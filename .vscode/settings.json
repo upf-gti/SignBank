@@ -1,0 +1,15 @@
+{
+    "git.ignoreLimitWarning": true,
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "Local Sign Bank",
+            "database": "postgres",
+            "username": "postgres",
+            "password": "password"
+        }
+    ]
+}
