@@ -1,17 +1,8 @@
-/*
-  Warnings:
-
-  - You are about to drop the `Dictionary` table. If the table is not empty, all the data it contains will be lost.
-
-*/
 -- CreateEnum
 CREATE TYPE "Role" AS ENUM ('ADMIN', 'USER');
 
 -- CreateEnum
 CREATE TYPE "RequestStatus" AS ENUM ('PENDING', 'ACCEPTED', 'DENIED');
-
--- DropTable
-DROP TABLE "Dictionary";
 
 -- CreateTable
 CREATE TABLE "Users" (
