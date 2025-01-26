@@ -31,13 +31,15 @@ services:
     image: postgres:15
     container_name: db
     environment:
-      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
       POSTGRES_DB: postgres
     networks:
       - app_network
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
 
   typesense:
     image: typesense/typesense:27.1
