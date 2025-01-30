@@ -21,5 +21,12 @@ export default defineConfig({
     allowedHosts: ['signbank.upf.com'],
 
   },
+  userConfig: {
+    server: {
+      port: 80,
+      host: true,
+      allowedHosts: ['signbank.upf.com'],
+    }
+  }
 
 })
