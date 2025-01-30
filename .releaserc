@@ -3,5 +3,14 @@
         "main",
         "semantic-release",
         "monorepo"
+    ],
+    "plugins": [
+        [
+            "@semantic-release/npm",
+            {
+                "npmPublish": false,
+                "tarballDir": "dist"
+            }
+        ]
     ]
 }
