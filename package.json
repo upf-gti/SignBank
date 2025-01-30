@@ -2,7 +2,7 @@
   "name": "SignBank",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git@github-RamonDonadeu:upf-gti/SignBank.git",
+  "repository": "git@github.com:upf-gti/SignBank.git",
   "author": "RamonDonadeu <ramondonadeucaballero@gmail.com>",
   "license": "MIT",
   "workspaces": [
