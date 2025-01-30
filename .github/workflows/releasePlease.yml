@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - 1.0.0
+      - main
 
 permissions:
   contents: write
@@ -13,6 +13,6 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     steps:
-      - uses: googleapis/release-please-action
+      - uses: googleapis/release-please-action@v4
         with:
           release-type: simple
