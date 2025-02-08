@@ -1,12 +1,23 @@
-FROM node:22-alpine
-
+FROM node:16-alpine AS builder
+RUN apk update
+# Set working directory
 WORKDIR /app
-COPY package*.json ./
-
-ENV DATABASE_URL="postgresql://postgres:password@db:5432/postgres?schema=public"
-
-RUN npm install
+RUN yarn global add turbo
 COPY . .
-RUN npx prisma migrate deploy
+RUN turbo prune --scope=backend --docker
+
+# Add lockfile and package.json's of isolated subworkspace
+FROM node:16-alpine AS installer
+RUN apk update
+WORKDIR /app
+COPY --from=builder /app/out/json/ .
+COPY --from=builder /app/out/yarn.lock ./yarn.lock
+COPY --from=builder /app/turbo.json ./turbo.json
+COPY --from=builder /app/apps/backend/prisma ./prisma
+RUN npm install --frozen-lockfile
+RUN npx prisma generate 
+
+# RUN npx prisma migrate deploy
+# RUN npx prisma generate
 
 CMD ["npm", "run", "start:dev"]

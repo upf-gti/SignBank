@@ -13,7 +13,7 @@ services:
       - DATABASE_HOST=db
       - DATABASE_PORT=5432
       - DATABASE_USER=postgres
-      - DATABASE_PASSWORD=postgres
+      - DATABASE_PASSWORD=password
       - DATABASE_NAME=postgres
       - PORT=80
     networks:
@@ -45,7 +45,7 @@ services:
     networks:
       - app_network
     volumes:
-      - ./apps/postgres_data:/var/lib/postgresql/data
+      - ./apps/database/data:/var/lib/postgresql/data
     ports:
       - 5432:5432
 
@@ -59,7 +59,7 @@ services:
     networks:
       - app_network
     volumes:
-      - ./appstypesense_data:/data
+      - ./apps/typesense/typesense_data:/data
     command: '--data-dir /data --api-key=xyz123 --enable-cors'
 
 
@@ -75,5 +75,5 @@ services:
       - app_network
 
 volumes:
-  postgres_data:
+  database:
   typesense_data:
