@@ -6,7 +6,7 @@ networks:
 services:
   backend:
     build:
-      context: ./apps/backend
+      context: ./backend
       dockerfile: Dockerfile.local
     container_name: backend
     environment:
@@ -19,14 +19,14 @@ services:
     networks:
       - app_network
     volumes:
-      - ./apps/backend:/app
+      - ./backend:/app
     depends_on:
       - db
       - typesense
 
   frontend:
     build:
-      context: ./apps/frontend
+      context: ./frontend
       dockerfile: Dockerfile.local
     container_name: frontend
     networks:
@@ -34,7 +34,7 @@ services:
 
   db:
     build:
-      context: ./apps/database
+      context: ./database
       dockerfile: Dockerfile.local
     image: postgres:15
     container_name: db
@@ -45,7 +45,7 @@ services:
     networks:
       - app_network
     volumes:
-      - ./apps/database/data:/var/lib/postgresql/data
+      - ./database/data:/var/lib/postgresql/data
     ports:
       - 5432:5432
 
@@ -59,7 +59,7 @@ services:
     networks:
       - app_network
     volumes:
-      - ./apps/typesense/typesense_data:/data
+      - ./typesense/typesense_data:/data
     command: '--data-dir /data --api-key=xyz123 --enable-cors'
 
 
@@ -70,7 +70,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./apps/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
       - app_network
 

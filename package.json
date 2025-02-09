@@ -5,16 +5,5 @@
   "repository": "https://github.com/upf-gti/SignBank.git",
   "author": "RamonDonadeu <ramondonadeucaballero@gmail.com>",
   "license": "MIT",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
-  "scripts": {
-    "build": "vite build",
-    "check-types": "tsc --noEmit"
-  },
-  "packageManager": "pnpm@9.5.0",
-  "devDependencies": {
-    "turbo": "^2.4.0"
-  }
+  "scripts": {}
 }
