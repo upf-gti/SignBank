@@ -8,13 +8,13 @@
     "csv-parser": "^3.1.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
-    "typesense": "^1.8.2"
+    "typesense": "^1.8.2",
+    "@nestjs/cli": "^10.0.0",
+    "@nestjs/schematics": "^10.0.0",
+    "@nestjs/testing": "^10.0.0"
   },
   "description": "",
   "devDependencies": {
-    "@nestjs/cli": "^10.0.0",
-    "@nestjs/schematics": "^10.0.0",
-    "@nestjs/testing": "^10.0.0",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.2",
     "@types/node": "^20.3.1",
@@ -67,7 +67,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "start:docker:dev": "prisma migrate dev & npm run start:dev"
   },
   "version": "0.0.1"
 }
