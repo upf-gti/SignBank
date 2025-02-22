@@ -17,16 +17,14 @@ export default defineConfig({
   },
   server: {
     port: 80,
-    host: true,
-    allowedHosts: ['signbank.upf.com'],
-
-  },
-  userConfig: {
-    server: {
-      port: 80,
-      host: true,
-      allowedHosts: ['signbank.upf.com'],
+    host: '0.0.0.0',
+    watch: {
+      usePolling: true,
+    },
+    hmr: {
+      host: 'signbank.upf.com',
+      protocol: 'ws',
+      clientPort: 80
     }
   }
-
 })

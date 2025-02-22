@@ -19,7 +19,6 @@ services:
       - postgres
       - typesense
     
-
   frontend:
     build:
       context: ./frontend
@@ -27,6 +26,9 @@ services:
     container_name: frontend
     networks:
       - signbank    
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules #Exclude node_modules directory
 
   postgres:
     build:
