@@ -8,10 +8,11 @@ import { UsersModule } from './users/users.module';
 import { WordsController } from './words/words.controller';
 import { WordsModule } from './words/words.module';
 import { WordsService } from './words/words.service';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, WordsModule],
+  imports: [AuthModule, UsersModule, WordsModule, PrismaModule],
   controllers: [AppController, WordsController],
   providers: [AppService, WordsService, PrismaService, TypesenseSyncService],
 })
-export class AppModule { }
+export class AppModule {}

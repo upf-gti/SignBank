@@ -32,7 +32,9 @@ export default [
    * pluginVue.configs["flat/recommended"]
    *   -> Above, plus rules to enforce subjective community defaults to ensure consistency.
    */
-  ...pluginVue.configs[ 'flat/essential' ],
+  ...pluginVue.configs['flat/essential'],
+  ...pluginVue.configs["flat/strongly-recommended"],
+  ...pluginVue.configs["flat/recommended"],
 
   {
     files: ['**/*.ts', '**/*.vue'],
@@ -86,7 +88,7 @@ export default [
   },
 
   {
-    files: [ 'src-pwa/custom-service-worker.ts' ],
+    files: ['src-pwa/custom-service-worker.ts'],
     languageOptions: {
       globals: {
         ...globals.serviceworker

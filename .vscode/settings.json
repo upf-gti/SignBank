@@ -11,5 +11,40 @@
             "username": "postgres",
             "password": "password"
         }
-    ]
+    ],
+    "dotnet.defaultSolution": "disable",
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "explicit",
+        "source.fixAll.sortJSON": "always"
+    },
+    "eslint.validate": [
+        "javascript",
+        "typescript",
+        "vue"
+    ],
+    "editor.formatOnSave": true,
+    "eslint.format.enable": true,
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "[vue]": {
+        "editor.formatOnSave": false,
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "javascript.format.insertSemicolons": false,
+    "typescript.format.insertSemicolons": false,
+    "javascript.format.semicolons": "remove",
+    "typescript.format.semicolons": "remove",
+    "cSpell.words": [
+        "autogrow"
+    ],
+    "[markdown]": {
+        "editor.formatOnSave": true,
+        "editor.formatOnPaste": true
+    },
 }

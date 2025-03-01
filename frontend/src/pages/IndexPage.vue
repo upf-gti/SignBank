@@ -1,43 +1,64 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <example-component
-      title="Example component"
-      active
-      :todos="todos"
-      :meta="meta"
-    ></example-component>
+  <q-page class="row items-center justify-evenly q-pa-md">
+    <div class="search-container">
+      <h1 class="text-h4 text-center q-mb-lg">
+        Sign Language Dictionary
+      </h1>
+      
+      <q-form
+        class="q-gutter-y-md"
+        @submit="onSubmit"
+      >
+        <q-input
+          v-model="search"
+          label="Enter a word"
+          filled
+          clearable
+          :rules="[val => !!val || 'Please enter a word']"
+          class="search-input"
+        >
+          <template #prepend>
+            <q-icon name="search" />
+          </template>
+        </q-input>
+        
+        <div class="row justify-center">
+          <q-btn
+            label="Search"
+            color="primary"
+            type="submit"
+            class="q-px-xl"
+          />
+        </div>
+      </q-form>
+    </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { Todo, Meta } from 'components/models';
-import ExampleComponent from 'components/ExampleComponent.vue';
+import { useRouter } from 'vue-router';
 
-const todos = ref<Todo[]>([
-  {
-    id: 1,
-    content: 'ct1'
-  },
-  {
-    id: 2,
-    content: 'ct2'
-  },
-  {
-    id: 3,
-    content: 'ct3'
-  },
-  {
-    id: 4,
-    content: 'ct4'
-  },
-  {
-    id: 5,
-    content: 'ct5'
+const router = useRouter();
+const search = ref('');
+
+const onSubmit = async () => {
+  if (search.value.trim()) {
+    await router.push({
+      path: '/results',
+      query: { search: search.value.trim() }
+    });
   }
-]);
-
-const meta = ref<Meta>({
-  totalCount: 1200
-});
+};
 </script>
+
+<style scoped>
+.search-container {
+  width: 100%;
+  max-width: 400px;
+}
+
+.search-input {
+  width: 100%;
+}
+</style>
