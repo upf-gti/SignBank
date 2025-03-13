@@ -1,0 +1,82 @@
+version: '3.8'
+networks:
+  signbank:
+    driver: bridge
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod  # Change to production Dockerfile
+    container_name: backend
+    environment:
+      - PORT=80
+      # Add other production environment variables
+    networks:
+      - signbank
+    restart: always  # Add restart policy
+    
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod  # Change to production Dockerfile
+    container_name: frontend
+    networks:
+      - signbank    
+    restart: always  # Add restart policy
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}  # Use environment variable
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST_AUTH_METHOD: md5  # Change from trust to md5 for security
+    networks:
+      - signbank
+    volumes:
+      - database:/var/lib/postgresql/data  # Use named volume
+    restart: always
+
+  typesense:
+    image: typesense/typesense:27.1
+    restart: always
+    container_name: typesense
+    environment:
+      - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}  # Use environment variable
+      - TYPESENSE_DATA_DIR=/data
+    networks:
+      - signbank
+    volumes:
+      - typesense_data:/data  # Use named volume
+    command: '--data-dir /data --api-key=${TYPESENSE_API_KEY} --enable-cors'
+
+  dufs:
+    image: sigoden/dufs
+    volumes:
+      - ${FILE_SERVER_PATH}:/data  # Use environment variable
+    command: /data -A
+    restart: always
+    networks:
+      - signbank
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./certbot/conf:/etc/letsencrypt  # Add SSL certificates volume
+      - ./certbot/www:/var/www/certbot  # Add certbot volume
+    networks:
+      - signbank
+    depends_on:
+      - backend
+    restart: always
+
+volumes:
+  database:
+  typesense_data:
