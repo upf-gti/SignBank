@@ -94,7 +94,7 @@ export default defineConfig(() => {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#devserver
     devServer: {
-      port: 80,
+      port: 443,
       host: '0.0.0.0',
       /* headers: {
         "Access-Control-Allow-Origin": "*",
