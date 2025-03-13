@@ -100,7 +100,7 @@ export default defineConfig(() => {
         "Access-Control-Allow-Origin": "*",
       }, */
       hmr: {
-        clientPort: 80,
+        clientPort: 443,
         host: 'signbank.upf.com',
         path: '/ws',
         protocol: 'wss'
@@ -123,7 +123,8 @@ export default defineConfig(() => {
           info: '#31CCEC',
           warning: '#F2C037'
         }
-      }
+      },
+      plugins: ['Notify'],
     },
 
     // animations: 'all', // --- includes all animations

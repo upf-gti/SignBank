@@ -3,4 +3,6 @@ export default interface Word {
     word: string
     description: string
     createdAt: string
+    videoUrl: string
 }
+

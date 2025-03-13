@@ -1,5 +1,8 @@
 <template>
-  <q-page class="row items-center justify-evenly q-pa-md">
+  <q-page
+    class="row content-start justify-evenly q-pa-md"
+    padding
+  >
     <div class="search-container">
       <h1 class="text-h4 text-center q-mb-lg">
         Sign Language Dictionary
@@ -56,6 +59,7 @@ const onSubmit = async () => {
 .search-container {
   width: 100%;
   max-width: 400px;
+  margin: 10rem;
 }
 
 .search-input {
