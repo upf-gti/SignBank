@@ -9,9 +9,11 @@ import { WordsController } from './words/words.controller';
 import { WordsModule } from './words/words.module';
 import { WordsService } from './words/words.service';
 import { PrismaModule } from './prisma/prisma.module';
+import { WordRequestsController } from './word-requests/word-requests.controller'
+import { WordRequestsModule } from './word-requests/word-requests.module'
 
 @Module({
-  imports: [AuthModule, UsersModule, WordsModule, PrismaModule],
+  imports: [AuthModule, UsersModule, WordsModule, PrismaModule, WordRequestsModule],
   controllers: [AppController, WordsController],
   providers: [AppService, WordsService, PrismaService, TypesenseSyncService],
 })

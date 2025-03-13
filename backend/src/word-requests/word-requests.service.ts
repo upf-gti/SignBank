@@ -20,6 +20,9 @@ export class WordRequestsService {
   async findAll(isAdmin: boolean, userId?: number) {
     if (isAdmin) {
       return this.prisma.wordRequest.findMany({
+        where: {
+          status: 'PENDING',
+        },
         include: {
           user: {
             select: {
@@ -36,6 +39,36 @@ export class WordRequestsService {
       where: {
         userId,
       },
+    });
+  }
+
+  async findUserRequests(userId: number) {
+    return this.prisma.wordRequest.findMany({
+      where: {
+        userId,
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+  }
+  
+  async findPendingRequests() {
+    return this.prisma.wordRequest.findMany({
+      where: {
+        status: 'PENDING'
+      },
+      include: {
+        user: {
+          select: {
+            username: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
     });
   }
 
@@ -57,5 +90,11 @@ export class WordRequestsService {
     }
 
     return request;
+  }
+
+  async findOne(id: number) {
+    return this.prisma.wordRequest.findUnique({
+      where: { id },
+    });
   }
 }

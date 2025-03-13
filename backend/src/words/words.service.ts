@@ -11,7 +11,7 @@ export class WordsService {
   async searchWords(query: string, limit: number) {
     const searchParameters: SearchParams = {
       q: query,
-      query_by: 'word', // Fields to search
+      query_by: 'word',
       per_page: limit,
       num_typos: 2,
     };
@@ -20,7 +20,7 @@ export class WordsService {
         .collections('words')
         .documents()
         .search(searchParameters);
-      return results.hits.map((hit) => hit.document); // Returning only the documents
+      return results.hits.map((hit) => hit.document);
     } catch (error) {
       throw new Error(`Search failed: ${error.message}`);
     }

@@ -7,6 +7,9 @@ RUN npm install
 COPY . .
 
 ENV DATABASE_URL=postgresql://postgres:password@postgres:5432/postgres?connect_timeout=300
+ENV ADMIN_EMAIL=admin@example.com
+ENV ADMIN_PASSWORD=password
+
 RUN npx prisma generate
 
 CMD ["npm", "run", "start:docker:dev"]

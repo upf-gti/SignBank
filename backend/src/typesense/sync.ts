@@ -29,12 +29,17 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
 
       try {
         // Check if the collection exists
+        console.log('Checking if collection exists');
         await typesense.collections('words').retrieve();
-        await typesense.collections('words').documents().delete();
+        console.log('Deleting collection');
+        await typesense.collections('words').delete();
+        console.log('Collection deleted');
       } catch (err) {
         // If not, create the collection
-        await typesense.collections().create(schema);
+        console.log(err);
       }
+      console.log('Creating collection');
+      await typesense.collections().create(schema);
 
       // Upsert all words into Typesense
       const documents = words.map((word) => ({
@@ -42,7 +47,10 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
         word: word.word,
         description: word.description,
         createdAt: word.createdAt.toISOString(),
+        videoUrl: word.videoUrl,
       }));
+
+      console.log(documents);
 
       await typesense
         .collections('words')
@@ -61,5 +69,26 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
   async onApplicationBootstrap() {
     console.log('Syncing database words to Typesense...');
     await this.syncWordsToTypesense();
+  }
+
+  async syncSingleWord(word: any) {
+    try {
+      const document = {
+        id: word.id.toString(),
+        word: word.word,
+        description: word.description,
+        createdAt: word.createdAt.toISOString(),
+        videoUrl: word.videoUrl,
+      };
+
+      await typesense
+        .collections('words')
+        .documents()
+        .upsert(document);
+
+      console.log(`Successfully synced word ${word.word} to Typesense.`);
+    } catch (error) {
+      console.error('Error syncing word to Typesense:', error.message);
+    }
   }
 }

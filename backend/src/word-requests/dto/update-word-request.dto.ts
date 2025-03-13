@@ -6,4 +6,5 @@ export enum RequestStatus {
 
 export class UpdateWordRequestDto {
   status: RequestStatus;
+  denyReason?: string;
 }
