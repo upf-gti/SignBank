@@ -8,7 +8,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile.prod  # Change to production Dockerfile
-    container_name: backend
+    container_name: backend-prod
     environment:
       - PORT=80
       # Add other production environment variables
@@ -20,14 +20,14 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod  # Change to production Dockerfile
-    container_name: frontend
+    container_name: frontend-prod
     networks:
       - signbank    
     restart: always  # Add restart policy
 
   postgres:
     image: postgres:15
-    container_name: postgres
+    container_name: postgres-prod
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}  # Use environment variable
       POSTGRES_USER: ${POSTGRES_USER}
@@ -42,7 +42,7 @@ services:
   typesense:
     image: typesense/typesense:27.1
     restart: always
-    container_name: typesense
+    container_name: typesense-prod
     environment:
       - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}  # Use environment variable
       - TYPESENSE_DATA_DIR=/data
@@ -63,7 +63,7 @@ services:
 
   nginx:
     image: nginx:latest
-    container_name: nginx
+    container_name: nginx-prod
     ports:
       - "80:80"
       - "443:443"

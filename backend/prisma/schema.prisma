@@ -5,46 +5,162 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x", "linux-arm64-openssl-3.0.x"]
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL") 
+  url      = env("DATABASE_URL")
 }
 
-
 model Users {
-  id        Int       @id @default(autoincrement())
-  username  String    @unique
-  email     String    @unique
-  password  String
-  role      Role      @default(USER)
-  createdAt DateTime  @default(now())
+  id           Int           @id @default(autoincrement())
+  username     String        @unique
+  email        String        @unique
+  password     String
+  role         Role          @default(USER)
+  createdAt    DateTime      @default(now())
   wordRequests WordRequest[]
+  words        Words[] // User who created/owns the word
+  wordEdits    WordEdit[] // User who submitted edits
 }
 
 model Words {
-  id          Int       @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   word        String
   description String
-  videoUrl    String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  status      WordStatus @default(PENDING)
+
+  // Creator/owner relationship
+  creator   Users @relation(fields: [creatorId], references: [id])
+  creatorId Int
+
+  // Original request that led to this word (if any)
+  originalRequest WordRequest? @relation("OriginalRequest", fields: [requestId], references: [id])
+  requestId       Int?         @unique
+
+  // Edit history
+  edits WordEdit[]
+
+  dialectId Int?
+  dialect   Dialect? @relation(fields: [dialectId], references: [id])
+  isNative  Boolean  @default(true)
+
+  // Phonological and linguistic annotations
+  movementType              String?
+  hasContact                Boolean?
+  facialExpression          String?
+  nonManualComponents       String?
+  dominantHand              Hand?
+  morphologicalVariants     String?
+  phonologicalTranscription String?
+
+  // Category and usage information
+  lexicalCategory LexicalCategory?
+  register        String?
+  usageFrequency  String?
+  usageEra        String?
+
+  // Related words content
+  videos         Video[]
+  senses         Sense[]
+  translations   Translation[]
+  relatedWords   WordRelation[] @relation("SourceWord")
+  relatedToWords WordRelation[] @relation("TargetWord")
+}
+
+model WordEdit {
+  id     Int   @id @default(autoincrement())
+  word   Words @relation(fields: [wordId], references: [id])
+  wordId Int
+
+  // User who submitted the edit
+  editor   Users @relation(fields: [editorId], references: [id])
+  editorId Int
+
+  // Edit details
+  editData   Json // Stores all edited fields
+  comment    String? // Optional comment explaining the edit
+  status     EditStatus @default(PENDING)
+  denyReason String? // Reason for rejection if denied
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Video {
+  id        Int      @id @default(autoincrement())
+  url       String
+  angle     String
+  word      Words    @relation(fields: [wordId], references: [id], onDelete: Cascade)
+  wordId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Dialect {
+  id             Int      @id @default(autoincrement())
+  name           String
+  region         String
+  mapCoordinates String?
+  description    String?
+  words          Words[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Sense {
+  id         Int      @id @default(autoincrement())
+  definition String
+  example    String?
+  word       Words    @relation(fields: [wordId], references: [id], onDelete: Cascade)
+  wordId     Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Translation {
+  id        Int      @id @default(autoincrement())
+  text      String
+  language  Language
+  word      Words    @relation(fields: [wordId], references: [id], onDelete: Cascade)
+  wordId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([wordId, language])
+}
+
+model WordRelation {
+  id           Int          @id @default(autoincrement())
+  sourceWord   Words        @relation("SourceWord", fields: [sourceWordId], references: [id])
+  sourceWordId Int
+  targetWord   Words        @relation("TargetWord", fields: [targetWordId], references: [id])
+  targetWordId Int
+  relationType RelationType
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@unique([sourceWordId, targetWordId, relationType])
 }
 
 model WordRequest {
-  id          Int       @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   word        String
   description String
   videoUrl    String
-  user        Users      @relation(fields: [userId], references: [id])
+  user        Users         @relation(fields: [userId], references: [id])
   userId      Int
   status      RequestStatus @default(PENDING)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
   denyReason  String?
+
+  // Link to the word created from this request (if accepted)
+  createdWord Words? @relation("OriginalRequest")
 }
 
 enum Role {
@@ -56,4 +172,51 @@ enum RequestStatus {
   PENDING
   ACCEPTED
   DENIED
+}
+
+enum Language {
+  CATALAN
+  SPANISH
+  ENGLISH
+  OTHER
+}
+
+enum LexicalCategory {
+  NOUN
+  VERB
+  ADJECTIVE
+  ADVERB
+  PRONOUN
+  DETERMINER
+  PREPOSITION
+  CONJUNCTION
+  INTERJECTION
+  OTHER
+}
+
+enum RelationType {
+  SYNONYM
+  REGIONAL_VARIANT
+  ASSOCIATED_CONCEPT
+  ANTONYM
+  HYPERNYM
+  HYPONYM
+}
+
+enum Hand {
+  RIGHT
+  LEFT
+  BOTH
+}
+
+enum WordStatus {
+  PENDING
+  PUBLISHED
+  ARCHIVED
+}
+
+enum EditStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
