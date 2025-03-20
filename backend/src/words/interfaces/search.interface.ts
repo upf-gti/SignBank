@@ -17,8 +17,16 @@ export interface SearchHighlight {
   indices?: number[];
 }
 
+// Simple word data returned in search results
+export interface WordSummary {
+  id: number;
+  word: string;
+  description: string;
+  videoUrls: string[];
+}
+
 export interface SearchResultItem {
-  document: Record<string, any>;
+  word: WordSummary;
   highlights: SearchHighlight[];
   textMatch: number;
 }

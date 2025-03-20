@@ -10,13 +10,13 @@
   >
     <q-card class="fit">
       <q-table
-        v-if="searchResult.length > 0"
+        v-if="searchResult.hits.length > 0"
         class="my-sticky-header-table"
-        :rows="searchResult"
-        :columns="wordStructure"
+        :rows="searchResult.hits"
         row-key="id"
         flat
         :style="'height: '+ pageHeight +'px'"
+        :columns="wordStructure"
       >
         <template #body="props">
           <q-tr
@@ -30,19 +30,19 @@
               <video
                 ref="videoRef"
                 style="height: 150px; width: 150px; object-fit: cover"
-                :src="props.row.videoUrl"
+                :src="props.row.word.videoUrl"
                 loop
               />
             </q-td>
             <q-td
               key="word"
             >
-              {{ props.row.word }}
+              {{ props.row.word.word }}
             </q-td>
             <q-td
               key="description"
             >
-              {{ props.row.description }}
+              {{ props.row.word.description }}
             </q-td>
           </q-tr>
         </template>
@@ -52,14 +52,14 @@
 </template>
 
 <script setup lang="ts">
-import axios from 'axios'
-import type Word from 'src/types/word'
+
+import type {Hit, SearchResponse} from 'src/types/word'
 import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import api from 'src/services/api'
 import wordStructure from 'src/utils/wordStructure'
-
 const route = useRoute()
-const searchResult = ref<Word[]>([])
+const searchResult = ref<SearchResponse>({hits: [] as Hit[], found: 0, page: 1, total: 0} as SearchResponse)
 const pageHeight = ref(0)
 
 watch(() => route.query.search, (newSearch) => {
@@ -73,11 +73,11 @@ onMounted(() => {
 })
 
 function search(word: string) {
-    axios.get(`/api/words/search?q=${word}`).then((response) => {
-        searchResult.value = response.data
-    }).catch((error) => {
-        console.log(error)
-    })
+  api.words.search(word).then((response) => {
+      searchResult.value = response.data
+  }).catch((error) => {
+      console.log(error)
+  })
 }
 
 </script>

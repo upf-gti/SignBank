@@ -1,8 +1,27 @@
-export default interface Word {
-    id: number
-    word: string
-    description: string
-    createdAt: string
-    videoUrl: string
+export interface SearchResponse {
+  found: number
+  page: number
+  hits: Hit[]
 }
 
+export interface Hit {
+  word: Word
+  highlights: Highlight[]
+  textMatch: number
+}
+
+export interface Word {
+  id: string
+  word: string
+  description: string
+  videoUrls: string[]
+}
+
+export interface Highlight {
+  field: string
+  matched_tokens: any[]
+  snippet?: string
+  value?: string
+  indices?: number[]
+  snippets?: string[]
+}
