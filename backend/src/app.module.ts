@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { PrismaService } from './prisma/prisma.service';
 import { TypesenseSyncService } from './typesense/sync';
-import { UsersModule } from './users/users.module';
 import { WordsModule } from './words/words.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { WordRequestsModule } from './word-requests/word-requests.module'
@@ -13,7 +12,6 @@ import { WordEditsModule } from './word-edits/word-edits.module';
 @Module({
   imports: [
     AuthModule, 
-    UsersModule, 
     WordsModule, 
     PrismaModule, 
     WordRequestsModule,

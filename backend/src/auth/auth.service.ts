@@ -2,7 +2,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
-import * as argon2 from 'argon2';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -18,10 +18,8 @@ export class AuthService {
     });
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
-    }
-  
-    // Check password
-    const isPasswordValid = await argon2.verify(user.password, password);
+    }    // Check password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
     
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
@@ -46,7 +44,7 @@ export class AuthService {
 
   async register(username: string, email: string, password: string) {
     // Hash password
-    const hashedPassword = await argon2.hash(password);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create user
     const user = await this.prisma.users.create({

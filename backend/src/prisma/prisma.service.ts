@@ -1,6 +1,6 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import * as argon2 from 'argon2';
+import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -17,7 +17,7 @@ const adminExists = await prisma.users.findFirst({
 });
 
 if (!adminExists) {
-  const hashedPassword = await argon2.hash(process.env.ADMIN_PASSWORD);
+  const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD, 10);
   await prisma.users.create({
     data: {
       username: 'admin',
