@@ -16,7 +16,7 @@ export class WordsService {
       query_by: 'word,description,senseDefinitions,translations',
       per_page: limit,
       num_typos: 2,
-      highlight_full_fields: 'word,description,senseDefinitions',
+      highlight_full_fields: 'word,description',
       sort_by: '_text_match:desc,word:asc',
     };
 
@@ -43,15 +43,31 @@ export class WordsService {
         .documents()
         .search(searchParameters);
       
-      // Process hits to include highlighting
+      // Process hits to include only general information
       return {
         found: results.found,
         page: results.page || 1,
-        hits: results.hits.map((hit) => ({
-          document: hit.document,
-          highlights: hit.highlights || [],
-          textMatch: hit.text_match
-        }))
+        hits: results.hits.map((hit) => {
+          // Extract only the required fields
+          const document = hit.document as Record<string, any>;
+          const { 
+            id, 
+            word, 
+            description, 
+            videoUrls = [] 
+          } = document;
+          
+          return {
+            word: { 
+              id, 
+              word, 
+              description, 
+              videoUrls 
+            },
+            highlights: hit.highlights || [],
+            textMatch: hit.text_match
+          };
+        })
       };
     } catch (error) {
       throw new Error(`Search failed: ${error.message}`);
@@ -102,6 +118,55 @@ export class WordsService {
 
     if (!result) {
       throw new NotFoundException(`Word with ID ${word} not found.`);
+    }
+
+    return result;
+  }
+
+  // Get word details by ID (public version)
+  async getWordDetailsById(id: number) {
+    const result = await this.prisma.words.findUnique({
+      where: {
+        id: id,
+        status: 'PUBLISHED', // Only return published words for public API
+      },
+      include: {
+        creator: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+        dialect: true,
+        videos: {
+          orderBy: {
+            priority: 'asc'
+          }
+        },
+        senses: {
+          include: {
+            Translation: true
+          },
+          orderBy: {
+            priority: 'asc'
+          }
+        },
+        translations: true,
+        relatedWords: {
+          include: {
+            targetWord: {
+              select: {
+                id: true,
+                word: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!result) {
+      throw new NotFoundException(`Word with ID ${id} not found.`);
     }
 
     return result;
@@ -279,11 +344,27 @@ export class WordsService {
       return {
         found: results.found,
         page: results.page,
-        hits: results.hits.map((hit) => ({
-          document: hit.document,
-          highlights: hit.highlights || [],
-          textMatch: hit.text_match
-        })),
+        hits: results.hits.map((hit) => {
+          // Extract only the required fields
+          const document = hit.document as Record<string, any>;
+          const { 
+            id, 
+            word, 
+            description, 
+            videoUrls = [] 
+          } = document;
+          
+          return {
+            word: { 
+              id, 
+              word, 
+              description, 
+              videoUrls 
+            },
+            highlights: hit.highlights || [],
+            textMatch: hit.text_match
+          };
+        }),
         facets: results.facet_counts || []
       };
     } catch (error) {

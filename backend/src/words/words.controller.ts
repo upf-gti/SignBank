@@ -21,8 +21,14 @@ export class WordsController {
   }
 
   @Public()
-  @Get(':word')
-  async getWordDetails(@Param('word') word: string) {
+  @Get('details/:id')
+  async getWordDetailsById(@Param('id', ParseIntPipe) id: number) {
+    return this.wordsService.getWordDetailsById(id);
+  }
+
+  @Public()
+  @Get('text/:text')
+  async getWordDetails(@Param('text') word: string) {
     return this.wordsService.getWordDetails(word);
   }
 
