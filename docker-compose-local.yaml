@@ -11,13 +11,14 @@ services:
     container_name: backend
     environment:
       - PORT=443
+      - DATABASE_URL=${DATABASE_URL_DOCKER}
     networks:
       - signbank
     volumes:
       - ./backend:/app
       - /app/node_modules #Exclude node_modules directory
     depends_on:
-      - postgres
+      - mongoDB
       - typesense
     
   frontend:
@@ -31,24 +32,38 @@ services:
       - ./frontend:/app
       - /app/node_modules #Exclude node_modules directory
 
-  postgres:
-    build:
-      context: ./database
-      dockerfile: Dockerfile.local
-    image: postgres:15
-    container_name: postgres
+  # postgres:
+  #   build:
+  #     context: ./database
+  #     dockerfile: Dockerfile.local
+  #   image: postgres:15
+  #   container_name: postgres
+  #   environment:
+  #     POSTGRES_PASSWORD: password
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_DB: postgres
+  #     POSTGRES_HOST_AUTH_METHOD: trust
+  #   networks:
+  #     - signbank
+  #   volumes:
+  #     - ./database/data:/var/lib/postgresql/data
+  #   ports:
+  #     - 5432:5432
+  mongoDB:
+    image: mongo
+    container_name: mongoDB
     environment:
-      POSTGRES_PASSWORD: password
-      POSTGRES_USER: postgres
-      POSTGRES_DB: postgres
-      POSTGRES_HOST_AUTH_METHOD: trust
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
     networks:
       - signbank
     volumes:
-      - ./database/data:/var/lib/postgresql/data
+      - ./mongoDB/data:/data/db
+      - ./mongoDB/initdb.d:/docker-entrypoint-initdb.d
+      - ./mongoDB/keyfile:/data/keyfile
     ports:
-      - 5432:5432
-
+      - 27017:27017
+    command: --replSet rs0 --bind_ip_all --keyFile /data/keyfile
   typesense:
     image: typesense/typesense:27.1
     restart: on-failure

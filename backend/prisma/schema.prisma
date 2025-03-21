@@ -4,153 +4,167 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
-model Users {
-  id           Int           @id @default(autoincrement())
-  username     String        @unique
-  email        String        @unique
-  password     String
-  role         Role          @default(USER)
-  createdAt    DateTime      @default(now())
-  wordEdits    WordEdit[]
-  wordRequests WordRequest[]
-  words        Words[]
-  editedWords  Words[]       @relation("WordEditor")
+// Define embedded types for MongoDB document structure
+type SenseTranslation {
+  text     String
+  language Language
 }
 
-model Words {
-  id                        Int              @id @default(autoincrement())
-  word                      String
-  description               String
-  createdAt                 DateTime         @default(now())
-  updatedAt                 DateTime         @updatedAt
-  creatorId                 Int
-  dialectId                 Int?
+type Description {
+  text         String
+  examples     String[]
+  translations SenseTranslation[] // Embedded translations
+}
+
+type Sense {
+  priority                  Int           @default(0)
   dominantHand              Hand?
   facialExpression          String?
   hasContact                Boolean?
-  isNative                  Boolean          @default(true)
-  lexicalCategory           LexicalCategory?
+  descriptions              Description[]
   morphologicalVariants     String?
   movementType              String?
   nonManualComponents       String?
   phonologicalTranscription String?
-  register                  String?
-  requestId                 Int?             @unique
-  status                    WordStatus       @default(PENDING)
   usageEra                  String?
   usageFrequency            String?
-  originalWordId            Int?
-  editorId                  Int?
-  editComment               String?
-  senses                    Sense[]
-  translations              Translation[]
-  videos                    Video[]
-  edits                     WordEdit[]
-  relatedWords              WordRelation[]   @relation("SourceWord")
-  relatedToWords            WordRelation[]   @relation("TargetWord")
-  creator                   Users            @relation(fields: [creatorId], references: [id])
-  editor                    Users?           @relation("WordEditor", fields: [editorId], references: [id])
-  dialect                   Dialect?         @relation(fields: [dialectId], references: [id])
-  originalRequest           WordRequest?     @relation("OriginalRequest", fields: [requestId], references: [id])
-  originalWord              Words?           @relation("WordVersions", fields: [originalWordId], references: [id])
-  wordVersions              Words[]          @relation("WordVersions")
+  videos                    VideoInfo[]
 }
 
-model WordEdit {
-  id               Int        @id @default(autoincrement())
-  wordId           Int
-  editorId         Int
-  comment          String?
-  status           EditStatus @default(PENDING)
-  denyReason       String?
-  newWordVersionId Int?
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
-  editor           Users      @relation(fields: [editorId], references: [id])
-  word             Words      @relation(fields: [wordId], references: [id])
+type VideoInfo {
+  url      String
+  angle    String
+  priority Int    @default(0)
 }
 
-model Video {
-  id        Int      @id @default(autoincrement())
-  url       String
-  angle     String
-  wordId    Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  priority  Int      @default(0)
-  word      Words    @relation(fields: [wordId], references: [id], onDelete: Cascade)
-
-  @@index([priority, wordId])
+// Define embedded type for related words
+type RelatedWord {
+  wordId       String       @db.ObjectId
+  relationType RelationType
 }
 
+model Users {
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  username      String        @unique
+  email         String        @unique
+  password      String
+  role          Role          @default(USER)
+  createdAt     DateTime      @default(now())
+  wordEdits     WordEdit[]    @relation("UserWordEdits")
+  wordRequests  WordRequest[] @relation("UserWordRequests")
+  words         Words[]       @relation("UserWords")
+  editedWords   Words[]       @relation("WordEditor")
+  acceptedWords Words[]       @relation("AcceptedBy")
+}
+
+// New separate Dialect model
 model Dialect {
-  id             Int      @id @default(autoincrement())
-  name           String
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  name           String   @unique
   region         String
   mapCoordinates String?
   description    String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
-  words          Words[]
+
+  // Relations
+  words       Words[]       @relation("WordDialect")
+  WordRequest WordRequest[]
 }
 
-model Sense {
-  id          Int           @id @default(autoincrement())
-  definition  String
-  example     String?
-  wordId      Int
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  priority    Int           @default(0)
-  word        Words         @relation(fields: [wordId], references: [id], onDelete: Cascade)
-  Translation Translation[]
+model Words {
+  id                      String     @id @default(auto()) @map("_id") @db.ObjectId
+  word                    String
+  description             String
+  createdAt               DateTime   @default(now())
+  updatedAt               DateTime   @updatedAt
+  creatorId               String     @db.ObjectId
+  isNative                Boolean    @default(true)
+  register                String?
+  status                  WordStatus @default(PUBLISHED) // Only PUBLISHED or EDIT_REQUEST
+  editorId                String?    @db.ObjectId
+  editComment             String?
+  currentVersion          Int        @default(1) // Track version number
+  originatedFromRequestId String?    @db.ObjectId // Optional reference to the request it came from
 
-  @@index([priority, wordId])
+  // Embedded document structures
+  senses       Sense[] // Embedded senses with their translations and descriptions
+  relatedWords RelatedWord[] // Embedded related words
+
+  // Relations to external collections
+  dialectId    String?       @db.ObjectId
+  dialect      Dialect?      @relation("WordDialect", fields: [dialectId], references: [id])
+  edits        WordEdit[]
+  wordRequests WordRequest[] @relation("CreatedFromRequest") // Updated to one-to-many
+
+  // Relations to other models
+  creator              Users?  @relation("UserWords", fields: [creatorId], references: [id], onDelete: Cascade)
+  editor               Users?  @relation("WordEditor", fields: [editorId], references: [id])
+  acceptedBy           Users?  @relation("AcceptedBy", fields: [acceptedById], references: [id])
+  acceptedById         String? @db.ObjectId
+  isCreatedFromRequest Boolean @default(false)
+  isCreatedFromEdit    Boolean @default(false)
 }
 
-model Translation {
-  id        Int      @id @default(autoincrement())
-  text      String
-  language  Language
-  senseId   Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  sense     Sense    @relation(fields: [senseId], references: [id], onDelete: Cascade)
-  Words     Words?   @relation(fields: [wordsId], references: [id])
-  wordsId   Int?
+model WordEdit {
+  id               String     @id @default(auto()) @map("_id") @db.ObjectId
+  wordId           String     @db.ObjectId
+  editorId         String     @db.ObjectId
+  comment          String?
+  status           EditStatus @default(PENDING)
+  denyReason       String?
+  newWordVersionId String?    @db.ObjectId // References a temporary version in Words with EDIT_REQUEST status
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
 
-  @@unique([senseId, language])
+  // Proposed edit data (stored as JSON if not yet approved)
+  proposedChanges Json?
+
+  // Relations
+  editor Users @relation("UserWordEdits", fields: [editorId], references: [id])
+  word   Words @relation(fields: [wordId], references: [id])
 }
 
-model WordRelation {
-  id           Int          @id @default(autoincrement())
-  sourceWordId Int
-  targetWordId Int
-  relationType RelationType
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  sourceWord   Words        @relation("SourceWord", fields: [sourceWordId], references: [id])
-  targetWord   Words        @relation("TargetWord", fields: [targetWordId], references: [id])
-
-  @@unique([sourceWordId, targetWordId, relationType])
+model WordEditHistoric {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  originalWordId String   @db.ObjectId // Reference to the current word
+  archivedAt     DateTime @default(now())
+  wordData       Json // Complete snapshot of the word at this version
+  versionNumber  Int // Track version number
 }
 
 model WordRequest {
-  id          Int           @id @default(autoincrement())
-  word        String
-  description String
-  videoUrl    String
-  userId      Int
-  status      RequestStatus @default(PENDING)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  denyReason  String?
-  user        Users         @relation(fields: [userId], references: [id])
-  createdWord Words?        @relation("OriginalRequest")
+  id         String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String        @db.ObjectId
+  status     RequestStatus @default(PENDING)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  denyReason String?
+
+  // Full request details
+  requestedWord        String
+  requestedDescription String
+  requestedVideoUrl    String?
+  dominantHand         Hand?
+  facialExpression     String?
+  hasContact           Boolean?
+  lexicalCategory      LexicalCategory?
+  dialectId            String?          @db.ObjectId
+  dialect              Dialect?         @relation(fields: [dialectId], references: [id])
+
+  // Additional data for complete request
+  requestedSenses Sense[]
+
+  // If accepted, links to the created word
+  createdWord   Words?  @relation("CreatedFromRequest", fields: [createdWordId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdWordId String? @db.ObjectId
+
+  // Relations
+  user Users @relation("UserWordRequests", fields: [userId], references: [id])
 }
 
 enum Role {
@@ -200,11 +214,8 @@ enum Hand {
 }
 
 enum WordStatus {
-  PENDING
   PUBLISHED
   ARCHIVED
-  EDIT_REQUEST
-  REJECTED
 }
 
 enum EditStatus {

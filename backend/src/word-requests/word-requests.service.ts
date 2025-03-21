@@ -4,6 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateWordRequestDto } from './dto/create-word-request.dto';
 import { UpdateWordRequestDto } from './dto/update-word-request.dto';
 import { TypesenseSyncService } from 'src/typesense/sync';
+import { WordStatus } from '@prisma/client'
 
 @Injectable()
 export class WordRequestsService {
@@ -15,12 +16,68 @@ export class WordRequestsService {
   ) {}
 
   async create(userId: number, dto: CreateWordRequestDto) {
-    return this.prisma.wordRequest.create({
-      data: {
-        ...dto,
-        userId,
-      },
+    const transaction = await this.prisma.$transaction(async (prisma) => {
+      const word = await prisma.words.create({
+        data: {
+          word: dto.word,
+          description: dto.description,
+          creatorId: userId,
+          dialectId: dto.dialectId,
+          dominantHand: dto.dominantHand,
+          facialExpression: dto.facialExpression,
+          hasContact: dto.hasContact,
+          isNative: dto.isNative,
+          lexicalCategory: dto.lexicalCategory,
+          movementType: dto.movementType,
+          nonManualComponents: dto.nonManualComponents,
+          phonologicalTranscription: dto.phonologicalTranscription,
+          register: dto.register,
+          usageEra: dto.usageEra,
+          usageFrequency: dto.usageFrequency,
+          morphologicalVariants: dto.morphologicalVariants,
+          status: WordStatus.PENDING_REQUEST
+        },
+      });
+
+      await prisma.sense.createMany({
+        data: dto.senses.map(sense => ({
+          ...sense,
+          wordId: word.id
+        }))
+      });
+
+      await prisma.translation.createMany({
+        data: dto.translations.map(translation => ({
+          ...translation,
+          wordId: word.id
+        }))
+      });
+
+      await prisma.video.createMany({
+        data: dto.videos.map(video => ({
+          ...video,
+          wordId: word.id
+        }))
+      });
+
+      await prisma.wordRelation.createMany({
+        data: dto.relatedWords.map(relation => ({
+          ...relation,
+          wordId: word.id
+        }))
+      });
+
+     const wordRequest = await prisma.wordRequest.create({
+        data: {
+          userId,          
+          wordsId: word.id,
+        },
+      });
+
+      return wordRequest;
     });
+
+    return transaction;
   }
 
   async findAll(isAdmin: boolean, userId?: number) {
