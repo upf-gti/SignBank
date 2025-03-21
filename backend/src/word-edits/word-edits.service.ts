@@ -1,181 +1,325 @@
-import { Injectable, NotFoundException, ForbiddenException, Logger } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, ConflictException, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateWordEditDto } from './dto/create-word-edit.dto';
 import { UpdateWordEditDto, EditStatus } from './dto/update-word-edit.dto';
 import { TypesenseSyncService } from 'src/typesense/sync';
+import { WordStatus } from '@prisma/client';
 
 @Injectable()
 export class WordEditsService {
   private readonly logger = new Logger(WordEditsService.name);
 
   constructor(
-    private prisma: PrismaService,
-    private typesenseSync: TypesenseSyncService
+    private readonly prisma: PrismaService,
+    private readonly typesenseSync: TypesenseSyncService,
   ) {}
 
-  async create(userId: number, dto: CreateWordEditDto) {
-    // Check if the word exists and user has permission to edit it
-    const word = await this.prisma.words.findUnique({
-      where: { id: dto.wordId },
-      select: { id: true, creatorId: true, status: true }
+  // Create a new word edit (creates a new word record as a copy with changes)
+  async createWordEdit(wordId: number, userId: number, editData: any, comment: string) {
+    // Check if word exists and is published
+    const originalWord = await this.prisma.words.findUnique({
+      where: { 
+        id: wordId,
+        status: WordStatus.PUBLISHED, // Only allow edits on published words
+      },
+      include: {
+        videos: true,
+        senses: {
+          include: {
+            Translation: true,
+          },
+        },
+        translations: true,
+        relatedWords: true,
+      },
     });
 
-    if (!word) {
-      throw new NotFoundException(`Word with ID ${dto.wordId} not found.`);
+    if (!originalWord) {
+      throw new NotFoundException(`Word with ID ${wordId} not found or not in published state.`);
     }
 
-    // Create the edit
-    try {
-      return await this.prisma.wordEdit.create({
+    // Check if there's already a pending edit for this word
+    const existingPendingEdits = await this.prisma.words.findFirst({
+      where: {
+        originalWordId: wordId,
+        status: WordStatus.EDIT_REQUEST,
+      },
+    });
+
+    if (existingPendingEdits) {
+      throw new ConflictException(`There is already a pending edit for word with ID ${wordId}.`);
+    }
+
+    // Create a new word as a copy with the changes and track its relationship to original
+    const { id: originalId, createdAt, updatedAt, ...wordDataWithoutIds } = originalWord;
+    
+    // Start a transaction to create the new word and its associated records
+    return this.prisma.$transaction(async (tx) => {
+      // Create the new word with edit changes
+      const newWordData = {
+        ...wordDataWithoutIds,
+        ...editData, // Apply the edit changes
+        status: WordStatus.EDIT_REQUEST, // Set status to indicate it's an edit request
+        originalWordId: wordId, // Track the original word this edit is for
+        editorId: userId, // Track who made this edit
+        editComment: comment, // Store edit comment
+      };
+
+      // Create the new word
+      const newWord = await tx.words.create({
+        data: newWordData,
+      });
+
+      // Copy videos
+      if (originalWord.videos && originalWord.videos.length > 0) {
+        const videosData = originalWord.videos.map(video => {
+          const { id, createdAt, updatedAt, wordId, ...videoData } = video;
+          return {
+            ...videoData,
+            wordId: newWord.id,
+          };
+        });
+
+        await tx.video.createMany({
+          data: videosData,
+        });
+      }
+
+      // Copy senses and their translations
+      if (originalWord.senses && originalWord.senses.length > 0) {
+        for (const sense of originalWord.senses) {
+          const { id: senseId, createdAt, updatedAt, wordId, Translation, ...senseData } = sense;
+          
+          // Create sense
+          const newSense = await tx.sense.create({
+            data: {
+              ...senseData,
+              wordId: newWord.id,
+            },
+          });
+
+          // Create translations for this sense
+          if (Translation && Translation.length > 0) {
+            const translationsData = Translation.map(translation => {
+              const { id, createdAt, updatedAt, senseId, ...translationData } = translation;
+              return {
+                ...translationData,
+                senseId: newSense.id,
+              };
+            });
+
+            await tx.translation.createMany({
+              data: translationsData,
+            });
+          }
+        }
+      }
+
+      // Create word edit record to track the edit itself
+      await tx.wordEdit.create({
         data: {
-          wordId: dto.wordId,
+          wordId,
           editorId: userId,
-          editData: dto.editData,
-          comment: dto.comment,
-          status: 'PENDING',
-        },
-        include: {
-          editor: {
-            select: {
-              id: true,
-              username: true,
-            },
-          },
-          word: {
-            select: {
-              id: true,
-              word: true,
-            },
-          },
+          comment,
+          status: EditStatus.PENDING,
+          newWordVersionId: newWord.id,
         },
       });
-    } catch (error) {
-      this.logger.error(`Error creating word edit: ${error.message}`, error.stack);
-      throw error;
-    }
-  }
 
-  async findAll(status?: EditStatus) {
-    const where = status ? { status } : {};
-    
-    return this.prisma.wordEdit.findMany({
-      where,
-      include: {
-        editor: {
-          select: {
-            id: true,
-            username: true,
-          },
-        },
-        word: {
-          select: {
-            id: true,
-            word: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
+      return newWord;
     });
   }
 
-  async findUserEdits(userId: number) {
-    return this.prisma.wordEdit.findMany({
-      where: {
-        editorId: userId,
-      },
-      include: {
-        word: {
-          select: {
-            id: true,
-            word: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-  }
-
-  async findOne(id: number) {
+  // Approve a word edit - publish the new version and archive the old one
+  async approveEdit(editId: number) {
+    // Find the edit
     const edit = await this.prisma.wordEdit.findUnique({
-      where: { id },
+      where: { id: editId },
       include: {
-        editor: {
-          select: {
-            id: true,
-            username: true,
-          },
-        },
-        word: {
-          select: {
-            id: true,
-            word: true,
-            description: true,
-          },
-        },
+        word: true, // The original word
       },
     });
 
     if (!edit) {
-      throw new NotFoundException(`Edit with ID ${id} not found.`);
+      throw new NotFoundException(`Edit with ID ${editId} not found.`);
     }
 
-    return edit;
+    if (edit.status !== EditStatus.PENDING) {
+      throw new ConflictException(`Edit has already been processed.`);
+    }
+
+    // Find the new word version
+    const newWordVersion = await this.prisma.words.findFirst({
+      where: { 
+        id: edit.newWordVersionId,
+        status: WordStatus.EDIT_REQUEST,
+      },
+    });
+
+    if (!newWordVersion) {
+      throw new NotFoundException(`New word version not found.`);
+    }
+
+    // Start a transaction to update statuses
+    return this.prisma.$transaction(async (tx) => {
+      // Archive the original word
+      await tx.words.update({
+        where: { id: edit.wordId },
+        data: { status: WordStatus.ARCHIVED },
+      });
+
+      // Publish the new version
+      const updatedWord = await tx.words.update({
+        where: { id: newWordVersion.id },
+        data: { status: WordStatus.PUBLISHED },
+      });
+
+      // Update the edit status
+      await tx.wordEdit.update({
+        where: { id: editId },
+        data: { status: EditStatus.APPROVED },
+      });
+
+      // Sync to Typesense
+      await this.typesenseSync.syncSingleWord(updatedWord.id);
+
+      return updatedWord;
+    });
   }
 
-  async updateStatus(id: number, dto: UpdateWordEditDto) {
+  // Reject a word edit
+  async rejectEdit(editId: number, denyReason: string) {
+    // Find the edit
     const edit = await this.prisma.wordEdit.findUnique({
-      where: { id },
-      include: {
-        word: true,
-      },
+      where: { id: editId },
     });
 
     if (!edit) {
-      throw new NotFoundException(`Edit with ID ${id} not found.`);
+      throw new NotFoundException(`Edit with ID ${editId} not found.`);
     }
 
-    // Update the edit status
-    const updatedEdit = await this.prisma.wordEdit.update({
-      where: { id },
-      data: {
-        status: dto.status,
-        denyReason: dto.denyReason,
+    if (edit.status !== EditStatus.PENDING) {
+      throw new ConflictException(`Edit has already been processed.`);
+    }
+
+    // Find the new word version
+    const newWordVersion = await this.prisma.words.findFirst({
+      where: { 
+        id: edit.newWordVersionId,
+        status: WordStatus.EDIT_REQUEST,
       },
     });
 
-    // If approved and applyChanges is true, apply the changes to the word
-    if (dto.status === EditStatus.APPROVED && dto.applyChanges) {
-      try {
-        // Apply the changes from editData to the word
-        const editData = edit.editData as Record<string, any>;
-        
-        // Ensure editData is valid
-        if (!editData || typeof editData !== 'object') {
-          throw new Error('Invalid edit data format');
-        }
-        
-        // Update the word with the edited fields
-        const updatedWord = await this.prisma.words.update({
-          where: { id: edit.wordId },
-          data: editData,
+    // Start a transaction to update statuses
+    return this.prisma.$transaction(async (tx) => {
+      // Change the status of the new word version to REJECTED
+      if (newWordVersion) {
+        await tx.words.update({
+          where: { id: newWordVersion.id },
+          data: { status: WordStatus.REJECTED },
         });
-        
-        // Sync the updated word to Typesense
-        await this.typesenseSync.syncSingleWord(updatedWord.id);
-        
-        this.logger.log(`Applied edit ${id} to word ${edit.wordId}`);
-        return { ...updatedEdit, wordUpdated: true };
-      } catch (error) {
-        this.logger.error(`Error applying edit ${id}: ${error.message}`, error.stack);
-        // Return the edit status update but indicate the word update failed
-        return { ...updatedEdit, wordUpdated: false, error: error.message };
       }
+
+      // Update the edit status
+      return tx.wordEdit.update({
+        where: { id: editId },
+        data: { 
+          status: EditStatus.REJECTED,
+          denyReason,
+        },
+      });
+    });
+  }
+
+  // Get all edits for a word
+  async getWordEdits(wordId: number) {
+    return this.prisma.wordEdit.findMany({
+      where: { wordId },
+      include: {
+        editor: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  // Get all pending edits (for admin)
+  async getPendingEdits() {
+    return this.prisma.wordEdit.findMany({
+      where: { status: EditStatus.PENDING },
+      include: {
+        word: {
+          select: {
+            id: true,
+            word: true,
+          },
+        },
+        editor: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  // Get edit details by ID
+  async getEditById(editId: number) {
+    const edit = await this.prisma.wordEdit.findUnique({
+      where: { id: editId },
+      include: {
+        word: true, // Original word
+        editor: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+      },
+    });
+
+    if (!edit) {
+      throw new NotFoundException(`Edit with ID ${editId} not found.`);
     }
 
-    return updatedEdit;
+    // Get the new word version
+    const newWordVersion = await this.prisma.words.findFirst({
+      where: { 
+        id: edit.newWordVersionId,
+      },
+      include: {
+        videos: {
+          orderBy: {
+            priority: 'asc'
+          }
+        },
+        senses: {
+          include: {
+            Translation: true
+          },
+          orderBy: {
+            priority: 'asc'
+          }
+        },
+        translations: true,
+        dialect: true,
+      },
+    });
+
+    return {
+      edit,
+      originalWord: edit.word,
+      newWordVersion,
+    };
   }
 } 

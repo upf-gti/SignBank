@@ -25,36 +25,47 @@ export class WordEditsController {
   @Post()
   create(
     @GetUser('id') userId: number,
-    @Body() createWordEditDto: CreateWordEditDto
+    @Body() createWordEditDto: { wordId: number; editData: any; comment: string }
   ) {
-    return this.wordEditsService.create(userId, createWordEditDto);
+    return this.wordEditsService.createWordEdit(
+      createWordEditDto.wordId,
+      userId,
+      createWordEditDto.editData,
+      createWordEditDto.comment
+    );
   }
 
-  @Get()
+  @Get('word/:wordId')
+  findWordEdits(@Param('wordId', ParseIntPipe) wordId: number) {
+    return this.wordEditsService.getWordEdits(wordId);
+  }
+
+  @Get('pending')
   @Roles('ADMIN')
   @UseGuards(RolesGuard)
-  findAll(@Query('status') status?: string) {
-    const editStatus = status as EditStatus;
-    return this.wordEditsService.findAll(editStatus);
-  }
-
-  @Get('user')
-  findUserEdits(@GetUser('id') userId: number) {
-    return this.wordEditsService.findUserEdits(userId);
+  findPendingEdits() {
+    return this.wordEditsService.getPendingEdits();
   }
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.wordEditsService.findOne(id);
+    return this.wordEditsService.getEditById(id);
   }
 
-  @Patch(':id')
+  @Patch(':id/approve')
   @Roles('ADMIN')
   @UseGuards(RolesGuard)
-  update(
+  approveEdit(@Param('id', ParseIntPipe) id: number) {
+    return this.wordEditsService.approveEdit(id);
+  }
+
+  @Patch(':id/reject')
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
+  rejectEdit(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateWordEditDto: UpdateWordEditDto
+    @Body('denyReason') denyReason: string
   ) {
-    return this.wordEditsService.updateStatus(id, updateWordEditDto);
+    return this.wordEditsService.rejectEdit(id, denyReason);
   }
 } 

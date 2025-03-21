@@ -18,6 +18,7 @@ model Users {
   wordEdits    WordEdit[]
   wordRequests WordRequest[]
   words        Words[]
+  editedWords  Words[]       @relation("WordEditor")
 }
 
 model Words {
@@ -42,6 +43,9 @@ model Words {
   status                    WordStatus       @default(PENDING)
   usageEra                  String?
   usageFrequency            String?
+  originalWordId            Int?
+  editorId                  Int?
+  editComment               String?
   senses                    Sense[]
   translations              Translation[]
   videos                    Video[]
@@ -49,22 +53,25 @@ model Words {
   relatedWords              WordRelation[]   @relation("SourceWord")
   relatedToWords            WordRelation[]   @relation("TargetWord")
   creator                   Users            @relation(fields: [creatorId], references: [id])
+  editor                    Users?           @relation("WordEditor", fields: [editorId], references: [id])
   dialect                   Dialect?         @relation(fields: [dialectId], references: [id])
   originalRequest           WordRequest?     @relation("OriginalRequest", fields: [requestId], references: [id])
+  originalWord              Words?           @relation("WordVersions", fields: [originalWordId], references: [id])
+  wordVersions              Words[]          @relation("WordVersions")
 }
 
 model WordEdit {
-  id         Int        @id @default(autoincrement())
-  wordId     Int
-  editorId   Int
-  editData   Json
-  comment    String?
-  status     EditStatus @default(PENDING)
-  denyReason String?
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  editor     Users      @relation(fields: [editorId], references: [id])
-  word       Words      @relation(fields: [wordId], references: [id])
+  id               Int        @id @default(autoincrement())
+  wordId           Int
+  editorId         Int
+  comment          String?
+  status           EditStatus @default(PENDING)
+  denyReason       String?
+  newWordVersionId Int?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  editor           Users      @relation(fields: [editorId], references: [id])
+  word             Words      @relation(fields: [wordId], references: [id])
 }
 
 model Video {
@@ -196,6 +203,8 @@ enum WordStatus {
   PENDING
   PUBLISHED
   ARCHIVED
+  EDIT_REQUEST
+  REJECTED
 }
 
 enum EditStatus {
