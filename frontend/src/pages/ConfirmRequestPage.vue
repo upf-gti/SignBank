@@ -159,6 +159,7 @@ import type { QTableColumn} from 'quasar';
 import { useQuasar } from 'quasar'
 import api from 'src/services/api'
 import type { WordRequest } from 'src/types/wordRequest'
+import translate from 'src/utils/translate'
 
 const $q = useQuasar()
 
@@ -174,28 +175,28 @@ const columns: QTableColumn = [
     {
         name: 'word',
         required: true,
-        label: 'Word',
+        label: translate('word'),
         align: 'left',
         field: 'word',
     },
     {
         name: 'description',
         required: true,
-        label: 'Description',
+        label: translate('description'),
         align: 'left',
         field: 'description',
     },
     {
         name: 'requestedBy',
         required: true,
-        label: 'Requested By',
+        label: translate('requestedBy'),
         align: 'left',
         field: 'user.email',
     },
     {
         name: 'actions',
         required: true,
-        label: 'Actions',
+        label: translate('actions'),
         align: 'center',
     },
 ]

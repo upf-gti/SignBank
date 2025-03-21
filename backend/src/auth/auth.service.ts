@@ -31,7 +31,7 @@ export class AuthService {
     return this.signToken(user.id, user.email, user.role);
   }
   
-  async signToken(userId: number, email: string, role: string) {
+  async signToken(userId: string, email: string, role: string) {
     const payload = {
       sub: userId,
       email,

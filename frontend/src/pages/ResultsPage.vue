@@ -30,7 +30,7 @@
               <video
                 ref="videoRef"
                 style="height: 150px; width: 150px; object-fit: cover"
-                :src="props.row.word.videoUrl"
+                :src="props.row.word.videoUrls[0]"
                 loop
               />
             </q-td>

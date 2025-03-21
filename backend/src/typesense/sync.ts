@@ -1,5 +1,5 @@
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections';
 import typesense from './client';
 
@@ -18,23 +18,6 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
           },
         },
         dialect: true,
-        senses: {
-          include: {
-            Translation: true,
-          }
-        },
-        translations: true,
-        videos: true,
-        relatedWords: {
-          include: {
-            targetWord: {
-              select: {
-                id: true,
-                word: true,
-              },
-            },
-          },
-        },
       },
     });
 
@@ -53,27 +36,18 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
           { name: 'description', type: 'string' },
           { name: 'createdAt', type: 'string', facet: true },
           { name: 'status', type: 'string', facet: true },
-          { name: 'dialect', type: 'string', facet: true },
-          { name: 'dialectId', type: 'int32', facet: true },
-          { name: 'lexicalCategory', type: 'string', facet: true },
-          { name: 'register', type: 'string', facet: true },
-          { name: 'movementType', type: 'string', facet: true },
-          { name: 'hasContact', type: 'bool', facet: true },
-          { name: 'facialExpression', type: 'string', facet: true },
-          { name: 'dominantHand', type: 'string', facet: true },
-          { name: 'morphologicalVariants', type: 'string' },
-          { name: 'phonologicalTranscription', type: 'string' },
-          { name: 'usageFrequency', type: 'string', facet: true },
-          { name: 'usageEra', type: 'string', facet: true },
+          { name: 'dialect', type: 'string', facet: true, optional: true },
+          { name: 'dialectId', type: 'string', facet: true, optional: true },
+          { name: 'dominantHand', type: 'string', facet: true, optional: true },
+          { name: 'register', type: 'string', facet: true, optional: true },
           { name: 'isNative', type: 'bool', facet: true },
-          { name: 'creatorId', type: 'int32' },
-          { name: 'creatorUsername', type: 'string' },
-          { name: 'senseDefinitions', type: 'string[]' },
-          { name: 'senseExamples', type: 'string[]' },
-          { name: 'translations', type: 'string[]' },
-          { name: 'relatedWords', type: 'string[]' },
-          { name: 'videoUrls', type: 'string[]' },
-          { name: 'nonManualComponents', type: 'string' }
+          { name: 'creatorId', type: 'string' },
+          { name: 'creatorUsername', type: 'string', optional: true },
+          { name: 'senseDefinitions', type: 'string[]', optional: true },
+          { name: 'senseExamples', type: 'string[]', optional: true },
+          { name: 'translations', type: 'string[]', optional: true },
+          { name: 'relatedWords', type: 'string[]', optional: true },
+          { name: 'videoUrls', type: 'string[]', optional: true },
         ],
         default_sorting_field: 'word',
         enable_nested_fields: true,
@@ -96,64 +70,84 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
 
       // Upsert all words into Typesense
       const documents = words.map((word) => {
-        // Process sense-specific translations
-        const allTranslations = [];
+        // Process sense definitions and examples
         const senseTexts = [];
         const senseExamples = [];
+        const allTranslations = [];
         
         word.senses?.forEach(sense => {
-          if (sense.definition) senseTexts.push(sense.definition);
-          if (sense.example) senseExamples.push(sense.example);
-          
-          // Add translations linked to this sense
-          sense.Translation?.forEach(translation => {
-            allTranslations.push(`${translation.language}:${translation.text}`);
+          // Process sense descriptions
+          sense.descriptions?.forEach(desc => {
+            if (desc.text) senseTexts.push(desc.text);
+            if (desc.examples) senseExamples.push(...desc.examples);
+            
+            // Add translations linked to this sense description
+            desc.translations?.forEach(translation => {
+              allTranslations.push(`${translation.language}:${translation.text}`);
+            });
           });
         });
         
-        // Add any word-level translations (if present in database)
-        word.translations?.forEach(translation => {
-          allTranslations.push(`${translation.language}:${translation.text}`);
+        // Extract video URLs from all senses
+        const videoUrls = [];
+        word.senses?.forEach(sense => {
+          sense.videos?.forEach(video => {
+            if (video.url) videoUrls.push(video.url);
+          });
         });
         
+        // Extract related words
+        const relatedWords = word.relatedWords?.map(rel => rel.wordId) || [];
+        
+        // Ensure all required fields have values to prevent indexing errors
         return {
-          id: word.id.toString(),
+          id: word.id,
           word: word.word,
-          description: word.description,
+          description: word.description || '',
           createdAt: word.createdAt.toISOString(),
-          status: word.status,
-          dialect: word.dialect?.name,
-          dialectId: word.dialectId,
-          lexicalCategory: word.lexicalCategory,
-          register: word.register,
-          movementType: word.movementType,
-          hasContact: word.hasContact,
-          facialExpression: word.facialExpression,
-          nonManualComponents: word.nonManualComponents,
-          dominantHand: word.dominantHand,
-          morphologicalVariants: word.morphologicalVariants,
-          phonologicalTranscription: word.phonologicalTranscription,
-          usageFrequency: word.usageFrequency,
-          usageEra: word.usageEra,
-          isNative: word.isNative,
-          creatorId: word.creatorId,
-          creatorUsername: word.creator?.username,
-          senseDefinitions: senseTexts,
-          senseExamples: senseExamples,
-          translations: allTranslations,
-          relatedWords: word.relatedWords?.map(rel => rel.targetWord.word) || [],
-          videoUrls: word.videos?.map(video => video.url) || []
+          status: word.status || 'PUBLISHED',
+          dialect: word.dialect?.name || '',
+          dialectId: word.dialectId || '',
+          dominantHand: 'UNKNOWN', // Default value for required field
+          register: word.register || '',
+          isNative: word.isNative || false,
+          creatorId: word.creatorId || '',
+          creatorUsername: word.creator?.username || '',
+          senseDefinitions: senseTexts.length > 0 ? senseTexts : [''],
+          senseExamples: senseExamples.length > 0 ? senseExamples : [''],
+          translations: allTranslations.length > 0 ? allTranslations : [''],
+          relatedWords: relatedWords,
+          videoUrls: videoUrls,
         };
       });
 
-      await typesense
-        .collections('words')
-        .documents()
-        .import(documents, { action: 'upsert' });
+      // Split into chunks to handle potential size limitations
+      const chunkSize = 100;
+      for (let i = 0; i < documents.length; i += chunkSize) {
+        const chunk = documents.slice(i, i + chunkSize);
+        try {
+          await typesense
+            .collections('words')
+            .documents()
+            .import(chunk, { action: 'upsert' });
+          console.log(`Successfully synced ${chunk.length} words to Typesense (chunk ${i/chunkSize + 1}).`);
+        } catch (error) {
+          console.error(`Error syncing chunk ${i/chunkSize + 1} to Typesense:`, error.message);
+          
+          // Try to import documents one by one if batch fails
+          console.log('Trying individual import for failed chunk...');
+          for (const doc of chunk) {
+            try {
+              await typesense.collections('words').documents().upsert(doc);
+              console.log(`Successfully synced word ${doc.word} individually.`);
+            } catch (docError) {
+              console.error(`Error syncing individual word ${doc.word}:`, docError.message);
+            }
+          }
+        }
+      }
 
-      console.log(
-        `Successfully synced ${documents.length} words to Typesense.`,
-      );
+      console.log(`Completed sync of ${documents.length} words to Typesense.`);
     } catch (error) {
       console.error('Error syncing words to Typesense:', error.message);
     }
@@ -165,7 +159,7 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
     await this.syncWordsToTypesense();
   }
 
-  async syncSingleWord(wordId: number) {
+  async syncSingleWord(wordId: string) {
     try {
       const word = await this.prisma.words.findUnique({
         where: { id: wordId },
@@ -177,23 +171,6 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
             },
           },
           dialect: true,
-          senses: {
-            include: {
-              Translation: true,
-            }
-          },
-          translations: true,
-          videos: true,
-          relatedWords: {
-            include: {
-              targetWord: {
-                select: {
-                  id: true,
-                  word: true,
-                },
-              },
-            },
-          },
         },
       });
 
@@ -202,53 +179,54 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
         return;
       }
 
-      // Process sense-specific translations
-      const allTranslations = [];
+      // Process sense definitions and examples
       const senseTexts = [];
       const senseExamples = [];
+      const allTranslations = [];
       
       word.senses?.forEach(sense => {
-        if (sense.definition) senseTexts.push(sense.definition);
-        if (sense.example) senseExamples.push(sense.example);
-        
-        // Add translations linked to this sense
-        sense.Translation?.forEach(translation => {
-          allTranslations.push(`${translation.language}:${translation.text}`);
+        // Process sense descriptions
+        sense.descriptions?.forEach(desc => {
+          if (desc.text) senseTexts.push(desc.text);
+          if (desc.examples) senseExamples.push(...desc.examples);
+          
+          // Add translations linked to this sense description
+          desc.translations?.forEach(translation => {
+            allTranslations.push(`${translation.language}:${translation.text}`);
+          });
         });
       });
       
-      // Add any word-level translations
-      word.translations?.forEach(translation => {
-        allTranslations.push(`${translation.language}:${translation.text}`);
+      // Extract video URLs from all senses
+      const videoUrls = [];
+      word.senses?.forEach(sense => {
+        sense.videos?.forEach(video => {
+          if (video.url) videoUrls.push(video.url);
+        });
       });
+      
+      // Extract related words
+      const relatedWords = word.relatedWords?.map(rel => rel.wordId) || [];
 
+      // Ensure all required fields have values to prevent indexing errors
       const document = {
-        id: word.id.toString(),
+        id: word.id,
         word: word.word,
-        description: word.description,
+        description: word.description || '',
         createdAt: word.createdAt.toISOString(),
-        status: word.status,
-        dialect: word.dialect?.name,
-        dialectId: word.dialectId,
-        lexicalCategory: word.lexicalCategory,
-        register: word.register,
-        movementType: word.movementType,
-        hasContact: word.hasContact,
-        facialExpression: word.facialExpression,
-        nonManualComponents: word.nonManualComponents,
-        dominantHand: word.dominantHand,
-        morphologicalVariants: word.morphologicalVariants,
-        phonologicalTranscription: word.phonologicalTranscription,
-        usageFrequency: word.usageFrequency,
-        usageEra: word.usageEra,
-        isNative: word.isNative,
-        creatorId: word.creatorId,
-        creatorUsername: word.creator?.username,
-        senseDefinitions: senseTexts,
-        senseExamples: senseExamples,
-        translations: allTranslations,
-        relatedWords: word.relatedWords?.map(rel => rel.targetWord.word) || [],
-        videoUrls: word.videos?.map(video => video.url) || []
+        status: word.status || 'PUBLISHED',
+        dialect: word.dialect?.name || '',
+        dialectId: word.dialectId || '',
+        dominantHand: 'UNKNOWN', // Default value for required field
+        register: word.register || '',
+        isNative: word.isNative || false,
+        creatorId: word.creatorId || '',
+        creatorUsername: word.creator?.username || '',
+        senseDefinitions: senseTexts.length > 0 ? senseTexts : [''],
+        senseExamples: senseExamples.length > 0 ? senseExamples : [''],
+        translations: allTranslations.length > 0 ? allTranslations : [''],
+        relatedWords: relatedWords,
+        videoUrls: videoUrls,
       };
 
       await typesense

@@ -106,12 +106,12 @@ async function main() {
           ],
           videos: [
             {
-              url: 'https://example.com/videos/hello_front.mp4',
+              url: 'https://signbank.upf.com/images/video.mp4',
               angle: 'Front',
               priority: 1
             },
             {
-              url: 'https://example.com/videos/hello_side.mp4',
+              url: 'https://signbank.upf.com/images/video.mp4',
               angle: 'Side',
               priority: 2
             }
@@ -150,7 +150,7 @@ async function main() {
           ],
           videos: [
             {
-              url: 'https://example.com/videos/cat_front.mp4',
+              url: 'https://signbank.upf.com/images/video.mp4',
               angle: 'Front',
               priority: 1
             }
@@ -230,12 +230,12 @@ async function main() {
           
           videos: [
             {
-              url: 'https://example.com/videos/hello_front.mp4',
+              url: 'https://signbank.upf.com/images/video.mp4',
               angle: 'Front',
               priority: 1
             },
             {
-              url: 'https://example.com/videos/hello_side.mp4',
+              url: 'https://signbank.upf.com/images/video.mp4',
               angle: 'Side',
               priority: 2
             }
@@ -285,7 +285,7 @@ async function main() {
           
           videos: [
             {
-              url: 'https://example.com/videos/cat_front.mp4',
+              url: 'https://signbank.upf.com/images/video.mp4',
               angle: 'Front',
               priority: 1
             }
@@ -345,7 +345,7 @@ async function main() {
           
           videos: [
             {
-              url: 'https://example.com/videos/run_front.mp4',
+              url: 'https://signbank.upf.com/images/video.mp4',
               angle: 'Front',
               priority: 1
             }

@@ -60,10 +60,11 @@ services:
     volumes:
       - ./mongoDB/data:/data/db
       - ./mongoDB/initdb.d:/docker-entrypoint-initdb.d
-      - ./mongoDB/keyfile:/data/keyfile
+      - ./mongoDB/keyfile:/tmp/keyfile:ro
+      - ./mongoDB/setup-keyfile.sh:/setup-keyfile.sh:ro
     ports:
       - 27017:27017
-    command: --replSet rs0 --bind_ip_all --keyFile /data/keyfile
+    command: bash /setup-keyfile.sh
   typesense:
     image: typesense/typesense:27.1
     restart: on-failure

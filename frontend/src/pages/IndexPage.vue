@@ -5,7 +5,7 @@
   >
     <div class="search-container">
       <h1 class="text-h4 text-center q-mb-lg">
-        Sign Language Dictionary
+        {{ translate('signLanguageDictionary') }}
       </h1>
       
       <q-form
@@ -14,7 +14,7 @@
       >
         <q-input
           v-model="search"
-          label="Enter a word"
+          :label="translate('enterAWord')"
           filled
           clearable
           :rules="[val => !!val || 'Please enter a word']"
@@ -27,7 +27,7 @@
         
         <div class="row justify-center">
           <q-btn
-            label="Search"
+            :label="translate('search')"
             color="primary"
             type="submit"
             class="q-px-xl"
@@ -41,7 +41,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-
+import translate from 'src/utils/translate';
 const router = useRouter();
 const search = ref('');
 

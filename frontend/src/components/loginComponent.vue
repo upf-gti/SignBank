@@ -26,7 +26,7 @@
           <q-input
             v-model="email"
             type="email"
-            label="Email"
+            :label="translate('email')"
             :rules="[val => !!val || 'Email is required']"
             filled
           >
@@ -38,7 +38,7 @@
           <q-input
             v-model="password"
             :type="isPwd ? 'password' : 'text'"
-            label="Password"
+            :label="translate('password')"
             :rules="[val => !!val || 'Password is required']"
             filled
           >
@@ -55,23 +55,19 @@
           </q-input>
 
           <div class="row justify-between items-center">
-            <q-checkbox
-              v-model="rememberMe"
-              label="Remember me"
-            />
             <q-btn
               flat
               dense
               color="primary"
-              label="Forgot Password?"
+              :label="translate('forgotPassword')"
             />
           </div>
 
           <div class="row q-mt-md">
             <q-btn
               type="submit"
-              color="primary"
-              label="Login"
+              color="primary"              
+              :label="translate('login')"
               class="full-width"
               :loading="loading"
             />
@@ -87,7 +83,7 @@ import { ref, computed } from 'vue'
 import { Notify } from 'quasar'
 import api from '../services/api'
 import useUser from 'src/stores/user.store'
-
+import translate from '../utils/translate'
 const userStore = useUser()
 
 // Props

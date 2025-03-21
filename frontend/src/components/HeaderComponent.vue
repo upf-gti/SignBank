@@ -7,6 +7,11 @@
     <q-toolbar class="row no-wrap">
       <q-toolbar-title class="col">
         <q-img
+          src="https://dlc.iec.cat/img/LOGO_IEC2.png"
+          class="q-ma-md"
+          style="width: 50px;"
+        />
+        <q-img
           class="header-logo cursor-pointer q-mr-md"
           src="https://www.upf.edu/o/upf-2016-theme/images/upf/logo.png"
           @click="$router.push('/')"
