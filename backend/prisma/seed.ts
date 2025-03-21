@@ -1,6 +1,5 @@
 import { PrismaClient, Role, RequestStatus, Language, LexicalCategory, RelationType, Hand, WordStatus, EditStatus } from '@prisma/client';
-import * as bcrypt from 'bcrypt';
-
+import * as argon2 from 'argon2';
 const prisma = new PrismaClient();
 
 async function main() {
@@ -18,8 +17,8 @@ async function main() {
   await prisma.users.deleteMany();
 
   // Create users
-  const adminPassword = await bcrypt.hash('admin123', 10);
-  const userPassword = await bcrypt.hash('user123', 10);
+  const adminPassword = await argon2.hash('admin123');
+  const userPassword = await argon2.hash('user123');
   
   const admin = await prisma.users.create({
     data: {
@@ -311,7 +310,6 @@ async function main() {
   // Cat - animal translations
   await prisma.translation.create({
     data: {
-        
       text: 'Gat',
       language: Language.CATALAN,
       senseId: catSense.id,
