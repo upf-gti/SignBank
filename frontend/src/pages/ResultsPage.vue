@@ -20,7 +20,9 @@
       >
         <template #body="props">
           <q-tr
+            class="cursor-pointer"
             :props="props"
+            @click="openWord(props.row.word.id)"
             @mouseenter="$event.target.querySelector('video').play()"
             @mouseleave="$event.target.querySelector('video').pause()"
           >
@@ -53,14 +55,15 @@
 
 <script setup lang="ts">
 
-import type {Hit, SearchResponse} from 'src/types/word'
+import type {SearchHit, SearchResponse} from 'src/types/word'
 import { onMounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import api from 'src/services/api'
 import wordStructure from 'src/utils/wordStructure'
 const route = useRoute()
-const searchResult = ref<SearchResponse>({hits: [] as Hit[], found: 0, page: 1, total: 0} as SearchResponse)
+const searchResult = ref<SearchResponse>({hits: [] as SearchHit[], found: 0, page: 1, total: 0} as SearchResponse)
 const pageHeight = ref(0)
+const router = useRouter()
 
 watch(() => route.query.search, (newSearch) => {
   if (newSearch) {
@@ -77,6 +80,12 @@ function search(word: string) {
       searchResult.value = response.data
   }).catch((error) => {
       console.log(error)
+  })
+}
+
+function openWord(wordId: string) {
+  router.push(`/word/${wordId}`).catch((error) => {
+    console.log(error)
   })
 }
 

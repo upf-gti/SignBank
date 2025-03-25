@@ -190,16 +190,18 @@ async function main() {
 
   // Create words
   console.log('Creating words...');
-  const helloWord = await prisma.words.create({
+  
+  // Create Arma (weapon)
+  const armaWord = await prisma.words.create({
     data: {
-      word: 'HOLA',
-      description: 'Common greeting sign used across various contexts',
+      word: 'ARMA',
+      description: 'Signe que representa una arma o arma de foc',
       creatorId: user1.id,
       status: WordStatus.PUBLISHED,
       isNative: true,
-      register: 'Informal',
+      register: 'Estàndard',
       currentVersion: 1,
-      isCreatedFromRequest: true,
+      isCreatedFromRequest: false,
       acceptedById: admin.id,
       dialectId: barcelonaDialect.id,
       
@@ -207,23 +209,23 @@ async function main() {
         {
           priority: 1,
           dominantHand: Hand.RIGHT,
-          facialExpression: 'Smiling',
+          facialExpression: 'Seriós',
           hasContact: false,
-          movementType: 'Waving',
-          nonManualComponents: 'Slight head nod',
-          morphologicalVariants: 'HOLA, HOLA+',
-          phonologicalTranscription: 'H-O-L-A',
-          usageFrequency: 'Very common',
-          usageEra: 'Contemporary',
+          movementType: 'Imitant subjectar una pistola',
+          nonManualComponents: 'Expressió facial tensa',
+          morphologicalVariants: 'ARMA, PISTOLA',
+          phonologicalTranscription: 'A-R-M-A',
+          usageFrequency: 'Comú',
+          usageEra: 'Contemporani',
           
           descriptions: [
             {
-              text: 'A greeting used when meeting someone',
-              examples: ['HOLA, COM ESTÀS?'],
+              text: 'Un objecte dissenyat o utilitzat per infligir dany o danys físics',
+              examples: ['TENIR UNA ARMA', 'ARMA DE FOC'],
               translations: [
-                { text: 'Hola', language: Language.CATALAN },
-                { text: 'Hello', language: Language.ENGLISH },
-                { text: 'Hola', language: Language.SPANISH }
+                { text: 'Arma', language: Language.CATALAN },
+                { text: 'Weapon', language: Language.ENGLISH },
+                { text: 'Arma', language: Language.SPANISH }
               ]
             }
           ],
@@ -231,13 +233,8 @@ async function main() {
           videos: [
             {
               url: 'https://signbank.upf.com/images/video.mp4',
-              angle: 'Front',
+              angle: 'Frontal',
               priority: 1
-            },
-            {
-              url: 'https://signbank.upf.com/images/video.mp4',
-              angle: 'Side',
-              priority: 2
             }
           ]
         }
@@ -245,16 +242,17 @@ async function main() {
     },
   });
 
-  const catWord = await prisma.words.create({
+  // Create Arna (moth)
+  const arnaWord = await prisma.words.create({
     data: {
-      word: 'GAT',
-      description: 'Sign representing a domestic feline animal',
+      word: 'ARNA',
+      description: 'Signe que representa una arna o arna de la roba',
       creatorId: user2.id,
       status: WordStatus.PUBLISHED,
       isNative: true,
-      register: 'Standard',
+      register: 'Estàndard',
       currentVersion: 1,
-      isCreatedFromRequest: true,
+      isCreatedFromRequest: false,
       acceptedById: admin.id,
       dialectId: barcelonaDialect.id,
       
@@ -263,22 +261,22 @@ async function main() {
           priority: 1,
           dominantHand: Hand.BOTH,
           facialExpression: 'Neutral',
-          hasContact: true,
-          movementType: 'Mimicking whiskers',
-          nonManualComponents: 'None',
-          morphologicalVariants: 'GAT, GATET',
-          phonologicalTranscription: 'G-A-T',
-          usageFrequency: 'Common',
-          usageEra: 'Contemporary',
+          hasContact: false,
+          movementType: 'Moviment d\'aletejament amb les mans',
+          nonManualComponents: 'Lleugera inclinació del cap',
+          morphologicalVariants: 'ARNA, PAPALLONA-NOCTURNA',
+          phonologicalTranscription: 'A-R-N-A',
+          usageFrequency: 'Poc comú',
+          usageEra: 'Contemporani',
           
           descriptions: [
             {
-              text: 'A small domesticated carnivorous mammal with soft fur',
-              examples: ['EL MEU GAT ÉS NEGRE'],
+              text: 'Un insecte nocturn similar a una papallona amb ales que aletegen',
+              examples: ['HI HA UNA ARNA A L\'ARMARI', 'LES ARNES MENGEN ROBA'],
               translations: [
-                { text: 'Gat', language: Language.CATALAN },
-                { text: 'Cat', language: Language.ENGLISH },
-                { text: 'Gato', language: Language.SPANISH }
+                { text: 'Arna', language: Language.CATALAN },
+                { text: 'Moth', language: Language.ENGLISH },
+                { text: 'Polilla', language: Language.SPANISH }
               ]
             }
           ],
@@ -286,22 +284,8 @@ async function main() {
           videos: [
             {
               url: 'https://signbank.upf.com/images/video.mp4',
-              angle: 'Front',
+              angle: 'Frontal',
               priority: 1
-            }
-          ]
-        },
-        {
-          priority: 2,
-          descriptions: [
-            {
-              text: 'A person who plays a minor role or is an extra in a performance',
-              examples: ['ELL ÉS UN GAT EN AQUESTA OBRA'],
-              translations: [
-                { text: 'Figurant', language: Language.CATALAN },
-                { text: 'Extra', language: Language.ENGLISH },
-                { text: 'Extra', language: Language.SPANISH }
-              ]
             }
           ]
         }
@@ -309,36 +293,39 @@ async function main() {
     },
   });
 
-  // Create a word with multiple senses 
-  const runWord = await prisma.words.create({
+  // Create Coll (with multiple senses)
+  const collWord = await prisma.words.create({
     data: {
-      word: 'CÓRRER',
-      description: 'Sign with multiple meanings related to movement and operation',
+      word: 'COLL',
+      description: 'Signe amb múltiples significats relacionats amb el coll d\'una persona o un pas de muntanya',
       creatorId: admin.id,
       status: WordStatus.PUBLISHED,
       isNative: true,
-      register: 'Standard',
+      register: 'Estàndard',
       currentVersion: 1,
       dialectId: barcelonaDialect.id,
       
       senses: [
         {
           priority: 1,
-          dominantHand: Hand.BOTH,
-          facialExpression: 'Intensity',
-          hasContact: false,
-          movementType: 'Alternating',
-          usageFrequency: 'Common',
-          usageEra: 'Contemporary',
+          dominantHand: Hand.RIGHT,
+          facialExpression: 'Neutral',
+          hasContact: true,
+          movementType: 'Moviment de tocar o acariciar el coll',
+          nonManualComponents: 'Lleugera inclinació del cap',
+          morphologicalVariants: 'COLL',
+          phonologicalTranscription: 'C-O-L-L',
+          usageFrequency: 'Comú',
+          usageEra: 'Contemporani',
           
           descriptions: [
             {
-              text: 'To move at a speed faster than walking',
-              examples: ['CÓRRER AL PARC'],
+              text: 'La part del cos que connecta el cap amb les espatlles',
+              examples: ['TINC MAL DE COLL', 'PORTA UN COLLARET AL COLL'],
               translations: [
-                { text: 'Córrer', language: Language.CATALAN },
-                { text: 'Run', language: Language.ENGLISH },
-                { text: 'Correr', language: Language.SPANISH }
+                { text: 'Coll', language: Language.CATALAN },
+                { text: 'Neck', language: Language.ENGLISH },
+                { text: 'Cuello', language: Language.SPANISH }
               ]
             }
           ],
@@ -346,114 +333,83 @@ async function main() {
           videos: [
             {
               url: 'https://signbank.upf.com/images/video.mp4',
-              angle: 'Front',
+              angle: 'Frontal',
               priority: 1
             }
           ]
         },
         {
           priority: 2,
-          descriptions: [
-            {
-              text: 'To manage or be in charge of an organization or activity',
-              examples: ['CÓRRER UNA EMPRESA'],
-              translations: [
-                { text: 'Gestionar', language: Language.CATALAN },
-                { text: 'Manage', language: Language.ENGLISH },
-                { text: 'Gestionar', language: Language.SPANISH }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-  });
-
-  // Create regional variant
-  const catVariant = await prisma.words.create({
-    data: {
-      word: 'GAT-GIRONA',
-      description: 'Girona dialect version of the sign for cat',
-      creatorId: user1.id,
-      status: WordStatus.PUBLISHED,
-      isNative: true,
-      register: 'Regional',
-      currentVersion: 1,
-      dialectId: gironaDialect.id,
-      
-      senses: [
-        {
-          priority: 1,
           dominantHand: Hand.BOTH,
           facialExpression: 'Neutral',
-          hasContact: true,
-          movementType: 'Alternating tap',
-          usageFrequency: 'Common',
-          usageEra: 'Contemporary',
+          hasContact: false,
+          movementType: 'Dues mans formant forma de muntanya amb depressió',
+          usageFrequency: 'Comú',
+          usageEra: 'Contemporani',
           
           descriptions: [
             {
-              text: 'A small domesticated carnivorous mammal with soft fur (Girona variant)',
-              examples: ['EL MEU GAT ÉS NEGRE'],
+              text: 'Un pas o bretxa entre muntanyes o turons',
+              examples: ['HEM CREUAT EL COLL DE LA MUNTANYA', 'AQUEST COLL CONNECTA DUES VALLS'],
               translations: [
-                { text: 'Gat', language: Language.CATALAN },
-                { text: 'Cat', language: Language.ENGLISH },
-                { text: 'Gato', language: Language.SPANISH }
+                { text: 'Coll (de muntanya)', language: Language.CATALAN },
+                { text: 'Mountain pass', language: Language.ENGLISH },
+                { text: 'Puerto de montaña', language: Language.SPANISH }
+              ]
+            }
+          ],
+          videos: [
+            {
+              url: 'https://signbank.upf.com/images/video.mp4',
+              angle: 'Frontal',
+              priority: 1
+            }
+          ]
+        },
+        {
+          priority: 3,
+          dominantHand: Hand.RIGHT,
+          facialExpression: 'Neutral',
+          hasContact: false,
+          
+          descriptions: [
+            {
+              text: 'La part estreta d\'una ampolla o altre recipient',
+              examples: ['EL COLL DE L\'AMPOLLA', 'TRENCA EL COLL DE L\'AMPOLLA'],
+              translations: [
+                { text: 'Coll (d\'ampolla)', language: Language.CATALAN },
+                { text: 'Bottleneck', language: Language.ENGLISH },
+                { text: 'Cuello de botella', language: Language.SPANISH }
               ]
             }
           ]
         }
-      ],
-      
-      // Word relations - add regional variant relationship
-      relatedWords: [
-        {
-          wordId: catWord.id,
-          relationType: RelationType.REGIONAL_VARIANT
-        }
       ]
     },
   });
+  
   console.log('Created words');
 
-  // Add relation from cat word to variant (both directions)
-  console.log('Creating word relations...');
-  try {
-    await prisma.words.update({
-      where: { id: catWord.id },
-      data: {
-        relatedWords: {
-          push: {
-            wordId: catVariant.id,
-            relationType: RelationType.REGIONAL_VARIANT
-          }
-        }
-      }
-    });
-    console.log('Created word relations');
-  } catch (error) {
-    console.error('Error creating word relations:', error);
-  }
+  // Word relations - removed since we have new words
 
   // Create word edits
   console.log('Creating word edits...');
   try {
     await prisma.wordEdit.create({
       data: {
-        wordId: catWord.id,
+        wordId: armaWord.id,
         editorId: user1.id,
-        comment: 'Improving description and facial expression details',
+        comment: 'Afegint context addicional sobre diferents tipus d\'armes',
         status: EditStatus.PENDING,
         proposedChanges: {
-          description: 'Updated description for cat sign',
+          description: 'Signe que representa una arma, arma de foc o altre eina de combat',
           senses: [
             {
               priority: 1,
-              facialExpression: 'Whiskers movement',
               descriptions: [
                 {
-                  text: 'A small domesticated carnivorous mammal with soft fur and whiskers',
-                  examples: ['EL MEU GAT ÉS NEGRE']
+                  text: 'Un objecte dissenyat o utilitzat per infligir dany o danys físics, incloent armes de foc, ganivets, etc.',
+                  examples: ['TENIR UNA ARMA', 'ARMA DE FOC']
                 }
               ]
             }
@@ -464,15 +420,15 @@ async function main() {
 
     await prisma.wordEdit.create({
       data: {
-        wordId: helloWord.id, 
+        wordId: collWord.id, 
         editorId: user2.id,
-        comment: 'Adding more details on non-manual components',
+        comment: 'Afegint descripció més detallada del moviment per al sentit de pas de muntanya',
         status: EditStatus.APPROVED,
         proposedChanges: {
           senses: [
             {
-              priority: 1,
-              nonManualComponents: 'Head nod and smile'
+              priority: 2,
+              movementType: 'Dues mans formant forma de muntanya amb depressió al mig representant el pas'
             }
           ]
         }
@@ -488,21 +444,30 @@ async function main() {
   try {
     await prisma.wordEditHistoric.create({
       data: {
-        originalWordId: helloWord.id,
+        originalWordId: collWord.id,
         versionNumber: 1,
         archivedAt: new Date(Date.now() - 86400000), // 1 day ago
         wordData: {
-          word: 'HOLA',
-          description: 'Common greeting sign used across various contexts',
-          creatorId: user1.id,
+          word: 'COLL',
+          description: 'Signe amb múltiples significats relacionats amb el coll o pas de muntanya',
+          creatorId: admin.id,
           dialectId: barcelonaDialect.id,
           status: 'PUBLISHED',
           senses: [
             {
               priority: 1,
               dominantHand: 'RIGHT',
-              facialExpression: 'Smiling',
-              nonManualComponents: 'Slight head nod' // This got updated
+              facialExpression: 'Neutral',
+              nonManualComponents: 'Cap' // This got updated
+            },
+            {
+              priority: 2,
+              dominantHand: 'BOTH',
+              descriptions: [
+                {
+                  text: 'Un pas o bretxa entre muntanyes o turons'
+                }
+              ]
             }
           ]
         }
@@ -517,7 +482,7 @@ async function main() {
   console.log('Updating version numbers...');
   try {
     await prisma.words.update({
-      where: { id: helloWord.id },
+      where: { id: collWord.id },
       data: { currentVersion: 2 }
     });
     console.log('Updated version numbers');
@@ -540,28 +505,28 @@ async function main() {
     // Create new requests with proper connection
     await prisma.wordRequest.create({
       data: {
-        requestedWord: 'HOLA',
-        requestedDescription: 'Common greeting sign',
+        requestedWord: 'ARMA',
+        requestedDescription: 'Signe que representa una arma o arma de foc',
         userId: user1.id,
         status: RequestStatus.ACCEPTED,
         dominantHand: Hand.RIGHT,
-        facialExpression: 'Smiling',
+        facialExpression: 'Seriós',
         hasContact: false,
-        lexicalCategory: LexicalCategory.INTERJECTION,
+        lexicalCategory: LexicalCategory.NOUN,
         dialectId: barcelonaDialect.id,
-        createdWordId: helloWord.id,
+        createdWordId: armaWord.id,
         requestedSenses: [
           {
             priority: 1,
             dominantHand: Hand.RIGHT,
             descriptions: [
               {
-                text: 'A greeting used when meeting someone',
-                examples: ['HOLA, COM ESTÀS?'],
+                text: 'Un objecte dissenyat o utilitzat per infligir dany o danys físics',
+                examples: ['TENIR UNA ARMA', 'ARMA DE FOC'],
                 translations: [
-                  { text: 'Hola', language: Language.CATALAN },
-                  { text: 'Hello', language: Language.ENGLISH },
-                  { text: 'Hola', language: Language.SPANISH }
+                  { text: 'Arma', language: Language.CATALAN },
+                  { text: 'Weapon', language: Language.ENGLISH },
+                  { text: 'Arma', language: Language.SPANISH }
                 ]
               }
             ]
@@ -572,28 +537,28 @@ async function main() {
 
     await prisma.wordRequest.create({
       data: {
-        requestedWord: 'GAT',
-        requestedDescription: 'Domestic feline animal',
+        requestedWord: 'ARNA',
+        requestedDescription: 'Signe que representa una arna o arna de la roba',
         userId: user2.id,
         status: RequestStatus.ACCEPTED,
         dominantHand: Hand.BOTH,
-        hasContact: true,
+        hasContact: false,
         facialExpression: 'Neutral',
         lexicalCategory: LexicalCategory.NOUN,
         dialectId: barcelonaDialect.id,
-        createdWordId: catWord.id,
+        createdWordId: arnaWord.id,
         requestedSenses: [
           {
             priority: 1,
             dominantHand: Hand.BOTH,
             descriptions: [
               {
-                text: 'A small domesticated carnivorous mammal with soft fur',
-                examples: ['EL MEU GAT ÉS NEGRE'],
+                text: 'Un insecte nocturn similar a una papallona amb ales que aletegen',
+                examples: ['HI HA UNA ARNA A L\'ARMARI'],
                 translations: [
-                  { text: 'Gat', language: Language.CATALAN },
-                  { text: 'Cat', language: Language.ENGLISH },
-                  { text: 'Gato', language: Language.SPANISH }
+                  { text: 'Arna', language: Language.CATALAN },
+                  { text: 'Moth', language: Language.ENGLISH },
+                  { text: 'Polilla', language: Language.SPANISH }
                 ]
               }
             ]

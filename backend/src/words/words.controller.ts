@@ -22,7 +22,7 @@ export class WordsController {
 
   @Public()
   @Get('details/:id')
-  async getWordDetailsById(@Param('id', ParseIntPipe) id: string) {
+  async getWordDetailsById(@Param('id') id: string) {
     return this.wordsService.getWordDetailsById(id);
   }
 }
