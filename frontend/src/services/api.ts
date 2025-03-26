@@ -1,6 +1,6 @@
 import type { AxiosResponse } from "axios"
 import { apiClient } from "src/boot/axios"
-import type { SearchResponse } from "src/types/word"
+import type { SearchResponse, Words } from "src/types/word"
 
 // Create API service object
 export const api = {
@@ -24,6 +24,15 @@ export const api = {
   words: {
     search(query: string, limit: number = 100, filters?: Record<string, any>): Promise<AxiosResponse<SearchResponse>> {
       return apiClient.get('/words/search', { params: { q: query, limit, ...filters } })
+    },
+    details(id: string): Promise<AxiosResponse<Words>> {
+      return apiClient.get(`/words/details/${id}`)
+    },
+    create(word: Words): Promise<AxiosResponse<Words>> {
+      return apiClient.post('/words', word)
+    },
+    requestEdit(word: Words): Promise<AxiosResponse<any>> {
+      return apiClient.post(`/words/edit-requests`, word)
     }
   }
 }

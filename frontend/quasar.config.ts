@@ -87,7 +87,8 @@ export default defineConfig(() => {
           eslint: {
             lintCommand: 'eslint -c ./eslint.config.js "./src*/**/*.{ts,js,mjs,cjs,vue}"',
             useFlatConfig: true
-          }
+          },
+          overlay: false  // Disables the error overlay button
         }, { server: false }]
       ]
     },

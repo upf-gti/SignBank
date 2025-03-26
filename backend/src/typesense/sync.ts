@@ -33,7 +33,6 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
         fields: [
           { name: 'id', type: 'string' },
           { name: 'word', type: 'string', facet: false, sort: true },
-          { name: 'description', type: 'string' },
           { name: 'createdAt', type: 'string', facet: true },
           { name: 'status', type: 'string', facet: true },
           { name: 'dialect', type: 'string', facet: true, optional: true },
@@ -103,7 +102,6 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
         return {
           id: word.id,
           word: word.word,
-          description: word.description || '',
           createdAt: word.createdAt.toISOString(),
           status: word.status || 'PUBLISHED',
           dialect: word.dialect?.name || '',
@@ -212,7 +210,6 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
       const document = {
         id: word.id,
         word: word.word,
-        description: word.description || '',
         createdAt: word.createdAt.toISOString(),
         status: word.status || 'PUBLISHED',
         dialect: word.dialect?.name || '',

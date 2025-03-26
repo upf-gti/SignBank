@@ -18,11 +18,11 @@
         :style="'height: '+ pageHeight +'px'"
         :columns="wordStructure"
       >
-        <template #body="props">
+        <template #body="scope: BodyScope">
           <q-tr
             class="cursor-pointer"
-            :props="props"
-            @click="openWord(props.row.word.id)"
+            :props="scope"
+            @click="openWord(scope.row.word.id)"
             @mouseenter="$event.target.querySelector('video').play()"
             @mouseleave="$event.target.querySelector('video').pause()"
           >
@@ -32,19 +32,19 @@
               <video
                 ref="videoRef"
                 style="height: 150px; width: 150px; object-fit: cover"
-                :src="props.row.word.videoUrls[0]"
+                :src="scope.row.word.description"
                 loop
               />
             </q-td>
             <q-td
               key="word"
             >
-              {{ props.row.word.word }}
+              {{ scope.row.word.word }}
             </q-td>
             <q-td
               key="description"
             >
-              {{ props.row.word.description }}
+              {{ getMostImportantDescription(scope.row.word) }}
             </q-td>
           </q-tr>
         </template>
@@ -64,6 +64,11 @@ const route = useRoute()
 const searchResult = ref<SearchResponse>({hits: [] as SearchHit[], found: 0, page: 1, total: 0} as SearchResponse)
 const pageHeight = ref(0)
 const router = useRouter()
+import type { QTableSlots } from 'quasar';
+
+interface BodyScope<T = SearchHit> extends Parameters<QTableSlots["body"]> {
+  row: T;
+}
 
 watch(() => route.query.search, (newSearch) => {
   if (newSearch) {
@@ -89,6 +94,24 @@ function openWord(wordId: string) {
   })
 }
 
+function getMostImportantDescription(word: any): string {
+  // If there are no senses, fall back to the general description
+  if (!word.senses || word.senses.length === 0) {
+    return word.description || '';
+  }
+
+  // Sort senses by priority if they exist (lower number = higher priority)
+  const sortedSenses = [...word.senses].sort((a: any, b: any) => (a.priority || 0) - (b.priority || 0));
+  const primarySense = sortedSenses[0];
+  
+  // Check if the primary sense has descriptions
+  if (primarySense && primarySense.descriptions && primarySense.descriptions.length > 0) {
+    return primarySense.descriptions[0].text;
+  }
+  
+  // Fall back to the general description if no sense descriptions are available
+  return word.description || '';
+}
 </script>
 <style lang="sass">
 .my-sticky-header-table

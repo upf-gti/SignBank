@@ -195,15 +195,27 @@ async function main() {
   const armaWord = await prisma.words.create({
     data: {
       word: 'ARMA',
-      description: 'Signe que representa una arma o arma de foc',
-      creatorId: user1.id,
+      creator: {
+        connect: {
+          id: user1.id
+        }
+      },
       status: WordStatus.PUBLISHED,
       isNative: true,
       register: 'Estàndard',
       currentVersion: 1,
       isCreatedFromRequest: false,
-      acceptedById: admin.id,
-      dialectId: barcelonaDialect.id,
+      isCreatedFromEdit: false,
+      acceptedBy: {
+        connect: {
+          id: admin.id
+        }
+      },
+      dialect: {
+        connect: {
+          id: barcelonaDialect.id
+        }
+      },
       
       senses: [
         {
@@ -246,15 +258,27 @@ async function main() {
   const arnaWord = await prisma.words.create({
     data: {
       word: 'ARNA',
-      description: 'Signe que representa una arna o arna de la roba',
-      creatorId: user2.id,
+      creator: {
+        connect: {
+          id: user2.id
+        }
+      },
       status: WordStatus.PUBLISHED,
       isNative: true,
       register: 'Estàndard',
       currentVersion: 1,
       isCreatedFromRequest: false,
-      acceptedById: admin.id,
-      dialectId: barcelonaDialect.id,
+      isCreatedFromEdit: false,
+      acceptedBy: {
+        connect: {
+          id: admin.id
+        }
+      },
+      dialect: {
+        connect: {
+          id: barcelonaDialect.id
+        }
+      },
       
       senses: [
         {
@@ -297,13 +321,22 @@ async function main() {
   const collWord = await prisma.words.create({
     data: {
       word: 'COLL',
-      description: 'Signe amb múltiples significats relacionats amb el coll d\'una persona o un pas de muntanya',
-      creatorId: admin.id,
+      creator: {
+        connect: {
+          id: admin.id
+        }
+      },
       status: WordStatus.PUBLISHED,
       isNative: true,
       register: 'Estàndard',
       currentVersion: 1,
-      dialectId: barcelonaDialect.id,
+      isCreatedFromRequest: false,
+      isCreatedFromEdit: false,
+      dialect: {
+        connect: {
+          id: barcelonaDialect.id
+        }
+      },
       
       senses: [
         {
@@ -408,7 +441,7 @@ async function main() {
               priority: 1,
               descriptions: [
                 {
-                  text: 'Un objecte dissenyat o utilitzat per infligir dany o danys físics, incloent armes de foc, ganivets, etc.',
+                  text: 'Un objecte dissenyat o utilitzat per infligir dany o danys físics, INCLUDING armes de foc, ganivets, etc.',
                   examples: ['TENIR UNA ARMA', 'ARMA DE FOC']
                 }
               ]
@@ -449,7 +482,6 @@ async function main() {
         archivedAt: new Date(Date.now() - 86400000), // 1 day ago
         wordData: {
           word: 'COLL',
-          description: 'Signe amb múltiples significats relacionats amb el coll o pas de muntanya',
           creatorId: admin.id,
           dialectId: barcelonaDialect.id,
           status: 'PUBLISHED',

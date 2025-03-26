@@ -1,0 +1,106 @@
+<template>
+  <div class="video-player">
+    <q-card class="video-card">
+      <q-card-section>
+        <div class="text-h6">{{ translate('word_detail.field.videos') }}</div>
+        
+        <div v-if="videos.length > 0" class="video-container">
+          <q-video 
+            :src="currentVideo!.url"
+            class="q-mb-md"
+          />
+          
+          <div class="text-caption q-mb-md">
+            {{ translate('word_detail.field.angle') }}: 
+            {{ currentVideo!.angle || translate('word_detail.notSpecified') }}
+          </div>
+          
+          <!-- Video navigation -->
+          <div v-if="videos.length > 1" class="video-navigation q-mb-md">
+            <q-btn 
+              icon="navigate_before" 
+              color="primary" 
+              flat 
+              round 
+              :disable="currentIndex === 0"
+              @click="prevVideo" 
+            />
+            
+            <span class="q-mx-sm">
+              {{ currentIndex + 1 }} / {{ videos.length }}
+            </span>
+            
+            <q-btn 
+              icon="navigate_next" 
+              color="primary" 
+              flat 
+              round 
+              :disable="currentIndex === videos.length - 1"
+              @click="nextVideo" 
+            />
+          </div>
+        </div>
+        
+        <div v-else class="no-videos">
+          {{ translate('word_detail.noVideos') }}
+        </div>
+      </q-card-section>
+    </q-card>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue'
+import { VideoInfo } from 'src/types/word'
+import translate from 'src/utils/translate'
+
+interface Props {
+  videos: VideoInfo[]
+}
+
+const props = defineProps<Props>()
+
+const currentIndex = ref(0)
+
+// Reset current index when videos change
+watch(() => props.videos, () => {
+  currentIndex.value = 0
+}, { immediate: true })
+
+const currentVideo = computed(() => {
+  if (props.videos.length === 0) {
+    return { url: '', angle: '' } as VideoInfo
+  }
+  return props.videos[currentIndex.value]
+})
+
+function nextVideo() {
+  if (currentIndex.value < props.videos.length - 1) {
+    currentIndex.value++
+  }
+}
+
+function prevVideo() {
+  if (currentIndex.value > 0) {
+    currentIndex.value--
+  }
+}
+</script>
+
+<style scoped>
+.video-card {
+  height: 100%;
+}
+
+.video-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.no-videos {
+  text-align: center;
+  padding: 2rem 0;
+  color: #aaa;
+}
+</style> 
