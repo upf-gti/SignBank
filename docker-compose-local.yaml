@@ -12,6 +12,8 @@ services:
     environment:
       - PORT=443
       - DATABASE_URL=${DATABASE_URL_DOCKER}
+    cap_add:
+      - NET_BIND_SERVICE
     networks:
       - signbank
     volumes:
@@ -52,19 +54,19 @@ services:
   mongoDB:
     image: mongo
     container_name: mongoDB
+    hostname: mongoDB
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_REPLICA_SET_NAME: rs0
     networks:
       - signbank
     volumes:
       - ./mongoDB/data:/data/db
-      - ./mongoDB/initdb.d:/docker-entrypoint-initdb.d
-      - ./mongoDB/keyfile:/tmp/keyfile:ro
-      - ./mongoDB/setup-keyfile.sh:/setup-keyfile.sh:ro
+      - ./mongoDB/init-rs.sh:/init-rs.sh
     ports:
       - 27017:27017
-    command: bash /setup-keyfile.sh
+    command: bash /init-rs.sh
   typesense:
     image: typesense/typesense:27.1
     restart: on-failure
