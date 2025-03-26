@@ -13,10 +13,10 @@ export class WordsService {
   async searchWords(query: string, limit: number, filters?: Record<string, any>): Promise<SearchResult> {
     const searchParameters: SearchParams = {
       q: query,
-      query_by: 'word,senseDefinitions,description',
+      query_by: 'word,senseDefinitions',
       per_page: limit,
       num_typos: 2,
-      highlight_full_fields: 'word,description,senseDefinitions',
+      highlight_full_fields: 'word,senseDefinitions',
       sort_by: '_text_match:desc,word:asc',
     };
 
@@ -53,7 +53,6 @@ export class WordsService {
           const { 
             id, 
             word, 
-            description, 
             videoUrls = [] 
           } = document;
           
@@ -61,9 +60,14 @@ export class WordsService {
           const senses = document.senses || [];
           
           // Find the most important sense based on priority
-          let bestSenseDescription = description;
+          let bestSenseDescription = "";
           
-          if (senses.length > 0) {
+          // Use senseDefinitions from Typesense if available
+          if (document.senseDefinitions && document.senseDefinitions.length > 0) {
+            bestSenseDescription = document.senseDefinitions[0];
+          }
+          // Fallback to extracting from senses if available in response
+          else if (senses.length > 0) {
             // Sort senses by priority (lower number = higher priority)
             const sortedSenses = [...senses].sort((a, b) => (a.priority || 0) - (b.priority || 0));
             const primarySense = sortedSenses[0];
@@ -78,7 +82,7 @@ export class WordsService {
             word: { 
               id, 
               word, 
-              description: bestSenseDescription, // Use the best sense description instead of general description
+              description: bestSenseDescription, // Use the best sense description
               videoUrls,
               senses: document.senses
             },
