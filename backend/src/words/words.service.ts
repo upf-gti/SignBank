@@ -13,9 +13,10 @@ export class WordsService {
   async searchWords(query: string, limit: number, filters?: Record<string, any>): Promise<SearchResult> {
     const searchParameters: SearchParams = {
       q: query,
-      query_by: 'word,senseDefinitions',
+      query_by: 'word',
       per_page: limit,
-      num_typos: 2,
+      num_typos: 3,
+      typo_tokens_threshold: 1,  // Allow typos on queries with at least 1 token
       highlight_full_fields: 'word,senseDefinitions',
       sort_by: '_text_match:desc,word:asc',
     };
@@ -36,7 +37,6 @@ export class WordsService {
         searchParameters.filter_by = filterStr;
       }
     }
-    console.log(searchParameters);
     try {
       const results = await typesense
         .collections('words')
@@ -53,38 +53,25 @@ export class WordsService {
           const { 
             id, 
             word, 
-            videoUrls = [] 
+            videoUrls = [],
+            lexicalCategory = ''
           } = document;
           
-          // Get senses or empty array if none exists
-          const senses = document.senses || [];
-          
-          // Find the most important sense based on priority
+          // Get best description from sense definitions
           let bestSenseDescription = "";
           
           // Use senseDefinitions from Typesense if available
           if (document.senseDefinitions && document.senseDefinitions.length > 0) {
             bestSenseDescription = document.senseDefinitions[0];
           }
-          // Fallback to extracting from senses if available in response
-          else if (senses.length > 0) {
-            // Sort senses by priority (lower number = higher priority)
-            const sortedSenses = [...senses].sort((a, b) => (a.priority || 0) - (b.priority || 0));
-            const primarySense = sortedSenses[0];
-            
-            // If the primary sense has descriptions, use the first one
-            if (primarySense && primarySense.descriptions && primarySense.descriptions.length > 0) {
-              bestSenseDescription = primarySense.descriptions[0].text;
-            }
-          }
           
           return {
             word: { 
               id, 
-              word, 
+              word,
               description: bestSenseDescription, // Use the best sense description
               videoUrls,
-              senses: document.senses
+              lexicalCategory
             },
             highlights: hit.highlights || [],
             textMatch: hit.text_match
@@ -107,7 +94,14 @@ export class WordsService {
       throw new NotFoundException('Word not found');
     }
 
-    return word;
-    
+    // Transform the data to match frontend expectations
+    return {
+      id: word.id,
+      createdAt: word.createdAt,
+      updatedAt: word.updatedAt,
+      status: word.status,
+      currentVersion: word.currentVersion,
+      ...word.wordData,
+    };
   }
 }

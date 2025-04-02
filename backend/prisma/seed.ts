@@ -1,5 +1,6 @@
-import { PrismaClient, Role, RequestStatus, Language, LexicalCategory, RelationType, Hand, WordStatus, EditStatus } from '@prisma/client';
+import { PrismaClient, Role, Language, LexicalCategory, RelationType, Hand, WordStatus } from '@prisma/client';
 import * as argon2 from 'argon2';
+
 const prisma = new PrismaClient();
 
 async function main() {
@@ -75,540 +76,802 @@ async function main() {
   });
   console.log('Created dialects');
 
-  // Create word requests
-  console.log('Creating word requests...');
-  const helloRequest = await prisma.wordRequest.create({
-    data: {
-      requestedWord: 'HOLA',
-      requestedDescription: 'Common greeting sign',
-      requestedVideoUrl: 'https://example.com/videos/hello.mp4',
-      userId: user1.id,
-      status: RequestStatus.PENDING,
-      dominantHand: Hand.RIGHT,
-      facialExpression: 'Smiling',
-      hasContact: false,
-      lexicalCategory: LexicalCategory.INTERJECTION,
-      dialectId: barcelonaDialect.id,
-      requestedSenses: [
-        {
-          priority: 1,
-          dominantHand: Hand.RIGHT,
-          descriptions: [
-            {
-              text: 'A greeting used when meeting someone',
-              examples: ['HOLA, COM ESTÀS?'],
-              translations: [
-                { text: 'Hola', language: Language.CATALAN },
-                { text: 'Hello', language: Language.ENGLISH },
-                { text: 'Hola', language: Language.SPANISH }
-              ]
-            }
-          ],
-          videos: [
-            {
-              url: 'https://signbank.upf.com/images/video.mp4',
-              angle: 'Front',
-              priority: 1
-            },
-            {
-              url: 'https://signbank.upf.com/images/video.mp4',
-              angle: 'Side',
-              priority: 2
-            }
-          ]
-        }
-      ]
-    },
-  });
-
-  const catRequest = await prisma.wordRequest.create({
-    data: {
-      requestedWord: 'GAT',
-      requestedDescription: 'Domestic feline animal',
-      requestedVideoUrl: 'https://example.com/videos/cat.mp4',
-      userId: user2.id,
-      status: RequestStatus.PENDING,
-      dominantHand: Hand.BOTH,
-      hasContact: true,
-      facialExpression: 'Neutral',
-      lexicalCategory: LexicalCategory.NOUN,
-      dialectId: barcelonaDialect.id,
-      requestedSenses: [
-        {
-          priority: 1,
-          dominantHand: Hand.BOTH,
-          descriptions: [
-            {
-              text: 'A small domesticated carnivorous mammal with soft fur',
-              examples: ['EL MEU GAT ÉS NEGRE'],
-              translations: [
-                { text: 'Gat', language: Language.CATALAN },
-                { text: 'Cat', language: Language.ENGLISH },
-                { text: 'Gato', language: Language.SPANISH }
-              ]
-            }
-          ],
-          videos: [
-            {
-              url: 'https://signbank.upf.com/images/video.mp4',
-              angle: 'Front',
-              priority: 1
-            }
-          ]
-        },
-        {
-          priority: 2,
-          descriptions: [
-            {
-              text: 'A person who plays a minor role or is an extra in a performance',
-              examples: ['ELL ÉS UN GAT EN AQUESTA OBRA'],
-              translations: [
-                { text: 'Figurant', language: Language.CATALAN },
-                { text: 'Extra', language: Language.ENGLISH },
-                { text: 'Extra', language: Language.SPANISH }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-  });
-
-  // Create a denied request
-  const deniedRequest = await prisma.wordRequest.create({
-    data: {
-      requestedWord: 'REJECTED',
-      requestedDescription: 'This is a test for rejection',
-      requestedVideoUrl: 'https://example.com/videos/test.mp4',
-      userId: user2.id,
-      status: RequestStatus.DENIED,
-      denyReason: 'This sign already exists in our database',
-      requestedSenses: []
-    },
-  });
-  console.log('Created word requests');
-
-  // Create words
+  // Create words with new schema structure
   console.log('Creating words...');
-  
-  // Create Arma (weapon)
-  const armaWord = await prisma.words.create({
+
+  await prisma.words.create({
     data: {
-      word: 'ARMA',
-      creator: {
-        connect: {
-          id: user1.id
-        }
-      },
       status: WordStatus.PUBLISHED,
-      isNative: true,
-      register: 'Estàndard',
       currentVersion: 1,
       isCreatedFromRequest: false,
       isCreatedFromEdit: false,
-      acceptedBy: {
-        connect: {
-          id: admin.id
-        }
-      },
-      dialect: {
-        connect: {
-          id: barcelonaDialect.id
-        }
-      },
       
-      senses: [
-        {
-          priority: 1,
-          dominantHand: Hand.RIGHT,
-          facialExpression: 'Seriós',
-          hasContact: false,
-          movementType: 'Imitant subjectar una pistola',
-          nonManualComponents: 'Expressió facial tensa',
-          morphologicalVariants: 'ARMA, PISTOLA',
-          phonologicalTranscription: 'A-R-M-A',
-          usageFrequency: 'Comú',
-          usageEra: 'Contemporani',
-          
-          descriptions: [
-            {
-              text: 'Un objecte dissenyat o utilitzat per infligir dany o danys físics',
-              examples: ['TENIR UNA ARMA', 'ARMA DE FOC'],
-              translations: [
-                { text: 'Arma', language: Language.CATALAN },
-                { text: 'Weapon', language: Language.ENGLISH },
-                { text: 'Arma', language: Language.SPANISH }
-              ]
-            }
-          ],
-          
-          videos: [
-            {
-              url: 'https://signbank.upf.com/images/video.mp4',
-              angle: 'Frontal',
-              priority: 1
-            }
-          ]
-        }
-      ]
-    },
-  });
-
-  // Create Arna (moth)
-  const arnaWord = await prisma.words.create({
-    data: {
-      word: 'ARNA',
-      creator: {
-        connect: {
-          id: user2.id
-        }
-      },
-      status: WordStatus.PUBLISHED,
-      isNative: true,
-      register: 'Estàndard',
-      currentVersion: 1,
-      isCreatedFromRequest: false,
-      isCreatedFromEdit: false,
-      acceptedBy: {
-        connect: {
-          id: admin.id
-        }
-      },
-      dialect: {
-        connect: {
-          id: barcelonaDialect.id
-        }
-      },
-      
-      senses: [
-        {
-          priority: 1,
-          dominantHand: Hand.BOTH,
-          facialExpression: 'Neutral',
-          hasContact: false,
-          movementType: 'Moviment d\'aletejament amb les mans',
-          nonManualComponents: 'Lleugera inclinació del cap',
-          morphologicalVariants: 'ARNA, PAPALLONA-NOCTURNA',
-          phonologicalTranscription: 'A-R-N-A',
-          usageFrequency: 'Poc comú',
-          usageEra: 'Contemporani',
-          
-          descriptions: [
-            {
-              text: 'Un insecte nocturn similar a una papallona amb ales que aletegen',
-              examples: ['HI HA UNA ARNA A L\'ARMARI', 'LES ARNES MENGEN ROBA'],
-              translations: [
-                { text: 'Arna', language: Language.CATALAN },
-                { text: 'Moth', language: Language.ENGLISH },
-                { text: 'Polilla', language: Language.SPANISH }
-              ]
-            }
-          ],
-          
-          videos: [
-            {
-              url: 'https://signbank.upf.com/images/video.mp4',
-              angle: 'Frontal',
-              priority: 1
-            }
-          ]
-        }
-      ]
-    },
-  });
-
-  // Create Coll (with multiple senses)
-  const collWord = await prisma.words.create({
-    data: {
-      word: 'COLL',
-      creator: {
-        connect: {
-          id: admin.id
-        }
-      },
-      status: WordStatus.PUBLISHED,
-      isNative: true,
-      register: 'Estàndard',
-      currentVersion: 1,
-      isCreatedFromRequest: false,
-      isCreatedFromEdit: false,
-      dialect: {
-        connect: {
-          id: barcelonaDialect.id
-        }
-      },
-      
-      senses: [
-        {
-          priority: 1,
-          dominantHand: Hand.RIGHT,
-          facialExpression: 'Neutral',
-          hasContact: true,
-          movementType: 'Moviment de tocar o acariciar el coll',
-          nonManualComponents: 'Lleugera inclinació del cap',
-          morphologicalVariants: 'COLL',
-          phonologicalTranscription: 'C-O-L-L',
-          usageFrequency: 'Comú',
-          usageEra: 'Contemporani',
-          
-          descriptions: [
-            {
-              text: 'La part del cos que connecta el cap amb les espatlles',
-              examples: ['TINC MAL DE COLL', 'PORTA UN COLLARET AL COLL'],
-              translations: [
-                { text: 'Coll', language: Language.CATALAN },
-                { text: 'Neck', language: Language.ENGLISH },
-                { text: 'Cuello', language: Language.SPANISH }
-              ]
-            }
-          ],
-          
-          videos: [
-            {
-              url: 'https://signbank.upf.com/images/video.mp4',
-              angle: 'Frontal',
-              priority: 1
-            }
-          ]
-        },
-        {
-          priority: 2,
-          dominantHand: Hand.BOTH,
-          facialExpression: 'Neutral',
-          hasContact: false,
-          movementType: 'Dues mans formant forma de muntanya amb depressió',
-          usageFrequency: 'Comú',
-          usageEra: 'Contemporani',
-          
-          descriptions: [
-            {
-              text: 'Un pas o bretxa entre muntanyes o turons',
-              examples: ['HEM CREUAT EL COLL DE LA MUNTANYA', 'AQUEST COLL CONNECTA DUES VALLS'],
-              translations: [
-                { text: 'Coll (de muntanya)', language: Language.CATALAN },
-                { text: 'Mountain pass', language: Language.ENGLISH },
-                { text: 'Puerto de montaña', language: Language.SPANISH }
-              ]
-            }
-          ],
-          videos: [
-            {
-              url: 'https://signbank.upf.com/images/video.mp4',
-              angle: 'Frontal',
-              priority: 1
-            }
-          ]
-        },
-        {
-          priority: 3,
-          dominantHand: Hand.RIGHT,
-          facialExpression: 'Neutral',
-          hasContact: false,
-          
-          descriptions: [
-            {
-              text: 'La part estreta d\'una ampolla o altre recipient',
-              examples: ['EL COLL DE L\'AMPOLLA', 'TRENCA EL COLL DE L\'AMPOLLA'],
-              translations: [
-                { text: 'Coll (d\'ampolla)', language: Language.CATALAN },
-                { text: 'Bottleneck', language: Language.ENGLISH },
-                { text: 'Cuello de botella', language: Language.SPANISH }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-  });
-  
-  console.log('Created words');
-
-  // Word relations - removed since we have new words
-
-  // Create word edits
-  console.log('Creating word edits...');
-  try {
-    await prisma.wordEdit.create({
-      data: {
-        wordId: armaWord.id,
-        editorId: user1.id,
-        comment: 'Afegint context addicional sobre diferents tipus d\'armes',
-        status: EditStatus.PENDING,
-        proposedChanges: {
-          description: 'Signe que representa una arma, arma de foc o altre eina de combat',
-          senses: [
-            {
-              priority: 1,
-              descriptions: [
-                {
-                  text: 'Un objecte dissenyat o utilitzat per infligir dany o danys físics, INCLUDING armes de foc, ganivets, etc.',
-                  examples: ['TENIR UNA ARMA', 'ARMA DE FOC']
-                }
-              ]
-            }
-          ]
-        }
-      },
-    });
-
-    await prisma.wordEdit.create({
-      data: {
-        wordId: collWord.id, 
-        editorId: user2.id,
-        comment: 'Afegint descripció més detallada del moviment per al sentit de pas de muntanya',
-        status: EditStatus.APPROVED,
-        proposedChanges: {
-          senses: [
-            {
-              priority: 2,
-              movementType: 'Dues mans formant forma de muntanya amb depressió al mig representant el pas'
-            }
-          ]
-        }
-      },
-    });
-    console.log('Created word edits');
-  } catch (error) {
-    console.error('Error creating word edits:', error);
-  }
-
-  // Create word edit historic record
-  console.log('Creating historic records...');
-  try {
-    await prisma.wordEditHistoric.create({
-      data: {
-        originalWordId: collWord.id,
-        versionNumber: 1,
-        archivedAt: new Date(Date.now() - 86400000), // 1 day ago
-        wordData: {
-          word: 'COLL',
-          creatorId: admin.id,
-          dialectId: barcelonaDialect.id,
-          status: 'PUBLISHED',
-          senses: [
-            {
-              priority: 1,
-              dominantHand: 'RIGHT',
-              facialExpression: 'Neutral',
-              nonManualComponents: 'Cap' // This got updated
-            },
-            {
-              priority: 2,
-              dominantHand: 'BOTH',
-              descriptions: [
-                {
-                  text: 'Un pas o bretxa entre muntanyes o turons'
-                }
-              ]
-            }
-          ]
-        }
-      }
-    });
-    console.log('Created historic records');
-  } catch (error) {
-    console.error('Error creating historic records:', error);
-  }
-
-  // Update version numbers
-  console.log('Updating version numbers...');
-  try {
-    await prisma.words.update({
-      where: { id: collWord.id },
-      data: { currentVersion: 2 }
-    });
-    console.log('Updated version numbers');
-  } catch (error) {
-    console.error('Error updating version numbers:', error);
-  }
-
-  // Connect word requests to words - Modified to create new requests
-  console.log('Connecting requests to words...');
-  try {
-    // Delete existing requests which we can't connect
-    await prisma.wordRequest.delete({
-      where: { id: helloRequest.id }
-    });
-
-    await prisma.wordRequest.delete({
-      where: { id: catRequest.id }
-    });
-
-    // Create new requests with proper connection
-    await prisma.wordRequest.create({
-      data: {
-        requestedWord: 'ARMA',
-        requestedDescription: 'Signe que representa una arma o arma de foc',
-        userId: user1.id,
-        status: RequestStatus.ACCEPTED,
-        dominantHand: Hand.RIGHT,
-        facialExpression: 'Seriós',
-        hasContact: false,
+      // Word data using the Word type
+      wordData: {
+        word: 'Cafe',
+        isNative: true,
+        register: 'Estàndard',
         lexicalCategory: LexicalCategory.NOUN,
-        dialectId: barcelonaDialect.id,
-        createdWordId: armaWord.id,
-        requestedSenses: [
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        
+        senses: [
           {
             priority: 1,
             dominantHand: Hand.RIGHT,
+            facialExpression: 'Neutral',
+            hasContact: true,
+            movementType: 'Moviment del signe Cafè',
+            nonManualComponents: 'Pronunciar Cafe',
+            morphologicalVariants: '-',
+            phonologicalTranscription: '-',
+            usageFrequency: 'Comú',
+            usageEra: 'Contemporani',
+            
             descriptions: [
               {
-                text: 'Un objecte dissenyat o utilitzat per infligir dany o danys físics',
-                examples: ['TENIR UNA ARMA', 'ARMA DE FOC'],
+                text: 'Arbret del gènere Coffea, de la família de les rubiàcies, conreat als països tropicals, de fulles lluents i flors blanques, els fruits del qual contenen ordinàriament dues llavors planoconvexes amb un solc al llarg de la cara plana.',
+                examples: ['Als matins prenem un cafe', 'El meu amic beu cafe cada dia'],
                 translations: [
-                  { text: 'Arma', language: Language.CATALAN },
-                  { text: 'Weapon', language: Language.ENGLISH },
-                  { text: 'Arma', language: Language.SPANISH }
+                  { text: 'Coffe', language: Language.ENGLISH },
+                  { text: 'Café', language: Language.SPANISH }
                 ]
+              },
+              {
+                text: 'Cafè moca Cafè: d’una varietat procedent d’Aràbia.',
+                examples: [],
+                translations: []
+              },
+              {
+                text: 'Llavor del cafè: Torrar cafè. Cafè molt. Cafè descafeïnat.',
+                examples: [],
+                translations: []
+              },
+              {
+                text: 'Cafè torrefacte: Cafè que ha estat barrejat amb sucre en torrar-lo.',
+                examples: [],
+                translations: []
+              },
+              {
+                text: 'Beguda feta per infusió de les llavors de cafè torrades i moltes. Prendre cafè. Una tassa de cafè. Cafè amb llet.',
+                examples: [],
+                translations: []
+              },
+              {
+                text: 'cCafè curt: Cafè elaborat amb menys aigua de la que se sol usar per a la mateixa quantitat de cafè molt.',
+                examples: [],
+                translations: []
+              },
+              {
+                text: 'Cafè exprés: Cafè fet amb una cafetera exprés. Posi’m dos cafès exprés, si us plau.',
+                examples: [],
+                translations: []
+              },
+              {
+                text: 'Cafè irlandès: Cafè amb whisky i nata.',
+                examples: [],
+                translations: []
+              },
+              {
+                text: 'Cafè llarg: Cafè elaborat amb més aigua de la que se sol usar per a la mateixa quantitat de cafè molt.',
+                examples: [],
+                translations: []
+              },
+              {
+                text: 'Establiment on serveixen cafè i també licors, refrescos, etc. El Cafè de la Rambla. L’amo del cafè.',
+                examples: [],
+                translations: []
+              },
+              {
+                text: 'Cafè concert: Cafè on es presenten números de música o de cant en un petit escenari.',
+                examples: [],
+                translations: []
+              },
+              {
+                text: 'Cafè bord [o cafè de pobre]: Planta de la família de les papilionàcies, de flors grogues i fruit terminat en un bec ganxut, pròpia del Mediterrani meridional, i que, en determinades contrades, ha reemplaçat el cafè veritable en èpoques de carestia (Astragalus boeticus).',
+                examples: [],
+                translations: []
+              }
+            ],
+            
+            videos: [
+              {
+                url: 'https://signbank.upf.com/images/LSC_-_Cafe.mp4',
+                angle: 'Frontal',
+                priority: 1
               }
             ]
           }
-        ]
+        ],
+        // Add related words - Arma and Coll are related
+        relatedWords: []
       }
-    });
+    },
+  });
 
-    await prisma.wordRequest.create({
-      data: {
-        requestedWord: 'ARNA',
-        requestedDescription: 'Signe que representa una arna o arna de la roba',
-        userId: user2.id,
-        status: RequestStatus.ACCEPTED,
-        dominantHand: Hand.BOTH,
-        hasContact: false,
-        facialExpression: 'Neutral',
+  await prisma.words.create({
+    data: {
+      status: WordStatus.PUBLISHED,
+      currentVersion: 1,
+      isCreatedFromRequest: false,
+      isCreatedFromEdit: false,
+      
+      // Word data using the Word type
+      wordData: {
+        word: 'Camell',
+        isNative: true,
+        register: 'Estàndard',
         lexicalCategory: LexicalCategory.NOUN,
-        dialectId: barcelonaDialect.id,
-        createdWordId: arnaWord.id,
-        requestedSenses: [
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        
+        senses: [
           {
             priority: 1,
-            dominantHand: Hand.BOTH,
+            dominantHand: Hand.RIGHT,
+            facialExpression: 'Neutral',
+            hasContact: true,
+            movementType: 'Moviment del signe camell',
+            nonManualComponents: 'Pronunciar Cafe',
+            morphologicalVariants: '-',
+            phonologicalTranscription: '-',
+            usageFrequency: 'Comú',
+            usageEra: 'Contemporani',
+            
             descriptions: [
               {
-                text: 'Un insecte nocturn similar a una papallona amb ales que aletegen',
-                examples: ['HI HA UNA ARNA A L\'ARMARI'],
+                text: 'Mamífer artiodàctil del gènere Camelus, de la família dels camèlids, de dimensions grans i cos robust, amb potes llargues i primes i coll llarg, fort i flexible, que té al dors un o dos geps.',
+                examples: ['El meu camell és molt gros'],
                 translations: [
-                  { text: 'Arna', language: Language.CATALAN },
-                  { text: 'Moth', language: Language.ENGLISH },
-                  { text: 'Polilla', language: Language.SPANISH }
+                  { text: 'Camel', language: Language.ENGLISH },
+                  { text: 'Camell', language: Language.SPANISH }
                 ]
+              },
+              {
+                text: 'Persona que comercia amb droga a la menuda.',
+                examples: ['El seu vei es camell'],
+                translations: []
+              }
+            ],
+            
+            videos: [
+              {
+                url: 'https://signbank.upf.com/images/LSC_-_Camell.mp4',
+                angle: 'Frontal',
+                priority: 1
               }
             ]
           }
-        ]
+        ],
+        // Add related words - Arma and Coll are related
+        relatedWords: []
       }
-    });
-    console.log('Connected requests to words');
-  } catch (error) {
-    console.error('Error connecting requests to words:', error);
-  }
+    },
+  });
+  
+  await prisma.words.create({
+    data: {
+      status: WordStatus.PUBLISHED,
+      currentVersion: 1,
+      isCreatedFromRequest: false,
+      isCreatedFromEdit: false,
+      
+      // Word data using the Word type
+      wordData: {
+        word: 'Cames',
+        isNative: true,
+        register: 'Estàndard',
+        lexicalCategory: LexicalCategory.NOUN,
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        
+        senses: [
+          {
+            priority: 1,
+            dominantHand: Hand.RIGHT,
+            facialExpression: 'Neutral',
+            hasContact: true,
+            movementType: 'Moviment del signe cames',
+            nonManualComponents: 'Pronunciar Cames',
+            morphologicalVariants: '-',
+            phonologicalTranscription: '-',
+            usageFrequency: 'Comú',
+            usageEra: 'Contemporani',
+            
+            descriptions: [
+              {
+                text: 'Extremitat inferior del cos humà, que va des del genoll fins al peu.',
+                examples: ['Les meves cames estan cansades', 'Té unes cames molt llargues'],
+                translations: [
+                  { text: 'Legs', language: Language.ENGLISH },
+                  { text: 'Piernas', language: Language.SPANISH }
+                ]
+              }
+            ],
+            
+            videos: [
+              {
+                url: 'https://signbank.upf.com/images/LSC_-_Cames.mp4',
+                angle: 'Frontal',
+                priority: 1
+              }
+            ]
+          }
+        ],
+        relatedWords: []
+      }
+    },
+  });
 
-  console.log('Seeding finished successfully!');
+  await prisma.words.create({
+    data: {
+      isCreatedFromRequest: false,
+      isCreatedFromEdit: false,
+      
+      // Word data using the Word type
+      wordData: {
+        word: 'Cami',
+        isNative: true,
+        register: 'Estàndard',
+        lexicalCategory: LexicalCategory.NOUN,
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        
+        senses: [
+          {
+            priority: 1,
+            dominantHand: Hand.RIGHT,
+            facialExpression: 'Neutral',
+            hasContact: true,
+            movementType: 'Moviment del signe cami',
+            nonManualComponents: 'Pronunciar Cami',
+            morphologicalVariants: '-',
+            phonologicalTranscription: '-',
+            usageFrequency: 'Comú',
+            usageEra: 'Contemporani',
+            
+            descriptions: [
+              {
+                text: 'Via que es fa servir per anar d\'un lloc a un altre.',
+                examples: ['El cami era molt llarg', 'Van perdre el cami'],
+                translations: [
+                  { text: 'Path', language: Language.ENGLISH },
+                  { text: 'Camino', language: Language.SPANISH }
+                ]
+              }
+            ],
+            
+            videos: [
+              {
+                url: 'https://signbank.upf.com/images/LSC_-_Cami.mp4',
+                angle: 'Frontal',
+                priority: 1
+              }
+            ]
+          }
+        ],
+        relatedWords: []
+      }
+    },
+  });
+
+  await prisma.words.create({
+    data: {
+      status: WordStatus.PUBLISHED,
+      currentVersion: 1,
+      isCreatedFromRequest: false,
+      isCreatedFromEdit: false,
+      
+      // Word data using the Word type
+      wordData: {
+        word: 'Cap',
+        isNative: true,
+        register: 'Estàndard',
+        lexicalCategory: LexicalCategory.NOUN,
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        
+        senses: [
+          {
+            priority: 1,
+            dominantHand: Hand.RIGHT,
+            facialExpression: 'Neutral',
+            hasContact: true,
+            movementType: 'Moviment del signe cap (part del cos)',
+            nonManualComponents: 'Pronunciar Cap',
+            morphologicalVariants: '-',
+            phonologicalTranscription: '-',
+            usageFrequency: 'Comú',
+            usageEra: 'Contemporani',
+            
+            descriptions: [
+              {
+                text: 'Part superior del cos dels animals vertebrats que conté el cervell, els principals òrgans dels sentits i l\'extrem superior o anterior del tub digestiu.',
+                examples: ['Em fa mal el cap', 'Va moure el cap'],
+                translations: [
+                  { text: 'Head', language: Language.ENGLISH },
+                  { text: 'Cabeza', language: Language.SPANISH }
+                ]
+              }
+            ],
+            
+            videos: [
+              {
+                url: 'https://signbank.upf.com/images/LSC_-_Cap.mp4',
+                angle: 'Frontal',
+                priority: 1
+              }
+            ]
+          },
+          {
+            priority: 2,
+            dominantHand: Hand.RIGHT,
+            facialExpression: 'Negació',
+            hasContact: false,
+            movementType: 'Moviment del signe cap (negació)',
+            nonManualComponents: 'Pronunciar Cap amb expressió de negació',
+            morphologicalVariants: '-',
+            phonologicalTranscription: '-',
+            usageFrequency: 'Comú',
+            usageEra: 'Contemporani',
+            
+            descriptions: [
+              {
+                text: 'Ni un, ningú, res; absència total.',
+                examples: ['No hi ha cap persona', 'No en queda cap'],
+                translations: [
+                  { text: 'None', language: Language.ENGLISH },
+                  { text: 'Ninguno', language: Language.SPANISH }
+                ]
+              }
+            ],
+            
+            videos: [
+              {
+                url: 'https://signbank.upf.com/images/LSC_-_Cap.mp4',
+                angle: 'Frontal',
+                priority: 1
+              }
+            ]
+          },
+          {
+            priority: 3,
+            dominantHand: Hand.RIGHT,
+            facialExpression: 'Neutral',
+            hasContact: false,
+            movementType: 'Moviment del signe cap (direcció)',
+            nonManualComponents: 'Pronunciar Cap',
+            morphologicalVariants: '-',
+            phonologicalTranscription: '-',
+            usageFrequency: 'Comú',
+            usageEra: 'Contemporani',
+            
+            descriptions: [
+              {
+                text: 'En direcció a, vers.',
+                examples: ['Anem cap a casa', 'Mira cap allà'],
+                translations: [
+                  { text: 'Towards', language: Language.ENGLISH },
+                  { text: 'Hacia', language: Language.SPANISH }
+                ]
+              }
+            ],
+            
+            videos: [
+              {
+                url: 'https://signbank.upf.com/images/LSC_-_Cap.mp4',
+                angle: 'Frontal',
+                priority: 1
+              }
+            ]
+          }
+        ],
+        relatedWords: []
+      }
+    },
+  });
+
+  await prisma.words.create({
+    data: {
+      status: WordStatus.PUBLISHED,
+      currentVersion: 1,
+      isCreatedFromRequest: false,
+      isCreatedFromEdit: false,
+      
+      // Word data using the Word type
+      wordData: {
+        word: 'Capa',
+        isNative: true,
+        register: 'Estàndard',
+        lexicalCategory: LexicalCategory.NOUN,
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        
+        senses: [
+          {
+            priority: 1,
+            dominantHand: Hand.RIGHT,
+            facialExpression: 'Neutral',
+            hasContact: true,
+            movementType: 'Moviment del signe capa',
+            nonManualComponents: 'Pronunciar Capa',
+            morphologicalVariants: '-',
+            phonologicalTranscription: '-',
+            usageFrequency: 'Comú',
+            usageEra: 'Contemporani',
+            
+            descriptions: [
+              {
+                text: 'Peça de roba llarga, folgada, oberta de davant, sense mànigues, que es porta tirada a les espatlles cobrint el vestit.',
+                examples: ['Porta una capa negra', 'La capa el protegia del fred'],
+                translations: [
+                  { text: 'Cape', language: Language.ENGLISH },
+                  { text: 'Capa', language: Language.SPANISH }
+                ]
+              }
+            ],
+            
+            videos: [
+              {
+                url: 'https://signbank.upf.com/images/LSC_-_Capa.mp4',
+                angle: 'Frontal',
+                priority: 1
+              }
+            ]
+          }
+        ],
+        relatedWords: []
+      }
+    },
+  });
+
+  await prisma.words.create({
+    data: {
+      status: WordStatus.PUBLISHED,
+      currentVersion: 1,
+      isCreatedFromRequest: false,
+      isCreatedFromEdit: false,
+      
+      // Word data using the Word type
+      wordData: {
+        word: 'Car',
+        isNative: true,
+        register: 'Estàndard',
+        lexicalCategory: LexicalCategory.ADJECTIVE,
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        
+        senses: [
+          {
+            priority: 1,
+            dominantHand: Hand.RIGHT,
+            facialExpression: 'Neutral',
+            hasContact: true,
+            movementType: 'Moviment del signe car',
+            nonManualComponents: 'Pronunciar Car',
+            morphologicalVariants: '-',
+            phonologicalTranscription: '-',
+            usageFrequency: 'Comú',
+            usageEra: 'Contemporani',
+            
+            descriptions: [
+              {
+                text: 'Que té un preu elevat, que costa molt de diners.',
+                examples: ['Aquest cotxe és molt car', 'El pis era massa car'],
+                translations: [
+                  { text: 'Expensive', language: Language.ENGLISH },
+                  { text: 'Caro', language: Language.SPANISH }
+                ]
+              }
+            ],
+            
+            videos: [
+              {
+                url: 'https://signbank.upf.com/images/LSC_-_Car.mp4',
+                angle: 'Frontal',
+                priority: 1
+              }
+            ]
+          }
+        ],
+        relatedWords: []
+      }
+    },
+  });
+
+  await prisma.words.create({
+    data: {
+      status: WordStatus.PUBLISHED,
+      currentVersion: 1,
+      isCreatedFromRequest: false,
+      isCreatedFromEdit: false,
+      
+      // Word data using the Word type
+      wordData: {
+        word: 'Cara',
+        isNative: true,
+        register: 'Estàndard',
+        lexicalCategory: LexicalCategory.NOUN,
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        
+        senses: [
+          {
+            priority: 1,
+            dominantHand: Hand.RIGHT,
+            facialExpression: 'Neutral',
+            hasContact: true,
+            movementType: 'Moviment del signe cara',
+            nonManualComponents: 'Pronunciar Cara',
+            morphologicalVariants: '-',
+            phonologicalTranscription: '-',
+            usageFrequency: 'Comú',
+            usageEra: 'Contemporani',
+            
+            descriptions: [
+              {
+                text: 'Part anterior del cap, on hi ha els ulls, el nas i la boca.',
+                examples: ['Té una cara molt expressiva', 'Es va rentar la cara'],
+                translations: [
+                  { text: 'Face', language: Language.ENGLISH },
+                  { text: 'Cara', language: Language.SPANISH }
+                ]
+              }
+            ],
+            
+            videos: [
+              {
+                url: 'https://signbank.upf.com/images/LSC_-_Cara_1.mp4',
+                angle: 'Frontal',
+                priority: 1
+              },
+              {
+                url: 'https://signbank.upf.com/images/LSC_-_Cara_2.mp4',
+                angle: 'Frontal',
+                priority: 2
+              }
+            ]
+          }
+        ],
+        relatedWords: []
+      }
+    },
+  });
+
+  await prisma.words.create({
+    data: {
+      status: WordStatus.PUBLISHED,
+      currentVersion: 1,
+      isCreatedFromRequest: false,
+      isCreatedFromEdit: false,
+      
+      // Word data using the Word type
+      wordData: {
+        word: 'Casa',
+        isNative: true,
+        register: 'Estàndard',
+        lexicalCategory: LexicalCategory.NOUN,
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        
+        senses: [
+          {
+            priority: 1,
+            dominantHand: Hand.RIGHT,
+            facialExpression: 'Neutral',
+            hasContact: true,
+            movementType: 'Moviment del signe casa',
+            nonManualComponents: 'Pronunciar Casa',
+            morphologicalVariants: '-',
+            phonologicalTranscription: '-',
+            usageFrequency: 'Comú',
+            usageEra: 'Contemporani',
+            
+            descriptions: [
+              {
+                text: 'Edifici destinat a l\'habitatge de persones.',
+                examples: ['Viu en una casa gran', 'La casa té un jardí'],
+                translations: [
+                  { text: 'House', language: Language.ENGLISH },
+                  { text: 'Casa', language: Language.SPANISH }
+                ]
+              }
+            ],
+            
+            videos: [
+              {
+                url: 'https://signbank.upf.com/images/LSC_-_Casa.mp4',
+                angle: 'Frontal',
+                priority: 1
+              }
+            ]
+          }
+        ],
+        relatedWords: []
+      }
+    },
+  });
+
+  await prisma.words.create({
+    data: {
+      status: WordStatus.PUBLISHED,
+      currentVersion: 1,
+      isCreatedFromRequest: false,
+      isCreatedFromEdit: false,
+      
+      // Word data using the Word type
+      wordData: {
+        word: 'Casat',
+        isNative: true,
+        register: 'Estàndard',
+        lexicalCategory: LexicalCategory.NOUN,
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        
+        senses: [
+          {
+            priority: 1,
+            dominantHand: Hand.RIGHT,
+            facialExpression: 'Neutral',
+            hasContact: true,
+            movementType: 'Moviment del signe casat',
+            nonManualComponents: 'Pronunciar Casat',
+            morphologicalVariants: '-',
+            phonologicalTranscription: '-',
+            usageFrequency: 'Comú',
+            usageEra: 'Contemporani',
+            
+            descriptions: [
+              {
+                text: 'Estat de tenir un cònjuge o una cònjuge.',
+                examples: ['Està casat amb una persona meravellosa', 'El seu estat civil és casat'],
+                translations: [
+                  { text: 'Married', language: Language.ENGLISH },
+                  { text: 'Casado', language: Language.SPANISH }
+                ]
+              }
+            ],
+            
+            videos: [
+              {
+                url: 'https://signbank.upf.com/images/LSC_-_Casat_casada.mp4',
+                angle: 'Frontal',
+                priority: 1
+              }
+            ]
+          }
+        ],
+        relatedWords: []
+      }
+    },
+  });
+
+  await prisma.words.create({
+    data: {
+      status: WordStatus.PUBLISHED,
+      currentVersion: 1,
+      isCreatedFromRequest: false,
+      isCreatedFromEdit: false,
+      
+      // Word data using the Word type
+      wordData: {
+        word: 'Dur',
+        isNative: true,
+        register: 'Estàndard',
+        lexicalCategory: LexicalCategory.ADJECTIVE,
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        
+        senses: [
+          {
+            priority: 1,
+            dominantHand: Hand.RIGHT,
+            facialExpression: 'Neutral',
+            hasContact: true,
+            movementType: 'Moviment del signe dur',
+            nonManualComponents: 'Pronunciar Dur',
+            morphologicalVariants: '-',
+            phonologicalTranscription: '-',
+            usageFrequency: 'Comú',
+            usageEra: 'Contemporani',
+            
+            descriptions: [
+              {
+                text: 'Que té una consistència ferma o difícil de trencar.',
+                examples: ['El material és molt dur', 'El gel és dur'],
+                translations: [
+                  { text: 'Hard', language: Language.ENGLISH },
+                  { text: 'Duro', language: Language.SPANISH }
+                ]
+              }
+            ],
+            
+            videos: [
+              {
+                url: 'https://signbank.upf.com/images/LSC_-_Dur_dura.mp4',
+                angle: 'Frontal',
+                priority: 1
+              }
+            ]
+          }
+        ],
+        relatedWords: []
+      }
+    },
+  });
+
+  await prisma.words.create({
+    data: {
+      status: WordStatus.PUBLISHED,
+      currentVersion: 1,
+      isCreatedFromRequest: false,
+      isCreatedFromEdit: false,
+      
+      // Word data using the Word type
+      wordData: {
+        word: 'Xocolata',
+        isNative: true,
+        register: 'Estàndard',
+        lexicalCategory: LexicalCategory.NOUN,
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        
+        senses: [
+          {
+            priority: 1,
+            dominantHand: Hand.RIGHT,
+            facialExpression: 'Neutral',
+            hasContact: true,
+            movementType: 'Moviment del signe xocolata',
+            nonManualComponents: 'Pronunciar Xocolata',
+            morphologicalVariants: '-',
+            phonologicalTranscription: '-',
+            usageFrequency: 'Comú',
+            usageEra: 'Contemporani',
+            
+            descriptions: [
+              {
+                text: 'Producte alimentari obtingut a partir de la fruita del cacau, que es pot consumir en diverses formes, com a beguda o en forma sòlida.',
+                examples: ["M'agrada la xocolata negra", "La xocolata és dolça"],
+                translations: [
+                  { text: 'Chocolate', language: Language.ENGLISH },
+                  { text: 'Chocolate', language: Language.SPANISH }
+                ]
+              }
+            ],
+            
+            videos: [
+              {
+                url: 'https://signbank.upf.com/images/LSC_-_Xocolata.mp4',
+                angle: 'Frontal',
+                priority: 1
+              }
+            ]
+          }
+        ],
+        relatedWords: []
+      }
+    },
+  });
+  console.log('Created words with new schema structure');
+  console.log('Seeding finished.');
 }
 
 main()
   .catch((e) => {
-    console.error('Error during seeding:', e);
+    console.error(e);
     process.exit(1);
   })
   .finally(async () => {

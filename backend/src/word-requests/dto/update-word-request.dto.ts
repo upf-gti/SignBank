@@ -1,8 +1,4 @@
-export enum RequestStatus {
-  PENDING = 'PENDING',
-  ACCEPTED = 'ACCEPTED',
-  DENIED = 'DENIED',
-}
+import { RequestStatus } from '@prisma/client';
 
 export class UpdateWordRequestDto {
   status: RequestStatus;

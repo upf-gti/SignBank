@@ -47,66 +47,67 @@ type RelatedWord {
   relationType RelationType
 }
 
-model Users {
-  id            String        @id @default(auto()) @map("_id") @db.ObjectId
-  username      String        @unique
-  email         String        @unique
-  password      String
-  role          Role          @default(USER)
-  createdAt     DateTime      @default(now())
-  wordEdits     WordEdit[]    @relation("UserWordEdits")
-  wordRequests  WordRequest[] @relation("UserWordRequests")
-  words         Words[]       @relation("UserWords")
-  editedWords   Words[]       @relation("WordEditor")
-  acceptedWords Words[]       @relation("AcceptedBy")
-}
-
-// New separate Dialect model
-model Dialect {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  name           String   @unique
-  region         String
-  mapCoordinates String?
-  description    String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  // Relations
-  words       Words[]       @relation("WordDialect")
-  WordRequest WordRequest[]
-}
-
-model Words {
-  id                      String     @id @default(auto()) @map("_id") @db.ObjectId
-  word                    String
-  createdAt               DateTime   @default(now())
-  updatedAt               DateTime   @updatedAt
-  creatorId               String     @db.ObjectId
-  isNative                Boolean    @default(true)
-  register                String?
-  status                  WordStatus @default(PUBLISHED) // Only PUBLISHED or EDIT_REQUEST
-  editorId                String?    @db.ObjectId
-  editComment             String?
-  currentVersion          Int        @default(1) // Track version number
-  originatedFromRequestId String?    @db.ObjectId // Optional reference to the request it came from
+// Comprehensive Word type to be used across models
+type Word {
+  word     String
+  isNative Boolean @default(true)
+  register String?
 
   // Embedded document structures
   senses       Sense[] // Embedded senses with their translations and descriptions
   relatedWords RelatedWord[] // Embedded related words
+  dialectId    String?       @db.ObjectId // Store just the ID reference
+
+  // Additional metadata
+  dominantHand     Hand?
+  facialExpression String?
+  hasContact       Boolean?
+  lexicalCategory  LexicalCategory?
+}
+
+model Users {
+  id                   String        @id @default(auto()) @map("_id") @db.ObjectId
+  username             String        @unique
+  email                String        @unique
+  password             String
+  role                 Role          @default(USER)
+  createdAt            DateTime      @default(now())
+  wordEdits            WordEdit[]    @relation("UserWordEdits")
+  wordRequests         WordRequest[] @relation("UserWordRequests")
+  WordRequestsAccepted WordRequest[] @relation("AcceptedBy")
+  WordRequestsDenied   WordRequest[] @relation("DeniedBy")
+}
+
+// New separate Dialect model
+model Dialect {
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  name           String        @unique
+  region         String
+  mapCoordinates String?
+  description    String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  WordRequest    WordRequest[]
+}
+
+model Words {
+  id                   String     @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt            DateTime   @default(now())
+  updatedAt            DateTime   @updatedAt
+  status               WordStatus @default(PUBLISHED) // Only PUBLISHED or EDIT_REQUEST
+  editComment          String?
+  currentVersion       Int        @default(1) // Track version number
+  isCreatedFromRequest Boolean
+  isCreatedFromEdit    Boolean
+  wordRequestId        String?    @db.ObjectId
+
+  // Word data as embedded type
+  wordData Word
 
   // Relations to external collections
-  dialectId    String?       @db.ObjectId
-  dialect      Dialect?      @relation("WordDialect", fields: [dialectId], references: [id])
-  edits        WordEdit[]
-  wordRequests WordRequest[] @relation("CreatedFromRequest") // Updated to one-to-many
-
+  edits       WordEdit[]
   // Relations to other models
-  creator              Users?  @relation("UserWords", fields: [creatorId], references: [id], onDelete: Cascade)
-  editor               Users?  @relation("WordEditor", fields: [editorId], references: [id])
-  acceptedBy           Users?  @relation("AcceptedBy", fields: [acceptedById], references: [id])
-  acceptedById         String? @db.ObjectId
-  isCreatedFromRequest Boolean @default(false)
-  isCreatedFromEdit    Boolean @default(false)
+  wordRequest WordRequest? @relation("WordRequest", fields: [wordRequestId], references: [id])
 }
 
 model WordEdit {
@@ -120,7 +121,11 @@ model WordEdit {
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
 
-  // Proposed edit data (stored as JSON if not yet approved)
+  // Proposed changes using the Word type
+  currentWordData  Word? // Original word data
+  proposedWordData Word? // Proposed word data
+
+  // Alternatively, store as JSON if needed
   proposedChanges Json?
 
   // Relations
@@ -137,33 +142,27 @@ model WordEditHistoric {
 }
 
 model WordRequest {
-  id         String        @id @default(auto()) @map("_id") @db.ObjectId
-  userId     String        @db.ObjectId
-  status     RequestStatus @default(PENDING)
-  createdAt  DateTime      @default(now())
-  updatedAt  DateTime      @updatedAt
-  denyReason String?
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  creatorId    String        @db.ObjectId
+  activeWordId String?       @db.ObjectId
+  status       RequestStatus @default(PENDING)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  denyReason   String?
+  acceptedBy   Users?        @relation("AcceptedBy", fields: [acceptedById], references: [id])
+  acceptedById String?       @db.ObjectId
+  deniedBy     Users?        @relation("DeniedBy", fields: [denyerId], references: [id])
+  denyerId     String?       @db.ObjectId
 
-  // Full request details
-  requestedWord        String
-  requestedDescription String
-  requestedVideoUrl    String?
-  dominantHand         Hand?
-  facialExpression     String?
-  hasContact           Boolean?
-  lexicalCategory      LexicalCategory?
-  dialectId            String?          @db.ObjectId
-  dialect              Dialect?         @relation(fields: [dialectId], references: [id])
-
-  // Additional data for complete request
-  requestedSenses Sense[]
-
-  // If accepted, links to the created word
-  createdWord   Words?  @relation("CreatedFromRequest", fields: [createdWordId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdWordId String? @db.ObjectId
+  // Word data using the Word type
+  requestedWordData Word
 
   // Relations
-  user Users @relation("UserWordRequests", fields: [userId], references: [id])
+  user Users @relation("UserWordRequests", fields: [creatorId], references: [id])
+
+  Words     Words[]  @relation("WordRequest")
+  Dialect   Dialect? @relation(fields: [dialectId], references: [id])
+  dialectId String?  @db.ObjectId
 }
 
 enum Role {

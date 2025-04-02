@@ -9,17 +9,7 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
 
   // Sync words from the database to Typesense
   async syncWordsToTypesense() {
-    const words = await this.prisma.words.findMany({
-      include: {
-        creator: {
-          select: {
-            id: true,
-            username: true,
-          },
-        },
-        dialect: true,
-      },
-    });
+    const words = await this.prisma.words.findMany();
 
     if (!words || words.length === 0) {
       console.log('No words found in the database to sync.');
@@ -32,7 +22,7 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
         name: 'words',
         fields: [
           { name: 'id', type: 'string' },
-          { name: 'word', type: 'string', facet: false, sort: true },
+          { name: 'word', type: 'string', facet: false, sort: true, infix: true },
           { name: 'createdAt', type: 'string', facet: true },
           { name: 'status', type: 'string', facet: true },
           { name: 'dialect', type: 'string', facet: true, optional: true },
@@ -40,17 +30,19 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
           { name: 'dominantHand', type: 'string', facet: true, optional: true },
           { name: 'register', type: 'string', facet: true, optional: true },
           { name: 'isNative', type: 'bool', facet: true },
-          { name: 'creatorId', type: 'string' },
+          { name: 'creatorId', type: 'string', optional: true },
           { name: 'creatorUsername', type: 'string', optional: true },
           { name: 'senseDefinitions', type: 'string[]', optional: true },
           { name: 'senseExamples', type: 'string[]', optional: true },
           { name: 'translations', type: 'string[]', optional: true },
           { name: 'relatedWords', type: 'string[]', optional: true },
           { name: 'videoUrls', type: 'string[]', optional: true },
+          { name: 'lexicalCategory', type: 'string', facet: true, optional: true },
         ],
         default_sorting_field: 'word',
         enable_nested_fields: true,
-        token_separators: ['-', '_']
+        token_separators: ['-', '_', ' '],
+        symbols_to_index: ['*']
       };
 
       try {
@@ -69,12 +61,19 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
 
       // Upsert all words into Typesense
       const documents = words.map((word) => {
+        // Get the wordData from the embedded type
+        const wordData = word.wordData;
+        if (!wordData) {
+          console.log(`Word ${word.id} has no wordData`, word);
+          return null;
+        }
+
         // Process sense definitions and examples
         const senseTexts = [];
         const senseExamples = [];
         const allTranslations = [];
         
-        word.senses?.forEach(sense => {
+        wordData.senses?.forEach(sense => {
           // Process sense descriptions
           sense.descriptions?.forEach(desc => {
             if (desc.text) senseTexts.push(desc.text);
@@ -89,35 +88,32 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
         
         // Extract video URLs from all senses
         const videoUrls = [];
-        word.senses?.forEach(sense => {
+        wordData.senses?.forEach(sense => {
           sense.videos?.forEach(video => {
             if (video.url) videoUrls.push(video.url);
           });
         });
         
         // Extract related words
-        const relatedWords = word.relatedWords?.map(rel => rel.wordId) || [];
+        const relatedWords = wordData.relatedWords?.map(rel => rel.wordId) || [];
         
         // Ensure all required fields have values to prevent indexing errors
         return {
           id: word.id,
-          word: word.word,
+          word: wordData.word,
           createdAt: word.createdAt.toISOString(),
           status: word.status || 'PUBLISHED',
-          dialect: word.dialect?.name || '',
-          dialectId: word.dialectId || '',
-          dominantHand: 'UNKNOWN', // Default value for required field
-          register: word.register || '',
-          isNative: word.isNative || false,
-          creatorId: word.creatorId || '',
-          creatorUsername: word.creator?.username || '',
+          dominantHand: wordData.dominantHand || 'UNKNOWN',
+          register: wordData.register || '',
+          isNative: wordData.isNative || false,
+          lexicalCategory: wordData.lexicalCategory || '',
           senseDefinitions: senseTexts.length > 0 ? senseTexts : [''],
           senseExamples: senseExamples.length > 0 ? senseExamples : [''],
           translations: allTranslations.length > 0 ? allTranslations : [''],
           relatedWords: relatedWords,
-          videoUrls: videoUrls,
+          videoUrls: videoUrls
         };
-      });
+      }).filter(Boolean); // Filter out null values
 
       // Split into chunks to handle potential size limitations
       const chunkSize = 100;
@@ -160,20 +156,18 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
   async syncSingleWord(wordId: string) {
     try {
       const word = await this.prisma.words.findUnique({
-        where: { id: wordId },
-        include: {
-          creator: {
-            select: {
-              id: true,
-              username: true,
-            },
-          },
-          dialect: true,
-        },
+        where: { id: wordId },          
       });
 
       if (!word) {
         console.log(`Word with ID ${wordId} not found.`);
+        return;
+      }
+
+      // Get the wordData from the embedded type
+      const wordData = word.wordData;
+      if (!wordData) {
+        console.log(`Word ${word.id} has no wordData`);
         return;
       }
 
@@ -182,7 +176,7 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
       const senseExamples = [];
       const allTranslations = [];
       
-      word.senses?.forEach(sense => {
+      wordData.senses?.forEach(sense => {
         // Process sense descriptions
         sense.descriptions?.forEach(desc => {
           if (desc.text) senseTexts.push(desc.text);
@@ -197,33 +191,30 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
       
       // Extract video URLs from all senses
       const videoUrls = [];
-      word.senses?.forEach(sense => {
+      wordData.senses?.forEach(sense => {
         sense.videos?.forEach(video => {
           if (video.url) videoUrls.push(video.url);
         });
       });
       
       // Extract related words
-      const relatedWords = word.relatedWords?.map(rel => rel.wordId) || [];
+      const relatedWords = wordData.relatedWords?.map(rel => rel.wordId) || [];
 
       // Ensure all required fields have values to prevent indexing errors
       const document = {
         id: word.id,
-        word: word.word,
+        word: wordData.word,
         createdAt: word.createdAt.toISOString(),
         status: word.status || 'PUBLISHED',
-        dialect: word.dialect?.name || '',
-        dialectId: word.dialectId || '',
-        dominantHand: 'UNKNOWN', // Default value for required field
-        register: word.register || '',
-        isNative: word.isNative || false,
-        creatorId: word.creatorId || '',
-        creatorUsername: word.creator?.username || '',
+        dominantHand: wordData.dominantHand || 'UNKNOWN',
+        register: wordData.register || '',
+        isNative: wordData.isNative || false,
+        lexicalCategory: wordData.lexicalCategory || '',
         senseDefinitions: senseTexts.length > 0 ? senseTexts : [''],
         senseExamples: senseExamples.length > 0 ? senseExamples : [''],
         translations: allTranslations.length > 0 ? allTranslations : [''],
         relatedWords: relatedWords,
-        videoUrls: videoUrls,
+        videoUrls: videoUrls
       };
 
       await typesense
@@ -231,7 +222,7 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
         .documents()
         .upsert(document);
 
-      console.log(`Successfully synced word ${word.word} to Typesense.`);
+      console.log(`Successfully synced word ${wordData.word} to Typesense.`);
     } catch (error) {
       console.error('Error syncing word to Typesense:', error.message);
     }
