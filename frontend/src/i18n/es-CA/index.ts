@@ -16,7 +16,15 @@ export default {
   enterAWord: 'Introdueix una paraula',
   search: 'Cercar',
   editMode: 'Mode d\'edició',
-  
+  status: 'Estat',
+  denyReason: 'Motiu de denegació',
+  newRequest: 'Nova sol·licitud',
+  APPROVED: 'Aprovat',
+  PENDING: 'Pendent',
+  REJECTED: 'Rebutjat',
+  ACCEPTED: 'Acceptat',
+  DENIED: 'Denegat',
+  myRequests: 'Les meves sol·licituds',
   // Common translations
   common: {
     yes: 'Sí',
@@ -34,6 +42,8 @@ export default {
   word_detail: {
     // Field labels
     field: {
+      signInfo: 'Informació del Signe',
+      definitions: 'Definicions',
       word: 'Paraula',
       description: 'Descripció',
       dialect: 'Dialecte',
@@ -52,7 +62,10 @@ export default {
       example: 'Exemple',
       translations: 'Traduccions',
       translation: 'Traducció',
-      language: 'Idioma'
+      language: 'Idioma',
+      rightHand: 'Mà dreta',
+      leftHand: 'Mà esquerra',
+      bothHands: 'Dues mans'
     },
     
     // Action buttons
@@ -63,7 +76,8 @@ export default {
       addExample: 'Afegir exemple',
       addTranslation: 'Afegir traducció',
       requestEdit: 'Sol·licitar edició',
-      createNewWord: 'Crear nova paraula'
+      createNewWord: 'Crear nova paraula',
+      removeDescription: 'Eliminar descripció'
     },
     
     // Error messages
@@ -84,6 +98,17 @@ export default {
     },
     
     // Miscellaneous
-    notSpecified: 'No especificat'
+    notSpecified: 'No especificat',
+    noVideos: 'No hi ha vídeos disponibles'
+  },
+  language: {
+    catalan: 'Català',
+    spanish: 'Castellà',
+    english: 'Anglès',
+    other: 'Altres',
+    CATALAN: 'Català',
+    SPANISH: 'Castellà',
+    ENGLISH: 'Anglès',
+    OTHER: 'Altres'
   }
 } as TranslateKeys; 

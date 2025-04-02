@@ -17,9 +17,13 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/WordPage.vue') }],
   },
   {
-    path: '/request',
+    path: '/requests',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/RequestPage.vue') }],
+    children: [
+      { path: '', component: () => import('pages/RequestPage.vue') },
+      { path: 'create', component: () => import('pages/CreateRequestPage.vue') },
+      { path: ':id', component: () => import('pages/EditRequestPage.vue') },
+    ],
     beforeEnter: (to, from, next) => {
       if (!useUser().isLoggedIn) {
         next('/')
@@ -29,9 +33,11 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
-    path: '/confirm',
+    path: '/confirm-requests',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/ConfirmRequestPage.vue') }],
+    children: [{ path: '', component: () => import('pages/ConfirmRequest/IndexPage.vue') },
+      { path: ':id', component: () => import('pages/ConfirmRequest/EditPage.vue') }
+    ],
     beforeEnter: (to, from, next) => {
       if (!useUser().isAdmin) {
         next('/');

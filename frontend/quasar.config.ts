@@ -126,6 +126,7 @@ export default defineConfig(() => {
         }
       },
       plugins: ['Notify'],
+      lang: 'es'
     },
 
     // animations: 'all', // --- includes all animations

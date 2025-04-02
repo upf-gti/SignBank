@@ -1,33 +1,72 @@
 <template>
-    <div>
-        <div v-if="loading" class="flex flex-center q-pa-xl">
-            <q-spinner size="3em" color="primary" />
-            <span class="q-ml-sm">{{ translate('common.loading') }}</span>
-        </div>
-        
-        <div v-else-if="error" class="text-center q-pa-md">
-            <div class="text-negative text-h6">{{ error }}</div>
-            <q-btn color="primary" :label="translate('common.goBack')" @click="$router.go(-1)" class="q-mt-md" />
-        </div>
-        
-        <div v-else>
-            <div class="row justify-between items-center q-pb-md">
-                <q-btn flat icon="arrow_back" :label="translate('common.back')" @click="$router.go(-1)" />
-                
-                <div class="row q-gutter-sm" v-if="editMode === 'none'">
-                    <q-btn outline color="primary" :label="translate('word_detail.action.requestEdit')" @click="startEdit('strict')" />
-                    <q-btn outline color="primary" :label="translate('word_detail.action.createNewWord')" @click="startEdit('full')" />
-                </div>
-            </div>
-            
-            <WordDetail 
-                :word="wordData" 
-                :editMode="editMode"
-                @save="saveWord"
-                @cancel="cancelEdit"
-            />
-        </div>
+  <q-page
+    :style-fn="
+      (header: number, height: number) => {
+        return { height: `${height - header}px` };
+      }
+    "
+    class="column items-center justify-evenly "
+  >
+    <div
+      v-if="loading"
+      class="q-pa-xl row col fit"
+    >
+      <q-spinner
+        size="3em"
+        color="primary"
+      />
+      <span class="q-ml-sm">{{ translate('common.loading') }}</span>
     </div>
+        
+    <div
+      v-else-if="error"
+      class="text-center q-pa-md"
+    >
+      <div class="text-negative text-h6">
+        {{ error }}
+      </div>
+      <q-btn
+        color="primary"
+        :label="translate('common.goBack')"
+        class="q-mt-md"
+        @click="$router.go(-1)"
+      />
+    </div>
+        
+    <div
+      v-else
+      class="column col full-width justify-center items-center"
+    >
+      <div class="row justify-between items-center q-py-sm full-width">
+        <q-btn
+          flat
+          icon="arrow_back"
+          :label="translate('common.back')"
+          @click="$router.go(-1)"
+        />
+                
+        <div
+          v-if="editMode === 'none'"
+          class="row q-gutter-sm q-px-md"
+        >
+          <q-btn
+            outline
+            color="primary"
+            :label="translate('word_detail.action.requestEdit')"
+            @click="startEdit('strict')"
+          />
+        </div>
+      </div>
+            
+      <WordDetail
+        class="col full-width" 
+        :word="wordData" 
+        :edit-mode="editMode"
+        @save="saveWord"
+        @cancel="cancelEdit"
+      />
+    </div>
+  </q-page>
 </template>
 
 <script setup lang="ts">
@@ -36,7 +75,8 @@ import { ref, onMounted } from 'vue'
 import { api } from 'src/services/api'
 import WordDetail from 'src/components/WordDetail.vue'
 import { useQuasar } from 'quasar'
-import { Words, WordStatus } from 'src/types/word'
+import type { Words} from 'src/types/word';
+import { WordStatus } from 'src/types/word'
 import translate from 'src/utils/translate'
 
 const $q = useQuasar()
@@ -123,10 +163,12 @@ async function saveWord(updatedWord: Words) {
         
         // If we're editing an existing word, refresh the data
         if (wordData.value && wordData.value.id) {
-            fetchWordData()
+            await fetchWordData()
         } else {
             // For new words, go back to the search page
-            router.push({ name: 'home' })
+            router.push({ name: 'home' }).catch((err) => {
+                console.error('Error navigating to home:', err)
+            })
         }
     } catch (err) {
         console.error('Error saving word:', err)
@@ -141,17 +183,17 @@ async function saveWord(updatedWord: Words) {
 }
 
 // Cancel editing
-function cancelEdit() {
+async function cancelEdit() {
     if (editMode.value === 'strict') {
         // If we're editing an existing word, reload it
-        fetchWordData()
+        await fetchWordData()
     }
     
     editMode.value = 'none'
 }
 
 // Load data when component mounts
-onMounted(() => {
-    fetchWordData()
+onMounted(async () => {
+    await fetchWordData()
 })
 </script>

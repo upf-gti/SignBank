@@ -48,15 +48,13 @@
           v-if="userStore.isLoggedIn" 
           flat
           :label="translate('requestWord')"
-          icon="add_circle"
-          @click="$router.push('/request')"
+          @click="$router.push('/requests')"
         />
         <q-btn
           v-if="userStore.isAdmin && userStore.isLoggedIn"
           flat
           :label="translate('confirmRequests')"
-          icon="assignment_turned_in"
-          @click="$router.push('/confirm')"
+          @click="$router.push('/confirm-requests')"
         />
         <q-btn
           v-if="!userStore.isLoggedIn"

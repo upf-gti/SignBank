@@ -12,7 +12,15 @@ interface TranslateKeys {
  enterAWord: string;
  search: string;
  editMode: string;
- 
+ status: string;
+ denyReason: string;
+ newRequest: string;
+ PENDING: string;
+ APPROVED: string;
+ REJECTED: string;
+ ACCEPTED: string;
+ DENIED: string;
+ myRequests: string;
  // Common translations
  common: {
    yes: string;
@@ -30,6 +38,8 @@ interface TranslateKeys {
  word_detail: {
    // Field labels
    field: {
+     signInfo: string;
+     definitions: string;
      word: string;
      description: string;
      dialect: string;
@@ -49,6 +59,9 @@ interface TranslateKeys {
      translations: string;
      translation: string;
      language: string;
+     rightHand: string;
+     leftHand: string;
+     bothHands: string;
    };
    
    // Action buttons
@@ -60,6 +73,7 @@ interface TranslateKeys {
      addTranslation: string;
      requestEdit: string;
      createNewWord: string;
+     removeDescription: string;
    };
    
    // Error messages
@@ -81,6 +95,17 @@ interface TranslateKeys {
    
    // Miscellaneous
    notSpecified: string;
+   noVideos: string;
+ };
+ language: {
+   catalan: string;
+   spanish: string;
+   english: string;
+   other: string;
+   CATALAN: string;
+   SPANISH: string;
+   ENGLISH: string;
+   OTHER: string;
  };
 }
 

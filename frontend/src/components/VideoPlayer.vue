@@ -1,13 +1,20 @@
 <template>
   <div class="video-player">
-    <q-card class="video-card">
+    <q-card
+      class="video-card"
+      flat
+    >
       <q-card-section>
-        <div class="text-h6">{{ translate('word_detail.field.videos') }}</div>
-        
-        <div v-if="videos.length > 0" class="video-container">
-          <q-video 
+        <div
+          v-if="videos.length > 0"
+          class="video-container"
+        >
+          <video 
             :src="currentVideo!.url"
             class="q-mb-md"
+            style="height: 250px; width: 250px; object-fit: cover"
+            loop
+            autoplay
           />
           
           <div class="text-caption q-mb-md">
@@ -16,7 +23,10 @@
           </div>
           
           <!-- Video navigation -->
-          <div v-if="videos.length > 1" class="video-navigation q-mb-md">
+          <div
+            v-if="videos.length > 1"
+            class="video-navigation q-mb-md"
+          >
             <q-btn 
               icon="navigate_before" 
               color="primary" 
@@ -41,7 +51,10 @@
           </div>
         </div>
         
-        <div v-else class="no-videos">
+        <div
+          v-else
+          class="no-videos"
+        >
           {{ translate('word_detail.noVideos') }}
         </div>
       </q-card-section>

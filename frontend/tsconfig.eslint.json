@@ -1,0 +1,12 @@
+{
+    "extends": "./.quasar/tsconfig.json",
+    "compilerOptions": {
+        "allowJs": true
+    },
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.vue",
+        ".eslintrc.js",
+        "eslint.config.js"
+    ]
+}

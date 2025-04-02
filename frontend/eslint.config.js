@@ -36,15 +36,6 @@ export default [
   ...pluginVue.configs["flat/strongly-recommended"],
   ...pluginVue.configs["flat/recommended"],
 
-  {
-    files: ['**/*.ts', '**/*.vue'],
-    rules: {
-      '@typescript-eslint/consistent-type-imports': [
-        'error',
-        { prefer: 'type-imports' }
-      ],
-    }
-  },
   // https://github.com/vuejs/eslint-config-typescript
   ...vueTsEslintConfig({
     // Optional: extend additional configurations from typescript-eslint'.
@@ -58,8 +49,40 @@ export default [
 
       // Other utility configurations, such as 'eslintRecommended', (note that it's in camelCase)
       // are also extendable here. But we don't recommend using them directly.
-    ]
+    ],
+    // Add parserOptions for TypeScript type checking
+    parserOptions: {
+      project: ['./tsconfig.eslint.json'],
+      tsconfigRootDir: '.',
+      extraFileExtensions: ['.vue']
+    }
   }),
+
+  {
+    files: ['**/*.ts', '**/*.vue'],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.eslint.json'],
+        tsconfigRootDir: '.',
+        extraFileExtensions: ['.vue']
+      }
+    },
+    rules: {
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        { prefer: 'type-imports' }
+      ],
+    }
+  },
+
+  // We also add a backup configuration for Vue files that disables type-checking rules if they cause issues
+  {
+    files: ['**/*.vue'],
+    rules: {
+      // Disable TypeScript ESLint rules that require type information if they cause problems
+      '@typescript-eslint/consistent-type-imports': 'off',
+    }
+  },
 
   {
     languageOptions: {

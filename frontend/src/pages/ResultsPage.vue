@@ -17,6 +17,13 @@
         flat
         :style="'height: '+ pageHeight +'px'"
         :columns="wordStructure"
+        :pagination="{
+          sortBy: 'desc',
+          descending: false,
+          page: 1,
+          rowsPerPage: 50
+        // rowsNumber: xx if getting data from a server
+        }"
       >
         <template #body="scope: BodyScope">
           <q-tr
@@ -30,11 +37,19 @@
               key="videoUrl"
             >
               <video
+                v-if="scope.row.word.videoUrls && scope.row.word.videoUrls.length > 0"
                 ref="videoRef"
-                style="height: 150px; width: 150px; object-fit: cover"
-                :src="scope.row.word.description"
+                style="height: 200px; width: 200px; object-fit: cover"
+                :src="scope.row.word.videoUrls[0] || ''"
                 loop
               />
+              <div
+                v-else
+                style="height: 150px; width: 150px;"
+                class="flex items-center justify-center bg-grey-3"
+              >
+                No video
+              </div>
             </q-td>
             <q-td
               key="word"
@@ -44,7 +59,7 @@
             <q-td
               key="description"
             >
-              {{ getMostImportantDescription(scope.row.word) }}
+              {{ scope.row.word.description }}
             </q-td>
           </q-tr>
         </template>
@@ -55,18 +70,18 @@
 
 <script setup lang="ts">
 
-import type {SearchHit, SearchResponse} from 'src/types/word'
 import { onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api from 'src/services/api'
 import wordStructure from 'src/utils/wordStructure'
 const route = useRoute()
-const searchResult = ref<SearchResponse>({hits: [] as SearchHit[], found: 0, page: 1, total: 0} as SearchResponse)
+const searchResult = ref<WordSearchResponse>({hits: [] as Hit[], found: 0, page: 1} as WordSearchResponse)
 const pageHeight = ref(0)
 const router = useRouter()
 import type { QTableSlots } from 'quasar';
+import type { Hit, WordSearchResponse } from 'src/types/wordSearch'
 
-interface BodyScope<T = SearchHit> extends Parameters<QTableSlots["body"]> {
+interface BodyScope<T = Hit> extends Parameters<QTableSlots["body"]> {
   row: T;
 }
 
@@ -94,24 +109,6 @@ function openWord(wordId: string) {
   })
 }
 
-function getMostImportantDescription(word: any): string {
-  // If there are no senses, fall back to the general description
-  if (!word.senses || word.senses.length === 0) {
-    return word.description || '';
-  }
-
-  // Sort senses by priority if they exist (lower number = higher priority)
-  const sortedSenses = [...word.senses].sort((a: any, b: any) => (a.priority || 0) - (b.priority || 0));
-  const primarySense = sortedSenses[0];
-  
-  // Check if the primary sense has descriptions
-  if (primarySense && primarySense.descriptions && primarySense.descriptions.length > 0) {
-    return primarySense.descriptions[0].text;
-  }
-  
-  // Fall back to the general description if no sense descriptions are available
-  return word.description || '';
-}
 </script>
 <style lang="sass">
 .my-sticky-header-table
