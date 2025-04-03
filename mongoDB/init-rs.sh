@@ -19,4 +19,15 @@ wait $MONGO_PID
 
 # Start MongoDB with replica set
 echo "Starting MongoDB with replica set..."
-exec mongod --dbpath /data/db --bind_ip_all --replSet rs0 
+mongod --dbpath /data/db --bind_ip_all --replSet rs0 &
+MONGO_PID=$!
+
+# Wait for MongoDB to start with replica set configuration
+sleep 10
+
+# Initialize the replica set
+echo "Configuring replica set..."
+mongosh admin -u root -p password --eval 'rs.initiate({_id: "rs0", members: [{_id: 0, host: "mongoDB:27017"}]})'
+
+# Keep MongoDB running in the foreground
+wait $MONGO_PID 
