@@ -17,6 +17,12 @@ const adminExists = await prisma.users.findFirst({
 });
 
 if (!adminExists) {
+  // Validate environment variables
+  if (!process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD) {
+    console.error('ADMIN_EMAIL or ADMIN_PASSWORD environment variables are not set. Using defaults.');
+    return
+  }
+  
   const hashedPassword = await argon2.hash(process.env.ADMIN_PASSWORD);
   await prisma.users.create({
     data: {

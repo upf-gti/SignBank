@@ -79,7 +79,7 @@ services:
       - signbank
     volumes:
       - ./typesense/typesense_data:/data
-    command: '--data-dir /data --api-key=xyz123 --enable-cors'
+    command: '--data-dir /data --api-key=${TYPESENSE_API_KEY} --enable-cors'
   dufs:
     image: sigoden/dufs
     volumes:

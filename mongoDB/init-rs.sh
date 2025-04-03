@@ -27,7 +27,12 @@ sleep 10
 
 # Initialize the replica set
 echo "Configuring replica set..."
-mongosh admin -u root -p password --eval 'rs.initiate({_id: "rs0", members: [{_id: 0, host: "mongoDB:27017"}]})'
+mongosh admin -u root -p password --eval 'rs.initiate({
+    _id: "rs0",
+    members: [
+        { _id: 0, host: "mongoDB" }
+    ]
+})'
 
 # Keep MongoDB running in the foreground
 wait $MONGO_PID 

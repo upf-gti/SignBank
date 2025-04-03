@@ -13,10 +13,15 @@ services:
       - PORT=80
       - DATABASE_URL=${DATABASE_URL_DOCKER}
       - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
       # Add other production environment variables
     networks:
       - signbank
     restart: always  # Add restart policy
+    depends_on:
+      - mongoDB
+      - typesense
     
   frontend:
     build:
@@ -32,19 +37,19 @@ services:
     container_name: mongoDB
     hostname: mongoDB
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
       MONGO_REPLICA_SET_NAME: rs0
     networks:
       - signbank
     volumes:
       - ./mongoDB/data:/data/db
-      - ./mongoDB/initdb.d:/docker-entrypoint-initdb.d
-      - ./mongoDB/keyfiles/mongodb-keyfile:/etc/mongodb-keyfile
+      - ./mongoDB/init-rs.sh:/init-rs.sh
     ports:
       - 27017:27017
-    command: mongod --replSet rs0 --bind_ip_all --keyFile /etc/mongodb-keyfile
+    command: bash /init-rs.sh
     restart: always
+
   typesense:
     image: typesense/typesense:27.1
     restart: always
@@ -81,6 +86,7 @@ services:
       - signbank
     depends_on:
       - backend
+      - frontend
     restart: always
 
 volumes:
