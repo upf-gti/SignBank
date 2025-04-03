@@ -73,7 +73,7 @@
     "start:debug": "nest start --debug --watch",
     "start:dev": "nest start --watch",
     "start:docker:dev": "prisma db push & npm run start:dev",
-    "start:prod": "node dist/src/main",
+    "start:prod": "NODE_ENV=production node dist/src/main",
     "test": "jest",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",

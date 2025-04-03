@@ -28,7 +28,6 @@ export class WordRequestsController {
     @GetUser('id') userId: string,
     @Body() createWordRequestDto: CreateWordRequestDto
   ) {
-    console.log(createWordRequestDto);
     return this.wordRequestsService.create(userId, createWordRequestDto);
   }
 

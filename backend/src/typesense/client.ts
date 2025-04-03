@@ -8,7 +8,7 @@ const typesense = new Client({
             protocol: 'http',
         },
     ],
-    apiKey: 'xyz123',
+    apiKey: process.env.TYPESENSE_API_KEY,
 });
 
 export default typesense;

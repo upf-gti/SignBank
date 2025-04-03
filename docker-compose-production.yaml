@@ -11,6 +11,8 @@ services:
     container_name: backend-prod
     environment:
       - PORT=80
+      - DATABASE_URL=${DATABASE_URL_DOCKER}
+      - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}
       # Add other production environment variables
     networks:
       - signbank
@@ -25,20 +27,24 @@ services:
       - signbank    
     restart: always  # Add restart policy
 
-  postgres:
-    image: postgres:15
-    container_name: postgres-prod
+  mongoDB:
+    image: mongo
+    container_name: mongoDB
+    hostname: mongoDB
     environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}  # Use environment variable
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_HOST_AUTH_METHOD: md5  # Change from trust to md5 for security
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_REPLICA_SET_NAME: rs0
     networks:
       - signbank
     volumes:
-      - database:/var/lib/postgresql/data  # Use named volume
+      - ./mongoDB/data:/data/db
+      - ./mongoDB/initdb.d:/docker-entrypoint-initdb.d
+      - ./mongoDB/keyfiles/mongodb-keyfile:/etc/mongodb-keyfile
+    ports:
+      - 27017:27017
+    command: mongod --replSet rs0 --bind_ip_all --keyFile /etc/mongodb-keyfile
     restart: always
-
   typesense:
     image: typesense/typesense:27.1
     restart: always
@@ -54,8 +60,9 @@ services:
 
   dufs:
     image: sigoden/dufs
+    container_name: dufs-prod
     volumes:
-      - ${FILE_SERVER_PATH}:/data  # Use environment variable
+      - ./production/FileServer:/data 
     command: /data -A
     restart: always
     networks:
@@ -68,9 +75,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./certbot/conf:/etc/letsencrypt  # Add SSL certificates volume
-      - ./certbot/www:/var/www/certbot  # Add certbot volume
+      - ./nginx/nginx.prod.conf/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/certs:/etc/ssl/certs/
     networks:
       - signbank
     depends_on:

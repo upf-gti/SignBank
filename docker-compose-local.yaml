@@ -12,6 +12,7 @@ services:
     environment:
       - PORT=443
       - DATABASE_URL=${DATABASE_URL_DOCKER}
+      - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}
     cap_add:
       - NET_BIND_SERVICE
     networks:
@@ -72,7 +73,7 @@ services:
     restart: on-failure
     container_name: typesense
     environment:
-      - TYPESENSE_API_KEY=xyz123
+      - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}
       - TYPESENSE_DATA_DIR=/data
     networks:
       - signbank

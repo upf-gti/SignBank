@@ -85,7 +85,6 @@ export class WordsService {
 
   // Get full word details using Prisma
   async getWordDetailsById(wordId: string) {
-    console.log(wordId);
     const word = await this.prisma.words.findUnique({
       where: { id: wordId },
     });

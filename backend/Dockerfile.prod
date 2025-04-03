@@ -5,15 +5,7 @@ WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install dependencies
-RUN npm install
-
-# Copy source code
-COPY . .
-
-# Generate Prisma client
-RUN npx prisma generate
-ENV DATABASE_URL=postgresql://postgres:password@postgres:5432/postgres?connect_timeout=300
+ENV DATABASE_URL=mongodb://root:password@mongoDB:27017/signbank?authSource=admin&replicaSet=rs0
 ENV ADMIN_EMAIL=admin@example.com
 ENV ADMIN_PASSWORD=password
 # Build the application
@@ -32,7 +24,7 @@ COPY --from=builder /app/prisma ./prisma
 
 # Environment variables should be provided through docker-compose
 ENV NODE_ENV=production
-ENV PORT=443
+ENV PORT=80
 
 # Create a non-root user
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
