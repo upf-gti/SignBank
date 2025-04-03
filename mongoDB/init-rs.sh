@@ -30,7 +30,7 @@ echo "Configuring replica set..."
 mongosh admin -u root -p password --eval 'rs.initiate({
     _id: "rs0",
     members: [
-        { _id: 0, host: "mongoDB" }
+        { _id: 0, host: "mongoDB:27017" }
     ]
 })'
 
