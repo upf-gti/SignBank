@@ -79,6 +79,17 @@ export class WordsService {
         })
       };
     } catch (error) {
+      // Check if this is a 404 error (collection doesn't exist or is empty)
+      if (error.message && error.message.includes('HTTP code 404')) {
+        // Return an empty result set instead of throwing an error
+        return {
+          found: 0,
+          page: 1,
+          hits: []
+        };
+      }
+      
+      // For any other errors, rethrow with a descriptive message
       throw new Error(`Search failed: ${error.message}`);
     }
   }
