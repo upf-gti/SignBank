@@ -7,7 +7,11 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile.prod  # Change to production Dockerfile
+      dockerfile: Dockerfile.prod
+      args:
+        DATABASE_URL: ${DATABASE_URL_DOCKER}
+        ADMIN_EMAIL: ${ADMIN_EMAIL}
+        ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     container_name: backend-prod
     environment:
       - PORT=80
