@@ -1,32 +1,58 @@
-# SignBank UPD (frontendd)
+# SignBank UPD (Frontend)
 
-\u0015Signbank project
+Frontend application for the SignBank project built with Quasar Framework (Vue.js-based).
 
-## Install the dependencies
+## Installation
+
+Install the dependencies:
+
 ```bash
 yarn
 # or
 npm install
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
+## Development
+
+### Start the app in development mode
+Features hot-code reloading, error reporting, etc.
+
 ```bash
 quasar dev
 ```
 
-
 ### Lint the files
+
 ```bash
 yarn lint
 # or
 npm run lint
 ```
 
+## Production Build
 
-### Build the app for production
 ```bash
 quasar build
 ```
 
-### Customize the configuration
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+## Docker
+
+The frontend application can be containerized using:
+- For local development: `Dockerfile.local`
+- For production: `Dockerfile.prod`
+
+These are typically used through the root docker-compose configuration.
+
+## Configuration
+
+See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js) for customizing the Quasar configuration.
+
+## Project Structure
+
+- `src/` - Source code
+  - `components/` - Reusable Vue components
+  - `pages/` - Application pages
+  - `boot/` - Initialization scripts
+  - `css/` - Global styles
+  - `layouts/` - Page layouts
+- `public/` - Static assets
