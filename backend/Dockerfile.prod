@@ -7,11 +7,22 @@ COPY prisma ./prisma/
 # Copy all source code
 COPY . .
 
-ENV DATABASE_URL=mongodb://root:password@mongoDB:27017/signbank?authSource=admin&replicaSet=rs0
-ENV ADMIN_EMAIL=admin@example.com
-ENV ADMIN_PASSWORD=password
+# Define build arguments
+ARG DATABASE_URL
+ARG ADMIN_EMAIL
+ARG ADMIN_PASSWORD
+
+# Set environment variables from build arguments
+ENV DATABASE_URL=${DATABASE_URL}
+ENV ADMIN_EMAIL=${ADMIN_EMAIL}
+ENV ADMIN_PASSWORD=${ADMIN_PASSWORD}
+
 # Install dependencies first
 RUN npm install
+
+# Generate Prisma client, but don't run migrations or seed during build
+RUN npx prisma generate
+
 # Build the application
 RUN npm run build
 
@@ -26,12 +37,14 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/prisma ./prisma
 
+
 # Environment variables should be provided through docker-compose
 ENV NODE_ENV=production
 ENV PORT=80
 
 # Create a non-root user
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
 USER appuser
 
 # Start the application
