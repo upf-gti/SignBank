@@ -35,7 +35,14 @@ export default {
     save: 'Desar',
     cancel: 'Cancel·lar',
     word: 'Paraula',
-    description: 'Descripció'
+    description: 'Descripció',
+    reject: 'Rebutjar',
+    approve: 'Aprovar',
+    errorSavingWordRequest: 'Error en desar la sol·licitud de paraula',
+    errorRejectingWordRequest: 'Error en rebutjar la sol·licitud de paraula',
+    errorRedirectingToConfirmRequest: 'Error en redirigir a la sol·licitud de paraula',
+    wordRequestApproved: 'Sol·licitud de paraula aprovada',
+    wordRequestRejected: 'Sol·licitud de paraula rebutjada'
   },
   
   // Word related translations

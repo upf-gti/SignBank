@@ -29,7 +29,7 @@
     
   <script setup lang="ts">
     import { ref, onMounted } from 'vue'
-    import {  useRoute } from 'vue-router'
+    import {  useRoute, useRouter } from 'vue-router'
     import { useQuasar } from 'quasar'
     import { api } from 'src/services/api'
     import WordDetail from 'src/components/WordDetail.vue'
@@ -39,7 +39,7 @@
     
     const $q = useQuasar()
     const route = useRoute()
-    
+    const router = useRouter()
     // Initialize empty word data for the request
     const wordData = ref<Word>({} as Word)
     
@@ -53,6 +53,10 @@
           message: translate('errorSavingWordRequest'),
           icon: 'error'
         })
+      }).finally(() => {
+        router.push('/confirm-request').catch(() => {
+          console.error('Error redirecting to confirm request')
+        })
       })
     }
 
@@ -61,6 +65,10 @@
         console.log('Word request rejected:', response.data)
       }).catch((error) => {
         console.error('Error rejecting word request:', error)
+      }).finally(() => {
+        router.push('/confirm-request').catch(() => {
+          console.error('Error redirecting to confirm request')
+        })
       })
     }
   

@@ -32,6 +32,13 @@ interface TranslateKeys {
    cancel: string;
    word: string;
    description: string;
+   reject: string;
+   approve: string;
+   errorSavingWordRequest: string;
+   errorRejectingWordRequest: string;
+   errorRedirectingToConfirmRequest: string;
+   wordRequestApproved: string;
+   wordRequestRejected: string;
  };
  
  // Word related translations
