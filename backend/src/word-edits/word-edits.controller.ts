@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { WordEditsService } from './word-edits.service';
 import { CreateWordEditDto } from './dto/create-word-edit.dto';
-import { UpdateWordEditDto, EditStatus } from './dto/update-word-edit.dto';
+import { UpdateWordEditDto } from './dto/update-word-edit.dto';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { GetUser } from '../auth/decorator/get-user.decorator';
 import { Roles } from '../auth/decorator/roles.decorator';

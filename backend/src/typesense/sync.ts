@@ -9,7 +9,7 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
 
   // Sync words from the database to Typesense
   async syncWordsToTypesense() {
-    const words = await this.prisma.words.findMany();
+    const words = await this.prisma.wordEntry.findMany();
 
     if (!words || words.length === 0) {
       console.log('No words found in the database to sync.');
@@ -76,12 +76,12 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
         wordData.senses?.forEach(sense => {
           // Process sense descriptions
           sense.descriptions?.forEach(desc => {
-            if (desc.text) senseTexts.push(desc.text);
+            if (desc.description) senseTexts.push(desc.description);
             if (desc.examples) senseExamples.push(...desc.examples);
             
             // Add translations linked to this sense description
             desc.translations?.forEach(translation => {
-              allTranslations.push(`${translation.language}:${translation.text}`);
+              allTranslations.push(`${translation.language}:${translation.translation}`);
             });
           });
         });
@@ -103,10 +103,7 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
           word: wordData.word,
           createdAt: word.createdAt.toISOString(),
           status: word.status || 'PUBLISHED',
-          dominantHand: wordData.dominantHand || 'UNKNOWN',
-          register: wordData.register || '',
           isNative: wordData.isNative || false,
-          lexicalCategory: wordData.lexicalCategory || '',
           senseDefinitions: senseTexts.length > 0 ? senseTexts : [''],
           senseExamples: senseExamples.length > 0 ? senseExamples : [''],
           translations: allTranslations.length > 0 ? allTranslations : [''],
@@ -155,7 +152,7 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
 
   async syncSingleWord(wordId: string) {
     try {
-      const word = await this.prisma.words.findUnique({
+      const word = await this.prisma.wordEntry.findUnique({
         where: { id: wordId },          
       });
 
@@ -179,12 +176,12 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
       wordData.senses?.forEach(sense => {
         // Process sense descriptions
         sense.descriptions?.forEach(desc => {
-          if (desc.text) senseTexts.push(desc.text);
+          if (desc.description) senseTexts.push(desc.description);
           if (desc.examples) senseExamples.push(...desc.examples);
           
           // Add translations linked to this sense description
           desc.translations?.forEach(translation => {
-            allTranslations.push(`${translation.language}:${translation.text}`);
+            allTranslations.push(`${translation.language}:${translation.translation}`);
           });
         });
       });
@@ -206,10 +203,7 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
         word: wordData.word,
         createdAt: word.createdAt.toISOString(),
         status: word.status || 'PUBLISHED',
-        dominantHand: wordData.dominantHand || 'UNKNOWN',
-        register: wordData.register || '',
         isNative: wordData.isNative || false,
-        lexicalCategory: wordData.lexicalCategory || '',
         senseDefinitions: senseTexts.length > 0 ? senseTexts : [''],
         senseExamples: senseExamples.length > 0 ? senseExamples : [''],
         translations: allTranslations.length > 0 ? allTranslations : [''],

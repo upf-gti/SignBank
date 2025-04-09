@@ -21,21 +21,7 @@ export class WordRequestsService {
       const wordRequest = await prisma.wordRequest.create({
         data: {
           creatorId: userId,
-          // Update to use requestedWordData
-          requestedWordData: {
-          word: dto.word,
-          isNative: dto.isNative || true,
-          register: dto.register,
-          lexicalCategory: dto.lexicalCategory,
-          dominantHand: dto.dominantHand,
-          facialExpression: dto.facialExpression,
-          hasContact: dto.hasContact,
-          senses: dto.senses ? dto.senses as any : [],
-          relatedWords: []
-          },
-          // Keep dialectId for the relation
-          dialectId: dto.dialectId ? String(dto.dialectId) : undefined,
-          // Missing fields with default values
+          requestedWordData: dto.requestedWordData,
           status: RequestStatus.PENDING,
         },
       });
@@ -62,7 +48,7 @@ export class WordRequestsService {
     return this.prisma.wordRequest.update({
       where: { id },
       data: {
-        requestedWordData: dto,
+        requestedWordData: dto.requestedWordData
       },
     });
   }
@@ -97,7 +83,7 @@ export class WordRequestsService {
         where: { id },
       });
       
-      const newWord = await this.prisma.words.create({
+      const newWord = await this.prisma.wordEntry.create({
         data: {
           wordData: wordRequest.requestedWordData,
           isCreatedFromRequest: true,

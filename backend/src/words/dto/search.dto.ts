@@ -23,15 +23,20 @@ export class SearchQueryDto {
 
   @IsOptional()
   @Type(() => Boolean)
-  hasContact?: boolean;
+  isNative?: boolean;
 
+  // Video attributes can be used to filter, but they are now nested in the sense.videos array
   @IsOptional()
   @Type(() => Boolean)
-  isNative?: boolean;
+  videoHasContact?: boolean;
 
   @IsOptional()
   @IsEnum(Hand)
-  dominantHand?: Hand;
+  videoDominantHand?: Hand;
+  
+  @IsOptional()
+  @IsString()
+  videoFacialExpression?: string;
 }
 
 export class AdvancedSearchDto {

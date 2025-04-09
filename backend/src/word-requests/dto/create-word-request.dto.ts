@@ -1,4 +1,4 @@
-import { Hand, Language, LexicalCategory } from "@prisma/client"
+import { Hand, Language, LexicalCategory, PrismaClient, RelationType } from "@prisma/client"
 import { Type } from 'class-transformer';
 import { IsString, IsOptional, IsBoolean, IsArray, ValidateNested, ArrayMinSize, IsNumber, IsNotEmpty } from 'class-validator';
 
@@ -6,7 +6,7 @@ import { IsString, IsOptional, IsBoolean, IsArray, ValidateNested, ArrayMinSize,
 export class SenseTranslationDto {
   @IsString()
   @IsNotEmpty()
-  text: string;
+  translation: string;
 
   @IsString()
   @IsNotEmpty()
@@ -16,7 +16,7 @@ export class SenseTranslationDto {
 export class DescriptionDto {
   @IsString()
   @IsNotEmpty()
-  text: string;
+  description: string;
 
   @IsArray()
   @IsString({ each: true })
@@ -29,21 +29,17 @@ export class DescriptionDto {
   translations: SenseTranslationDto[];
 }
 
-export class VideoInfoDto {
+export class VideoDto {
   @IsString()
   url: string;
 
   @IsString()
   angle: string;
-
-  @IsOptional()
-  priority?: number;
-}
-
-export class SenseDto {
+  
   @IsNumber()
-  priority?: number;
-
+  @IsOptional()
+  priority: number;
+  
   @IsOptional()
   dominantHand?: Hand;
 
@@ -54,6 +50,11 @@ export class SenseDto {
   @IsOptional()
   @IsBoolean()
   hasContact?: boolean;
+}
+
+export class SenseDto {
+  @IsNumber()
+  priority: number;
 
   @IsArray()
   @ValidateNested({ each: true })
@@ -87,44 +88,51 @@ export class SenseDto {
 
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => VideoInfoDto)
+  @Type(() => VideoDto)
   @IsOptional()
-  videos?: VideoInfoDto[];
+  videos?: VideoDto[];
+  
+  @IsOptional()
+  lexicalCategory?: LexicalCategory;
 }
 
-export class CreateWordRequestDto {
+export class RelatedWordDto {
+  @IsString()
+  @IsNotEmpty()
+  wordId: string;
+  
+  @IsNotEmpty()
+  relationType: RelationType;
+}
+
+export class WordDataDto {
   @IsString()
   @IsNotEmpty()
   word: string;
-
-  @IsOptional()
-  dialectId?: string;
-
-  @IsOptional()
-  dominantHand?: Hand;
-
-  @IsOptional()
-  @IsString()
-  facialExpression?: string;
-
-  @IsOptional()
+  
   @IsBoolean()
-  hasContact?: boolean;
-
   @IsOptional()
-  @IsBoolean()
-  isNative?: boolean;
-
-  @IsOptional()
-  lexicalCategory?: LexicalCategory;
-
-  @IsOptional()
-  @IsString()
-  register?: string;
-
+  isNative?: boolean = true;
+  
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => SenseDto)
   @ArrayMinSize(1)
   senses: SenseDto[];
+  
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => RelatedWordDto)
+  @IsOptional()
+  relatedWords?: RelatedWordDto[] = [];
+  
+  @IsOptional()
+  @IsString()
+  dialectId?: string;
+}
+
+export class CreateWordRequestDto {
+  @ValidateNested()
+  @Type(() => WordDataDto)
+  requestedWordData: WordDataDto;
 }

@@ -13,7 +13,7 @@ async function main() {
     await prisma.wordEditHistoric.deleteMany({});
     await prisma.wordEdit.deleteMany({});
     await prisma.wordRequest.deleteMany({});
-    await prisma.words.deleteMany({});
+    await prisma.wordEntry.deleteMany({});
     await prisma.dialect.deleteMany({});
     await prisma.users.deleteMany({});
     console.log('Deleted existing data');
@@ -79,7 +79,7 @@ async function main() {
   // Create words with new schema structure
   console.log('Creating words...');
 
-  await prisma.words.create({
+  await prisma.wordEntry.create({
     data: {
       status: WordStatus.PUBLISHED,
       currentVersion: 1,
@@ -90,86 +90,79 @@ async function main() {
       wordData: {
         word: 'Cafe',
         isNative: true,
-        register: 'Estàndard',
-        lexicalCategory: LexicalCategory.NOUN,
-        dominantHand: Hand.RIGHT,
-        facialExpression: 'Neutral',
-        hasContact: false,
         
         senses: [
           {
             priority: 1,
-            dominantHand: Hand.RIGHT,
-            facialExpression: 'Neutral',
-            hasContact: true,
             movementType: 'Moviment del signe Cafè',
             nonManualComponents: 'Pronunciar Cafe',
             morphologicalVariants: '-',
             phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
+            lexicalCategory: LexicalCategory.NOUN,
             
             descriptions: [
               {
-                text: 'Arbret del gènere Coffea, de la família de les rubiàcies, conreat als països tropicals, de fulles lluents i flors blanques, els fruits del qual contenen ordinàriament dues llavors planoconvexes amb un solc al llarg de la cara plana.',
+                description: 'Arbret del gènere Coffea, de la família de les rubiàcies, conreat als països tropicals, de fulles lluents i flors blanques, els fruits del qual contenen ordinàriament dues llavors planoconvexes amb un solc al llarg de la cara plana.',
                 examples: ['Als matins prenem un cafe', 'El meu amic beu cafe cada dia'],
                 translations: [
-                  { text: 'Coffe', language: Language.ENGLISH },
-                  { text: 'Café', language: Language.SPANISH }
+                  { translation: 'Coffe', language: Language.ENGLISH },
+                  { translation: 'Café', language: Language.SPANISH }
                 ]
               },
               {
-                text: 'Cafè moca Cafè: d’una varietat procedent d’Aràbia.',
+                description: 'Cafè moca Cafè: d\'una varietat procedent d\'Aràbia.',
                 examples: [],
                 translations: []
               },
               {
-                text: 'Llavor del cafè: Torrar cafè. Cafè molt. Cafè descafeïnat.',
+                description: 'Llavor del cafè: Torrar cafè. Cafè molt. Cafè descafeïnat.',
                 examples: [],
                 translations: []
               },
               {
-                text: 'Cafè torrefacte: Cafè que ha estat barrejat amb sucre en torrar-lo.',
+                description: 'Cafè torrefacte: Cafè que ha estat barrejat amb sucre en torrar-lo.',
                 examples: [],
                 translations: []
               },
               {
-                text: 'Beguda feta per infusió de les llavors de cafè torrades i moltes. Prendre cafè. Una tassa de cafè. Cafè amb llet.',
+                description: 'Beguda feta per infusió de les llavors de cafè torrades i moltes. Prendre cafè. Una tassa de cafè. Cafè amb llet.',
                 examples: [],
                 translations: []
               },
               {
-                text: 'cCafè curt: Cafè elaborat amb menys aigua de la que se sol usar per a la mateixa quantitat de cafè molt.',
+                description: 'cCafè curt: Cafè elaborat amb menys aigua de la que se sol usar per a la mateixa quantitat de cafè molt.',
                 examples: [],
                 translations: []
               },
               {
-                text: 'Cafè exprés: Cafè fet amb una cafetera exprés. Posi’m dos cafès exprés, si us plau.',
+                description: 'Cafè exprés: Cafè fet amb una cafetera exprés. Posi\'m dos cafès exprés, si us plau.',
                 examples: [],
                 translations: []
               },
               {
-                text: 'Cafè irlandès: Cafè amb whisky i nata.',
+                description: 'Cafè irlandès: Cafè amb whisky i nata.',
                 examples: [],
                 translations: []
               },
               {
-                text: 'Cafè llarg: Cafè elaborat amb més aigua de la que se sol usar per a la mateixa quantitat de cafè molt.',
+                description: 'Cafè llarg: Cafè elaborat amb més aigua de la que se sol usar per a la mateixa quantitat de cafè molt.',
                 examples: [],
                 translations: []
               },
               {
-                text: 'Establiment on serveixen cafè i també licors, refrescos, etc. El Cafè de la Rambla. L’amo del cafè.',
+                description: 'Establiment on serveixen cafè i també licors, refrescos, etc. El Cafè de la Rambla. L\'amo del cafè.',
                 examples: [],
                 translations: []
               },
               {
-                text: 'Cafè concert: Cafè on es presenten números de música o de cant en un petit escenari.',
+                description: 'Cafè concert: Cafè on es presenten números de música o de cant en un petit escenari.',
                 examples: [],
                 translations: []
               },
               {
-                text: 'Cafè bord [o cafè de pobre]: Planta de la família de les papilionàcies, de flors grogues i fruit terminat en un bec ganxut, pròpia del Mediterrani meridional, i que, en determinades contrades, ha reemplaçat el cafè veritable en èpoques de carestia (Astragalus boeticus).',
+                description: 'Cafè bord [o cafè de pobre]: Planta de la família de les papilionàcies, de flors grogues i fruit terminat en un bec ganxut, pròpia del Mediterrani meridional, i que, en determinades contrades, ha reemplaçat el cafè veritable en èpoques de carestia (Astragalus boeticus).',
                 examples: [],
                 translations: []
               }
@@ -179,18 +172,21 @@ async function main() {
               {
                 url: 'https://signbank.upf.com/images/LSC_-_Cafe.mp4',
                 angle: 'Frontal',
-                priority: 1
+                priority: 1,
+                dominantHand: Hand.RIGHT,
+                facialExpression: 'Neutral',
+                hasContact: true
               }
             ]
           }
         ],
-        // Add related words - Arma and Coll are related
+        // Add related words
         relatedWords: []
       }
     },
   });
 
-  await prisma.words.create({
+  await prisma.wordEntry.create({
     data: {
       status: WordStatus.PUBLISHED,
       currentVersion: 1,
@@ -201,36 +197,29 @@ async function main() {
       wordData: {
         word: 'Camell',
         isNative: true,
-        register: 'Estàndard',
-        lexicalCategory: LexicalCategory.NOUN,
-        dominantHand: Hand.RIGHT,
-        facialExpression: 'Neutral',
-        hasContact: false,
         
         senses: [
           {
             priority: 1,
-            dominantHand: Hand.RIGHT,
-            facialExpression: 'Neutral',
-            hasContact: true,
             movementType: 'Moviment del signe camell',
             nonManualComponents: 'Pronunciar Cafe',
             morphologicalVariants: '-',
             phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
+            lexicalCategory: LexicalCategory.NOUN,
             
             descriptions: [
               {
-                text: 'Mamífer artiodàctil del gènere Camelus, de la família dels camèlids, de dimensions grans i cos robust, amb potes llargues i primes i coll llarg, fort i flexible, que té al dors un o dos geps.',
+                description: 'Mamífer artiodàctil del gènere Camelus, de la família dels camèlids, de dimensions grans i cos robust, amb potes llargues i primes i coll llarg, fort i flexible, que té al dors un o dos geps.',
                 examples: ['El meu camell és molt gros'],
                 translations: [
-                  { text: 'Camel', language: Language.ENGLISH },
-                  { text: 'Camell', language: Language.SPANISH }
+                  { translation: 'Camel', language: Language.ENGLISH },
+                  { translation: 'Camell', language: Language.SPANISH }
                 ]
               },
               {
-                text: 'Persona que comercia amb droga a la menuda.',
+                description: 'Persona que comercia amb droga a la menuda.',
                 examples: ['El seu vei es camell'],
                 translations: []
               }
@@ -240,18 +229,21 @@ async function main() {
               {
                 url: 'https://signbank.upf.com/images/LSC_-_Camell.mp4',
                 angle: 'Frontal',
-                priority: 1
+                priority: 1,
+                dominantHand: Hand.RIGHT,
+                facialExpression: 'Neutral',
+                hasContact: true
               }
             ]
           }
         ],
-        // Add related words - Arma and Coll are related
+        // Add related words
         relatedWords: []
       }
     },
   });
   
-  await prisma.words.create({
+  await prisma.wordEntry.create({
     data: {
       status: WordStatus.PUBLISHED,
       currentVersion: 1,
@@ -262,32 +254,25 @@ async function main() {
       wordData: {
         word: 'Cames',
         isNative: true,
-        register: 'Estàndard',
-        lexicalCategory: LexicalCategory.NOUN,
-        dominantHand: Hand.RIGHT,
-        facialExpression: 'Neutral',
-        hasContact: false,
         
         senses: [
           {
             priority: 1,
-            dominantHand: Hand.RIGHT,
-            facialExpression: 'Neutral',
-            hasContact: true,
             movementType: 'Moviment del signe cames',
             nonManualComponents: 'Pronunciar Cames',
             morphologicalVariants: '-',
             phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
+            lexicalCategory: LexicalCategory.NOUN,
             
             descriptions: [
               {
-                text: 'Extremitat inferior del cos humà, que va des del genoll fins al peu.',
+                description: 'Extremitat inferior del cos humà, que va des del genoll fins al peu.',
                 examples: ['Les meves cames estan cansades', 'Té unes cames molt llargues'],
                 translations: [
-                  { text: 'Legs', language: Language.ENGLISH },
-                  { text: 'Piernas', language: Language.SPANISH }
+                  { translation: 'Legs', language: Language.ENGLISH },
+                  { translation: 'Piernas', language: Language.SPANISH }
                 ]
               }
             ],
@@ -296,7 +281,10 @@ async function main() {
               {
                 url: 'https://signbank.upf.com/images/LSC_-_Cames.mp4',
                 angle: 'Frontal',
-                priority: 1
+                priority: 1,
+                dominantHand: Hand.RIGHT,
+                facialExpression: 'Neutral',
+                hasContact: true
               }
             ]
           }
@@ -306,7 +294,7 @@ async function main() {
     },
   });
 
-  await prisma.words.create({
+  await prisma.wordEntry.create({
     data: {
       isCreatedFromRequest: false,
       isCreatedFromEdit: false,
@@ -315,32 +303,25 @@ async function main() {
       wordData: {
         word: 'Cami',
         isNative: true,
-        register: 'Estàndard',
-        lexicalCategory: LexicalCategory.NOUN,
-        dominantHand: Hand.RIGHT,
-        facialExpression: 'Neutral',
-        hasContact: false,
         
         senses: [
           {
             priority: 1,
-            dominantHand: Hand.RIGHT,
-            facialExpression: 'Neutral',
-            hasContact: true,
             movementType: 'Moviment del signe cami',
             nonManualComponents: 'Pronunciar Cami',
             morphologicalVariants: '-',
             phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
+            lexicalCategory: LexicalCategory.NOUN,
             
             descriptions: [
               {
-                text: 'Via que es fa servir per anar d\'un lloc a un altre.',
+                description: 'Via que es fa servir per anar d\'un lloc a un altre.',
                 examples: ['El cami era molt llarg', 'Van perdre el cami'],
                 translations: [
-                  { text: 'Path', language: Language.ENGLISH },
-                  { text: 'Camino', language: Language.SPANISH }
+                  { translation: 'Path', language: Language.ENGLISH },
+                  { translation: 'Camino', language: Language.SPANISH }
                 ]
               }
             ],
@@ -349,7 +330,10 @@ async function main() {
               {
                 url: 'https://signbank.upf.com/images/LSC_-_Cami.mp4',
                 angle: 'Frontal',
-                priority: 1
+                priority: 1,
+                dominantHand: Hand.RIGHT,
+                facialExpression: 'Neutral',
+                hasContact: true
               }
             ]
           }
@@ -359,7 +343,7 @@ async function main() {
     },
   });
 
-  await prisma.words.create({
+  await prisma.wordEntry.create({
     data: {
       status: WordStatus.PUBLISHED,
       currentVersion: 1,
@@ -370,18 +354,10 @@ async function main() {
       wordData: {
         word: 'Cap',
         isNative: true,
-        register: 'Estàndard',
-        lexicalCategory: LexicalCategory.NOUN,
-        dominantHand: Hand.RIGHT,
-        facialExpression: 'Neutral',
-        hasContact: false,
         
         senses: [
           {
             priority: 1,
-            dominantHand: Hand.RIGHT,
-            facialExpression: 'Neutral',
-            hasContact: true,
             movementType: 'Moviment del signe cap (part del cos)',
             nonManualComponents: 'Pronunciar Cap',
             morphologicalVariants: '-',
@@ -391,11 +367,11 @@ async function main() {
             
             descriptions: [
               {
-                text: 'Part superior del cos dels animals vertebrats que conté el cervell, els principals òrgans dels sentits i l\'extrem superior o anterior del tub digestiu.',
+                description: 'Part superior del cos dels animals vertebrats que conté el cervell, els principals òrgans dels sentits i l\'extrem superior o anterior del tub digestiu.',
                 examples: ['Em fa mal el cap', 'Va moure el cap'],
                 translations: [
-                  { text: 'Head', language: Language.ENGLISH },
-                  { text: 'Cabeza', language: Language.SPANISH }
+                  { translation: 'Head', language: Language.ENGLISH },
+                  { translation: 'Cabeza', language: Language.SPANISH }
                 ]
               }
             ],
@@ -404,15 +380,15 @@ async function main() {
               {
                 url: 'https://signbank.upf.com/images/LSC_-_Cap.mp4',
                 angle: 'Frontal',
-                priority: 1
+                priority: 1,
+                dominantHand: Hand.RIGHT,
+                facialExpression: 'Neutral',
+                hasContact: true
               }
             ]
           },
           {
             priority: 2,
-            dominantHand: Hand.RIGHT,
-            facialExpression: 'Negació',
-            hasContact: false,
             movementType: 'Moviment del signe cap (negació)',
             nonManualComponents: 'Pronunciar Cap amb expressió de negació',
             morphologicalVariants: '-',
@@ -422,11 +398,11 @@ async function main() {
             
             descriptions: [
               {
-                text: 'Ni un, ningú, res; absència total.',
+                description: 'Ni un, ningú, res; absència total.',
                 examples: ['No hi ha cap persona', 'No en queda cap'],
                 translations: [
-                  { text: 'None', language: Language.ENGLISH },
-                  { text: 'Ninguno', language: Language.SPANISH }
+                  { translation: 'None', language: Language.ENGLISH },
+                  { translation: 'Ninguno', language: Language.SPANISH }
                 ]
               }
             ],
@@ -435,15 +411,15 @@ async function main() {
               {
                 url: 'https://signbank.upf.com/images/LSC_-_Cap.mp4',
                 angle: 'Frontal',
-                priority: 1
+                priority: 1,
+                dominantHand: Hand.RIGHT,
+                facialExpression: 'Negació',
+                hasContact: false
               }
             ]
           },
           {
             priority: 3,
-            dominantHand: Hand.RIGHT,
-            facialExpression: 'Neutral',
-            hasContact: false,
             movementType: 'Moviment del signe cap (direcció)',
             nonManualComponents: 'Pronunciar Cap',
             morphologicalVariants: '-',
@@ -453,11 +429,11 @@ async function main() {
             
             descriptions: [
               {
-                text: 'En direcció a, vers.',
+                description: 'En direcció a, vers.',
                 examples: ['Anem cap a casa', 'Mira cap allà'],
                 translations: [
-                  { text: 'Towards', language: Language.ENGLISH },
-                  { text: 'Hacia', language: Language.SPANISH }
+                  { translation: 'Towards', language: Language.ENGLISH },
+                  { translation: 'Hacia', language: Language.SPANISH }
                 ]
               }
             ],
@@ -466,7 +442,10 @@ async function main() {
               {
                 url: 'https://signbank.upf.com/images/LSC_-_Cap.mp4',
                 angle: 'Frontal',
-                priority: 1
+                priority: 1,
+                dominantHand: Hand.RIGHT,
+                facialExpression: 'Neutral',
+                hasContact: true
               }
             ]
           }
@@ -476,7 +455,7 @@ async function main() {
     },
   });
 
-  await prisma.words.create({
+  await prisma.wordEntry.create({
     data: {
       status: WordStatus.PUBLISHED,
       currentVersion: 1,
@@ -486,33 +465,24 @@ async function main() {
       // Word data using the Word type
       wordData: {
         word: 'Capa',
-        isNative: true,
-        register: 'Estàndard',
-        lexicalCategory: LexicalCategory.NOUN,
-        dominantHand: Hand.RIGHT,
-        facialExpression: 'Neutral',
-        hasContact: false,
-        
+        isNative: true,        
         senses: [
           {
             priority: 1,
-            dominantHand: Hand.RIGHT,
-            facialExpression: 'Neutral',
-            hasContact: true,
             movementType: 'Moviment del signe capa',
             nonManualComponents: 'Pronunciar Capa',
             morphologicalVariants: '-',
             phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
-            
+            lexicalCategory: LexicalCategory.NOUN,
             descriptions: [
               {
-                text: 'Peça de roba llarga, folgada, oberta de davant, sense mànigues, que es porta tirada a les espatlles cobrint el vestit.',
+                description: 'Peça de roba llarga, folgada, oberta de davant, sense mànigues, que es porta tirada a les espatlles cobrint el vestit.',
                 examples: ['Porta una capa negra', 'La capa el protegia del fred'],
                 translations: [
-                  { text: 'Cape', language: Language.ENGLISH },
-                  { text: 'Capa', language: Language.SPANISH }
+                  { translation: 'Cape', language: Language.ENGLISH },
+                  { translation: 'Capa', language: Language.SPANISH }
                 ]
               }
             ],
@@ -521,7 +491,10 @@ async function main() {
               {
                 url: 'https://signbank.upf.com/images/LSC_-_Capa.mp4',
                 angle: 'Frontal',
-                priority: 1
+                priority: 1,
+                dominantHand: Hand.RIGHT,
+                facialExpression: 'Neutral',
+                hasContact: true
               }
             ]
           }
@@ -531,7 +504,7 @@ async function main() {
     },
   });
 
-  await prisma.words.create({
+  await prisma.wordEntry.create({
     data: {
       status: WordStatus.PUBLISHED,
       currentVersion: 1,
@@ -541,19 +514,10 @@ async function main() {
       // Word data using the Word type
       wordData: {
         word: 'Car',
-        isNative: true,
-        register: 'Estàndard',
-        lexicalCategory: LexicalCategory.ADJECTIVE,
-        dominantHand: Hand.RIGHT,
-        facialExpression: 'Neutral',
-        hasContact: false,
-        
+        isNative: true,        
         senses: [
           {
             priority: 1,
-            dominantHand: Hand.RIGHT,
-            facialExpression: 'Neutral',
-            hasContact: true,
             movementType: 'Moviment del signe car',
             nonManualComponents: 'Pronunciar Car',
             morphologicalVariants: '-',
@@ -563,11 +527,11 @@ async function main() {
             
             descriptions: [
               {
-                text: 'Que té un preu elevat, que costa molt de diners.',
+                description: 'Que té un preu elevat, que costa molt de diners.',
                 examples: ['Aquest cotxe és molt car', 'El pis era massa car'],
                 translations: [
-                  { text: 'Expensive', language: Language.ENGLISH },
-                  { text: 'Caro', language: Language.SPANISH }
+                  { translation: 'Expensive', language: Language.ENGLISH },
+                  { translation: 'Caro', language: Language.SPANISH }
                 ]
               }
             ],
@@ -576,7 +540,10 @@ async function main() {
               {
                 url: 'https://signbank.upf.com/images/LSC_-_Car.mp4',
                 angle: 'Frontal',
-                priority: 1
+                priority: 1,
+                dominantHand: Hand.RIGHT,
+                facialExpression: 'Neutral',
+                hasContact: true
               }
             ]
           }
@@ -586,7 +553,7 @@ async function main() {
     },
   });
 
-  await prisma.words.create({
+  await prisma.wordEntry.create({
     data: {
       status: WordStatus.PUBLISHED,
       currentVersion: 1,
@@ -597,32 +564,24 @@ async function main() {
       wordData: {
         word: 'Cara',
         isNative: true,
-        register: 'Estàndard',
-        lexicalCategory: LexicalCategory.NOUN,
-        dominantHand: Hand.RIGHT,
-        facialExpression: 'Neutral',
-        hasContact: false,
         
         senses: [
           {
             priority: 1,
-            dominantHand: Hand.RIGHT,
-            facialExpression: 'Neutral',
-            hasContact: true,
             movementType: 'Moviment del signe cara',
             nonManualComponents: 'Pronunciar Cara',
             morphologicalVariants: '-',
             phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
-            
+            lexicalCategory: LexicalCategory.NOUN,
             descriptions: [
               {
-                text: 'Part anterior del cap, on hi ha els ulls, el nas i la boca.',
+                description: 'Part anterior del cap, on hi ha els ulls, el nas i la boca.',
                 examples: ['Té una cara molt expressiva', 'Es va rentar la cara'],
                 translations: [
-                  { text: 'Face', language: Language.ENGLISH },
-                  { text: 'Cara', language: Language.SPANISH }
+                  { translation: 'Face', language: Language.ENGLISH },
+                  { translation: 'Cara', language: Language.SPANISH }
                 ]
               }
             ],
@@ -631,12 +590,18 @@ async function main() {
               {
                 url: 'https://signbank.upf.com/images/LSC_-_Cara_1.mp4',
                 angle: 'Frontal',
-                priority: 1
+                priority: 1,
+                dominantHand: Hand.RIGHT,
+                facialExpression: 'Neutral',
+                hasContact: true
               },
               {
                 url: 'https://signbank.upf.com/images/LSC_-_Cara_2.mp4',
                 angle: 'Frontal',
-                priority: 2
+                priority: 2,
+                dominantHand: Hand.RIGHT,
+                facialExpression: 'Neutral',
+                hasContact: true
               }
             ]
           }
@@ -646,7 +611,7 @@ async function main() {
     },
   });
 
-  await prisma.words.create({
+  await prisma.wordEntry.create({
     data: {
       status: WordStatus.PUBLISHED,
       currentVersion: 1,
@@ -657,32 +622,24 @@ async function main() {
       wordData: {
         word: 'Casa',
         isNative: true,
-        register: 'Estàndard',
-        lexicalCategory: LexicalCategory.NOUN,
-        dominantHand: Hand.RIGHT,
-        facialExpression: 'Neutral',
-        hasContact: false,
         
         senses: [
           {
             priority: 1,
-            dominantHand: Hand.RIGHT,
-            facialExpression: 'Neutral',
-            hasContact: true,
             movementType: 'Moviment del signe casa',
             nonManualComponents: 'Pronunciar Casa',
             morphologicalVariants: '-',
             phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
-            
+            lexicalCategory: LexicalCategory.NOUN,
             descriptions: [
               {
-                text: 'Edifici destinat a l\'habitatge de persones.',
+                description: 'Edifici destinat a l\'habitatge de persones.',
                 examples: ['Viu en una casa gran', 'La casa té un jardí'],
                 translations: [
-                  { text: 'House', language: Language.ENGLISH },
-                  { text: 'Casa', language: Language.SPANISH }
+                  { translation: 'House', language: Language.ENGLISH },
+                  { translation: 'Casa', language: Language.SPANISH }
                 ]
               }
             ],
@@ -691,7 +648,10 @@ async function main() {
               {
                 url: 'https://signbank.upf.com/images/LSC_-_Casa.mp4',
                 angle: 'Frontal',
-                priority: 1
+                priority: 1,
+                dominantHand: Hand.RIGHT,
+                facialExpression: 'Neutral',
+                hasContact: true
               }
             ]
           }
@@ -701,7 +661,7 @@ async function main() {
     },
   });
 
-  await prisma.words.create({
+  await prisma.wordEntry.create({
     data: {
       status: WordStatus.PUBLISHED,
       currentVersion: 1,
@@ -712,32 +672,24 @@ async function main() {
       wordData: {
         word: 'Casat',
         isNative: true,
-        register: 'Estàndard',
-        lexicalCategory: LexicalCategory.NOUN,
-        dominantHand: Hand.RIGHT,
-        facialExpression: 'Neutral',
-        hasContact: false,
         
         senses: [
           {
             priority: 1,
-            dominantHand: Hand.RIGHT,
-            facialExpression: 'Neutral',
-            hasContact: true,
             movementType: 'Moviment del signe casat',
             nonManualComponents: 'Pronunciar Casat',
             morphologicalVariants: '-',
             phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
-            
+            lexicalCategory: LexicalCategory.NOUN,
             descriptions: [
               {
-                text: 'Estat de tenir un cònjuge o una cònjuge.',
+                description: 'Estat de tenir un cònjuge o una cònjuge.',
                 examples: ['Està casat amb una persona meravellosa', 'El seu estat civil és casat'],
                 translations: [
-                  { text: 'Married', language: Language.ENGLISH },
-                  { text: 'Casado', language: Language.SPANISH }
+                  { translation: 'Married', language: Language.ENGLISH },
+                  { translation: 'Casado', language: Language.SPANISH }
                 ]
               }
             ],
@@ -746,7 +698,10 @@ async function main() {
               {
                 url: 'https://signbank.upf.com/images/LSC_-_Casat_casada.mp4',
                 angle: 'Frontal',
-                priority: 1
+                priority: 1,
+                dominantHand: Hand.RIGHT,
+                facialExpression: 'Neutral',
+                hasContact: true
               }
             ]
           }
@@ -756,7 +711,7 @@ async function main() {
     },
   });
 
-  await prisma.words.create({
+  await prisma.wordEntry.create({
     data: {
       status: WordStatus.PUBLISHED,
       currentVersion: 1,
@@ -767,32 +722,24 @@ async function main() {
       wordData: {
         word: 'Dur',
         isNative: true,
-        register: 'Estàndard',
-        lexicalCategory: LexicalCategory.ADJECTIVE,
-        dominantHand: Hand.RIGHT,
-        facialExpression: 'Neutral',
-        hasContact: false,
         
         senses: [
           {
             priority: 1,
-            dominantHand: Hand.RIGHT,
-            facialExpression: 'Neutral',
-            hasContact: true,
             movementType: 'Moviment del signe dur',
             nonManualComponents: 'Pronunciar Dur',
             morphologicalVariants: '-',
             phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
-            
+            lexicalCategory: LexicalCategory.ADJECTIVE,
             descriptions: [
               {
-                text: 'Que té una consistència ferma o difícil de trencar.',
+                description: 'Que té una consistència ferma o difícil de trencar.',
                 examples: ['El material és molt dur', 'El gel és dur'],
                 translations: [
-                  { text: 'Hard', language: Language.ENGLISH },
-                  { text: 'Duro', language: Language.SPANISH }
+                  { translation: 'Hard', language: Language.ENGLISH },
+                  { translation: 'Duro', language: Language.SPANISH }
                 ]
               }
             ],
@@ -801,7 +748,10 @@ async function main() {
               {
                 url: 'https://signbank.upf.com/images/LSC_-_Dur_dura.mp4',
                 angle: 'Frontal',
-                priority: 1
+                priority: 1,
+                dominantHand: Hand.RIGHT,
+                facialExpression: 'Neutral',
+                hasContact: true
               }
             ]
           }
@@ -811,7 +761,7 @@ async function main() {
     },
   });
 
-  await prisma.words.create({
+  await prisma.wordEntry.create({
     data: {
       status: WordStatus.PUBLISHED,
       currentVersion: 1,
@@ -822,32 +772,24 @@ async function main() {
       wordData: {
         word: 'Xocolata',
         isNative: true,
-        register: 'Estàndard',
-        lexicalCategory: LexicalCategory.NOUN,
-        dominantHand: Hand.RIGHT,
-        facialExpression: 'Neutral',
-        hasContact: false,
         
         senses: [
           {
             priority: 1,
-            dominantHand: Hand.RIGHT,
-            facialExpression: 'Neutral',
-            hasContact: true,
             movementType: 'Moviment del signe xocolata',
             nonManualComponents: 'Pronunciar Xocolata',
             morphologicalVariants: '-',
             phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
-            
+            lexicalCategory: LexicalCategory.NOUN,
             descriptions: [
               {
-                text: 'Producte alimentari obtingut a partir de la fruita del cacau, que es pot consumir en diverses formes, com a beguda o en forma sòlida.',
+                description: 'Producte alimentari obtingut a partir de la fruita del cacau, que es pot consumir en diverses formes, com a beguda o en forma sòlida.',
                 examples: ["M'agrada la xocolata negra", "La xocolata és dolça"],
                 translations: [
-                  { text: 'Chocolate', language: Language.ENGLISH },
-                  { text: 'Chocolate', language: Language.SPANISH }
+                  { translation: 'Chocolate', language: Language.ENGLISH },
+                  { translation: 'Chocolate', language: Language.SPANISH }
                 ]
               }
             ],
@@ -856,7 +798,10 @@ async function main() {
               {
                 url: 'https://signbank.upf.com/images/LSC_-_Xocolata.mp4',
                 angle: 'Frontal',
-                priority: 1
+                priority: 1,
+                dominantHand: Hand.RIGHT,
+                facialExpression: 'Neutral',
+                hasContact: true
               }
             ]
           }

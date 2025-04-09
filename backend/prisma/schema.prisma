@@ -10,35 +10,36 @@ datasource db {
 
 // Define embedded types for MongoDB document structure
 type SenseTranslation {
-  text     String
-  language Language
+  translation String
+  language    Language
 }
 
 type Description {
-  text         String
+  description  String
   examples     String[]
   translations SenseTranslation[] // Embedded translations
 }
 
 type Sense {
-  priority                  Int           @default(0)
-  dominantHand              Hand?
-  facialExpression          String?
-  hasContact                Boolean?
-  descriptions              Description[]
+  priority                  Int
   morphologicalVariants     String?
   movementType              String?
   nonManualComponents       String?
   phonologicalTranscription String?
   usageEra                  String?
   usageFrequency            String?
-  videos                    VideoInfo[]
+  descriptions              Description[]
+  videos                    Video[]
+  lexicalCategory           LexicalCategory?
 }
 
-type VideoInfo {
-  url      String
-  angle    String
-  priority Int    @default(0)
+type Video {
+  url              String
+  angle            String
+  priority         Int
+  dominantHand     Hand?
+  facialExpression String?
+  hasContact       Boolean?
 }
 
 // Define embedded type for related words
@@ -51,18 +52,11 @@ type RelatedWord {
 type Word {
   word     String
   isNative Boolean @default(true)
-  register String?
 
   // Embedded document structures
   senses       Sense[] // Embedded senses with their translations and descriptions
   relatedWords RelatedWord[] // Embedded related words
   dialectId    String?       @db.ObjectId // Store just the ID reference
-
-  // Additional metadata
-  dominantHand     Hand?
-  facialExpression String?
-  hasContact       Boolean?
-  lexicalCategory  LexicalCategory?
 }
 
 model Users {
@@ -80,17 +74,16 @@ model Users {
 
 // New separate Dialect model
 model Dialect {
-  id             String        @id @default(auto()) @map("_id") @db.ObjectId
-  name           String        @unique
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  name           String   @unique
   region         String
   mapCoordinates String?
   description    String?
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  WordRequest    WordRequest[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
-model Words {
+model WordEntry {
   id                   String     @id @default(auto()) @map("_id") @db.ObjectId
   createdAt            DateTime   @default(now())
   updatedAt            DateTime   @updatedAt
@@ -107,7 +100,7 @@ model Words {
   // Relations to external collections
   edits       WordEdit[]
   // Relations to other models
-  wordRequest WordRequest? @relation("WordRequest", fields: [wordRequestId], references: [id])
+  wordRequest WordRequest?
 }
 
 model WordEdit {
@@ -129,8 +122,8 @@ model WordEdit {
   proposedChanges Json?
 
   // Relations
-  editor Users @relation("UserWordEdits", fields: [editorId], references: [id])
-  word   Words @relation(fields: [wordId], references: [id])
+  editor Users     @relation("UserWordEdits", fields: [editorId], references: [id])
+  word   WordEntry @relation(fields: [wordId], references: [id])
 }
 
 model WordEditHistoric {
@@ -160,9 +153,8 @@ model WordRequest {
   // Relations
   user Users @relation("UserWordRequests", fields: [creatorId], references: [id])
 
-  Words     Words[]  @relation("WordRequest")
-  Dialect   Dialect? @relation(fields: [dialectId], references: [id])
-  dialectId String?  @db.ObjectId
+  wordEntry WordEntry? @relation(fields: [wordId], references: [id])
+  wordId    String?    @unique @db.ObjectId
 }
 
 enum Role {
