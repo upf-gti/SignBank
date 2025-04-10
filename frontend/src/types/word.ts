@@ -1,4 +1,4 @@
-export interface Words {
+export interface WordEntry {
   id: string
   createdAt: Date
   updatedAt: Date
@@ -13,61 +13,52 @@ export interface Words {
   isCreatedFromRequest: boolean
   isCreatedFromEdit: boolean
   acceptedById?: string
-  // Fields from wordData embedded type (previously direct properties)
-  word: string
-  isNative: boolean
-  register?: string
-  senses: Sense[]
-  relatedWords?: RelatedWord[]
-  dominantHand?: Hand
-  facialExpression?: string
-  hasContact?: boolean
-  lexicalCategory?: LexicalCategory
+  wordRequestId?: string
+  
+  // Word data as embedded type
+  wordData: Word
 }
 
 // Define Word type to match the Prisma Word embedded type
 export interface Word {
   word: string
   isNative: boolean
-  register?: string
   senses: Sense[]
   relatedWords: RelatedWord[]
-  dominantHand?: Hand
-  facialExpression?: string
-  hasContact?: boolean
-  lexicalCategory?: LexicalCategory
+  dialectId?: string
 }
 
 export interface Sense {
   priority: number
-  dominantHand?: Hand
-  facialExpression?: string
-  hasContact?: boolean
-  descriptions: Description[]
-  morphologicalVariants?: string
-  movementType?: string
-  nonManualComponents?: string
-  phonologicalTranscription?: string
   usageEra?: string
   usageFrequency?: string
-  videos?: VideoInfo[]
+  descriptions: Description[]
+  videos?: Video[]
+  lexicalCategory?: LexicalCategory
+  morphologicalVariants?: string
 }
 
 export interface Description {
-  text: string
+  description: string
   examples: string[]
   translations: SenseTranslation[]
 }
 
 export interface SenseTranslation {
-  text: string
+  translation: string
   language: Language
 }
 
-export interface VideoInfo {
+export interface Video {
   url: string
   angle: string
   priority: number
+  dominantHand?: Hand
+  facialExpression?: string
+  hasContact?: boolean
+  movementType?: string
+  nonManualComponents?: string
+  phonologicalTranscription?: string
 }
 
 export interface RelatedWord {
@@ -88,14 +79,20 @@ export interface Dialect {
 // Add WordRequest interface to match backend schema
 export interface WordRequest {
   id: string
-  userId: string
+  creatorId: string
+  activeWordId?: string
   status: RequestStatus
   createdAt: Date
   updatedAt: Date
   denyReason?: string
-  dialectId?: string
+  acceptedById?: string
+  denyerId?: string
+  
+  // Word data using the Word type
   requestedWordData: Word
-  createdWordId?: string
+  
+  // Relations
+  wordEntry?: WordEntry
 }
 
 // Enum types
@@ -163,6 +160,8 @@ export interface WordEdit {
   newWordVersionId?: string
   createdAt: Date
   updatedAt: Date
+  
+  // Proposed changes using the Word type
   currentWordData?: Word
   proposedWordData?: Word
   proposedChanges?: any

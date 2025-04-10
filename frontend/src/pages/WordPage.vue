@@ -75,7 +75,7 @@ import { ref, onMounted } from 'vue'
 import { api } from 'src/services/api'
 import WordDetail from 'src/components/WordDetail.vue'
 import { useQuasar } from 'quasar'
-import type { Words} from 'src/types/word';
+import type { WordEntry } from 'src/types/word';
 import { WordStatus } from 'src/types/word'
 import translate from 'src/utils/translate'
 
@@ -85,7 +85,7 @@ const router = useRouter()
 const word = route.params.word as string
 
 // State
-const wordData = ref<Words | null>(null)
+const wordData = ref<WordEntry | null>(null)
 const loading = ref(true)
 const error = ref<string | null>(null)
 const editMode = ref<'none' | 'strict' | 'full'>('none')
@@ -121,7 +121,6 @@ function startEdit(mode: 'strict' | 'full') {
         wordData.value = {
             id: '',
             word: '',
-            description: '',
             createdAt: new Date(),
             updatedAt: new Date(),
             creatorId: '', // This will be set by the backend
@@ -130,13 +129,14 @@ function startEdit(mode: 'strict' | 'full') {
             currentVersion: 1,
             isCreatedFromRequest: false,
             isCreatedFromEdit: false,
-            senses: []
+            senses: [],
+            relatedWords: []
         }
     }
 }
 
 // Save edited word
-async function saveWord(updatedWord: Words) {
+async function saveWord(updatedWord: WordEntry) {
     try {
         loading.value = true
         

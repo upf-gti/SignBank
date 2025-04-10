@@ -64,7 +64,7 @@
             class="q-mt-md"
           >
             <div class="text-weight-bold">
-              {{ desc.text }}
+              {{ desc.description }}
             </div>
             
             <!-- Examples -->
@@ -98,7 +98,7 @@
                   v-for="(trans, tIndex) in desc.translations"
                   :key="'trans-' + tIndex"
                 >
-                  <span class="text-caption text-weight-bold">{{ translate('language.' + trans.language) }}:</span> {{ trans.text }}
+                  <span class="text-caption text-weight-bold">{{ translate('language.' + trans.language) }}:</span> {{ trans.translation }}
                 </div>
               </div>
             </div>
@@ -116,7 +116,7 @@
             class="q-mt-md"
           >
             <q-input
-              v-model="desc.text"
+              v-model="desc.description"
               :label="translate('word_detail.field.descriptionText')"
               outlined
               type="textarea"
@@ -178,7 +178,7 @@
                 <div class="row items-center q-col-gutter-sm">
                   <div class="col">
                     <q-input
-                      v-model="trans.text"
+                      v-model="trans.translation"
                       :label="translate('word_detail.field.translation')"
                       outlined
                       dense
@@ -303,7 +303,7 @@ function createEmptySense(): Sense {
 
 function createEmptyDescription(): Description {
   return {
-    text: '',
+    description: '',
     examples: [],
     translations: []
   }
@@ -366,7 +366,7 @@ function addTranslation(descIndex: number) {
   if (currentSense.value && currentSense.value.descriptions[descIndex]) {
     // Add a translation with default values
     currentSense.value.descriptions[descIndex].translations.push({
-      text: 'Translation',
+      translation: 'Translation',
       language: Language.CATALAN
     })
     emit('update:senses', [...senses])

@@ -17,7 +17,7 @@ import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { api } from 'src/services/api'
 import WordDetail from 'src/components/WordDetail.vue'
-import type { Words } from 'src/types/word'
+import type { Word, WordEntry } from 'src/types/word'
 import { WordStatus, Hand, Language } from 'src/types/word'
 import translate from 'src/utils/translate'
 
@@ -25,7 +25,7 @@ const $q = useQuasar()
 const router = useRouter()
 
 // Initialize empty word data for the request
-const wordData = ref<Words>({
+const wordData = ref<Word>({
   id: '',
   word: '',
   createdAt: new Date(),
@@ -41,27 +41,29 @@ const wordData = ref<Words>({
     dominantHand: Hand.RIGHT,
     facialExpression: 'neutral',
     hasContact: true,
-    descriptions: [{ text: 'test', examples: ['test'], translations: [{ text: 'test', language: Language.CATALAN }] }]
-  }]
+    descriptions: [{ text: 'test', examples: ['test'], translations: [{ translation: 'test', language: Language.CATALAN }] }]
+  }],
+  relatedWords: [] // Add this to satisfy the Word interface
 })
 
 // Save word request
-async function saveWordRequest(word: Words) {
+async function saveWordRequest(word: WordEntry) {
   try {
     // Set flag to indicate this is a request
     word.isCreatedFromRequest = true
     
-    // Create request payload with only the fields needed by the backend
-    const requestPayload = {
-      word: word.word,
+    // Create request payload with only the fields needed by the backend (using Word type)
+    const requestPayload: WordEntry = {
+      wordData: word.wordData,
+      
       isNative: word.isNative,
       senses: word.senses,
-      dialectId: word.dialectId || undefined,
-      dominantHand: word.dominantHand || undefined,
-      facialExpression: word.facialExpression || undefined,
-      hasContact: word.hasContact || undefined,
-      lexicalCategory: word.lexicalCategory || undefined,
-      register: word.register || undefined
+      relatedWords: word.relatedWords || [],
+      dominantHand: word.dominantHand,
+      facialExpression: word.facialExpression,
+      hasContact: word.hasContact,
+      lexicalCategory: word.lexicalCategory,
+      register: word.register
     };
     
     // Submit using the format expected by the backend

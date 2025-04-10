@@ -59,36 +59,47 @@
         </div>
       </q-card-section>
     </q-card>
+    <!-- Sign information below the video -->
+    <SignInfo 
+      :video="currentVideo" 
+      :is-edit-mode="editMode !== 'none'"
+      @update:video="updateVideo"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { VideoInfo } from 'src/types/word'
+import { Video, Hand } from 'src/types/word'
 import translate from 'src/utils/translate'
+import SignInfo from './SignInfo.vue'
 
 interface Props {
-  videos: VideoInfo[]
+  videos: Video[]
+  editMode: 'none' | 'strict' | 'full'
 }
 
-const props = defineProps<Props>()
+const emit = defineEmits<{
+  (e: 'update:videos', videos: Video[]): void
+}>()
+const { videos, editMode = 'none' } = defineProps<Props>()
 
 const currentIndex = ref(0)
 
 // Reset current index when videos change
-watch(() => props.videos, () => {
+watch(() => videos, () => {
   currentIndex.value = 0
 }, { immediate: true })
 
 const currentVideo = computed(() => {
-  if (props.videos.length === 0) {
-    return { url: '', angle: '' } as VideoInfo
+  if (videos.length === 0) {
+    return { url: '', angle: '', dominantHand: Hand.RIGHT, facialExpression: '', hasContact: true, phonologicalTranscription: '', movementType: '', nonManualComponents: '' } as Video
   }
-  return props.videos[currentIndex.value]
+  return videos[currentIndex.value] as Video
 })
 
 function nextVideo() {
-  if (currentIndex.value < props.videos.length - 1) {
+  if (currentIndex.value < videos.length - 1) {
     currentIndex.value++
   }
 }
@@ -97,6 +108,10 @@ function prevVideo() {
   if (currentIndex.value > 0) {
     currentIndex.value--
   }
+}
+
+function updateVideo(video: Video) {
+  emit('update:videos', videos.map((v, index) => index === currentIndex.value ? video : v))
 }
 </script>
 

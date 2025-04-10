@@ -27,12 +27,6 @@
                   {{ localWord.word }}
                 </div>
               </div>              
-              <div
-                v-if="localWord.dialect"
-                class="text-caption q-mt-sm q-pl-md"
-              >
-                {{ translate('word_detail.field.dialect') }}: {{ localWord.dialect.name }}
-              </div>
             </div>
             <!-- Actions for edit mode -->
             <div
@@ -65,14 +59,8 @@
           <!-- Videos on the left side -->
           <VideoPlayer 
             :videos="allVideos"
-          />
-          <!-- Sign information below the video -->
-
-          <SignInfo 
-            v-if="currentSense"
-            :sense="currentSense" 
-            :is-edit-mode="editMode !== 'none'"
-            @update:sense="updateCurrentSense"
+            :edit-mode="editMode"
+            @update:videos="updateVideos"
           />
         </div>
 
@@ -94,12 +82,11 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useQuasar } from 'quasar'
-import type { Words, Sense, Description, VideoInfo, Word } from 'src/types/word';
+import type { Sense, Description, Video, Word } from 'src/types/word';
 import { WordStatus} from 'src/types/word'
 import translate from 'src/utils/translate'
 import VideoPlayer from './VideoPlayer.vue'
 import SenseDetails from './SenseDetails.vue'
-import SignInfo from './SignInfo.vue'
 
 // The Quasar notification system
 const $q = useQuasar()
@@ -134,20 +121,15 @@ const emit = defineEmits<{
 }>()
 
 // Local state for word editing
-const localWord = ref<Words>({} as Words)
+const localWord = ref<Word>({} as Word)
 
 // Current sense for the sign information display
 const currentSenseIndex = ref(0)
-const currentSense = computed(() => {
-  if (!localWord.value || !localWord.value.senses || localWord.value.senses.length === 0) {
-    return null
-  }
-  return localWord.value.senses[currentSenseIndex.value]
-})
+
 
 // All videos from all senses for the video player
 const allVideos = computed(() => {
-  const videos: VideoInfo[] = []
+  const videos: Video[] = []
   for (const sense of localWord.value.senses || []) {
     if (sense.videos && sense.videos.length) {
       videos.push(...sense.videos)
@@ -178,7 +160,7 @@ function createEmptySense(): Sense {
 
 function createEmptyDescription(): Description {
   return {
-    text: '',
+    description: '',
     examples: [],
     translations: []
   }
@@ -189,15 +171,14 @@ function updateSenses(senses: Sense[]) {
   localWord.value.senses = senses
 }
 
-function updateCurrentSenseIndex(index: number) {
-  currentSenseIndex.value = index
+function updateVideos(videos: Video[]) {
+  localWord.value.senses.forEach(sense => {
+    sense.videos = videos
+  })
 }
 
-// Update current sense from SignInfo component
-function updateCurrentSense(updatedSense: Sense) {
-  if (localWord.value.senses && localWord.value.senses.length > currentSenseIndex.value) {
-    localWord.value.senses[currentSenseIndex.value] = updatedSense
-  }
+function updateCurrentSenseIndex(index: number) {
+  currentSenseIndex.value = index
 }
 
 // Save and cancel handlers
@@ -234,7 +215,7 @@ function save() {
     }
     
     // Check if at least one description has non-empty text
-    const hasValidDescription = sense.descriptions.some(desc => desc.text && desc.text.trim().length > 0)
+    const hasValidDescription = sense.descriptions.some(desc => desc.description && desc.description.trim().length > 0)
     if (!hasValidDescription) {
       $q.notify({
         color: 'negative',
