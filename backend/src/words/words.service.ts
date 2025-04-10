@@ -99,6 +99,7 @@ export class WordsService {
     const word = await this.prisma.wordEntry.findUnique({
       where: { id: wordId },
     });
+    console.log(word.wordData.senses);
 
     if (!word) {
       throw new NotFoundException('Word not found');

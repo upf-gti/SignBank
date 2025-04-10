@@ -21,25 +21,25 @@ type Description {
 }
 
 type Sense {
-  priority                  Int
-  morphologicalVariants     String?
-  movementType              String?
-  nonManualComponents       String?
-  phonologicalTranscription String?
-  usageEra                  String?
-  usageFrequency            String?
-  descriptions              Description[]
-  videos                    Video[]
-  lexicalCategory           LexicalCategory?
+  priority              Int
+  morphologicalVariants String?
+  usageEra              String?
+  usageFrequency        String?
+  descriptions          Description[]
+  videos                Video[]
+  lexicalCategory       LexicalCategory?
 }
 
 type Video {
-  url              String
-  angle            String
-  priority         Int
-  dominantHand     Hand?
-  facialExpression String?
-  hasContact       Boolean?
+  url                       String
+  angle                     String
+  priority                  Int
+  dominantHand              Hand?
+  facialExpression          String?
+  hasContact                Boolean?
+  phonologicalTranscription String?
+  nonManualComponents       String?
+  movementType              String?
 }
 
 // Define embedded type for related words

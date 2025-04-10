@@ -94,10 +94,7 @@ async function main() {
         senses: [
           {
             priority: 1,
-            movementType: 'Moviment del signe Cafè',
-            nonManualComponents: 'Pronunciar Cafe',
             morphologicalVariants: '-',
-            phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
             lexicalCategory: LexicalCategory.NOUN,
@@ -162,7 +159,7 @@ async function main() {
                 translations: []
               },
               {
-                description: 'Cafè bord [o cafè de pobre]: Planta de la família de les papilionàcies, de flors grogues i fruit terminat en un bec ganxut, pròpia del Mediterrani meridional, i que, en determinades contrades, ha reemplaçat el cafè veritable en èpoques de carestia (Astragalus boeticus).',
+                description: 'Cafè bord [o cafè de pobre]: Planta de la família de les papilionàcies, de flors grogues i fruit terminat en un bec ganxut, pròpia del Mediterrani meridional, i que, en determinats casos, ha reemplaçat el cafè veritable en èpoques de carestia (Astragalus boeticus).',
                 examples: [],
                 translations: []
               }
@@ -175,7 +172,10 @@ async function main() {
                 priority: 1,
                 dominantHand: Hand.RIGHT,
                 facialExpression: 'Neutral',
-                hasContact: true
+                hasContact: true,
+                movementType: 'Moviment del signe Cafè',
+                nonManualComponents: 'Pronunciar Cafe',
+                phonologicalTranscription: '-'
               }
             ]
           }
@@ -201,10 +201,7 @@ async function main() {
         senses: [
           {
             priority: 1,
-            movementType: 'Moviment del signe camell',
-            nonManualComponents: 'Pronunciar Cafe',
             morphologicalVariants: '-',
-            phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
             lexicalCategory: LexicalCategory.NOUN,
@@ -232,7 +229,10 @@ async function main() {
                 priority: 1,
                 dominantHand: Hand.RIGHT,
                 facialExpression: 'Neutral',
-                hasContact: true
+                hasContact: true,
+                movementType: 'Moviment del signe camell',
+                nonManualComponents: 'Pronunciar Cafe',
+                phonologicalTranscription: '-'
               }
             ]
           }
@@ -258,10 +258,7 @@ async function main() {
         senses: [
           {
             priority: 1,
-            movementType: 'Moviment del signe cames',
-            nonManualComponents: 'Pronunciar Cames',
             morphologicalVariants: '-',
-            phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
             lexicalCategory: LexicalCategory.NOUN,
@@ -284,7 +281,10 @@ async function main() {
                 priority: 1,
                 dominantHand: Hand.RIGHT,
                 facialExpression: 'Neutral',
-                hasContact: true
+                hasContact: true,
+                movementType: 'Moviment del signe cames',
+                nonManualComponents: 'Pronunciar Cames',
+                phonologicalTranscription: '-'
               }
             ]
           }
@@ -307,10 +307,7 @@ async function main() {
         senses: [
           {
             priority: 1,
-            movementType: 'Moviment del signe cami',
-            nonManualComponents: 'Pronunciar Cami',
             morphologicalVariants: '-',
-            phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
             lexicalCategory: LexicalCategory.NOUN,
@@ -333,7 +330,10 @@ async function main() {
                 priority: 1,
                 dominantHand: Hand.RIGHT,
                 facialExpression: 'Neutral',
-                hasContact: true
+                hasContact: true,
+                movementType: 'Moviment del signe cami',
+                nonManualComponents: 'Pronunciar Cami',
+                phonologicalTranscription: '-'
               }
             ]
           }
@@ -358,10 +358,7 @@ async function main() {
         senses: [
           {
             priority: 1,
-            movementType: 'Moviment del signe cap (part del cos)',
-            nonManualComponents: 'Pronunciar Cap',
             morphologicalVariants: '-',
-            phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
             
@@ -383,16 +380,16 @@ async function main() {
                 priority: 1,
                 dominantHand: Hand.RIGHT,
                 facialExpression: 'Neutral',
-                hasContact: true
+                hasContact: true,
+                movementType: 'Moviment del signe cap (part del cos)',
+                nonManualComponents: 'Pronunciar Cap',
+                phonologicalTranscription: '-'
               }
             ]
           },
           {
             priority: 2,
-            movementType: 'Moviment del signe cap (negació)',
-            nonManualComponents: 'Pronunciar Cap amb expressió de negació',
             morphologicalVariants: '-',
-            phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
             
@@ -414,16 +411,16 @@ async function main() {
                 priority: 1,
                 dominantHand: Hand.RIGHT,
                 facialExpression: 'Negació',
-                hasContact: false
+                hasContact: false,
+                movementType: 'Moviment del signe cap (negació)',
+                nonManualComponents: 'Pronunciar Cap amb expressió de negació',
+                phonologicalTranscription: '-'
               }
             ]
           },
           {
             priority: 3,
-            movementType: 'Moviment del signe cap (direcció)',
-            nonManualComponents: 'Pronunciar Cap',
             morphologicalVariants: '-',
-            phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
             
@@ -445,7 +442,10 @@ async function main() {
                 priority: 1,
                 dominantHand: Hand.RIGHT,
                 facialExpression: 'Neutral',
-                hasContact: true
+                hasContact: true,
+                movementType: 'Moviment del signe cap (direcció)',
+                nonManualComponents: 'Pronunciar Cap',
+                phonologicalTranscription: '-'
               }
             ]
           }
@@ -469,10 +469,7 @@ async function main() {
         senses: [
           {
             priority: 1,
-            movementType: 'Moviment del signe capa',
-            nonManualComponents: 'Pronunciar Capa',
             morphologicalVariants: '-',
-            phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
             lexicalCategory: LexicalCategory.NOUN,
@@ -494,7 +491,10 @@ async function main() {
                 priority: 1,
                 dominantHand: Hand.RIGHT,
                 facialExpression: 'Neutral',
-                hasContact: true
+                hasContact: true,
+                movementType: 'Moviment del signe capa',
+                nonManualComponents: 'Pronunciar Capa',
+                phonologicalTranscription: '-'
               }
             ]
           }
@@ -518,10 +518,7 @@ async function main() {
         senses: [
           {
             priority: 1,
-            movementType: 'Moviment del signe car',
-            nonManualComponents: 'Pronunciar Car',
             morphologicalVariants: '-',
-            phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
             
@@ -543,7 +540,10 @@ async function main() {
                 priority: 1,
                 dominantHand: Hand.RIGHT,
                 facialExpression: 'Neutral',
-                hasContact: true
+                hasContact: true,
+                movementType: 'Moviment del signe car',
+                nonManualComponents: 'Pronunciar Car',
+                phonologicalTranscription: '-'
               }
             ]
           }
@@ -568,10 +568,7 @@ async function main() {
         senses: [
           {
             priority: 1,
-            movementType: 'Moviment del signe cara',
-            nonManualComponents: 'Pronunciar Cara',
             morphologicalVariants: '-',
-            phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
             lexicalCategory: LexicalCategory.NOUN,
@@ -593,7 +590,10 @@ async function main() {
                 priority: 1,
                 dominantHand: Hand.RIGHT,
                 facialExpression: 'Neutral',
-                hasContact: true
+                hasContact: true,
+                movementType: 'Moviment del signe cara',
+                nonManualComponents: 'Pronunciar Cara',
+                phonologicalTranscription: '-'
               },
               {
                 url: 'https://signbank.upf.com/images/LSC_-_Cara_2.mp4',
@@ -626,10 +626,7 @@ async function main() {
         senses: [
           {
             priority: 1,
-            movementType: 'Moviment del signe casa',
-            nonManualComponents: 'Pronunciar Casa',
             morphologicalVariants: '-',
-            phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
             lexicalCategory: LexicalCategory.NOUN,
@@ -651,7 +648,10 @@ async function main() {
                 priority: 1,
                 dominantHand: Hand.RIGHT,
                 facialExpression: 'Neutral',
-                hasContact: true
+                hasContact: true,
+                movementType: 'Moviment del signe casa',
+                nonManualComponents: 'Pronunciar Casa',
+                phonologicalTranscription: '-'
               }
             ]
           }
@@ -676,10 +676,7 @@ async function main() {
         senses: [
           {
             priority: 1,
-            movementType: 'Moviment del signe casat',
-            nonManualComponents: 'Pronunciar Casat',
             morphologicalVariants: '-',
-            phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
             lexicalCategory: LexicalCategory.NOUN,
@@ -701,7 +698,10 @@ async function main() {
                 priority: 1,
                 dominantHand: Hand.RIGHT,
                 facialExpression: 'Neutral',
-                hasContact: true
+                hasContact: true,
+                movementType: 'Moviment del signe casat',
+                nonManualComponents: 'Pronunciar Casat',
+                phonologicalTranscription: '-'
               }
             ]
           }
@@ -726,10 +726,7 @@ async function main() {
         senses: [
           {
             priority: 1,
-            movementType: 'Moviment del signe dur',
-            nonManualComponents: 'Pronunciar Dur',
             morphologicalVariants: '-',
-            phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
             lexicalCategory: LexicalCategory.ADJECTIVE,
@@ -751,7 +748,10 @@ async function main() {
                 priority: 1,
                 dominantHand: Hand.RIGHT,
                 facialExpression: 'Neutral',
-                hasContact: true
+                hasContact: true,
+                movementType: 'Moviment del signe dur',
+                nonManualComponents: 'Pronunciar Dur',
+                phonologicalTranscription: '-'
               }
             ]
           }
@@ -776,10 +776,7 @@ async function main() {
         senses: [
           {
             priority: 1,
-            movementType: 'Moviment del signe xocolata',
-            nonManualComponents: 'Pronunciar Xocolata',
             morphologicalVariants: '-',
-            phonologicalTranscription: '-',
             usageFrequency: 'Comú',
             usageEra: 'Contemporani',
             lexicalCategory: LexicalCategory.NOUN,
@@ -801,7 +798,10 @@ async function main() {
                 priority: 1,
                 dominantHand: Hand.RIGHT,
                 facialExpression: 'Neutral',
-                hasContact: true
+                hasContact: true,
+                movementType: 'Moviment del signe xocolata',
+                nonManualComponents: 'Pronunciar Xocolata',
+                phonologicalTranscription: '-'
               }
             ]
           }
