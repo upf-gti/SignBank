@@ -20,6 +20,8 @@ To deploy the project in production mode:
 docker-compose -f docker-compose-production.yaml up
 ```
 
+Set the env variables specified in schema.env file. With schema.env the project should work fine.
+
 ## Seeding the Database
 
 To seed the database with initial data:
