@@ -54,11 +54,6 @@
           </div>
         </q-form>
       </q-card-section>
-      <q-card-section class="text-center">
-        <router-link to="/login">
-          Already have an account? Login
-        </router-link>
-      </q-card-section>
     </q-card>
   </q-page>
 </template>
@@ -93,7 +88,7 @@ const onSubmit = async () => {
       color: 'positive',
       message: 'Registration successful! Please login.'
     })
-    router.push('/login')
+    router.push('/')
   } catch (error) {
     $q.notify({
       color: 'negative',
