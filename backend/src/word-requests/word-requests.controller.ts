@@ -6,70 +6,58 @@ import {
   Patch,
   Param,
   UseGuards,
-  UnauthorizedException,
   Put,
 } from '@nestjs/common';
 import { WordRequestsService } from './word-requests.service';
-import { CreateWordRequestDto } from './dto/create-word-request.dto';
-import { UpdateWordRequestDto } from './dto/update-word-request.dto';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { RolesGuard } from '../auth/guard/roles.guard';
 import { Roles } from '../auth/decorator/roles.decorator';
 import { GetUser } from '../auth/decorator/get-user.decorator';
-import { Role, Users } from '@prisma/client'
+import { RequestStatus, Role, User, Word } from '../../types/database';
+import { UpdateWordRequestDto } from './dto/update-word-request.dto'
+import { CreateWordRequestDto, WordDataDto } from './dto/create-word-request.dto'
 
 @Controller('word-requests')
-@UseGuards(JwtGuard)
 export class WordRequestsController {
   constructor(private readonly wordRequestsService: WordRequestsService) {}
 
+  @UseGuards(JwtGuard)
   @Post()
-  create(
-    @GetUser('id') userId: string,
-    @Body() createWordRequestDto: CreateWordRequestDto
-  ) {
-    return this.wordRequestsService.create(userId, createWordRequestDto);
+  create(@GetUser('id') userId: string, @Body() createWordRequestDto: WordDataDto) {
+    return this.wordRequestsService.createWordRequest(userId, createWordRequestDto);
   }
 
-  @Get()
-  findAll(@GetUser('id') userId: string) {
-    return this.wordRequestsService.findAll(userId);
-  }
-
+  @UseGuards(JwtGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Get('pending')
-  findPending(@GetUser('id') userId: string) {
-    return this.wordRequestsService.findPending(userId);
+  findPending() {
+    return this.wordRequestsService.getWordRequestsByStatus(RequestStatus.PENDING);
   }
 
+  @UseGuards(JwtGuard)
+  @Get()
+  findAll(@GetUser() user: User) {
+    return this.wordRequestsService.getWordRequestsByCreator(user.id);
+  }
+
+  @UseGuards(JwtGuard)
   @Get(':id')
-  async findOne(@Param('id') id: string, @GetUser() user: Users) {
-    const wordRequest = await this.wordRequestsService.findOne(id);
-    if (!wordRequest) {
-      return null;
-    }
-    if (wordRequest.creatorId !== user.id && user.role !== Role.ADMIN) {
-      throw new UnauthorizedException('You do not have permission to view this word request');
-    }
-    return wordRequest;
+  findOne(@Param('id') id: string) {
+    return this.wordRequestsService.getWordRequestById(id);
   }
 
+  @UseGuards(JwtGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Put(':id/approve')
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN)
-  approve(@Param('id') id: string, @GetUser() user: Users) {
-    return this.wordRequestsService.approve(id, user.id);
+  approve(@Param('id') id: string, @GetUser('id') userId: string, @Body() word: Word) {
+    return this.wordRequestsService.acceptWordRequest(id, userId, word);
   }
 
+  @UseGuards(JwtGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Put(':id/reject')
-  @UseGuards(RolesGuard)
-  @Roles(Role.ADMIN)
-  reject(@Param('id') id: string, @Body() body: { reason: string }, @GetUser() user: Users) {
-    return this.wordRequestsService.reject(id, body.reason, user.id);
-  }
-
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateWordRequestDto: CreateWordRequestDto) {
-    return this.wordRequestsService.update(id, updateWordRequestDto);
+  deny(@Param('id') id: string, @Body('reason') reason: string, @GetUser('id') userId: string) {
+    return this.wordRequestsService.denyWordRequest(id, userId, reason);
   }
 
 }

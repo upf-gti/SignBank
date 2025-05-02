@@ -79,7 +79,7 @@ const searchResult = ref<WordSearchResponse>({hits: [] as Hit[], found: 0, page:
 const pageHeight = ref(0)
 const router = useRouter()
 import type { QTableSlots } from 'quasar';
-import type { Hit, WordSearchResponse } from 'src/types/wordSearch'
+import type { Hit, WordSearchResponse } from 'src/types/databaseSearch'
 
 interface BodyScope<T = Hit> extends Parameters<QTableSlots["body"]> {
   row: T;

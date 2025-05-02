@@ -1,6 +1,41 @@
-import { Hand, Language, LexicalCategory, PrismaClient, RelationType } from "@prisma/client"
 import { Type } from 'class-transformer';
-import { IsString, IsOptional, IsBoolean, IsArray, ValidateNested, ArrayMinSize, IsNumber, IsNotEmpty } from 'class-validator';
+import { IsString, IsOptional, IsBoolean, IsArray, ValidateNested, ArrayMinSize, IsNumber, IsNotEmpty, IsEnum } from 'class-validator';
+
+// Define enums locally instead of importing from Prisma
+export enum Hand {
+  RIGHT = 'RIGHT',
+  LEFT = 'LEFT',
+  BOTH = 'BOTH'
+}
+
+export enum Language {
+  CATALAN = 'CATALAN',
+  SPANISH = 'SPANISH',
+  ENGLISH = 'ENGLISH',
+  OTHER = 'OTHER'
+}
+
+export enum LexicalCategory {
+  NOUN = 'NOUN',
+  VERB = 'VERB',
+  ADJECTIVE = 'ADJECTIVE',
+  ADVERB = 'ADVERB',
+  PRONOUN = 'PRONOUN',
+  DETERMINER = 'DETERMINER',
+  PREPOSITION = 'PREPOSITION',
+  CONJUNCTION = 'CONJUNCTION',
+  INTERJECTION = 'INTERJECTION',
+  OTHER = 'OTHER'
+}
+
+export enum RelationType {
+  SYNONYM = 'SYNONYM',
+  REGIONAL_VARIANT = 'REGIONAL_VARIANT',
+  ASSOCIATED_CONCEPT = 'ASSOCIATED_CONCEPT',
+  ANTONYM = 'ANTONYM',
+  HYPERNYM = 'HYPERNYM',
+  HYPONYM = 'HYPONYM'
+}
 
 // Define types for embedded documents that match the Prisma schema
 export class SenseTranslationDto {
@@ -8,7 +43,7 @@ export class SenseTranslationDto {
   @IsNotEmpty()
   translation: string;
 
-  @IsString()
+  @IsEnum(Language)
   @IsNotEmpty()
   language: Language;
 }
@@ -41,6 +76,7 @@ export class VideoDto {
   priority: number;
   
   @IsOptional()
+  @IsEnum(Hand)
   dominantHand?: Hand;
 
   @IsOptional()
@@ -93,6 +129,7 @@ export class SenseDto {
   videos?: VideoDto[];
   
   @IsOptional()
+  @IsEnum(LexicalCategory)
   lexicalCategory?: LexicalCategory;
 }
 
@@ -101,6 +138,7 @@ export class RelatedWordDto {
   @IsNotEmpty()
   wordId: string;
   
+  @IsEnum(RelationType)
   @IsNotEmpty()
   relationType: RelationType;
 }

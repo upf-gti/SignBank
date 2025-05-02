@@ -70,7 +70,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { Video, Hand } from 'src/types/word'
+import { Video, Hand } from 'src/types/database'
 import translate from 'src/utils/translate'
 import SignInfo from './SignInfo.vue'
 
@@ -111,7 +111,8 @@ function prevVideo() {
 }
 
 function updateVideo(video: Video) {
-  emit('update:videos', videos.map((v, index) => index === currentIndex.value ? video : v))
+  const updatedVideos = videos.map((v, index) => index === currentIndex.value ? video : v);
+  emit('update:videos', updatedVideos);
 }
 </script>
 

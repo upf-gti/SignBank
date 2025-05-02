@@ -145,7 +145,8 @@
 
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
-import { Hand, Video } from 'src/types/word'
+import { debounce } from 'quasar'
+import { Hand, Video } from 'src/types/database'
 import translate from 'src/utils/translate'
 
 interface Props {
@@ -171,10 +172,11 @@ onMounted(() => {
   localVideo.value = {...props.video}
 })
 
-// Update the parent component when local data changes
-function updateVideo() {
+// Update the parent component when local data changes (debounced)
+const updateVideo = debounce(() => {
   emit('update:video', {...localVideo.value})
-}
+}, 300)
+
 const handOptions = [{value: Hand.RIGHT, label: translate('word_detail.field.rightHand')}, {value: Hand.LEFT, label: translate('word_detail.field.leftHand')}, {value: Hand.BOTH, label: translate('word_detail.field.bothHands')}]
 </script>
 

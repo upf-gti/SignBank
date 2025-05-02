@@ -125,7 +125,7 @@ export default defineConfig(() => {
           warning: '#F2C037'
         }
       },
-      plugins: ['Notify'],
+      plugins: ['Notify', 'Dialog'],
       lang: 'es'
     },
 

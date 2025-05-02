@@ -123,6 +123,7 @@
               autogrow
               class="q-mb-sm"
               :rules="[val => !!val.trim() || translate('word_detail.error.emptyDescription')]"
+              @update:model-value="emitUpdate"
             />
             
             <!-- Examples -->
@@ -143,6 +144,7 @@
                       outlined
                       dense
                       :rules="[val => !!val.trim() || translate('word_detail.error.emptyExample')]"
+                      @update:model-value="emitUpdate"
                     />
                   </div>
                   <div class="col-auto">
@@ -183,6 +185,7 @@
                       outlined
                       dense
                       :rules="[val => !!val.trim() || translate('word_detail.error.emptyTranslation')]"
+                      @update:model-value="emitUpdate"
                     />
                   </div>
                   <div class="col-auto">
@@ -194,6 +197,7 @@
                       dense
                       class="q-ml-sm"
                       :rules="[val => !!val || translate('word_detail.error.noLanguage')]"
+                      @update:model-value="emitUpdate"
                     />
                   </div>
                   <div class="col-auto">
@@ -245,8 +249,9 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useQuasar } from 'quasar'
-import type { Sense, Description} from 'src/types/word';
-import { Language } from 'src/types/word'
+import { debounce } from 'quasar'
+import type { Sense, Description} from 'src/types/database';
+import { Language } from 'src/types/database'
 import translate from 'src/utils/translate'
 
 // The Quasar notification system
@@ -291,6 +296,11 @@ const currentSense = computed(() => {
   }
   return senses[currentSenseIndex.value]
 })
+
+// Create a debounced emit function for smoother updates
+const emitUpdate = debounce(() => {
+  emit('update:senses', [...senses])
+}, 300) // 300ms debounce time
 
 // Helper methods
 function createEmptySense(): Sense {

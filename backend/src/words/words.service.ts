@@ -1,13 +1,14 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { ObjectId } from 'mongodb';
 import typesense from 'src/typesense/client';
 import { SearchParams } from 'typesense/lib/Typesense/Documents';
-import { WordStatus } from '@prisma/client';
+import { WordStatus, WordEntry } from '../../types/database'; // Import types
 import { SearchOptions, SearchResult } from './interfaces/search.interface';
+import { MongoDBService } from '../mongodb/mongodb.service';
 
 @Injectable()
 export class WordsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly mongodb: MongoDBService) {}
 
   // Search for words using Typesense
   async searchWords(query: string, limit: number, filters?: Record<string, any>): Promise<SearchResult> {
@@ -43,6 +44,7 @@ export class WordsService {
         .documents()
         .search(searchParameters);
       
+      console.log(results)
       // Process hits to include only general information
       return {
         found: results.found,
@@ -62,7 +64,14 @@ export class WordsService {
           
           // Use senseDefinitions from Typesense if available
           if (document.senseDefinitions && document.senseDefinitions.length > 0) {
+            // The first element should be the highest priority definition based on our updated sync logic
             bestSenseDescription = document.senseDefinitions[0];
+          }
+          
+          // If we still don't have a description, try to get it using the word ID
+          if (!bestSenseDescription && id) {
+            // We'll handle this asynchronously to avoid blocking the search results
+            this.enrichWordWithDefinition(id, hit);
           }
           
           return {
@@ -94,25 +103,56 @@ export class WordsService {
     }
   }
 
-  // Get full word details using Prisma
+  // Helper method to fetch a full definition if needed
+  private async enrichWordWithDefinition(wordId: string, hit: any): Promise<void> {
+    try {
+      const word = await this.getWordDetailsById(wordId);
+      if (word && word.senses && word.senses.length > 0) {
+        // Find the sense with the highest priority
+        const highestPrioritySense = word.senses.sort((a, b) => 
+          (a.priority || 999) - (b.priority || 999)
+        )[0];
+        
+        if (highestPrioritySense && 
+            highestPrioritySense.descriptions && 
+            highestPrioritySense.descriptions.length > 0) {
+          // Get the first description
+          const topDescription = highestPrioritySense.descriptions[0];
+          if (topDescription && topDescription.description) {
+            // Update the hit document with the description
+            if (hit.document) {
+              hit.document.description = topDescription.description;
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error(`Failed to enrich word ${wordId} with definition:`, error);
+    }
+  }
+
+  // Get full word details using MongoDB directly
   async getWordDetailsById(wordId: string) {
-    const word = await this.prisma.wordEntry.findUnique({
-      where: { id: wordId },
-    });
-    console.log(word.wordData.senses);
+    // Convert string ID to ObjectId
+    const objectId = this.mongodb.toObjectId(wordId);
+    
+    // Fetch the word from MongoDB directly
+    const word = await this.mongodb.words.findOne({ _id: objectId });
 
     if (!word) {
       throw new NotFoundException('Word not found');
     }
 
-    // Transform the data to match frontend expectations
+    // Format the document and transform the data to match frontend expectations
+    const formattedWord = this.mongodb.formatDocument<WordEntry>(word);
+
     return {
-      id: word.id,
-      createdAt: word.createdAt,
-      updatedAt: word.updatedAt,
-      status: word.status,
-      currentVersion: word.currentVersion,
-      ...word.wordData,
+      id: formattedWord.id,
+      createdAt: formattedWord.createdAt,
+      updatedAt: formattedWord.updatedAt,
+      status: formattedWord.status,
+      currentVersion: formattedWord.currentVersion,
+      ...formattedWord.wordData,
     };
   }
 }

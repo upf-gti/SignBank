@@ -19,12 +19,12 @@ import { ref, onMounted } from 'vue'
 import type { QTableProps } from 'quasar'
 import { useQuasar } from 'quasar'
 import api from 'src/services/api'
-import type { ConfirmRequestType } from 'src/types/wordRequest'
+import type { WordRequest } from 'src/types/database'
 import translate from 'src/utils/translate'
 
 const $q = useQuasar()
 
-const wordsRequested = ref<ConfirmRequestType[]>([])
+const wordsRequested = ref<WordRequest[]>([])
 const loading = ref(false)
 
 const columns: QTableProps['columns'] = [
@@ -33,7 +33,7 @@ const columns: QTableProps['columns'] = [
         required: true,
         label: translate('word'),
         align: 'left',
-        field: (row: ConfirmRequestType) => {
+        field: (row: WordRequest) => {
           console.log(row);
           return row.requestedWordData.word
         },
@@ -43,14 +43,14 @@ const columns: QTableProps['columns'] = [
         required: true,
         label: translate('description'),
         align: 'left',
-        field: (row: ConfirmRequestType) => row.requestedWordData.senses[0]?.descriptions[0]?.text,
+        field: (row: WordRequest) => row.requestedWordData.senses[0]?.descriptions[0]?.description,
     },
     {
         name: 'requestedBy',
         required: true,
         label: translate('requestedBy'),
         align: 'left',
-        field: (row: ConfirmRequestType) => row.user.email,
+        field: (row: WordRequest) => row.creatorId
     }
 ]
 

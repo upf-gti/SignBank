@@ -19,6 +19,7 @@
                   outlined 
                   hide-bottom-space
                   :rules="[(val) => !!val || translate('word_detail.error.emptyWord')]"
+                  @update:model-value="emitUpdate"
                 />
                 <div
                   v-else
@@ -82,8 +83,9 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useQuasar } from 'quasar'
-import type { Sense, Description, Video, Word } from 'src/types/word';
-import { WordStatus} from 'src/types/word'
+import { debounce } from 'quasar'
+import type { Sense, Description, Video, Word } from 'src/types/database';
+import { WordStatus} from 'src/types/database'
 import translate from 'src/utils/translate'
 import VideoPlayer from './VideoPlayer.vue'
 import SenseDetails from './SenseDetails.vue'
@@ -96,6 +98,7 @@ interface Props {
   word?: Word | null
   editMode: 'none' | 'strict' | 'full'
 }
+
 const props = withDefaults(defineProps<Props>(), {
   word: () => ({
     id: '',
@@ -118,6 +121,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   (e: 'save', word: Word): void
   (e: 'cancel'): void
+  (e: 'update:word', word: Word): void
 }>()
 
 // Local state for word editing
@@ -169,17 +173,24 @@ function createEmptyDescription(): Description {
 // Methods for manipulating data
 function updateSenses(senses: Sense[]) {
   localWord.value.senses = senses
+  emitUpdate()
 }
 
 function updateVideos(videos: Video[]) {
   localWord.value.senses.forEach(sense => {
     sense.videos = videos
   })
+  emitUpdate()
 }
 
 function updateCurrentSenseIndex(index: number) {
   currentSenseIndex.value = index
 }
+
+// Helper function to emit updates (debounced)
+const emitUpdate = debounce(() => {
+  emit('update:word', localWord.value)
+}, 300) // 300ms debounce time
 
 // Save and cancel handlers
 function save() {

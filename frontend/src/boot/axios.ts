@@ -9,7 +9,7 @@ declare module 'vue' {
   }
 }
 
-const api = axios.create({ baseURL: 'https://rdonadeu.com/api' });
+const api = axios.create({ baseURL: process.env.BACKEND_URL || 'https://signbank.upf.com/api' });
 
 // Add interceptor to the api instance instead of global axios
 api.interceptors.request.use(config => {

@@ -3,10 +3,10 @@ import { Module } from '@nestjs/common';
 import { WordRequestsController } from './word-requests.controller';
 import { WordRequestsService } from './word-requests.service';
 import { TypesenseSyncService } from 'src/typesense/sync';
-import { PrismaModule } from 'src/prisma/prisma.module';
+import { MongoDBModule } from 'src/mongodb/mongodb.module';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [MongoDBModule],
   controllers: [WordRequestsController],
   providers: [WordRequestsService, TypesenseSyncService],
   exports: [WordRequestsService]

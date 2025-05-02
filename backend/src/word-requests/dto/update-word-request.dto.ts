@@ -1,5 +1,11 @@
-import { RequestStatus } from '@prisma/client';
 import { IsBoolean, IsEnum, IsOptional, IsString } from 'class-validator';
+
+// Define enum locally instead of importing from Prisma
+export enum RequestStatus {
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  DENIED = 'DENIED'
+}
 
 export class UpdateWordRequestDto {
   @IsEnum(RequestStatus)

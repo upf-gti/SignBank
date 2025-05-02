@@ -75,8 +75,8 @@ import { ref, onMounted } from 'vue'
 import { api } from 'src/services/api'
 import WordDetail from 'src/components/WordDetail.vue'
 import { useQuasar } from 'quasar'
-import type { WordEntry } from 'src/types/word';
-import { WordStatus } from 'src/types/word'
+import type { WordEntry } from 'src/types/database';
+import { WordStatus } from 'src/types/database'
 import translate from 'src/utils/translate'
 
 const $q = useQuasar()

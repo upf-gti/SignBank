@@ -1,8 +1,7 @@
 import type { AxiosResponse } from "axios"
 import { apiClient } from "src/boot/axios"
-import type {  Words, Word } from "src/types/word"
-import type { WordRequest, WordRequests } from "src/types/wordRequest"
-import type { WordSearchResponse } from "src/types/wordSearch"
+import type {  Word } from "src/types/database"
+import type { WordRequest } from "src/types/database"
 
 // Create API service object
 export const api = {
@@ -10,7 +9,7 @@ export const api = {
     return apiClient.post('/auth/login', credentials)
   },
   wordRequests: {
-    get(id?: string): Promise<AxiosResponse<WordRequest | WordRequests>> {
+    get(id?: string): Promise<AxiosResponse<WordRequest | WordRequest[]>> {
       return apiClient.get(`/word-requests${id ? `/${id}` : ''}`)
     },
     getPending() {
@@ -18,9 +17,6 @@ export const api = {
     },
     post(dto: Word) {
       return apiClient.post('/word-requests', dto)
-    },
-    put(id: string, dto: Word) {
-      return apiClient.put(`/word-requests/${id}`, dto)
     },
     approve(id: string, dto: Word) {
       return apiClient.put(`/word-requests/${id}/approve`, dto)
@@ -36,12 +32,6 @@ export const api = {
     details(id: string): Promise<AxiosResponse<Words>> {
       return apiClient.get(`/words/details/${id}`)
     },
-    create(word: Words): Promise<AxiosResponse<Words>> {
-      return apiClient.post('/words', word)
-    },
-    requestEdit(word: Words): Promise<AxiosResponse<any>> {
-      return apiClient.post(`/words/edit-requests`, word)
-    }
   }
 }
 
