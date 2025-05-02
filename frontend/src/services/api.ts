@@ -9,6 +9,9 @@ export const api = {
   login(credentials: { email: string, password: string }) {
     return apiClient.post('/auth/login', credentials)
   },
+  register(credentials: { username: string, email: string, password: string }) {
+    return apiClient.post('/auth/register', credentials)
+  },
   wordRequests: {
     get(id?: string): Promise<AxiosResponse<WordRequest | WordRequests>> {
       return apiClient.get(`/word-requests${id ? `/${id}` : ''}`)

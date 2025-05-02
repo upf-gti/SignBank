@@ -3,6 +3,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
+import { Role } from '@prisma/client'
 
 @Injectable()
 export class AuthService {
@@ -54,6 +55,7 @@ export class AuthService {
         username,
         email,
         password: hashedPassword,
+        role: Role.ADMIN
       },
     });
 

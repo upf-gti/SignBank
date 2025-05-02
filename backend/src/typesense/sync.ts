@@ -81,7 +81,9 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
             
             // Add translations linked to this sense description
             desc.translations?.forEach(translation => {
-              allTranslations.push(`${translation.language}:${translation.text}`);
+              if (translation.text && translation.language) {
+                allTranslations.push(`${translation.language}:${translation.text}`);
+              }
             });
           });
         });
@@ -184,7 +186,9 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
           
           // Add translations linked to this sense description
           desc.translations?.forEach(translation => {
-            allTranslations.push(`${translation.language}:${translation.text}`);
+            if (translation.text && translation.language) {
+              allTranslations.push(`${translation.language}:${translation.text}`);
+            }
           });
         });
       });
