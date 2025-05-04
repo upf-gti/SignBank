@@ -9,7 +9,8 @@ export class MongoDBService implements OnModuleInit, OnModuleDestroy {
   private isConnected = false;
 
   constructor() {
-    this.client = new MongoClient(process.env.DATABASE_URL || '');
+    const dbUrl = process.env.DATABASE_URL || '';
+    this.client = new MongoClient(dbUrl);
   }
 
   async onModuleInit() {
@@ -21,7 +22,9 @@ export class MongoDBService implements OnModuleInit, OnModuleDestroy {
   }
 
   async connect(): Promise<void> {
-    if (this.isConnected) return;
+    if (this.isConnected) {
+      return;
+    }
 
     try {
       await this.client.connect();
@@ -30,18 +33,16 @@ export class MongoDBService implements OnModuleInit, OnModuleDestroy {
       
       // Initialize collections
       this.collections = {
-        users: this.db.collection('Users'),
-        dialects: this.db.collection('Dialect'),
-        words: this.db.collection('Words'),
-        wordEdits: this.db.collection('WordEdit'),
-        wordEditHistoric: this.db.collection('WordEditHistoric'),
-        wordRequests: this.db.collection('WordRequest')
+        users: this.db.collection('users'),
+        dialects: this.db.collection('dialects'),
+        words: this.db.collection('words'),
+        wordEdits: this.db.collection('wordEdits'),
+        wordEditHistoric: this.db.collection('wordEditHistoric'),
+        wordRequests: this.db.collection('wordRequests')
       };
       
-      console.log('Connected to MongoDB');
     } catch (error) {
       this.isConnected = false;
-      console.error('MongoDB connection error:', error);
       throw error;
     }
   }
@@ -52,9 +53,7 @@ export class MongoDBService implements OnModuleInit, OnModuleDestroy {
     try {
       await this.client.close();
       this.isConnected = false;
-      console.log('Disconnected from MongoDB');
     } catch (error) {
-      console.error('MongoDB disconnection error:', error);
       throw error;
     }
   }

@@ -4,10 +4,10 @@ import { RequestStatus, Word, WordStatus } from '../../types/database';
 import { MongoDBService } from '../mongodb/mongodb.service';
 import { UpdateWordRequestDto } from './dto/update-word-request.dto'
 import { CreateWordRequestDto, WordDataDto } from './dto/create-word-request.dto'
-
+import { TypesenseSyncService } from '../typesense/sync';
 @Injectable()
 export class WordRequestsService {
-  constructor(private readonly mongodb: MongoDBService) {}
+  constructor(private readonly mongodb: MongoDBService, private readonly typesenseSyncService: TypesenseSyncService) {}
 
   /**
    * Create a new word request
@@ -200,7 +200,6 @@ export class WordRequestsService {
   async acceptWordRequest(requestId: string, adminId: string, word: Word) {
     const session = await this.mongodb.startSession();
     
-    await this.updateWordRequest(requestId, word);
     try {
       // Convert IDs to ObjectIds
       const requestObjectId = this.mongodb.toObjectId(requestId);
@@ -264,11 +263,20 @@ export class WordRequestsService {
         
         if (!updateResult) {
           throw new InternalServerErrorException(`Failed to update word request status for ID ${requestId}`);
-        }
-        
+        }        
         result = this.mongodb.formatDocument(updateResult.value);
+
+        // 4. Sync to Typesense within the transaction
+        try {
+          await this.typesenseSyncService.syncSingleWord(wordEntryId.toString(), word);
+        } catch (syncError) {
+          // If sync fails, we should still commit the transaction but log the error
+          console.error(`Failed to sync word ${wordEntryId} to Typesense:`, syncError);
+          // We could add this to a queue for retry later
+          // this.typesenseSyncService.addToRetryQueue(wordEntryId.toString());
+        }
       });
-      
+
       return result;
     } catch (error) {
       if (error instanceof NotFoundException || 

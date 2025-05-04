@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsString, IsNumber, IsArray, IsObject, IsOptional, Min, Max, IsEnum } from 'class-validator';
-import { WordStatus, Hand, LexicalCategory } from '@prisma/client';
+import { Hand, LexicalCategory } from 'types/database'
 
 export class SearchQueryDto {
   @IsString()

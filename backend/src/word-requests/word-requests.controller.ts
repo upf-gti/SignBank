@@ -20,7 +20,7 @@ import { CreateWordRequestDto, WordDataDto } from './dto/create-word-request.dto
 @Controller('word-requests')
 export class WordRequestsController {
   constructor(private readonly wordRequestsService: WordRequestsService) {}
-
+  
   @UseGuards(JwtGuard)
   @Post()
   create(@GetUser('id') userId: string, @Body() createWordRequestDto: WordDataDto) {

@@ -14,7 +14,6 @@ const api = axios.create({ baseURL: process.env.BACKEND_URL || 'https://signbank
 // Add interceptor to the api instance instead of global axios
 api.interceptors.request.use(config => {
   const userStore = useUser()
-
   const token = userStore.access_token
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;

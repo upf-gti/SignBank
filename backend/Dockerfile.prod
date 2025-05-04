@@ -3,7 +3,6 @@ FROM node:20 AS builder
 
 WORKDIR /app
 COPY package*.json ./
-COPY prisma ./prisma/
 # Copy all source code
 COPY . .
 
@@ -20,8 +19,6 @@ ENV ADMIN_PASSWORD=${ADMIN_PASSWORD}
 # Install dependencies first
 RUN npm install
 
-# Generate Prisma client, but don't run migrations or seed during build
-RUN npx prisma generate
 
 # Build the application
 RUN npm run build
@@ -35,7 +32,6 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/prisma ./prisma
 
 
 # Environment variables should be provided through docker-compose

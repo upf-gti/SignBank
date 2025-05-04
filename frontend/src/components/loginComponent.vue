@@ -118,7 +118,6 @@ const handleLogin = async () => {
       email: email.value,
       password: password.value
     })
-    debugger
     userStore.setUserData(response)    
 
     Notify.create({

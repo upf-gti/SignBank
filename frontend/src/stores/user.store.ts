@@ -17,6 +17,7 @@ const useUser = defineStore('user', () => {
         Cookies.set('access_token', data.access_token)
         Cookies.set('role', data.user.role)
     }
+    
     function logout() {
         access_token.value = ''
         role.value = ''

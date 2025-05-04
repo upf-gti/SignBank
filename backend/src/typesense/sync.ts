@@ -200,20 +200,13 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
     await this.syncWordsToTypesense();
   }
 
-  async syncSingleWord(wordId: string) {
+  async syncSingleWord(wordId: string, wordData: any, retryCount = 0) {
+    const MAX_RETRIES = 3;
+    const RETRY_DELAY = 1000; // 1 second
+
     try {
-      // Use the service's method to find a word by ID
-      const word = await this.findWordById(wordId);
-
-      if (!word) {
-        console.log(`Word with ID ${wordId} not found.`);
-        return;
-      }
-
-      // Get the wordData from the embedded type
-      const wordData = word.wordData;
       if (!wordData) {
-        console.log(`Word ${word.id} has no wordData`);
+        console.log(`No word data provided for word ID ${wordId}`);
         return;
       }
 
@@ -249,10 +242,10 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
 
       // Create the document with required fields
       const document: any = {
-        id: word.id,
+        id: wordId,
         word: wordData.word,
-        createdAt: word.createdAt,
-        status: word.status || 'PUBLISHED',
+        createdAt: new Date().toISOString(),
+        status: 'PUBLISHED',
         isNative: wordData.isNative || false,
         senseDefinitions: definitionsByPriority.length > 0 ? definitionsByPriority : [''],
         senseExamples: senseExamples.length > 0 ? senseExamples : [''],
@@ -262,18 +255,28 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
       };
       
       // Add lexical category if it exists in the wordData
-      if ((wordData as any).lexicalCategory) {
-        document.lexicalCategory = (wordData as any).lexicalCategory;
+      if (wordData.lexicalCategory) {
+        document.lexicalCategory = wordData.lexicalCategory;
       }
 
-      await typesense
-        .collections('words')
-        .documents()
-        .upsert(document);
+      try {
+        await typesense
+          .collections('words')
+          .documents()
+          .upsert(document);
 
-      console.log(`Successfully synced word ${wordData.word} to Typesense.`);
+        console.log(`Successfully synced word ${wordData.word} to Typesense.`);
+      } catch (error) {
+        if (retryCount < MAX_RETRIES) {
+          console.log(`Retrying sync for word ${wordData.word} (attempt ${retryCount + 1}/${MAX_RETRIES})...`);
+          await new Promise(resolve => setTimeout(resolve, RETRY_DELAY * (retryCount + 1)));
+          return this.syncSingleWord(wordId, wordData, retryCount + 1);
+        }
+        throw error;
+      }
     } catch (error) {
       console.error('Error syncing word to Typesense:', error.message);
+      throw error;
     }
   }
 

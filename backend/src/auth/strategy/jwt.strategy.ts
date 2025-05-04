@@ -10,29 +10,37 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(private readonly mongodb: MongoDBService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: process.env.JWT_SECRET || 'super-secret',
+      secretOrKey: 'super-secret',
     });
   }
 
   async validate(payload: any) {
-    const objectId = this.mongodb.toObjectId(payload.sub);
-    
-    // Find the user by ID from the token payload
-    const user = await this.mongodb.users.findOne({ _id: objectId });
-    
-    if (!user) {
-      throw new UnauthorizedException('User not found');
+    if (!payload || !payload.sub) {
+      throw new UnauthorizedException('Invalid token payload');
     }
-    
-    // Format the document and remove sensitive data
-    const formattedUser = this.mongodb.formatDocument<User>(user);
-    
-    // Remove password from user object
-    const { password, ...userWithoutPassword } = formattedUser;
-    
-    return {
-      ...userWithoutPassword,
-      userId: userWithoutPassword.id, // Include this for backward compatibility
-    };
+
+    try {
+      const objectId = this.mongodb.toObjectId(payload.sub);
+      
+      // Find the user by ID from the token payload
+      const user = await this.mongodb.users.findOne({ _id: objectId });
+      if (!user) {
+        throw new UnauthorizedException('User not found');
+      }
+      
+      // Format the document and remove sensitive data
+      const formattedUser = this.mongodb.formatDocument<User>(user);
+      
+      // Remove password from user object
+      const { password, ...userWithoutPassword } = formattedUser;
+      
+      return {
+        ...userWithoutPassword,
+        userId: userWithoutPassword.id, // Include this for backward compatibility
+      };
+    } catch (error) {
+      console.error('JwtStrategy: Error during validation:', error);
+      throw error;
+    }
   }
 }

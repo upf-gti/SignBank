@@ -43,12 +43,12 @@ const WordStatus = {
 // Define collection names with correct capitalization to match Prisma's conventions
 // This ensures consistency between development and production
 const Collections = {
-    WORDS: 'Words',                 // Capitalized to match Prisma's convention
-    WORD_EDIT: 'WordEdit',          // Capitalized
-    WORD_EDIT_HISTORIC: 'WordEditHistoric', // Capitalized
-    WORD_REQUEST: 'WordRequest',     // Capitalized
-    DIALECT: 'Dialect',             // Capitalized
-    USERS: 'Users'                  // Capitalized
+    WORDS: 'words',                 // Plural form
+    WORD_EDIT: 'wordEdits',          // Plural form
+    WORD_EDIT_HISTORIC: 'wordEditHistoric', // Keep as is since it's a special case
+    WORD_REQUEST: 'wordRequests',     // Plural form
+    DIALECT: 'dialects',             // Plural form
+    USERS: 'users'                  // Plural form
 }
 
 async function main() {
