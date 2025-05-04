@@ -25,7 +25,7 @@
         // rowsNumber: xx if getting data from a server
         }"
       >
-        <template #body="scope: BodyScope">
+        <template #body="scope">
           <q-tr
             class="cursor-pointer"
             :props="scope"
@@ -75,15 +75,11 @@ import { useRoute, useRouter } from 'vue-router'
 import api from 'src/services/api'
 import wordStructure from 'src/utils/wordStructure'
 const route = useRoute()
-const searchResult = ref<WordSearchResponse>({hits: [] as Hit[], found: 0, page: 1} as WordSearchResponse)
+const searchResult = ref<any>({hits: [] as any[], found: 0, page: 1} as any)
 const pageHeight = ref(0)
 const router = useRouter()
-import type { QTableSlots } from 'quasar';
-import type { Hit, WordSearchResponse } from 'src/types/wordSearch'
 
-interface BodyScope<T = Hit> extends Parameters<QTableSlots["body"]> {
-  row: T;
-}
+
 
 watch(() => route.query.search, (newSearch) => {
   if (newSearch) {

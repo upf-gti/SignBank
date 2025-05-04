@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsString, IsNumber, IsArray, IsObject, IsOptional, Min, Max, IsEnum } from 'class-validator';
-import { WordStatus, Hand, LexicalCategory } from '@prisma/client';
+import { Hand, LexicalCategory } from 'types/database'
 
 export class SearchQueryDto {
   @IsString()
@@ -23,15 +23,20 @@ export class SearchQueryDto {
 
   @IsOptional()
   @Type(() => Boolean)
-  hasContact?: boolean;
+  isNative?: boolean;
 
+  // Video attributes can be used to filter, but they are now nested in the sense.videos array
   @IsOptional()
   @Type(() => Boolean)
-  isNative?: boolean;
+  videoHasContact?: boolean;
 
   @IsOptional()
   @IsEnum(Hand)
-  dominantHand?: Hand;
+  videoDominantHand?: Hand;
+  
+  @IsOptional()
+  @IsString()
+  videoFacialExpression?: string;
 }
 
 export class AdvancedSearchDto {

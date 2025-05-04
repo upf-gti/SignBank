@@ -19,6 +19,7 @@
                   outlined 
                   hide-bottom-space
                   :rules="[(val) => !!val || translate('word_detail.error.emptyWord')]"
+                  @update:model-value="emitUpdate"
                 />
                 <div
                   v-else
@@ -27,12 +28,6 @@
                   {{ localWord.word }}
                 </div>
               </div>              
-              <div
-                v-if="localWord.dialect"
-                class="text-caption q-mt-sm q-pl-md"
-              >
-                {{ translate('word_detail.field.dialect') }}: {{ localWord.dialect.name }}
-              </div>
             </div>
             <!-- Actions for edit mode -->
             <div
@@ -65,14 +60,8 @@
           <!-- Videos on the left side -->
           <VideoPlayer 
             :videos="allVideos"
-          />
-          <!-- Sign information below the video -->
-
-          <SignInfo 
-            v-if="currentSense"
-            :sense="currentSense" 
-            :is-edit-mode="editMode !== 'none'"
-            @update:sense="updateCurrentSense"
+            :edit-mode="editMode"
+            @update:videos="updateVideos"
           />
         </div>
 
@@ -94,12 +83,11 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useQuasar } from 'quasar'
-import type { Words, Sense, Description, VideoInfo, Word } from 'src/types/word';
-import { WordStatus} from 'src/types/word'
+import { debounce } from 'quasar'
+import type { Sense, Description, Video, Word } from 'src/types/database';
 import translate from 'src/utils/translate'
 import VideoPlayer from './VideoPlayer.vue'
 import SenseDetails from './SenseDetails.vue'
-import SignInfo from './SignInfo.vue'
 
 // The Quasar notification system
 const $q = useQuasar()
@@ -109,20 +97,14 @@ interface Props {
   word?: Word | null
   editMode: 'none' | 'strict' | 'full'
 }
+
 const props = withDefaults(defineProps<Props>(), {
-  word: () => ({
-    id: '',
+  word: () => ({        
     word: '',
-    createdAt: new Date(),
-    updatedAt: new Date(), 
-    creatorId: '',
     isNative: true,
-    status: WordStatus.PUBLISHED,
-    currentVersion: 1,
-    isCreatedFromRequest: false,
-    isCreatedFromEdit: false,
     senses: [],
-    relatedWords: []
+    relatedWords: [],
+    dialectId: ''
   }),
   editMode: 'none'
 })
@@ -131,23 +113,19 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   (e: 'save', word: Word): void
   (e: 'cancel'): void
+  (e: 'update:word', word: Word): void
 }>()
 
 // Local state for word editing
-const localWord = ref<Words>({} as Words)
+const localWord = ref<Word>({} as Word)
 
 // Current sense for the sign information display
 const currentSenseIndex = ref(0)
-const currentSense = computed(() => {
-  if (!localWord.value || !localWord.value.senses || localWord.value.senses.length === 0) {
-    return null
-  }
-  return localWord.value.senses[currentSenseIndex.value]
-})
+
 
 // All videos from all senses for the video player
 const allVideos = computed(() => {
-  const videos: VideoInfo[] = []
+  const videos: Video[] = []
   for (const sense of localWord.value.senses || []) {
     if (sense.videos && sense.videos.length) {
       videos.push(...sense.videos)
@@ -178,7 +156,7 @@ function createEmptySense(): Sense {
 
 function createEmptyDescription(): Description {
   return {
-    text: '',
+    description: '',
     examples: [],
     translations: []
   }
@@ -187,18 +165,24 @@ function createEmptyDescription(): Description {
 // Methods for manipulating data
 function updateSenses(senses: Sense[]) {
   localWord.value.senses = senses
+  emitUpdate()
+}
+
+function updateVideos(videos: Video[]) {
+  localWord.value.senses.forEach(sense => {
+    sense.videos = videos
+  })
+  emitUpdate()
 }
 
 function updateCurrentSenseIndex(index: number) {
   currentSenseIndex.value = index
 }
 
-// Update current sense from SignInfo component
-function updateCurrentSense(updatedSense: Sense) {
-  if (localWord.value.senses && localWord.value.senses.length > currentSenseIndex.value) {
-    localWord.value.senses[currentSenseIndex.value] = updatedSense
-  }
-}
+// Helper function to emit updates (debounced)
+const emitUpdate = debounce(() => {
+  emit('update:word', localWord.value)
+}, 300) // 300ms debounce time
 
 // Save and cancel handlers
 function save() {
@@ -234,7 +218,7 @@ function save() {
     }
     
     // Check if at least one description has non-empty text
-    const hasValidDescription = sense.descriptions.some(desc => desc.text && desc.text.trim().length > 0)
+    const hasValidDescription = sense.descriptions.some(desc => desc.description && desc.description.trim().length > 0)
     if (!hasValidDescription) {
       $q.notify({
         color: 'negative',

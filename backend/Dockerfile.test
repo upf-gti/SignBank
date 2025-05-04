@@ -19,7 +19,6 @@ ENV ADMIN_PASSWORD=${ADMIN_PASSWORD}
 # Install dependencies first
 RUN npm install
 
-
 # Build the application
 RUN npm run build
 

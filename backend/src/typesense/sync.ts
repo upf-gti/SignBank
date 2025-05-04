@@ -1,16 +1,17 @@
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { MongoDBService } from '../mongodb/mongodb.service';
 import { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections';
 import typesense from './client';
+import { WordEntry, WordStatus } from '../../types/database';
 
 @Injectable()
 export class TypesenseSyncService implements OnApplicationBootstrap {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly mongodb: MongoDBService) {}
 
   // Sync words from the database to Typesense
   async syncWordsToTypesense() {
-    const words = await this.prisma.words.findMany();
-
+    // Use the service's function to find all word entries
+    const words = await this.findAllPublishedWords();
     if (!words || words.length === 0) {
       console.log('No words found in the database to sync.');
       return;
@@ -68,22 +69,21 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
           return null;
         }
 
-        // Process sense definitions and examples
-        const senseTexts = [];
+        // Get definitions organized by priority
+        const definitionsByPriority = this.getDefinitionsByPriority(wordData.senses);
+        
+        // Process sense examples and translations
         const senseExamples = [];
         const allTranslations = [];
         
         wordData.senses?.forEach(sense => {
           // Process sense descriptions
           sense.descriptions?.forEach(desc => {
-            if (desc.text) senseTexts.push(desc.text);
             if (desc.examples) senseExamples.push(...desc.examples);
             
             // Add translations linked to this sense description
             desc.translations?.forEach(translation => {
-              if (translation.text && translation.language) {
-                allTranslations.push(`${translation.language}:${translation.text}`);
-              }
+              allTranslations.push(`${translation.language}:${translation.translation}`);
             });
           });
         });
@@ -99,22 +99,26 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
         // Extract related words
         const relatedWords = wordData.relatedWords?.map(rel => rel.wordId) || [];
         
-        // Ensure all required fields have values to prevent indexing errors
-        return {
+        // Create the document with required fields
+        const doc: any = {
           id: word.id,
           word: wordData.word,
-          createdAt: word.createdAt.toISOString(),
+          createdAt: word.createdAt,
           status: word.status || 'PUBLISHED',
-          dominantHand: wordData.dominantHand || 'UNKNOWN',
-          register: wordData.register || '',
           isNative: wordData.isNative || false,
-          lexicalCategory: wordData.lexicalCategory || '',
-          senseDefinitions: senseTexts.length > 0 ? senseTexts : [''],
+          senseDefinitions: definitionsByPriority.length > 0 ? definitionsByPriority : [''],
           senseExamples: senseExamples.length > 0 ? senseExamples : [''],
           translations: allTranslations.length > 0 ? allTranslations : [''],
           relatedWords: relatedWords,
           videoUrls: videoUrls
         };
+        
+        // Add lexical category if it exists in the wordData
+        if ((wordData as any).lexicalCategory) {
+          doc.lexicalCategory = (wordData as any).lexicalCategory;
+        }
+        
+        return doc;
       }).filter(Boolean); // Filter out null values
 
       // Split into chunks to handle potential size limitations
@@ -149,46 +153,77 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
     }
   }
 
+  // Helper method to get definitions sorted by priority
+  private getDefinitionsByPriority(senses: any[] = []): string[] {
+    if (!senses || senses.length === 0) return [];
+    
+    // Sort senses by priority (lower number = higher priority)
+    const sortedSenses = [...senses].sort((a, b) => {
+      const priorityA = a.priority !== undefined ? a.priority : 999;
+      const priorityB = b.priority !== undefined ? b.priority : 999;
+      return priorityA - priorityB;
+    });
+    
+    // Extract definitions from sorted senses
+    const definitions: string[] = [];
+    
+    sortedSenses.forEach(sense => {
+      if (sense.descriptions && sense.descriptions.length > 0) {
+        sense.descriptions.forEach(desc => {
+          if (desc.description) {
+            definitions.push(desc.description);
+          }
+        });
+      }
+    });
+    
+    return definitions;
+  }
+
+  // Fetch all published words
+  private async findAllPublishedWords(): Promise<WordEntry[]> {
+    try {
+      const rawWords = await this.mongodb.words.find({
+        status: WordStatus.PUBLISHED
+      }).toArray();
+      return rawWords.map(word => this.mongodb.formatDocument<WordEntry>(word));
+    } catch (error) {
+      console.error('Error fetching published words:', error);
+      return [];
+    }
+  }
+
   // Automatically run on application bootstrap
   async onApplicationBootstrap() {
     console.log('Syncing database words to Typesense...');
     await this.syncWordsToTypesense();
   }
 
-  async syncSingleWord(wordId: string) {
+  async syncSingleWord(wordId: string, wordData: any, retryCount = 0) {
+    const MAX_RETRIES = 3;
+    const RETRY_DELAY = 1000; // 1 second
+
     try {
-      const word = await this.prisma.words.findUnique({
-        where: { id: wordId },          
-      });
-
-      if (!word) {
-        console.log(`Word with ID ${wordId} not found.`);
-        return;
-      }
-
-      // Get the wordData from the embedded type
-      const wordData = word.wordData;
       if (!wordData) {
-        console.log(`Word ${word.id} has no wordData`);
+        console.log(`No word data provided for word ID ${wordId}`);
         return;
       }
 
-      // Process sense definitions and examples
-      const senseTexts = [];
+      // Get definitions organized by priority
+      const definitionsByPriority = this.getDefinitionsByPriority(wordData.senses);
+      
+      // Process sense examples and translations
       const senseExamples = [];
       const allTranslations = [];
       
       wordData.senses?.forEach(sense => {
         // Process sense descriptions
         sense.descriptions?.forEach(desc => {
-          if (desc.text) senseTexts.push(desc.text);
           if (desc.examples) senseExamples.push(...desc.examples);
           
           // Add translations linked to this sense description
           desc.translations?.forEach(translation => {
-            if (translation.text && translation.language) {
-              allTranslations.push(`${translation.language}:${translation.text}`);
-            }
+            allTranslations.push(`${translation.language}:${translation.translation}`);
           });
         });
       });
@@ -204,31 +239,60 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
       // Extract related words
       const relatedWords = wordData.relatedWords?.map(rel => rel.wordId) || [];
 
-      // Ensure all required fields have values to prevent indexing errors
-      const document = {
-        id: word.id,
+      // Create the document with required fields
+      const document: any = {
+        id: wordId,
         word: wordData.word,
-        createdAt: word.createdAt.toISOString(),
-        status: word.status || 'PUBLISHED',
-        dominantHand: wordData.dominantHand || 'UNKNOWN',
-        register: wordData.register || '',
+        createdAt: new Date().toISOString(),
+        status: 'PUBLISHED',
         isNative: wordData.isNative || false,
-        lexicalCategory: wordData.lexicalCategory || '',
-        senseDefinitions: senseTexts.length > 0 ? senseTexts : [''],
+        senseDefinitions: definitionsByPriority.length > 0 ? definitionsByPriority : [''],
         senseExamples: senseExamples.length > 0 ? senseExamples : [''],
         translations: allTranslations.length > 0 ? allTranslations : [''],
         relatedWords: relatedWords,
         videoUrls: videoUrls
       };
+      
+      // Add lexical category if it exists in the wordData
+      if (wordData.lexicalCategory) {
+        document.lexicalCategory = wordData.lexicalCategory;
+      }
 
-      await typesense
-        .collections('words')
-        .documents()
-        .upsert(document);
+      try {
+        await typesense
+          .collections('words')
+          .documents()
+          .upsert(document);
 
-      console.log(`Successfully synced word ${wordData.word} to Typesense.`);
+        console.log(`Successfully synced word ${wordData.word} to Typesense.`);
+      } catch (error) {
+        if (retryCount < MAX_RETRIES) {
+          console.log(`Retrying sync for word ${wordData.word} (attempt ${retryCount + 1}/${MAX_RETRIES})...`);
+          await new Promise(resolve => setTimeout(resolve, RETRY_DELAY * (retryCount + 1)));
+          return this.syncSingleWord(wordId, wordData, retryCount + 1);
+        }
+        throw error;
+      }
     } catch (error) {
       console.error('Error syncing word to Typesense:', error.message);
+      throw error;
+    }
+  }
+
+  // Helper to find a word by ID
+  private async findWordById(wordId: string): Promise<WordEntry | null> {
+    try {
+      const objectId = this.mongodb.toObjectId(wordId);
+      const word = await this.mongodb.words.findOne({ _id: objectId });
+      
+      if (!word) {
+        return null;
+      }
+      
+      return this.mongodb.formatDocument<WordEntry>(word);
+    } catch (error) {
+      console.error(`Error finding word with ID ${wordId}:`, error);
+      return null;
     }
   }
 }

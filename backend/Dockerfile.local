@@ -7,10 +7,9 @@ ENV DATABASE_URL=${DATABASE_URL_DOCKER}
 ENV ADMIN_EMAIL=${ADMIN_EMAIL}
 ENV ADMIN_PASSWORD=${ADMIN_PASSWORD}
 
+EXPOSE 9229
+
 RUN npm install
 COPY . .
-
-# RUN npx prisma generate
-# RUN npx prisma db seed
 
 CMD ["npm", "run", "start:docker:dev"]

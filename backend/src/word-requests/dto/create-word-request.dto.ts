@@ -1,14 +1,49 @@
-import { Hand, Language, LexicalCategory } from "@prisma/client"
 import { Type } from 'class-transformer';
-import { IsString, IsOptional, IsBoolean, IsArray, ValidateNested, ArrayMinSize, IsNumber, IsNotEmpty } from 'class-validator';
+import { IsString, IsOptional, IsBoolean, IsArray, ValidateNested, ArrayMinSize, IsNumber, IsNotEmpty, IsEnum } from 'class-validator';
+
+// Define enums locally instead of importing from Prisma
+export enum Hand {
+  RIGHT = 'RIGHT',
+  LEFT = 'LEFT',
+  BOTH = 'BOTH'
+}
+
+export enum Language {
+  CATALAN = 'CATALAN',
+  SPANISH = 'SPANISH',
+  ENGLISH = 'ENGLISH',
+  OTHER = 'OTHER'
+}
+
+export enum LexicalCategory {
+  NOUN = 'NOUN',
+  VERB = 'VERB',
+  ADJECTIVE = 'ADJECTIVE',
+  ADVERB = 'ADVERB',
+  PRONOUN = 'PRONOUN',
+  DETERMINER = 'DETERMINER',
+  PREPOSITION = 'PREPOSITION',
+  CONJUNCTION = 'CONJUNCTION',
+  INTERJECTION = 'INTERJECTION',
+  OTHER = 'OTHER'
+}
+
+export enum RelationType {
+  SYNONYM = 'SYNONYM',
+  REGIONAL_VARIANT = 'REGIONAL_VARIANT',
+  ASSOCIATED_CONCEPT = 'ASSOCIATED_CONCEPT',
+  ANTONYM = 'ANTONYM',
+  HYPERNYM = 'HYPERNYM',
+  HYPONYM = 'HYPONYM'
+}
 
 // Define types for embedded documents that match the Prisma schema
 export class SenseTranslationDto {
   @IsString()
   @IsNotEmpty()
-  text: string;
+  translation: string;
 
-  @IsString()
+  @IsEnum(Language)
   @IsNotEmpty()
   language: Language;
 }
@@ -16,7 +51,7 @@ export class SenseTranslationDto {
 export class DescriptionDto {
   @IsString()
   @IsNotEmpty()
-  text: string;
+  description: string;
 
   @IsArray()
   @IsString({ each: true })
@@ -29,22 +64,19 @@ export class DescriptionDto {
   translations: SenseTranslationDto[];
 }
 
-export class VideoInfoDto {
+export class VideoDto {
   @IsString()
   url: string;
 
   @IsString()
   angle: string;
-
-  @IsOptional()
-  priority?: number;
-}
-
-export class SenseDto {
+  
   @IsNumber()
-  priority?: number;
-
   @IsOptional()
+  priority: number;
+  
+  @IsOptional()
+  @IsEnum(Hand)
   dominantHand?: Hand;
 
   @IsOptional()
@@ -54,6 +86,11 @@ export class SenseDto {
   @IsOptional()
   @IsBoolean()
   hasContact?: boolean;
+}
+
+export class SenseDto {
+  @IsNumber()
+  priority: number;
 
   @IsArray()
   @ValidateNested({ each: true })
@@ -87,44 +124,53 @@ export class SenseDto {
 
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => VideoInfoDto)
+  @Type(() => VideoDto)
   @IsOptional()
-  videos?: VideoInfoDto[];
+  videos?: VideoDto[];
+  
+  @IsOptional()
+  @IsEnum(LexicalCategory)
+  lexicalCategory?: LexicalCategory;
 }
 
-export class CreateWordRequestDto {
+export class RelatedWordDto {
+  @IsString()
+  @IsNotEmpty()
+  wordId: string;
+  
+  @IsEnum(RelationType)
+  @IsNotEmpty()
+  relationType: RelationType;
+}
+
+export class WordDataDto {
   @IsString()
   @IsNotEmpty()
   word: string;
-
-  @IsOptional()
-  dialectId?: string;
-
-  @IsOptional()
-  dominantHand?: Hand;
-
-  @IsOptional()
-  @IsString()
-  facialExpression?: string;
-
-  @IsOptional()
+  
   @IsBoolean()
-  hasContact?: boolean;
-
   @IsOptional()
-  @IsBoolean()
-  isNative?: boolean;
-
-  @IsOptional()
-  lexicalCategory?: LexicalCategory;
-
-  @IsOptional()
-  @IsString()
-  register?: string;
-
+  isNative?: boolean = true;
+  
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => SenseDto)
   @ArrayMinSize(1)
   senses: SenseDto[];
+  
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => RelatedWordDto)
+  @IsOptional()
+  relatedWords?: RelatedWordDto[] = [];
+  
+  @IsOptional()
+  @IsString()
+  dialectId?: string;
+}
+
+export class CreateWordRequestDto {
+  @ValidateNested()
+  @Type(() => WordDataDto)
+  requestedWordData: WordDataDto;
 }

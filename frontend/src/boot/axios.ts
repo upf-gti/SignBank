@@ -9,12 +9,12 @@ declare module 'vue' {
   }
 }
 
-const api = axios.create({ baseURL: 'https://signbank.upf.com/api' });
+console.log(process.env)
+const api = axios.create({ baseURL: ('https://' + process.env.BASE_URL + '/api') });
 
 // Add interceptor to the api instance instead of global axios
 api.interceptors.request.use(config => {
   const userStore = useUser()
-
   const token = userStore.access_token
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;

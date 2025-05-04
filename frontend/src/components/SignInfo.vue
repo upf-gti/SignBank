@@ -1,6 +1,7 @@
 <template>
   <div class="sign-info">
     <q-card
+      v-if="video"
       class="info-card"
       flat
     >
@@ -14,65 +15,65 @@
           <template v-if="!isEditMode">
             <div class="col-12 col-md-6">
               <div
-                v-if="sense.dominantHand"
+                v-if="video.dominantHand"
                 class="q-mb-sm"
               >
                 <div class="text-caption">
                   {{ translate('word_detail.field.dominantHand') }}:
                 </div>
-                <div>{{ translate(sense.dominantHand) }}</div>
+                <div>{{ translate(video.dominantHand) }}</div>
               </div>
               
               <div
-                v-if="sense.facialExpression"
+                v-if="video.facialExpression"
                 class="q-mb-sm"
               >
                 <div class="text-caption">
                   {{ translate('word_detail.field.facialExpression') }}:
                 </div>
-                <div>{{ sense.facialExpression }}</div>
+                <div>{{ video.facialExpression }}</div>
               </div>
               
               <div
-                v-if="sense.hasContact !== undefined"
+                v-if="video.hasContact !== undefined"
                 class="q-mb-sm"
               >
                 <div class="text-caption">
                   {{ translate('word_detail.field.hasContact') }}:
                 </div>
-                <div>{{ sense.hasContact ? translate('common.yes') : translate('common.no') }}</div>
+                <div>{{ video.hasContact ? translate('common.yes') : translate('common.no') }}</div>
               </div>
             </div>
             
             <div class="col-12 col-md-6">
               <div
-                v-if="sense.phonologicalTranscription"
+                v-if="video.phonologicalTranscription"
                 class="q-mb-sm"
               >
                 <div class="text-caption">
                   {{ translate('word_detail.field.phonologicalTranscription') }}:
                 </div>
-                <div>{{ sense.phonologicalTranscription }}</div>
+                <div>{{ video.phonologicalTranscription }}</div>
               </div>
               
               <div
-                v-if="sense.movementType"
+                v-if="video.movementType"
                 class="q-mb-sm"
               >
                 <div class="text-caption">
                   {{ translate('word_detail.field.movementType') }}:
                 </div>
-                <div>{{ sense.movementType }}</div>
+                <div>{{ video.movementType }}</div>
               </div>
               
               <div
-                v-if="sense.nonManualComponents"
+                v-if="video.nonManualComponents"
                 class="q-mb-sm"
               >
                 <div class="text-caption">
                   {{ translate('word_detail.field.nonManualComponents') }}:
                 </div>
-                <div>{{ sense.nonManualComponents }}</div>
+                <div>{{ video.nonManualComponents }}</div>
               </div>
             </div>
           </template>
@@ -81,58 +82,58 @@
           <template v-else>
             <div class="col-12 col-md-6">
               <q-select
-                v-model="localSense.dominantHand"
+                v-model="localVideo.dominantHand"
                 :options="handOptions"
                 :label="translate('word_detail.field.dominantHand')"
                 outlined
                 dense
                 class="q-mb-sm"
-                @update:model-value="updateSense"
+                @update:model-value="updateVideo"
               />
               
               <q-input
-                v-model="localSense.facialExpression"
+                v-model="localVideo.facialExpression"
                 :label="translate('word_detail.field.facialExpression')"
                 outlined
                 dense
                 class="q-mb-sm"
-                @update:model-value="updateSense"
+                @update:model-value="updateVideo"
               />
               
               <q-toggle
-                v-model="localSense.hasContact"
+                v-model="localVideo.hasContact"
                 :label="translate('word_detail.field.hasContact')"
                 class="q-mb-sm"
-                @update:model-value="updateSense"
+                @update:model-value="updateVideo"
               />
             </div>
             
             <div class="col-12 col-md-6">
               <q-input
-                v-model="localSense.phonologicalTranscription"
+                v-model="localVideo.phonologicalTranscription"
                 :label="translate('word_detail.field.phonologicalTranscription')"
                 outlined
                 dense
                 class="q-mb-sm"
-                @update:model-value="updateSense"
+                @update:model-value="updateVideo"
               />
               
               <q-input
-                v-model="localSense.movementType"
+                v-model="localVideo.movementType"
                 :label="translate('word_detail.field.movementType')"
                 outlined
                 dense
                 class="q-mb-sm"
-                @update:model-value="updateSense"
+                @update:model-value="updateVideo"
               />
               
               <q-input
-                v-model="localSense.nonManualComponents"
+                v-model="localVideo.nonManualComponents"
                 :label="translate('word_detail.field.nonManualComponents')"
                 outlined
                 dense
                 class="q-mb-sm"
-                @update:model-value="updateSense"
+                @update:model-value="updateVideo"
               />
             </div>
           </template>
@@ -144,36 +145,38 @@
 
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
-import { Hand, Sense } from 'src/types/word'
+import { debounce } from 'quasar'
+import { Hand, Video } from 'src/types/database'
 import translate from 'src/utils/translate'
 
 interface Props {
-  sense: Sense
+  video: Video
   isEditMode: boolean
 }
 
 const props = defineProps<Props>()
 const emit = defineEmits<{
-  'update:sense': [updatedSense: Sense]
+  'update:video': [updatedVideo: Video]
 }>()
 
 // Create a local copy of the sense data
-const localSense = ref<Sense>({...props.sense})
+const localVideo = ref<Video>({...props.video})
 
 // Update local sense when props change
-watch(() => props.sense, (newSense) => {
-  localSense.value = {...newSense}
+watch(() => props.video, (newVideo) => {
+  localVideo.value = {...newVideo}
 }, { deep: true })
 
 // Initial setup
 onMounted(() => {
-  localSense.value = {...props.sense}
+  localVideo.value = {...props.video}
 })
 
-// Update the parent component when local data changes
-function updateSense() {
-  emit('update:sense', {...localSense.value})
-}
+// Update the parent component when local data changes (debounced)
+const updateVideo = debounce(() => {
+  emit('update:video', {...localVideo.value})
+}, 300)
+
 const handOptions = [{value: Hand.RIGHT, label: translate('word_detail.field.rightHand')}, {value: Hand.LEFT, label: translate('word_detail.field.leftHand')}, {value: Hand.BOTH, label: translate('word_detail.field.bothHands')}]
 </script>
 

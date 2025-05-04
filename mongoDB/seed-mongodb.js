@@ -10,7 +10,8 @@ const Role = {
 const Language = {
     CATALAN: 'CATALAN',
     ENGLISH: 'ENGLISH',
-    SPANISH: 'SPANISH'
+    SPANISH: 'SPANISH',
+    OTHER: 'OTHER'
 }
 
 const LexicalCategory = {
@@ -23,7 +24,7 @@ const LexicalCategory = {
     CONJUNCTION: 'CONJUNCTION',
     INTERJECTION: 'INTERJECTION',
     DETERMINER: 'DETERMINER',
-    NUMERAL: 'NUMERAL'
+    OTHER: 'OTHER'
 }
 
 const Hand = {
@@ -42,12 +43,12 @@ const WordStatus = {
 // Define collection names with correct capitalization to match Prisma's conventions
 // This ensures consistency between development and production
 const Collections = {
-    WORDS: 'Words',                 // Capitalized to match Prisma's convention
-    WORD_EDIT: 'WordEdit',          // Capitalized
-    WORD_EDIT_HISTORIC: 'WordEditHistoric', // Capitalized
-    WORD_REQUEST: 'WordRequest',     // Capitalized
-    DIALECT: 'Dialect',             // Capitalized
-    USERS: 'Users'                  // Capitalized
+    WORDS: 'words',                 // Plural form
+    WORD_EDIT: 'wordEdits',          // Plural form
+    WORD_EDIT_HISTORIC: 'wordEditHistoric', // Keep as is since it's a special case
+    WORD_REQUEST: 'wordRequests',     // Plural form
+    DIALECT: 'dialects',             // Plural form
+    USERS: 'users'                  // Plural form
 }
 
 async function main() {
@@ -166,30 +167,30 @@ async function main() {
                             usageEra: 'Contemporani',
                             descriptions: [
                                 {
-                                    text: 'Arbret del gènere Coffea, de la família de les rubiàcies, conreat als països tropicals, de fulles lluents i flors blanques, els fruits del qual contenen ordinàriament dues llavors planoconvexes amb un solc al llarg de la cara plana.',
+                                    description: 'Arbret del gènere Coffea, de la família de les rubiàcies, conreat als països tropicals, de fulles lluents i flors blanques, els fruits del qual contenen ordinàriament dues llavors planoconvexes amb un solc al llarg de la cara plana.',
                                     examples: ['Als matins prenem un cafe', 'El meu amic beu cafe cada dia'],
                                     translations: [
-                                        { text: 'Coffe', language: Language.ENGLISH },
-                                        { text: 'Café', language: Language.SPANISH }
+                                        { translation: 'Coffe', language: Language.ENGLISH },
+                                        { translation: 'Café', language: Language.SPANISH }
                                     ]
                                 },
                                 {
-                                    text: 'Cafè moca Cafè: d\'una varietat procedent d\'Aràbia.',
+                                    description: 'Cafè moca Cafè: d\'una varietat procedent d\'Aràbia.',
                                     examples: [],
                                     translations: []
                                 },
                                 {
-                                    text: 'Llavor del cafè: Torrar cafè. Cafè molt. Cafè descafeïnat.',
+                                    description: 'Llavor del cafè: Torrar cafè. Cafè molt. Cafè descafeïnat.',
                                     examples: [],
                                     translations: []
                                 },
                                 {
-                                    text: 'Cafè torrefacte: Cafè que ha estat barrejat amb sucre en torrar-lo.',
+                                    description: 'Cafè torrefacte: Cafè que ha estat barrejat amb sucre en torrar-lo.',
                                     examples: [],
                                     translations: []
                                 },
                                 {
-                                    text: 'Beguda feta per infusió de les llavors de cafè torrades i moltes. Prendre cafè. Una tassa de cafè. Cafè amb llet.',
+                                    description: 'Beguda feta per infusió de les llavors de cafè torrades i moltes. Prendre cafè. Una tassa de cafè. Cafè amb llet.',
                                     examples: [],
                                     translations: []
                                 }
@@ -235,15 +236,15 @@ async function main() {
                             usageEra: 'Contemporani',
                             descriptions: [
                                 {
-                                    text: 'Mamífer artiodàctil del gènere Camelus, de la família dels camèlids, de dimensions grans i cos robust, amb potes llargues i primes i coll llarg, fort i flexible, que té al dors un o dos geps.',
+                                    description: 'Mamífer artiodàctil del gènere Camelus, de la família dels camèlids, de dimensions grans i cos robust, amb potes llargues i primes i coll llarg, fort i flexible, que té al dors un o dos geps.',
                                     examples: ['El meu camell és molt gros'],
                                     translations: [
-                                        { text: 'Camel', language: Language.ENGLISH },
-                                        { text: 'Camell', language: Language.SPANISH }
+                                        { translation: 'Camel', language: Language.ENGLISH },
+                                        { translation: 'Camell', language: Language.SPANISH }
                                     ]
                                 },
                                 {
-                                    text: 'Persona que comercia amb droga a la menuda.',
+                                    description: 'Persona que comercia amb droga a la menuda.',
                                     examples: ['El seu vei es camell'],
                                     translations: []
                                 }
@@ -289,11 +290,11 @@ async function main() {
                             usageEra: 'Contemporani',
                             descriptions: [
                                 {
-                                    text: 'Extremitat inferior del cos humà, que va des del genoll fins al peu.',
+                                    description: 'Extremitat inferior del cos humà, que va des del genoll fins al peu.',
                                     examples: ['Les meves cames estan cansades', 'Té unes cames molt llargues'],
                                     translations: [
-                                        { text: 'Legs', language: Language.ENGLISH },
-                                        { text: 'Piernas', language: Language.SPANISH }
+                                        { translation: 'Legs', language: Language.ENGLISH },
+                                        { translation: 'Piernas', language: Language.SPANISH }
                                     ]
                                 }
                             ],
@@ -311,7 +312,7 @@ async function main() {
             },
             {
                 // Changed to match appropriate enum value
-                status: WordStatus.DRAFT,
+                status: WordStatus.ARCHIVED,
                 currentVersion: 1,
                 isCreatedFromRequest: false,
                 isCreatedFromEdit: false,
@@ -339,11 +340,11 @@ async function main() {
                             usageEra: 'Contemporani',
                             descriptions: [
                                 {
-                                    text: 'Via que es fa servir per anar d\'un lloc a un altre.',
+                                    description: 'Via que es fa servir per anar d\'un lloc a un altre.',
                                     examples: ['El cami era molt llarg', 'Van perdre el cami'],
                                     translations: [
-                                        { text: 'Path', language: Language.ENGLISH },
-                                        { text: 'Camino', language: Language.SPANISH }
+                                        { translation: 'Path', language: Language.ENGLISH },
+                                        { translation: 'Camino', language: Language.SPANISH }
                                     ]
                                 }
                             ],
@@ -388,11 +389,11 @@ async function main() {
                             usageEra: 'Contemporani',
                             descriptions: [
                                 {
-                                    text: 'Part superior del cos dels animals vertebrats que conté el cervell, els principals òrgans dels sentits i l\'extrem superior o anterior del tub digestiu.',
+                                    description: 'Part superior del cos dels animals vertebrats que conté el cervell, els principals òrgans dels sentits i l\'extrem superior o anterior del tub digestiu.',
                                     examples: ['Em fa mal el cap', 'Va moure el cap'],
                                     translations: [
-                                        { text: 'Head', language: Language.ENGLISH },
-                                        { text: 'Cabeza', language: Language.SPANISH }
+                                        { translation: 'Head', language: Language.ENGLISH },
+                                        { translation: 'Cabeza', language: Language.SPANISH }
                                     ]
                                 }
                             ],
@@ -417,11 +418,11 @@ async function main() {
                             usageEra: 'Contemporani',
                             descriptions: [
                                 {
-                                    text: 'Ni un, ningú, res; absència total.',
+                                    description: 'Ni un, ningú, res; absència total.',
                                     examples: ['No hi ha cap persona', 'No en queda cap'],
                                     translations: [
-                                        { text: 'None', language: Language.ENGLISH },
-                                        { text: 'Ninguno', language: Language.SPANISH }
+                                        { translation: 'None', language: Language.ENGLISH },
+                                        { translation: 'Ninguno', language: Language.SPANISH }
                                     ]
                                 }
                             ],
@@ -466,11 +467,11 @@ async function main() {
                             usageEra: 'Contemporani',
                             descriptions: [
                                 {
-                                    text: 'Peça de roba llarga, folgada, oberta de davant, sense mànigues, que es porta tirada a les espatlles cobrint el vestit.',
+                                    description: 'Peça de roba llarga, folgada, oberta de davant, sense mànigues, que es porta tirada a les espatlles cobrint el vestit.',
                                     examples: ['Porta una capa negra', 'La capa el protegia del fred'],
                                     translations: [
-                                        { text: 'Cape', language: Language.ENGLISH },
-                                        { text: 'Capa', language: Language.SPANISH }
+                                        { translation: 'Cape', language: Language.ENGLISH },
+                                        { translation: 'Capa', language: Language.SPANISH }
                                     ]
                                 }
                             ],
@@ -515,11 +516,11 @@ async function main() {
                             usageEra: 'Contemporani',
                             descriptions: [
                                 {
-                                    text: 'Que té un preu elevat, que costa molt de diners.',
+                                    description: 'Que té un preu elevat, que costa molt de diners.',
                                     examples: ['Aquest cotxe és molt car', 'El pis era massa car'],
                                     translations: [
-                                        { text: 'Expensive', language: Language.ENGLISH },
-                                        { text: 'Caro', language: Language.SPANISH }
+                                        { translation: 'Expensive', language: Language.ENGLISH },
+                                        { translation: 'Caro', language: Language.SPANISH }
                                     ]
                                 }
                             ],
@@ -564,11 +565,11 @@ async function main() {
                             usageEra: 'Contemporani',
                             descriptions: [
                                 {
-                                    text: 'Part anterior del cap, on hi ha els ulls, el nas i la boca.',
+                                    description: 'Part anterior del cap, on hi ha els ulls, el nas i la boca.',
                                     examples: ['Té una cara molt expressiva', 'Es va rentar la cara'],
                                     translations: [
-                                        { text: 'Face', language: Language.ENGLISH },
-                                        { text: 'Cara', language: Language.SPANISH }
+                                        { translation: 'Face', language: Language.ENGLISH },
+                                        { translation: 'Cara', language: Language.SPANISH }
                                     ]
                                 }
                             ],
@@ -618,11 +619,11 @@ async function main() {
                             usageEra: 'Contemporani',
                             descriptions: [
                                 {
-                                    text: 'Edifici destinat a l\'habitatge de persones.',
+                                    description: 'Edifici destinat a l\'habitatge de persones.',
                                     examples: ['Viu en una casa gran', 'La casa té un jardí'],
                                     translations: [
-                                        { text: 'House', language: Language.ENGLISH },
-                                        { text: 'Casa', language: Language.SPANISH }
+                                        { translation: 'House', language: Language.ENGLISH },
+                                        { translation: 'Casa', language: Language.SPANISH }
                                     ]
                                 }
                             ],
@@ -667,11 +668,11 @@ async function main() {
                             usageEra: 'Contemporani',
                             descriptions: [
                                 {
-                                    text: 'Estat de tenir un cònjuge o una cònjuge.',
+                                    description: 'Estat de tenir un cònjuge o una cònjuge.',
                                     examples: ['Està casat amb una persona meravellosa', 'El seu estat civil és casat'],
                                     translations: [
-                                        { text: 'Married', language: Language.ENGLISH },
-                                        { text: 'Casado', language: Language.SPANISH }
+                                        { translation: 'Married', language: Language.ENGLISH },
+                                        { translation: 'Casado', language: Language.SPANISH }
                                     ]
                                 }
                             ],
@@ -716,11 +717,11 @@ async function main() {
                             usageEra: 'Contemporani',
                             descriptions: [
                                 {
-                                    text: 'Que té una consistència ferma o difícil de trencar.',
+                                    description: 'Que té una consistència ferma o difícil de trencar.',
                                     examples: ['El material és molt dur', 'El gel és dur'],
                                     translations: [
-                                        { text: 'Hard', language: Language.ENGLISH },
-                                        { text: 'Duro', language: Language.SPANISH }
+                                        { translation: 'Hard', language: Language.ENGLISH },
+                                        { translation: 'Duro', language: Language.SPANISH }
                                     ]
                                 }
                             ],
@@ -765,11 +766,11 @@ async function main() {
                             usageEra: 'Contemporani',
                             descriptions: [
                                 {
-                                    text: 'Producte alimentari obtingut a partir de la fruita del cacau, que es pot consumir en diverses formes, com a beguda o en forma sòlida.',
+                                    description: 'Producte alimentari obtingut a partir de la fruita del cacau, que es pot consumir en diverses formes, com a beguda o en forma sòlida.',
                                     examples: ["M'agrada la xocolata negra", "La xocolata és dolça"],
                                     translations: [
-                                        { text: 'Chocolate', language: Language.ENGLISH },
-                                        { text: 'Chocolate', language: Language.SPANISH }
+                                        { translation: 'Chocolate', language: Language.ENGLISH },
+                                        { translation: 'Chocolate', language: Language.SPANISH }
                                     ]
                                 }
                             ],

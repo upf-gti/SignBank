@@ -64,7 +64,7 @@
             class="q-mt-md"
           >
             <div class="text-weight-bold">
-              {{ desc.text }}
+              {{ desc.description }}
             </div>
             
             <!-- Examples -->
@@ -98,7 +98,7 @@
                   v-for="(trans, tIndex) in desc.translations"
                   :key="'trans-' + tIndex"
                 >
-                  <span class="text-caption text-weight-bold">{{ translate('language.' + trans.language) }}:</span> {{ trans.text }}
+                  <span class="text-caption text-weight-bold">{{ translate('language.' + trans.language) }}:</span> {{ trans.translation }}
                 </div>
               </div>
             </div>
@@ -116,13 +116,14 @@
             class="q-mt-md"
           >
             <q-input
-              v-model="desc.text"
+              v-model="desc.description"
               :label="translate('word_detail.field.descriptionText')"
               outlined
               type="textarea"
               autogrow
               class="q-mb-sm"
               :rules="[val => !!val.trim() || translate('word_detail.error.emptyDescription')]"
+              @update:model-value="emitUpdate"
             />
             
             <!-- Examples -->
@@ -143,6 +144,7 @@
                       outlined
                       dense
                       :rules="[val => !!val.trim() || translate('word_detail.error.emptyExample')]"
+                      @update:model-value="emitUpdate"
                     />
                   </div>
                   <div class="col-auto">
@@ -178,11 +180,12 @@
                 <div class="row items-center q-col-gutter-sm">
                   <div class="col">
                     <q-input
-                      v-model="trans.text"
+                      v-model="trans.translation"
                       :label="translate('word_detail.field.translation')"
                       outlined
                       dense
                       :rules="[val => !!val.trim() || translate('word_detail.error.emptyTranslation')]"
+                      @update:model-value="emitUpdate"
                     />
                   </div>
                   <div class="col-auto">
@@ -194,6 +197,7 @@
                       dense
                       class="q-ml-sm"
                       :rules="[val => !!val || translate('word_detail.error.noLanguage')]"
+                      @update:model-value="emitUpdate"
                     />
                   </div>
                   <div class="col-auto">
@@ -245,8 +249,9 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useQuasar } from 'quasar'
-import type { Sense, Description} from 'src/types/word';
-import { Language } from 'src/types/word'
+import { debounce } from 'quasar'
+import type { Sense, Description} from 'src/types/database';
+import { Language } from 'src/types/database'
 import translate from 'src/utils/translate'
 
 // The Quasar notification system
@@ -292,6 +297,11 @@ const currentSense = computed(() => {
   return senses[currentSenseIndex.value]
 })
 
+// Create a debounced emit function for smoother updates
+const emitUpdate = debounce(() => {
+  emit('update:senses', [...senses])
+}, 300) // 300ms debounce time
+
 // Helper methods
 function createEmptySense(): Sense {
   return {
@@ -303,7 +313,7 @@ function createEmptySense(): Sense {
 
 function createEmptyDescription(): Description {
   return {
-    text: '',
+    description: '',
     examples: [],
     translations: []
   }
@@ -366,7 +376,7 @@ function addTranslation(descIndex: number) {
   if (currentSense.value && currentSense.value.descriptions[descIndex]) {
     // Add a translation with default values
     currentSense.value.descriptions[descIndex].translations.push({
-      text: 'Translation',
+      translation: 'Translation',
       language: Language.CATALAN
     })
     emit('update:senses', [...senses])

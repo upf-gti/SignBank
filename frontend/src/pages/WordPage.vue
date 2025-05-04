@@ -60,7 +60,7 @@
             
       <WordDetail
         class="col full-width" 
-        :word="wordData" 
+        :word="wordData ?? null" 
         :edit-mode="editMode"
         @save="saveWord"
         @cancel="cancelEdit"
@@ -70,22 +70,18 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import { api } from 'src/services/api'
 import WordDetail from 'src/components/WordDetail.vue'
-import { useQuasar } from 'quasar'
-import type { Words} from 'src/types/word';
-import { WordStatus } from 'src/types/word'
+import type { Word } from 'src/types/database';
 import translate from 'src/utils/translate'
 
-const $q = useQuasar()
 const route = useRoute()
-const router = useRouter()
 const word = route.params.word as string
 
 // State
-const wordData = ref<Words | null>(null)
+const wordData = ref<Word>()
 const loading = ref(true)
 const error = ref<string | null>(null)
 const editMode = ref<'none' | 'strict' | 'full'>('none')
@@ -119,67 +115,17 @@ function startEdit(mode: 'strict' | 'full') {
     if (mode === 'full') {
         // For full edit, we start with a new word
         wordData.value = {
-            id: '',
             word: '',
-            description: '',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            creatorId: '', // This will be set by the backend
             isNative: true,
-            status: WordStatus.PUBLISHED,
-            currentVersion: 1,
-            isCreatedFromRequest: false,
-            isCreatedFromEdit: false,
-            senses: []
+            senses: [],
+            relatedWords: []
         }
     }
 }
 
 // Save edited word
-async function saveWord(updatedWord: Words) {
-    try {
-        loading.value = true
-        
-        if (editMode.value === 'strict') {
-            // Request edit to existing word
-            await api.words.requestEdit(updatedWord)
-            $q.notify({
-                color: 'positive',
-                message: translate('word_detail.success.editSubmitted'),
-                icon: 'check_circle'
-            })
-        } else if (editMode.value === 'full') {
-            // Create new word
-            await api.words.create(updatedWord)
-            $q.notify({
-                color: 'positive',
-                message: translate('word_detail.success.created'),
-                icon: 'check_circle'
-            })
-        }
-        
-        // Reset edit mode
-        editMode.value = 'none'
-        
-        // If we're editing an existing word, refresh the data
-        if (wordData.value && wordData.value.id) {
-            await fetchWordData()
-        } else {
-            // For new words, go back to the search page
-            router.push({ name: 'home' }).catch((err) => {
-                console.error('Error navigating to home:', err)
-            })
-        }
-    } catch (err) {
-        console.error('Error saving word:', err)
-        $q.notify({
-            color: 'negative',
-            message: translate('word_detail.error.savingFailed'),
-            icon: 'error'
-        })
-    } finally {
-        loading.value = false
-    }
+ function saveWord() {
+  console.log('TODO')    
 }
 
 // Cancel editing
