@@ -44,7 +44,6 @@ export class WordsService {
         .documents()
         .search(searchParameters);
       
-      console.log(results)
       // Process hits to include only general information
       return {
         found: results.found,

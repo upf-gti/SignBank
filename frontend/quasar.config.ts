@@ -17,6 +17,8 @@ export default defineConfig(() => {
       'axios'
     ],
 
+
+
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#css
     css: [
       'app.css'
@@ -38,6 +40,9 @@ export default defineConfig(() => {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#build
     build: {
+      env: {
+        BASE_URL: process.env.BASE_URL
+      },
       target: {
         browser: ['es2022', 'firefox115', 'chrome115', 'safari14'],
         node: 'node20'
@@ -102,7 +107,7 @@ export default defineConfig(() => {
       }, */
       hmr: {
         clientPort: 443,
-        host: 'signbank.upf.com',
+        host: process.env.BASE_URL || 'localhost',
         path: '/ws',
         protocol: 'wss'
       }

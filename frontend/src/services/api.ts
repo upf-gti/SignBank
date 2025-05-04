@@ -2,6 +2,7 @@ import type { AxiosResponse } from "axios"
 import { apiClient } from "src/boot/axios"
 import type {  Word } from "src/types/database"
 import type { WordRequest } from "src/types/database"
+
 // Create API service object
 export const api = {
   login(credentials: { email: string, password: string }) {

@@ -12,7 +12,6 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
   async syncWordsToTypesense() {
     // Use the service's function to find all word entries
     const words = await this.findAllPublishedWords();
-    console.log(words);
     if (!words || words.length === 0) {
       console.log('No words found in the database to sync.');
       return;
