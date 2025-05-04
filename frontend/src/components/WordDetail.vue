@@ -85,7 +85,6 @@ import { ref, computed, watch } from 'vue'
 import { useQuasar } from 'quasar'
 import { debounce } from 'quasar'
 import type { Sense, Description, Video, Word } from 'src/types/database';
-import { WordStatus} from 'src/types/database'
 import translate from 'src/utils/translate'
 import VideoPlayer from './VideoPlayer.vue'
 import SenseDetails from './SenseDetails.vue'
@@ -100,19 +99,12 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  word: () => ({
-    id: '',
+  word: () => ({        
     word: '',
-    createdAt: new Date(),
-    updatedAt: new Date(), 
-    creatorId: '',
     isNative: true,
-    status: WordStatus.PUBLISHED,
-    currentVersion: 1,
-    isCreatedFromRequest: false,
-    isCreatedFromEdit: false,
     senses: [],
-    relatedWords: []
+    relatedWords: [],
+    dialectId: ''
   }),
   editMode: 'none'
 })

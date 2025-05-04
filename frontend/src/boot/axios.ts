@@ -9,7 +9,7 @@ declare module 'vue' {
   }
 }
 
-
+console.log(process.env)
 const api = axios.create({ baseURL: ('https://' + process.env.BASE_URL + '/api') });
 
 // Add interceptor to the api instance instead of global axios

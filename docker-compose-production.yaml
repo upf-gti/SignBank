@@ -71,7 +71,7 @@ services:
     image: sigoden/dufs
     container_name: dufs-prod
     volumes:
-      - ./production/FileServer:/data 
+      - ./FileServer:/data 
     command: /data -A
     restart: always
     networks:

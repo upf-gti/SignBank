@@ -36,7 +36,6 @@
   import {  Word } from 'src/types/database'
   import type { WordRequest } from 'src/types/database'
   import translate from 'src/utils/translate'
-import { wrap } from 'module'
   
   const $q = useQuasar()
   const route = useRoute()

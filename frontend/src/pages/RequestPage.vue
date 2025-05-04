@@ -39,7 +39,7 @@
   import { useQuasar } from 'quasar'
   import translate from '../utils/translate'
   import api from '../services/api'
-  import type { WordRequest } from '../types/wordRequest'
+  import type { WordRequest } from '../types/database'
   import type { QTableProps } from 'quasar'
   import { useRouter } from 'vue-router'
 
@@ -50,7 +50,7 @@
   const columns: QTableProps['columns'] = [
     { name: 'word',  label: translate('word'),  sortable: true, align: 'left', field: (row: WordRequest) => {
       return row.requestedWordData.word} },
-    { name: 'description', label: translate('description'), align: 'left', field: (row: WordRequest) => row.requestedWordData.senses[0]?.descriptions[0]?.text },
+    { name: 'description', label: translate('description'), align: 'left', field: (row: WordRequest) => row.requestedWordData.senses[0]?.descriptions[0]?.description },
     { name: 'status', label: translate('status'), sortable: true, align: 'left', field: (row: WordRequest) => row.status },
     { name: 'denyReason',  label: translate('denyReason'), sortable: true, align: 'left', field: (row: WordRequest) => row.denyReason }
   ]

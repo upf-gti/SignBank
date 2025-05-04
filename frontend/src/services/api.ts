@@ -26,10 +26,10 @@ export const api = {
     }
   },
   words: {
-    search(query: string, limit: number = 100, filters?: Record<string, any>): Promise<AxiosResponse<WordSearchResponse>> {
+    search(query: string, limit: number = 100, filters?: Record<string, any>): Promise<AxiosResponse<any>> {
       return apiClient.get('/words/search', { params: { q: query, limit, ...filters } })
     },
-    details(id: string): Promise<AxiosResponse<Words>> {
+    details(id: string): Promise<AxiosResponse<any>> {
       return apiClient.get(`/words/details/${id}`)
     },
   }

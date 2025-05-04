@@ -31,6 +31,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.test
+      args:
+        BASE_URL: ${BASE_URL}
     container_name: frontend-test
     environment:
       - BASE_URL=${BASE_URL}
@@ -74,7 +76,7 @@ services:
     image: sigoden/dufs
     container_name: dufs-test
     volumes:
-      - ./test/FileServer:/data 
+      - ./FileServer:/data
     command: /data -A
     restart: always
     networks:

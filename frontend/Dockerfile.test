@@ -5,6 +5,9 @@ RUN yarn global add @quasar/cli
 RUN yarn global add dotenv
 COPY . .
 
+ARG BASE_URL
+ENV BASE_URL=${BASE_URL}
+
 RUN yarn
 RUN quasar build
 FROM nginx:1.23.1
