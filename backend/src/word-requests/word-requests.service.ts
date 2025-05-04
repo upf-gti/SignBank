@@ -198,84 +198,72 @@ export class WordRequestsService {
    * @param adminId - ID of the admin accepting the request
    */
   async acceptWordRequest(requestId: string, adminId: string, word: Word) {
-    const session = await this.mongodb.startSession();
-    
     try {
       // Convert IDs to ObjectIds
       const requestObjectId = this.mongodb.toObjectId(requestId);
       const adminObjectId = this.mongodb.toObjectId(adminId);
       
-      let result;
+      // 1. Get and validate the request
+      const request = await this.mongodb.wordRequests.findOne({ _id: requestObjectId });
       
-      await session.withTransaction(async () => {
-        // 1. Get and validate the request
-        const request = await this.mongodb.wordRequests.findOne(
-          { _id: requestObjectId },
-          { session }
-        );
-        
-        if (!request) {
-          throw new NotFoundException(`Word request with ID ${requestId} not found`);
-        }
-        
-        if (request.status !== RequestStatus.PENDING) {
-          throw new ForbiddenException(`Word request is not pending (current status: ${request.status})`);
-        }
-        
-        // 2. Create a new word entry using the word parameter instead of request.requestedWordData
-        const now = new Date();
-        const wordEntryDoc = {
-          status: WordStatus.PUBLISHED,
-          currentVersion: 1,
-          isCreatedFromRequest: true,
-          isCreatedFromEdit: false,
-          wordRequestId: requestObjectId,
-          wordData: word,
-          createdAt: now,
-          updatedAt: now
-        };
-        
-        // Insert the new word
-        const wordEntryResult = await this.mongodb.words.insertOne(
-          this.mongodb.prepareDocumentForDB(wordEntryDoc),
-          { session }
-        );
-        
-        const wordEntryId = wordEntryResult.insertedId;
-        
-        // 3. Update the request status
-        const updateResult = await this.mongodb.wordRequests.findOneAndUpdate(
-          { _id: requestObjectId },
-          { 
-            $set: {
-              status: RequestStatus.ACCEPTED,
-              acceptedById: adminObjectId,
-              updatedAt: now,
-              wordId: wordEntryId,
-              activeWordId: wordEntryId
-            }
-          },
-          { 
-            returnDocument: 'after', 
-            session
+      if (!request) {
+        throw new NotFoundException(`Word request with ID ${requestId} not found`);
+      }
+      
+      if (request.status !== RequestStatus.PENDING) {
+        throw new ForbiddenException(`Word request is not pending (current status: ${request.status})`);
+      }
+      
+      // 2. Create a new word entry using the word parameter
+      const now = new Date();
+      const wordEntryDoc = {
+        status: WordStatus.PUBLISHED,
+        currentVersion: 1,
+        isCreatedFromRequest: true,
+        isCreatedFromEdit: false,
+        wordRequestId: requestObjectId,
+        wordData: word,
+        createdAt: now,
+        updatedAt: now
+      };
+      
+      // Insert the new word
+      const wordEntryResult = await this.mongodb.words.insertOne(
+        this.mongodb.prepareDocumentForDB(wordEntryDoc)
+      );
+      
+      const wordEntryId = wordEntryResult.insertedId;
+      
+      // 3. Update the request status
+      const updateResult = await this.mongodb.wordRequests.findOneAndUpdate(
+        { _id: requestObjectId },
+        { 
+          $set: {
+            status: RequestStatus.ACCEPTED,
+            acceptedById: adminObjectId,
+            updatedAt: now,
+            wordId: wordEntryId,
+            activeWordId: wordEntryId
           }
-        );
-        
-        if (!updateResult) {
-          throw new InternalServerErrorException(`Failed to update word request status for ID ${requestId}`);
-        }        
-        result = this.mongodb.formatDocument(updateResult.value);
+        },
+        { returnDocument: 'after' }
+      );
+      
+      if (!updateResult) {
+        throw new InternalServerErrorException(`Failed to update word request status for ID ${requestId}`);
+      }
+      
+      const result = await this.mongodb.formatDocument(updateResult.value);
 
-        // 4. Sync to Typesense within the transaction
-        try {
-          await this.typesenseSyncService.syncSingleWord(wordEntryId.toString(), word);
-        } catch (syncError) {
-          // If sync fails, we should still commit the transaction but log the error
-          console.error(`Failed to sync word ${wordEntryId} to Typesense:`, syncError);
-          // We could add this to a queue for retry later
-          // this.typesenseSyncService.addToRetryQueue(wordEntryId.toString());
-        }
-      });
+      // 4. Sync to Typesense
+      try {
+        await this.typesenseSyncService.syncSingleWord(wordEntryId.toString(), word);
+      } catch (syncError) {
+        // If sync fails, log the error but don't fail the request
+        console.error(`Failed to sync word ${wordEntryId} to Typesense:`, syncError);
+        // We could add this to a queue for retry later
+        // this.typesenseSyncService.addToRetryQueue(wordEntryId.toString());
+      }
 
       return result;
     } catch (error) {
@@ -294,8 +282,6 @@ export class WordRequestsService {
       throw new InternalServerErrorException(
         `Error accepting word request: ${error.message}`
       );
-    } finally {
-      await session.endSession();
     }
   }
 
