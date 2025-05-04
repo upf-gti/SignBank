@@ -58,6 +58,8 @@ npm run seed
 
 Or if you don't have npm, you can execute this command from inside mongoDB container
 
+Then restart backend container to sync all words into typesense
+
 ## Project Structure
 
 - `frontend/` - The web client application
