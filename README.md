@@ -1,7 +1,4 @@
-TODOS
-- Unit testing
-- Code coverage
-- Integration testing
+
 
 ### Environment Configuration
 
