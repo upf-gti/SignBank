@@ -16,6 +16,7 @@ docker-compose -f docker-compose-local.yaml up
 To deploy the project in test mode:
 
 ```bash
+docker-compose -f docker-compose-test.yaml build
 docker-compose -f docker-compose-test.yaml up
 ```
 
@@ -45,6 +46,7 @@ Then restart backend container to sync all words into typesense
 To deploy the project in production mode:
 
 ```bash
+docker-compose -f docker-compose-production.yaml build
 docker-compose -f docker-compose-production.yaml up
 ```
 
