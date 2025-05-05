@@ -11,6 +11,34 @@ To start the project locally:
 docker-compose -f docker-compose-local.yaml build
 docker-compose -f docker-compose-local.yaml up
 ```
+## Test Deployment
+
+To deploy the project in test mode:
+
+```bash
+docker-compose -f docker-compose-test.yaml up
+```
+
+## Seeding the Database
+
+To seed the database with initial data:
+
+1. Navigate to the MongoDB folder:
+
+```bash
+cd mongoDB
+```
+
+2. Install dependencies and run the seed script:
+
+```bash
+npm install
+npm run seed
+```
+
+Or if you don't have npm, you can execute this command from inside mongoDB container
+
+Then restart backend container to sync all words into typesense
 
 ## Production Deployment
 
@@ -38,27 +66,6 @@ The Nginx configuration is located in the `nginx/` directory. To update the conf
 ```bash
 docker-compose restart nginx
 ```
-
-## Seeding the Database
-
-To seed the database with initial data:
-
-1. Navigate to the MongoDB folder:
-
-```bash
-cd mongoDB
-```
-
-2. Install dependencies and run the seed script:
-
-```bash
-npm install
-npm run seed
-```
-
-Or if you don't have npm, you can execute this command from inside mongoDB container
-
-Then restart backend container to sync all words into typesense
 
 ## Project Structure
 
