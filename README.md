@@ -3,6 +3,25 @@ TODOS
 - Code coverage
 - Integration testing
 
+### Environment Configuration
+
+Set the following environment variables in your `.env` file:
+
+- `BASEURL`: The base URL of your application (e.g., `https://signbank.example.com`)
+- Other variables as specified in schema.env file
+
+### Nginx Configuration
+
+The Nginx configuration is located in the `nginx/` directory. To update the configuration:
+
+1. Edit the `nginx/nginx.conf` file, for test, local or production
+2. Update the `server_name` directive to match your domain
+4. Restart the Nginx container:
+
+```bash
+docker-compose restart nginx
+```
+
 ## Local Development
 
 To start the project locally:
@@ -50,24 +69,7 @@ docker-compose -f docker-compose-production.yaml build
 docker-compose -f docker-compose-production.yaml up
 ```
 
-### Environment Configuration
 
-Set the following environment variables in your `.env` file:
-
-- `BASEURL`: The base URL of your application (e.g., `https://signbank.example.com`)
-- Other variables as specified in schema.env file
-
-### Nginx Configuration
-
-The Nginx configuration is located in the `nginx/` directory. To update the configuration:
-
-1. Edit the `nginx/nginx.conf` file, for test, local or production
-2. Update the `server_name` directive to match your domain
-4. Restart the Nginx container:
-
-```bash
-docker-compose restart nginx
-```
 
 ## Project Structure
 
