@@ -55,7 +55,6 @@ const Collections = {
 // Define all videos
 const videosData = [
     {
-        id: '1',
         url: 'https://signbank.upf.com/images/LSC_-_Cafe.mp4',
         angle: 'Frontal',
         priority: 1,
@@ -69,7 +68,6 @@ const videosData = [
         updatedAt: new Date()
     },
     {
-        id: '2',
         url: 'https://signbank.upf.com/images/LSC_-_Camell.mp4',
         angle: 'Frontal',
         priority: 1,
@@ -83,7 +81,6 @@ const videosData = [
         updatedAt: new Date()
     },
     {
-        id: '3',
         url: 'https://signbank.upf.com/images/LSC_-_Cames.mp4',
         angle: 'Frontal',
         priority: 1,
@@ -97,7 +94,6 @@ const videosData = [
         updatedAt: new Date()
     },
     {
-        id: '4',
         url: 'https://signbank.upf.com/images/LSC_-_Cami.mp4',
         angle: 'Frontal',
         priority: 1,
@@ -111,7 +107,6 @@ const videosData = [
         updatedAt: new Date()
     },
     {
-        id: '5',
         url: 'https://signbank.upf.com/images/LSC_-_Cap.mp4',
         angle: 'Frontal',
         priority: 1,
@@ -125,7 +120,6 @@ const videosData = [
         updatedAt: new Date()
     },
     {
-        id: '6',
         url: 'https://signbank.upf.com/images/LSC_-_Capa.mp4',
         angle: 'Frontal',
         priority: 1,
@@ -139,7 +133,6 @@ const videosData = [
         updatedAt: new Date()
     },
     {
-        id: '7',
         url: 'https://signbank.upf.com/images/LSC_-_Car.mp4',
         angle: 'Frontal',
         priority: 1,
@@ -153,7 +146,6 @@ const videosData = [
         updatedAt: new Date()
     },
     {
-        id: '8',
         url: 'https://signbank.upf.com/images/LSC_-_Cara_1.mp4',
         angle: 'Frontal',
         priority: 1,
@@ -167,7 +159,6 @@ const videosData = [
         updatedAt: new Date()
     },
     {
-        id: '9',
         url: 'https://signbank.upf.com/images/LSC_-_Cara_2.mp4',
         angle: 'Frontal',
         priority: 2,
@@ -181,7 +172,6 @@ const videosData = [
         updatedAt: new Date()
     },
     {
-        id: '10',
         url: 'https://signbank.upf.com/images/LSC_-_Casa.mp4',
         angle: 'Frontal',
         priority: 1,
@@ -195,7 +185,6 @@ const videosData = [
         updatedAt: new Date()
     },
     {
-        id: '11',
         url: 'https://signbank.upf.com/images/LSC_-_Casat_casada.mp4',
         angle: 'Frontal',
         priority: 1,
@@ -209,7 +198,6 @@ const videosData = [
         updatedAt: new Date()
     },
     {
-        id: '12',
         url: 'https://signbank.upf.com/images/LSC_-_Dur_dura.mp4',
         angle: 'Frontal',
         priority: 1,
@@ -223,7 +211,6 @@ const videosData = [
         updatedAt: new Date()
     },
     {
-        id: '13',
         url: 'https://signbank.upf.com/images/LSC_-_Xocolata.mp4',
         angle: 'Frontal',
         priority: 1,
@@ -326,6 +313,8 @@ async function main() {
         const videoResult = await db.collection(Collections.VIDEOS).insertMany(videosData)
         console.log(`Created ${videoResult.insertedCount} videos`)
 
+        const videos = await db.collection(Collections.VIDEOS).find({}).toArray()
+        console.log(videos)
         // Create words
         console.log('Creating words...')
 
@@ -388,7 +377,7 @@ async function main() {
                                     translations: []
                                 }
                             ],
-                            videoIds: ['1']
+                            videoIds: [videos[0]._id.toString()]
                         }
                     ],
                     relatedWords: []
@@ -436,7 +425,7 @@ async function main() {
                                     translations: []
                                 }
                             ],
-                            videoIds: ['2']
+                            videoIds: [videos[1]._id.toString()]
                         }
                     ],
                     relatedWords: []
@@ -479,7 +468,7 @@ async function main() {
                                     ]
                                 }
                             ],
-                            videoIds: ['3']
+                            videoIds: [videos[2]._id.toString()]
                         }
                     ],
                     relatedWords: []
@@ -522,7 +511,7 @@ async function main() {
                                     ]
                                 }
                             ],
-                            videoIds: ['4']
+                            videoIds: [videos[3]._id.toString()]
                         }
                     ],
                     relatedWords: []
@@ -565,7 +554,7 @@ async function main() {
                                     ]
                                 }
                             ],
-                            videoIds: ['5']
+                            videoIds: [videos[4]._id.toString()]
                         },
                         {
                             priority: 2,
@@ -588,7 +577,7 @@ async function main() {
                                     ]
                                 }
                             ],
-                            videoIds: ['5']
+                            videoIds: [videos[5]._id.toString()]
                         }
                     ],
                     relatedWords: []
@@ -631,7 +620,7 @@ async function main() {
                                     ]
                                 }
                             ],
-                            videoIds: ['6']
+                            videoIds: [videos[6]._id.toString()]
                         }
                     ],
                     relatedWords: []
@@ -674,7 +663,7 @@ async function main() {
                                     ]
                                 }
                             ],
-                            videoIds: ['7']
+                            videoIds: [videos[7]._id.toString()]
                         }
                     ],
                     relatedWords: []
@@ -717,7 +706,7 @@ async function main() {
                                     ]
                                 }
                             ],
-                            videoIds: ['8', '9']
+                            videoIds: [videos[8]._id.toString(), videos[9]._id.toString()]
                         }
                     ],
                     relatedWords: []
@@ -760,7 +749,7 @@ async function main() {
                                     ]
                                 }
                             ],
-                            videoIds: ['10']
+                            videoIds: [videos[10]._id.toString()]
                         }
                     ],
                     relatedWords: []
@@ -803,7 +792,7 @@ async function main() {
                                     ]
                                 }
                             ],
-                            videoIds: ['11']
+                            videoIds: [videos[1]._id.toString()]
                         }
                     ],
                     relatedWords: []
@@ -846,7 +835,7 @@ async function main() {
                                     ]
                                 }
                             ],
-                            videoIds: ['12']
+                            videoIds: [videos[1]._id.toString()]
                         }
                     ],
                     relatedWords: []
@@ -889,7 +878,7 @@ async function main() {
                                     ]
                                 }
                             ],
-                            videoIds: ['13']
+                            videoIds: [videos[1]._id.toString()]
                         }
                     ],
                     relatedWords: []

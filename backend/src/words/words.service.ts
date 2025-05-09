@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/commo
 import { ObjectId } from 'mongodb';
 import typesense from 'src/typesense/client';
 import { SearchParams } from 'typesense/lib/Typesense/Documents';
-import { WordStatus, WordEntry } from '../../types/database'; // Import types
+import { WordStatus, WordEntry, Video } from '../../types/database'; // Import Video type
 import { SearchOptions, SearchResult } from './interfaces/search.interface';
 import { MongoDBService } from '../mongodb/mongodb.service';
 
@@ -60,6 +60,7 @@ export class WordsService {
           
           // Get best description from sense definitions
           let bestSenseDescription = "";
+          let bestSenseVideo = null;
           
           // Use senseDefinitions from Typesense if available
           if (document.senseDefinitions && document.senseDefinitions.length > 0) {
@@ -68,7 +69,7 @@ export class WordsService {
           }
           
           // If we still don't have a description, try to get it using the word ID
-          if (!bestSenseDescription && id) {
+          if ((!bestSenseDescription || !bestSenseVideo) && id) {
             // We'll handle this asynchronously to avoid blocking the search results
             this.enrichWordWithDefinition(id, hit);
           }
@@ -79,7 +80,8 @@ export class WordsService {
               word,
               description: bestSenseDescription, // Use the best sense description
               videoUrls,
-              lexicalCategory
+              lexicalCategory,
+              video: bestSenseVideo // Add the best sense video
             },
             highlights: hit.highlights || [],
             textMatch: hit.text_match
@@ -105,33 +107,79 @@ export class WordsService {
   // Helper method to fetch a full definition if needed
   private async enrichWordWithDefinition(wordId: string, hit: any): Promise<void> {
     try {
+      // Validate the ID format first
+      if (!wordId || !/^[0-9a-fA-F]{24}$/.test(wordId)) {
+        console.error(`Failed to enrich word: Invalid ID format ${wordId}`);
+        return;
+      }
+
       const word = await this.getWordDetailsById(wordId);
-      if (word && word.senses && word.senses.length > 0) {
-        // Find the sense with the highest priority
-        const highestPrioritySense = word.senses.sort((a, b) => 
+      if (!word) {
+        console.error(`Failed to enrich word ${wordId}: Word not found in database`);
+        return;
+      }
+      
+      if (!word.senses || word.senses.length === 0) {
+        console.error(`Failed to enrich word ${wordId}: No senses found for word`);
+        return;
+      }
+
+      // Find the sense with the highest priority
+      const highestPrioritySense = word.senses.sort((a, b) => 
+        (a.priority || 999) - (b.priority || 999)
+      )[0];
+      
+      if (!highestPrioritySense) {
+        console.error(`Failed to enrich word ${wordId}: Could not determine highest priority sense`);
+        return;
+      }
+
+      // Get the description
+      if (highestPrioritySense.descriptions && 
+          highestPrioritySense.descriptions.length > 0) {
+        const topDescription = highestPrioritySense.descriptions[0];
+        if (topDescription && topDescription.description) {
+          // Update the hit document with the description
+          if (hit?.document) {
+            hit.document.description = topDescription.description;
+          }
+        } else {
+          console.error(`Failed to enrich word ${wordId}: No valid description in highest priority sense`);
+        }
+      }
+
+      // Get the video with highest priority
+      if (highestPrioritySense.videos && highestPrioritySense.videos.length > 0) {
+        const topVideo = (highestPrioritySense.videos as Video[]).sort((a, b) => 
           (a.priority || 999) - (b.priority || 999)
         )[0];
         
-        if (highestPrioritySense && 
-            highestPrioritySense.descriptions && 
-            highestPrioritySense.descriptions.length > 0) {
-          // Get the first description
-          const topDescription = highestPrioritySense.descriptions[0];
-          if (topDescription && topDescription.description) {
-            // Update the hit document with the description
-            if (hit.document) {
-              hit.document.description = topDescription.description;
-            }
+        if (topVideo) {
+          // Update the hit document with the video
+          if (hit?.document) {
+            hit.document.video = topVideo;
           }
+        } else {
+          console.error(`Failed to enrich word ${wordId}: No valid video in highest priority sense`);
         }
       }
     } catch (error) {
-      console.error(`Failed to enrich word ${wordId} with definition:`, error);
+      console.error(`Failed to enrich word ${wordId}:`, {
+        error: error.message,
+        stack: error.stack,
+        wordId,
+        hitDocument: hit?.document ? JSON.stringify(hit.document) : 'No hit document'
+      });
     }
   }
 
   // Get full word details using MongoDB directly
   async getWordDetailsById(wordId: string) {
+    // Validate the ID format before attempting conversion
+    if (!wordId || !/^[0-9a-fA-F]{24}$/.test(wordId)) {
+      throw new NotFoundException(`Invalid word ID format: ${wordId}`);
+    }
+
     // Convert string ID to ObjectId
     const objectId = this.mongodb.toObjectId(wordId);
     
@@ -145,6 +193,25 @@ export class WordsService {
     // Format the document and transform the data to match frontend expectations
     const formattedWord = this.mongodb.formatDocument<WordEntry>(word);
 
+    // Get all videoIds from all senses and validate each ID before using it
+    const sensesWithVideos = [];
+    await Promise.all(formattedWord.wordData.senses.map(async sense => {
+      const listOfVideos = [];
+      await Promise.all(sense.videoIds.map(async id => {
+        console.log(id)
+        const videoId = this.mongodb.toObjectId(id)
+        const video = await this.mongodb.videos.findOne({ _id: videoId });
+          listOfVideos.push(video);
+        })
+      );
+      const senseWithVideo = {
+        ...sense,
+        videos: listOfVideos
+      }
+      sensesWithVideos.push(senseWithVideo);
+      })
+    )
+
     return {
       id: formattedWord.id,
       createdAt: formattedWord.createdAt,
@@ -152,6 +219,7 @@ export class WordsService {
       status: formattedWord.status,
       currentVersion: formattedWord.currentVersion,
       ...formattedWord.wordData,
+      senses: sensesWithVideos
     };
   }
 }

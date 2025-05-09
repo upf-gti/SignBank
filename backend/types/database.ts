@@ -74,7 +74,6 @@ export type Description = {
 };
 
 export type Video = {
-  id: string;
   url: string;
   angle: string;
   priority: number;

@@ -2,7 +2,7 @@ import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { MongoDBService } from '../mongodb/mongodb.service';
 import { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections';
 import typesense from './client';
-import { WordEntry, WordStatus } from '../../types/database';
+import { WordEntry, WordStatus, Video } from '../../types/database';
 
 @Injectable()
 export class TypesenseSyncService implements OnApplicationBootstrap {
@@ -61,7 +61,7 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
       await typesense.collections().create(schema);
 
       // Upsert all words into Typesense
-      const documents = words.map((word) => {
+      const documents = await Promise.all(words.map(async (word) => {
         // Get the wordData from the embedded type
         const wordData = word.wordData;
         if (!wordData) {
@@ -90,11 +90,18 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
         
         // Extract video URLs from all senses
         const videoUrls = [];
-        wordData.senses?.forEach(sense => {
-          sense.videos?.forEach(video => {
-            if (video.url) videoUrls.push(video.url);
-          });
-        });
+        for (const sense of wordData.senses || []) {
+          if (sense.videoIds) {
+            // Fetch video data for each videoId
+            for (const videoId of sense.videoIds) {
+              const videoObjectId = this.mongodb.toObjectId(videoId);
+              const video = await this.mongodb.videos.findOne({ _id: videoObjectId });
+              if (video) {
+                videoUrls.push(video.url);
+              }
+            }
+          }
+        }
         
         // Extract related words
         const relatedWords = wordData.relatedWords?.map(rel => rel.wordId) || [];
@@ -119,12 +126,15 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
         }
         
         return doc;
-      }).filter(Boolean); // Filter out null values
+      }));
+
+      // Filter out null values
+      const validDocuments = documents.filter(Boolean);
 
       // Split into chunks to handle potential size limitations
       const chunkSize = 100;
-      for (let i = 0; i < documents.length; i += chunkSize) {
-        const chunk = documents.slice(i, i + chunkSize);
+      for (let i = 0; i < validDocuments.length; i += chunkSize) {
+        const chunk = validDocuments.slice(i, i + chunkSize);
         try {
           await typesense
             .collections('words')
@@ -147,7 +157,7 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
         }
       }
 
-      console.log(`Completed sync of ${documents.length} words to Typesense.`);
+      console.log(`Completed sync of ${validDocuments.length} words to Typesense.`);
     } catch (error) {
       console.error('Error syncing words to Typesense:', error.message);
     }
@@ -230,11 +240,18 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
       
       // Extract video URLs from all senses
       const videoUrls = [];
-      wordData.senses?.forEach(sense => {
-        sense.videos?.forEach(video => {
-          if (video.url) videoUrls.push(video.url);
-        });
-      });
+      for (const sense of wordData.senses || []) {
+        if (sense.videoIds) {
+          // Fetch video data for each videoId
+          for (const videoId of sense.videoIds) {
+            const videoObjectId = this.mongodb.toObjectId(videoId);
+            const video = await this.mongodb.videos.findOne({ _id: videoObjectId });
+            if (video) {
+              videoUrls.push(video.url);
+            }
+          }
+        }
+      }
       
       // Extract related words
       const relatedWords = wordData.relatedWords?.map(rel => rel.wordId) || [];
