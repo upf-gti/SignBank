@@ -6,6 +6,7 @@ import { TypesenseSyncService } from './typesense/sync';
 import { WordsModule } from './words/words.module';
 import { WordRequestsModule } from './word-requests/word-requests.module'
 import { MongoDBModule } from './mongodb/mongodb.module';
+import { VideosModule } from './videos/videos.module';
 // import { WordEditsModule } from './word-edits/word-edits.module';
 
 @Module({
@@ -15,6 +16,7 @@ import { MongoDBModule } from './mongodb/mongodb.module';
     WordsModule, 
     // PrismaModule, 
     WordRequestsModule,
+    VideosModule,
     // WordEditsModule
   ],
   controllers: [AppController],

@@ -74,6 +74,7 @@ export type Description = {
 };
 
 export type Video = {
+  id: string;
   url: string;
   angle: string;
   priority: number;
@@ -83,6 +84,8 @@ export type Video = {
   phonologicalTranscription?: string;
   nonManualComponents?: string;
   movementType?: string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type Sense = {
@@ -91,7 +94,7 @@ export type Sense = {
   usageEra?: string;
   usageFrequency?: string;
   descriptions: Description[];
-  videos: Video[];
+  videoIds: string[]; // For storage/reference
   lexicalCategory?: LexicalCategory;
 };
 

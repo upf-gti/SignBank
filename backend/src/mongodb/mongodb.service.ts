@@ -38,7 +38,8 @@ export class MongoDBService implements OnModuleInit, OnModuleDestroy {
         words: this.db.collection('words'),
         wordEdits: this.db.collection('wordEdits'),
         wordEditHistoric: this.db.collection('wordEditHistoric'),
-        wordRequests: this.db.collection('wordRequests')
+        wordRequests: this.db.collection('wordRequests'),
+        videos: this.db.collection('videos')
       };
       
     } catch (error) {
@@ -81,6 +82,10 @@ export class MongoDBService implements OnModuleInit, OnModuleDestroy {
 
   get wordRequests(): Collection {
     return this.collections.wordRequests;
+  }
+
+  get videos(): Collection {
+    return this.collections.videos;
   }
 
   // Helper to convert string IDs to ObjectIds
