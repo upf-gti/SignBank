@@ -48,12 +48,199 @@ const Collections = {
     WORD_EDIT_HISTORIC: 'wordEditHistoric', // Keep as is since it's a special case
     WORD_REQUEST: 'wordRequests',     // Plural form
     DIALECT: 'dialects',             // Plural form
-    USERS: 'users'                  // Plural form
+    USERS: 'users',                  // Plural form
+    VIDEOS: 'videos'                 // New collection for videos
 }
+
+// Define all videos
+const videosData = [
+    {
+        id: '1',
+        url: 'https://signbank.upf.com/images/LSC_-_Cafe.mp4',
+        angle: 'Frontal',
+        priority: 1,
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        phonologicalTranscription: '-',
+        nonManualComponents: 'Pronunciar Cafe',
+        movementType: 'Moviment del signe Cafè',
+        createdAt: new Date(),
+        updatedAt: new Date()
+    },
+    {
+        id: '2',
+        url: 'https://signbank.upf.com/images/LSC_-_Camell.mp4',
+        angle: 'Frontal',
+        priority: 1,
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        phonologicalTranscription: '-',
+        nonManualComponents: 'Pronunciar Camell',
+        movementType: 'Moviment del signe Camell',
+        createdAt: new Date(),
+        updatedAt: new Date()
+    },
+    {
+        id: '3',
+        url: 'https://signbank.upf.com/images/LSC_-_Cames.mp4',
+        angle: 'Frontal',
+        priority: 1,
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        phonologicalTranscription: '-',
+        nonManualComponents: 'Pronunciar Cames',
+        movementType: 'Moviment del signe Cames',
+        createdAt: new Date(),
+        updatedAt: new Date()
+    },
+    {
+        id: '4',
+        url: 'https://signbank.upf.com/images/LSC_-_Cami.mp4',
+        angle: 'Frontal',
+        priority: 1,
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        phonologicalTranscription: '-',
+        nonManualComponents: 'Pronunciar Cami',
+        movementType: 'Moviment del signe Cami',
+        createdAt: new Date(),
+        updatedAt: new Date()
+    },
+    {
+        id: '5',
+        url: 'https://signbank.upf.com/images/LSC_-_Cap.mp4',
+        angle: 'Frontal',
+        priority: 1,
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        phonologicalTranscription: '-',
+        nonManualComponents: 'Pronunciar Cap',
+        movementType: 'Moviment del signe Cap',
+        createdAt: new Date(),
+        updatedAt: new Date()
+    },
+    {
+        id: '6',
+        url: 'https://signbank.upf.com/images/LSC_-_Capa.mp4',
+        angle: 'Frontal',
+        priority: 1,
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        phonologicalTranscription: '-',
+        nonManualComponents: 'Pronunciar Capa',
+        movementType: 'Moviment del signe Capa',
+        createdAt: new Date(),
+        updatedAt: new Date()
+    },
+    {
+        id: '7',
+        url: 'https://signbank.upf.com/images/LSC_-_Car.mp4',
+        angle: 'Frontal',
+        priority: 1,
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        phonologicalTranscription: '-',
+        nonManualComponents: 'Pronunciar Car',
+        movementType: 'Moviment del signe Car',
+        createdAt: new Date(),
+        updatedAt: new Date()
+    },
+    {
+        id: '8',
+        url: 'https://signbank.upf.com/images/LSC_-_Cara_1.mp4',
+        angle: 'Frontal',
+        priority: 1,
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        phonologicalTranscription: '-',
+        nonManualComponents: 'Pronunciar Cara',
+        movementType: 'Moviment del signe Cara',
+        createdAt: new Date(),
+        updatedAt: new Date()
+    },
+    {
+        id: '9',
+        url: 'https://signbank.upf.com/images/LSC_-_Cara_2.mp4',
+        angle: 'Frontal',
+        priority: 2,
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        phonologicalTranscription: '-',
+        nonManualComponents: 'Pronunciar Cara',
+        movementType: 'Moviment del signe Cara',
+        createdAt: new Date(),
+        updatedAt: new Date()
+    },
+    {
+        id: '10',
+        url: 'https://signbank.upf.com/images/LSC_-_Casa.mp4',
+        angle: 'Frontal',
+        priority: 1,
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        phonologicalTranscription: '-',
+        nonManualComponents: 'Pronunciar Casa',
+        movementType: 'Moviment del signe Casa',
+        createdAt: new Date(),
+        updatedAt: new Date()
+    },
+    {
+        id: '11',
+        url: 'https://signbank.upf.com/images/LSC_-_Casat_casada.mp4',
+        angle: 'Frontal',
+        priority: 1,
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        phonologicalTranscription: '-',
+        nonManualComponents: 'Pronunciar Casat',
+        movementType: 'Moviment del signe Casat',
+        createdAt: new Date(),
+        updatedAt: new Date()
+    },
+    {
+        id: '12',
+        url: 'https://signbank.upf.com/images/LSC_-_Dur_dura.mp4',
+        angle: 'Frontal',
+        priority: 1,
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        phonologicalTranscription: '-',
+        nonManualComponents: 'Pronunciar Dur',
+        movementType: 'Moviment del signe Dur',
+        createdAt: new Date(),
+        updatedAt: new Date()
+    },
+    {
+        id: '13',
+        url: 'https://signbank.upf.com/images/LSC_-_Xocolata.mp4',
+        angle: 'Frontal',
+        priority: 1,
+        dominantHand: Hand.RIGHT,
+        facialExpression: 'Neutral',
+        hasContact: false,
+        phonologicalTranscription: '-',
+        nonManualComponents: 'Pronunciar Xocolata',
+        movementType: 'Moviment del signe Xocolata',
+        createdAt: new Date(),
+        updatedAt: new Date()
+    }
+]
 
 async function main() {
     // Replace with your MongoDB connection string
-    const uri = process.env.DATABASE_URL || 'mongodb://localhost:27017/signbank'
+    const uri = process.env.DATABASE_URL || 'mongodb://root:password@mongoDB:27017/signbank?authSource=admin'
     const client = new MongoClient(uri)
 
     try {
@@ -73,6 +260,7 @@ async function main() {
             await db.collection(Collections.WORDS).deleteMany({})
             await db.collection(Collections.DIALECT).deleteMany({})
             await db.collection(Collections.USERS).deleteMany({})
+            await db.collection(Collections.VIDEOS).deleteMany({})  // Clean videos collection
             console.log('Deleted existing data')
         } catch (error) {
             console.error('Error cleaning up data:', error)
@@ -133,13 +321,18 @@ async function main() {
         })
         console.log('Created dialects')
 
+        // Create videos first
+        console.log('Creating videos...')
+        const videoResult = await db.collection(Collections.VIDEOS).insertMany(videosData)
+        console.log(`Created ${videoResult.insertedCount} videos`)
+
         // Create words
         console.log('Creating words...')
 
         // Words data array
         const wordsData = [
             {
-                status: WordStatus.PUBLISHED,  // Ensure this matches exactly what your app expects
+                status: WordStatus.PUBLISHED,
                 currentVersion: 1,
                 isCreatedFromRequest: false,
                 isCreatedFromEdit: false,
@@ -195,13 +388,7 @@ async function main() {
                                     translations: []
                                 }
                             ],
-                            videos: [
-                                {
-                                    url: 'https://signbank.upf.com/images/LSC_-_Cafe.mp4',
-                                    angle: 'Frontal',
-                                    priority: 1
-                                }
-                            ]
+                            videoIds: ['1']
                         }
                     ],
                     relatedWords: []
@@ -249,13 +436,7 @@ async function main() {
                                     translations: []
                                 }
                             ],
-                            videos: [
-                                {
-                                    url: 'https://signbank.upf.com/images/LSC_-_Camell.mp4',
-                                    angle: 'Frontal',
-                                    priority: 1
-                                }
-                            ]
+                            videoIds: ['2']
                         }
                     ],
                     relatedWords: []
@@ -298,20 +479,13 @@ async function main() {
                                     ]
                                 }
                             ],
-                            videos: [
-                                {
-                                    url: 'https://signbank.upf.com/images/LSC_-_Cames.mp4',
-                                    angle: 'Frontal',
-                                    priority: 1
-                                }
-                            ]
+                            videoIds: ['3']
                         }
                     ],
                     relatedWords: []
                 }
             },
             {
-                // Changed to match appropriate enum value
                 status: WordStatus.ARCHIVED,
                 currentVersion: 1,
                 isCreatedFromRequest: false,
@@ -348,13 +522,7 @@ async function main() {
                                     ]
                                 }
                             ],
-                            videos: [
-                                {
-                                    url: 'https://signbank.upf.com/images/LSC_-_Cami.mp4',
-                                    angle: 'Frontal',
-                                    priority: 1
-                                }
-                            ]
+                            videoIds: ['4']
                         }
                     ],
                     relatedWords: []
@@ -397,13 +565,7 @@ async function main() {
                                     ]
                                 }
                             ],
-                            videos: [
-                                {
-                                    url: 'https://signbank.upf.com/images/LSC_-_Cap.mp4',
-                                    angle: 'Frontal',
-                                    priority: 1
-                                }
-                            ]
+                            videoIds: ['5']
                         },
                         {
                             priority: 2,
@@ -426,13 +588,7 @@ async function main() {
                                     ]
                                 }
                             ],
-                            videos: [
-                                {
-                                    url: 'https://signbank.upf.com/images/LSC_-_Cap.mp4',
-                                    angle: 'Frontal',
-                                    priority: 1
-                                }
-                            ]
+                            videoIds: ['5']
                         }
                     ],
                     relatedWords: []
@@ -475,13 +631,7 @@ async function main() {
                                     ]
                                 }
                             ],
-                            videos: [
-                                {
-                                    url: 'https://signbank.upf.com/images/LSC_-_Capa.mp4',
-                                    angle: 'Frontal',
-                                    priority: 1
-                                }
-                            ]
+                            videoIds: ['6']
                         }
                     ],
                     relatedWords: []
@@ -524,13 +674,7 @@ async function main() {
                                     ]
                                 }
                             ],
-                            videos: [
-                                {
-                                    url: 'https://signbank.upf.com/images/LSC_-_Car.mp4',
-                                    angle: 'Frontal',
-                                    priority: 1
-                                }
-                            ]
+                            videoIds: ['7']
                         }
                     ],
                     relatedWords: []
@@ -573,18 +717,7 @@ async function main() {
                                     ]
                                 }
                             ],
-                            videos: [
-                                {
-                                    url: 'https://signbank.upf.com/images/LSC_-_Cara_1.mp4',
-                                    angle: 'Frontal',
-                                    priority: 1
-                                },
-                                {
-                                    url: 'https://signbank.upf.com/images/LSC_-_Cara_2.mp4',
-                                    angle: 'Frontal',
-                                    priority: 2
-                                }
-                            ]
+                            videoIds: ['8', '9']
                         }
                     ],
                     relatedWords: []
@@ -627,13 +760,7 @@ async function main() {
                                     ]
                                 }
                             ],
-                            videos: [
-                                {
-                                    url: 'https://signbank.upf.com/images/LSC_-_Casa.mp4',
-                                    angle: 'Frontal',
-                                    priority: 1
-                                }
-                            ]
+                            videoIds: ['10']
                         }
                     ],
                     relatedWords: []
@@ -676,13 +803,7 @@ async function main() {
                                     ]
                                 }
                             ],
-                            videos: [
-                                {
-                                    url: 'https://signbank.upf.com/images/LSC_-_Casat_casada.mp4',
-                                    angle: 'Frontal',
-                                    priority: 1
-                                }
-                            ]
+                            videoIds: ['11']
                         }
                     ],
                     relatedWords: []
@@ -725,13 +846,7 @@ async function main() {
                                     ]
                                 }
                             ],
-                            videos: [
-                                {
-                                    url: 'https://signbank.upf.com/images/LSC_-_Dur_dura.mp4',
-                                    angle: 'Frontal',
-                                    priority: 1
-                                }
-                            ]
+                            videoIds: ['12']
                         }
                     ],
                     relatedWords: []
@@ -774,13 +889,7 @@ async function main() {
                                     ]
                                 }
                             ],
-                            videos: [
-                                {
-                                    url: 'https://signbank.upf.com/images/LSC_-_Xocolata.mp4',
-                                    angle: 'Frontal',
-                                    priority: 1
-                                }
-                            ]
+                            videoIds: ['13']
                         }
                     ],
                     relatedWords: []
