@@ -1,0 +1,98 @@
+version: '3.8'
+networks:
+  signbank:
+    driver: bridge
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+      args:
+        DATABASE_URL: ${DATABASE_URL_DOCKER}
+        ADMIN_EMAIL: ${ADMIN_EMAIL}
+        ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    container_name: backend-prod
+    environment:
+      - PORT=80
+      - DATABASE_URL=${DATABASE_URL_DOCKER}
+      - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      # Add other production environment variables
+    networks:
+      - signbank
+    restart: always  # Add restart policy
+    depends_on:
+      - mongoDB
+      - typesense
+    
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod  # Change to production Dockerfile
+    container_name: frontend-prod
+    networks:
+      - signbank    
+    restart: always  # Add restart policy
+
+  mongoDB:
+    image: mongo
+    container_name: mongoDB
+    hostname: mongoDB
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_REPLICA_SET_NAME: rs0
+    networks:
+      - signbank
+    volumes:
+      - ./mongoDB/data:/data/db
+      - ./mongoDB/init-rs.sh:/init-rs.sh
+    ports:
+      - 27017:27017
+    command: bash /init-rs.sh
+    restart: always
+
+  typesense:
+    image: typesense/typesense:27.1
+    restart: always
+    container_name: typesense-prod
+    environment:
+      - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}  # Use environment variable
+      - TYPESENSE_DATA_DIR=/data
+    networks:
+      - signbank
+    volumes:
+      - typesense_data:/data  # Use named volume
+    command: '--data-dir /data --api-key=${TYPESENSE_API_KEY} --enable-cors'
+
+  dufs:
+    image: sigoden/dufs
+    container_name: dufs-prod
+    volumes:
+      - ./FileServer:/data 
+    command: /data -A
+    restart: always
+    networks:
+      - signbank
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx-prod
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.prod.conf/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/certs:/etc/ssl/certs/
+    networks:
+      - signbank
+    depends_on:
+      - backend
+      - frontend
+    restart: always
+
+volumes:
+  database:
+  typesense_data:

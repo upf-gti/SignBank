@@ -1,2 +1,5 @@
-.turbo
 node_modules
+database
+FileServer
+.env
+mongoDb/data
