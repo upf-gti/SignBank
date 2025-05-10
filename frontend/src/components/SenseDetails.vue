@@ -53,18 +53,18 @@
           />
         </div>
         
-        <!-- Display descriptions in view mode -->
+        <!-- Display definitions in view mode -->
         <div
           v-if="!isEditMode && currentSense"
           class="col overflow-auto q-pr-md"
         >
           <div
-            v-for="(desc, dIndex) in currentSense.descriptions"
+            v-for="(desc, dIndex) in currentSense.definitions"
             :key="'desc-' + dIndex"
             class="q-mt-md"
           >
             <div class="text-weight-bold">
-              {{ desc.description }}
+              {{ desc.definition }}
             </div>
             
             <!-- Examples -->
@@ -111,18 +111,18 @@
           class="col overflow-auto"
         >
           <div
-            v-for="(desc, dIndex) in currentSense.descriptions"
-            :key="'desc-edit-' + dIndex"
+            v-for="(def, dIndex) in currentSense.definitions"
+            :key="'def-edit-' + dIndex"
             class="q-mt-md"
           >
             <q-input
-              v-model="desc.description"
-              :label="translate('word_detail.field.descriptionText')"
+              v-model="def.definition"
+              :label="translate('word_detail.field.definitionText')"
               outlined
               type="textarea"
               autogrow
               class="q-mb-sm"
-              :rules="[val => !!val.trim() || translate('word_detail.error.emptyDescription')]"
+              :rules="[val => !!val.trim() || translate('word_detail.error.emptyDefinition')]"
               @update:model-value="emitUpdate"
             />
             
@@ -132,14 +132,14 @@
                 {{ translate('word_detail.field.examples') }}
               </div>
               <div
-                v-for="(example, eIndex) in desc.examples"
+                v-for="(example, eIndex) in def.examples"
                 :key="'example-' + eIndex"
                 class="q-mb-xs"
               >
                 <div class="row items-center">
                   <div class="col">
                     <q-input
-                      v-model="desc.examples[eIndex]"
+                      v-model="def.examples[eIndex]"
                       :label="translate('word_detail.field.example')"
                       outlined
                       dense
@@ -173,7 +173,7 @@
                 {{ translate('word_detail.field.translations') }}
               </div>
               <div
-                v-for="(trans, tIndex) in desc.translations"
+                v-for="(trans, tIndex) in def.translations"
                 :key="'trans-' + tIndex"
                 class="q-mb-xs"
               >
@@ -225,8 +225,8 @@
                 flat
                 color="negative"
                 icon="delete"
-                :label="translate('word_detail.action.removeDescription')"
-                @click="removeDescription(dIndex)"
+                :label="translate('word_detail.action.removeDefinition')"
+                @click="removeDefinition(dIndex)"
               />
             </div>
           </div>
@@ -236,8 +236,8 @@
               flat
               color="primary"
               icon="add"
-              :label="translate('word_detail.action.addDescription')"
-              @click="addDescription()"
+              :label="translate('word_detail.action.addDefinition')"
+              @click="addDefinition()"
             />
           </div>
         </div>
@@ -250,7 +250,7 @@
 import { ref, computed, watch } from 'vue'
 import { useQuasar } from 'quasar'
 import { debounce } from 'quasar'
-import type { Sense, Description} from 'src/types/database';
+import type { Sense, Definition } from 'src/types/database';
 import { Language } from 'src/types/database'
 import translate from 'src/utils/translate'
 
@@ -306,14 +306,14 @@ const emitUpdate = debounce(() => {
 function createEmptySense(): Sense {
   return {
     priority: senses.length + 1,
-    descriptions: [createEmptyDescription()],
+    definitions: [createEmptyDefinition()],
     videos: []
   }
 }
 
-function createEmptyDescription(): Description {
+function createEmptyDefinition(): Definition {
   return {
-    description: '',
+    definition: '',
     examples: [],
     translations: []
   }
@@ -326,9 +326,9 @@ function addSense() {
   // Create a new sense with required fields
   const newSense = createEmptySense();
   
-  // Add a default description to ensure it meets requirements
-  if (!newSense.descriptions || newSense.descriptions.length === 0) {
-    newSense.descriptions = [createEmptyDescription()];
+  // Add a default definition to ensure it meets requirements
+  if (!newSense.definitions || newSense.definitions.length === 0) {
+    newSense.definitions = [createEmptyDefinition()];
   }
   
   newSenses.push(newSense);
@@ -338,44 +338,45 @@ function addSense() {
   currentSenseIndex.value = newSenses.length - 1;
 }
 
-function addDescription() {
+function addDefinition() {
+  debugger
   if (currentSense.value) {
-    currentSense.value.descriptions.push(createEmptyDescription())
+    currentSense.value.definitions.push(createEmptyDefinition())
     emit('update:senses', [...senses])
   }
 }
 
-function removeDescription(descIndex: number) {
-  if (currentSense.value && currentSense.value.descriptions.length > 1) {
-    currentSense.value.descriptions.splice(descIndex, 1)
+function removeDefinition(defIndex: number) {
+  if (currentSense.value && currentSense.value.definitions.length > 1) {
+    currentSense.value.definitions.splice(defIndex, 1)
     emit('update:senses', [...senses])
   } else {
     $q.notify({
       color: 'warning',
-      message: translate('word_detail.error.needOneDescription')
+      message: translate('word_detail.error.needOneDefinition')
     })
   }
 }
 
-function addExample(descIndex: number) {
-  if (currentSense.value && currentSense.value.descriptions[descIndex]) {
+function addExample(defIndex: number) {
+  if (currentSense.value && currentSense.value.definitions[defIndex]) {
     // Add a placeholder example instead of empty string
-    currentSense.value.descriptions[descIndex].examples.push('Example')
+    currentSense.value.definitions[defIndex].examples.push('Example')
     emit('update:senses', [...senses])
   }
 }
 
-function removeExample(descIndex: number, exampleIndex: number) {
-  if (currentSense.value && currentSense.value.descriptions[descIndex]) {
-    currentSense.value.descriptions[descIndex].examples.splice(exampleIndex, 1)
+function removeExample(defIndex: number, exampleIndex: number) {
+  if (currentSense.value && currentSense.value.definitions[defIndex]) {
+    currentSense.value.definitions[defIndex].examples.splice(exampleIndex, 1)
     emit('update:senses', [...senses])
   }
 }
 
-function addTranslation(descIndex: number) {
-  if (currentSense.value && currentSense.value.descriptions[descIndex]) {
+function addTranslation(defIndex: number) {
+  if (currentSense.value && currentSense.value.definitions[defIndex]) {
     // Add a translation with default values
-    currentSense.value.descriptions[descIndex].translations.push({
+    currentSense.value.definitions[defIndex].translations.push({
       translation: 'Translation',
       language: Language.CATALAN
     })
@@ -383,9 +384,9 @@ function addTranslation(descIndex: number) {
   }
 }
 
-function removeTranslation(descIndex: number, translationIndex: number) {
-  if (currentSense.value && currentSense.value.descriptions[descIndex]) {
-    currentSense.value.descriptions[descIndex].translations.splice(translationIndex, 1)
+function removeTranslation(defIndex: number, translationIndex: number) {
+  if (currentSense.value && currentSense.value.definitions[defIndex]) {
+    currentSense.value.definitions[defIndex].translations.splice(translationIndex, 1)
     emit('update:senses', [...senses])
   }
 }

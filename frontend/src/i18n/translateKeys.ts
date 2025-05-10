@@ -31,7 +31,7 @@ interface TranslateKeys {
    save: string;
    cancel: string;
    word: string;
-   description: string;
+   definition: string;
    reject: string;
    approve: string;
    errorSavingWordRequest: string;
@@ -48,7 +48,7 @@ interface TranslateKeys {
      signInfo: string;
      definitions: string;
      word: string;
-     description: string;
+     definition: string;
      dialect: string;
      videos: string;
      angle: string;
@@ -59,8 +59,7 @@ interface TranslateKeys {
      phonologicalTranscription: string;
      movementType: string;
      nonManualComponents: string;
-     descriptions: string;
-     descriptionText: string;
+     definitionText: string;
      examples: string;
      example: string;
      translations: string;
@@ -75,20 +74,20 @@ interface TranslateKeys {
    action: {
      addSense: string;
      removeSense: string;
-     addDescription: string;
+     addDefinition: string;
      addExample: string;
      addTranslation: string;
      requestEdit: string;
      createNewWord: string;
-     removeDescription: string;
+     removeDefinition: string;
    };
    
    // Error messages
    error: {
      needOneSense: string;
-     needOneDescription: string;
+     needOneDefinition: string;
      emptyWord: string;
-     emptyDescription: string;
+     emptyDefinition: string;
      notFound: string;
      loadingFailed: string;
      savingFailed: string;

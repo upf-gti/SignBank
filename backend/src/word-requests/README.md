@@ -8,7 +8,7 @@ This module handles user requests to add new words to the LSC SignBank database.
 
 The current implementation follows a simplified flow where:
 
-1. Users submit word requests with basic information (word, description, videoUrl).
+1. Users submit word requests with basic information (word, definition, videoUrl).
 2. Admins review these requests and can approve or deny them.
 3. When a request is approved, a new Word entry is created with the information from the request.
 
@@ -40,7 +40,7 @@ async updateStatus(requestId: number, dto: UpdateWordRequestDto, adminId: number
       const newWord = await tx.words.create({
         data: {
           word: request.word,
-          description: request.description,
+          definition: request.definition,
           status: 'PENDING',  // Default status for new words
           // Connect to the admin as creator
           creator: {

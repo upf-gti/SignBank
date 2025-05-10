@@ -67,8 +67,8 @@ export type SenseTranslation = {
   language: Language;
 };
 
-export type Description = {
-  description: string;
+export type Definition = {
+  definition: string;
   examples: string[];
   translations: SenseTranslation[]; // Embedded translations
 };
@@ -92,7 +92,7 @@ export type Sense = {
   morphologicalVariants?: string;
   usageEra?: string;
   usageFrequency?: string;
-  descriptions: Description[];
+  definitions: Definition[];
   videoIds: string[]; // For storage/reference
   lexicalCategory?: LexicalCategory;
 };
@@ -125,7 +125,7 @@ export type Dialect = {
   name: string;
   region: string;
   mapCoordinates?: string;
-  description?: string;
+  definition?: string;
   createdAt: Date;
   updatedAt: Date;
 };

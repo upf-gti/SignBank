@@ -30,7 +30,7 @@ const wordData = ref<Word>({
   isNative: true,
   senses: [{
     priority: 1,
-    descriptions: [{ description: 'test', examples: ['test'], translations: [{ translation: 'test', language: Language.CATALAN }] }],
+    definitions: [{ definition: 'test', examples: ['test'], translations: [{ translation: 'test', language: Language.CATALAN }] }],
     videos: []
   }],
   relatedWords: [] // Add this to satisfy the Word interface

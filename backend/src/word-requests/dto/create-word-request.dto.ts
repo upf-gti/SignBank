@@ -48,10 +48,10 @@ export class SenseTranslationDto {
   language: Language;
 }
 
-export class DescriptionDto {
+export class DefinitionDto {
   @IsString()
   @IsNotEmpty()
-  description: string;
+  definition: string;
 
   @IsArray()
   @IsString({ each: true })
@@ -94,9 +94,9 @@ export class SenseDto {
 
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => DescriptionDto)
+  @Type(() => DefinitionDto)
   @ArrayMinSize(1)
-  descriptions: DescriptionDto[];
+  definitions: DefinitionDto[];
 
   @IsOptional()
   @IsString()

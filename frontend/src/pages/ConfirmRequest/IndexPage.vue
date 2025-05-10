@@ -39,11 +39,11 @@ const columns: QTableProps['columns'] = [
         },
     },
     {
-        name: 'description',
+        name: 'definition',
         required: true,
-        label: translate('description'),
+        label: translate('definition'),
         align: 'left',
-        field: (row: WordRequest) => row.requestedWordData.senses[0]?.descriptions[0]?.description,
+        field: (row: WordRequest) => row.requestedWordData.senses[0]?.definitions[0]?.definition,
     },
     {
         name: 'requestedBy',

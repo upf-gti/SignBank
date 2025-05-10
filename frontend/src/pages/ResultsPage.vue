@@ -57,9 +57,9 @@
               {{ scope.row.word.word }}
             </q-td>
             <q-td
-              key="description"
+              key="definition"
             >
-              {{ scope.row.word.description }}
+              {{ scope.row.word.definition }}
             </q-td>
           </q-tr>
         </template>

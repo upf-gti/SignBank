@@ -347,9 +347,9 @@ async function main() {
                             phonologicalTranscription: '-',
                             usageFrequency: 'Comú',
                             usageEra: 'Contemporani',
-                            descriptions: [
+                            definitions: [
                                 {
-                                    description: 'Arbret del gènere Coffea, de la família de les rubiàcies, conreat als països tropicals, de fulles lluents i flors blanques, els fruits del qual contenen ordinàriament dues llavors planoconvexes amb un solc al llarg de la cara plana.',
+                                    definition: 'Arbret del gènere Coffea, de la família de les rubiàcies, conreat als països tropicals, de fulles lluents i flors blanques, els fruits del qual contenen ordinàriament dues llavors planoconvexes amb un solc al llarg de la cara plana.',
                                     examples: ['Als matins prenem un cafe', 'El meu amic beu cafe cada dia'],
                                     translations: [
                                         { translation: 'Coffe', language: Language.ENGLISH },
@@ -357,22 +357,22 @@ async function main() {
                                     ]
                                 },
                                 {
-                                    description: 'Cafè moca Cafè: d\'una varietat procedent d\'Aràbia.',
+                                    definition: 'Cafè moca Cafè: d\'una varietat procedent d\'Aràbia.',
                                     examples: [],
                                     translations: []
                                 },
                                 {
-                                    description: 'Llavor del cafè: Torrar cafè. Cafè molt. Cafè descafeïnat.',
+                                    definition: 'Llavor del cafè: Torrar cafè. Cafè molt. Cafè descafeïnat.',
                                     examples: [],
                                     translations: []
                                 },
                                 {
-                                    description: 'Cafè torrefacte: Cafè que ha estat barrejat amb sucre en torrar-lo.',
+                                    definition: 'Cafè torrefacte: Cafè que ha estat barrejat amb sucre en torrar-lo.',
                                     examples: [],
                                     translations: []
                                 },
                                 {
-                                    description: 'Beguda feta per infusió de les llavors de cafè torrades i moltes. Prendre cafè. Una tassa de cafè. Cafè amb llet.',
+                                    definition: 'Beguda feta per infusió de les llavors de cafè torrades i moltes. Prendre cafè. Una tassa de cafè. Cafè amb llet.',
                                     examples: [],
                                     translations: []
                                 }
@@ -410,9 +410,9 @@ async function main() {
                             phonologicalTranscription: '-',
                             usageFrequency: 'Comú',
                             usageEra: 'Contemporani',
-                            descriptions: [
+                            definitions: [
                                 {
-                                    description: 'Mamífer artiodàctil del gènere Camelus, de la família dels camèlids, de dimensions grans i cos robust, amb potes llargues i primes i coll llarg, fort i flexible, que té al dors un o dos geps.',
+                                    definition: 'Mamífer artiodàctil del gènere Camelus, de la família dels camèlids, de dimensions grans i cos robust, amb potes llargues i primes i coll llarg, fort i flexible, que té al dors un o dos geps.',
                                     examples: ['El meu camell és molt gros'],
                                     translations: [
                                         { translation: 'Camel', language: Language.ENGLISH },
@@ -420,7 +420,7 @@ async function main() {
                                     ]
                                 },
                                 {
-                                    description: 'Persona que comercia amb droga a la menuda.',
+                                    definition: 'Persona que comercia amb droga a la menuda.',
                                     examples: ['El seu vei es camell'],
                                     translations: []
                                 }
@@ -458,9 +458,9 @@ async function main() {
                             phonologicalTranscription: '-',
                             usageFrequency: 'Comú',
                             usageEra: 'Contemporani',
-                            descriptions: [
+                            definitions: [
                                 {
-                                    description: 'Extremitat inferior del cos humà, que va des del genoll fins al peu.',
+                                    definition: 'Extremitat inferior del cos humà, que va des del genoll fins al peu.',
                                     examples: ['Les meves cames estan cansades', 'Té unes cames molt llargues'],
                                     translations: [
                                         { translation: 'Legs', language: Language.ENGLISH },
@@ -501,9 +501,9 @@ async function main() {
                             phonologicalTranscription: '-',
                             usageFrequency: 'Comú',
                             usageEra: 'Contemporani',
-                            descriptions: [
+                            definitions: [
                                 {
-                                    description: 'Via que es fa servir per anar d\'un lloc a un altre.',
+                                    definition: 'Via que es fa servir per anar d\'un lloc a un altre.',
                                     examples: ['El cami era molt llarg', 'Van perdre el cami'],
                                     translations: [
                                         { translation: 'Path', language: Language.ENGLISH },
@@ -544,9 +544,9 @@ async function main() {
                             phonologicalTranscription: '-',
                             usageFrequency: 'Comú',
                             usageEra: 'Contemporani',
-                            descriptions: [
+                            definitions: [
                                 {
-                                    description: 'Part superior del cos dels animals vertebrats que conté el cervell, els principals òrgans dels sentits i l\'extrem superior o anterior del tub digestiu.',
+                                    definition: 'Part superior del cos dels animals vertebrats que conté el cervell, els principals òrgans dels sentits i l\'extrem superior o anterior del tub digestiu.',
                                     examples: ['Em fa mal el cap', 'Va moure el cap'],
                                     translations: [
                                         { translation: 'Head', language: Language.ENGLISH },
@@ -567,9 +567,9 @@ async function main() {
                             phonologicalTranscription: '-',
                             usageFrequency: 'Comú',
                             usageEra: 'Contemporani',
-                            descriptions: [
+                            definitions: [
                                 {
-                                    description: 'Ni un, ningú, res; absència total.',
+                                    definition: 'Ni un, ningú, res; absència total.',
                                     examples: ['No hi ha cap persona', 'No en queda cap'],
                                     translations: [
                                         { translation: 'None', language: Language.ENGLISH },
@@ -610,9 +610,9 @@ async function main() {
                             phonologicalTranscription: '-',
                             usageFrequency: 'Comú',
                             usageEra: 'Contemporani',
-                            descriptions: [
+                            definitions: [
                                 {
-                                    description: 'Peça de roba llarga, folgada, oberta de davant, sense mànigues, que es porta tirada a les espatlles cobrint el vestit.',
+                                    definition: 'Peça de roba llarga, folgada, oberta de davant, sense mànigues, que es porta tirada a les espatlles cobrint el vestit.',
                                     examples: ['Porta una capa negra', 'La capa el protegia del fred'],
                                     translations: [
                                         { translation: 'Cape', language: Language.ENGLISH },
@@ -653,9 +653,9 @@ async function main() {
                             phonologicalTranscription: '-',
                             usageFrequency: 'Comú',
                             usageEra: 'Contemporani',
-                            descriptions: [
+                            definitions: [
                                 {
-                                    description: 'Que té un preu elevat, que costa molt de diners.',
+                                    definition: 'Que té un preu elevat, que costa molt de diners.',
                                     examples: ['Aquest cotxe és molt car', 'El pis era massa car'],
                                     translations: [
                                         { translation: 'Expensive', language: Language.ENGLISH },
@@ -696,9 +696,9 @@ async function main() {
                             phonologicalTranscription: '-',
                             usageFrequency: 'Comú',
                             usageEra: 'Contemporani',
-                            descriptions: [
+                            definitions: [
                                 {
-                                    description: 'Part anterior del cap, on hi ha els ulls, el nas i la boca.',
+                                    definition: 'Part anterior del cap, on hi ha els ulls, el nas i la boca.',
                                     examples: ['Té una cara molt expressiva', 'Es va rentar la cara'],
                                     translations: [
                                         { translation: 'Face', language: Language.ENGLISH },
@@ -739,9 +739,9 @@ async function main() {
                             phonologicalTranscription: '-',
                             usageFrequency: 'Comú',
                             usageEra: 'Contemporani',
-                            descriptions: [
+                            definitions: [
                                 {
-                                    description: 'Edifici destinat a l\'habitatge de persones.',
+                                    definition: 'Edifici destinat a l\'habitatge de persones.',
                                     examples: ['Viu en una casa gran', 'La casa té un jardí'],
                                     translations: [
                                         { translation: 'House', language: Language.ENGLISH },
@@ -782,9 +782,9 @@ async function main() {
                             phonologicalTranscription: '-',
                             usageFrequency: 'Comú',
                             usageEra: 'Contemporani',
-                            descriptions: [
+                            definitions: [
                                 {
-                                    description: 'Estat de tenir un cònjuge o una cònjuge.',
+                                    definition: 'Estat de tenir un cònjuge o una cònjuge.',
                                     examples: ['Està casat amb una persona meravellosa', 'El seu estat civil és casat'],
                                     translations: [
                                         { translation: 'Married', language: Language.ENGLISH },
@@ -825,9 +825,9 @@ async function main() {
                             phonologicalTranscription: '-',
                             usageFrequency: 'Comú',
                             usageEra: 'Contemporani',
-                            descriptions: [
+                            definitions: [
                                 {
-                                    description: 'Que té una consistència ferma o difícil de trencar.',
+                                    definition: 'Que té una consistència ferma o difícil de trencar.',
                                     examples: ['El material és molt dur', 'El gel és dur'],
                                     translations: [
                                         { translation: 'Hard', language: Language.ENGLISH },
@@ -868,9 +868,9 @@ async function main() {
                             phonologicalTranscription: '-',
                             usageFrequency: 'Comú',
                             usageEra: 'Contemporani',
-                            descriptions: [
+                            definitions: [
                                 {
-                                    description: 'Producte alimentari obtingut a partir de la fruita del cacau, que es pot consumir en diverses formes, com a beguda o en forma sòlida.',
+                                    definition: 'Producte alimentari obtingut a partir de la fruita del cacau, que es pot consumir en diverses formes, com a beguda o en forma sòlida.',
                                     examples: ["M'agrada la xocolata negra", "La xocolata és dolça"],
                                     translations: [
                                         { translation: 'Chocolate', language: Language.ENGLISH },

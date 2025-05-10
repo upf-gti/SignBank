@@ -21,7 +21,7 @@ export interface SearchHighlight {
 export interface WordSummary {
   id: number;
   word: string;
-  description: string;
+  definition: string;
   videoUrls: string[];
 }
 

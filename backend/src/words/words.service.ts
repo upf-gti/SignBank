@@ -58,18 +58,18 @@ export class WordsService {
             lexicalCategory = ''
           } = document;
           
-          // Get best description from sense definitions
-          let bestSenseDescription = "";
+          // Get best definition from sense definitions
+          let bestSenseDefinition = "";
           let bestSenseVideo = null;
           
           // Use senseDefinitions from Typesense if available
           if (document.senseDefinitions && document.senseDefinitions.length > 0) {
             // The first element should be the highest priority definition based on our updated sync logic
-            bestSenseDescription = document.senseDefinitions[0];
+            bestSenseDefinition = document.senseDefinitions[0];
           }
           
-          // If we still don't have a description, try to get it using the word ID
-          if ((!bestSenseDescription || !bestSenseVideo) && id) {
+          // If we still don't have a definition, try to get it using the word ID
+          if ((!bestSenseDefinition || !bestSenseVideo) && id) {
             // We'll handle this asynchronously to avoid blocking the search results
             this.enrichWordWithDefinition(id, hit);
           }
@@ -78,7 +78,7 @@ export class WordsService {
             word: { 
               id, 
               word,
-              description: bestSenseDescription, // Use the best sense description
+              definition: bestSenseDefinition, // Use the best sense definition
               videoUrls,
               lexicalCategory,
               video: bestSenseVideo // Add the best sense video
@@ -134,17 +134,17 @@ export class WordsService {
         return;
       }
 
-      // Get the description
-      if (highestPrioritySense.descriptions && 
-          highestPrioritySense.descriptions.length > 0) {
-        const topDescription = highestPrioritySense.descriptions[0];
-        if (topDescription && topDescription.description) {
-          // Update the hit document with the description
+      // Get the definition
+      if (highestPrioritySense.definitions && 
+          highestPrioritySense.definitions.length > 0) {
+        const topDefinition = highestPrioritySense.definitions[0];
+        if (topDefinition && topDefinition.definition) {
+          // Update the hit document with the definition
           if (hit?.document) {
-            hit.document.description = topDescription.description;
+            hit.document.definition = topDefinition.definition;
           }
         } else {
-          console.error(`Failed to enrich word ${wordId}: No valid description in highest priority sense`);
+          console.error(`Failed to enrich word ${wordId}: No valid definition in highest priority sense`);
         }
       }
 
@@ -197,13 +197,15 @@ export class WordsService {
     const sensesWithVideos = [];
     await Promise.all(formattedWord.wordData.senses.map(async sense => {
       const listOfVideos = [];
-      await Promise.all(sense.videoIds.map(async id => {
-        console.log(id)
-        const videoId = this.mongodb.toObjectId(id)
-        const video = await this.mongodb.videos.findOne({ _id: videoId });
+      if (sense.videoIds) {
+        await Promise.all(sense.videoIds.map(async id => {
+          console.log(id)
+          const videoId = this.mongodb.toObjectId(id)
+          const video = await this.mongodb.videos.findOne({ _id: videoId });
           listOfVideos.push(video);
         })
       );
+      }
       const senseWithVideo = {
         ...sense,
         videos: listOfVideos

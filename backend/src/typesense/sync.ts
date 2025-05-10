@@ -77,12 +77,12 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
         const allTranslations = [];
         
         wordData.senses?.forEach(sense => {
-          // Process sense descriptions
-          sense.descriptions?.forEach(desc => {
-            if (desc.examples) senseExamples.push(...desc.examples);
+          // Process sense definitions
+          sense.definitions?.forEach(def => {
+            if (def.examples) senseExamples.push(...def.examples);
             
-            // Add translations linked to this sense description
-            desc.translations?.forEach(translation => {
+            // Add translations linked to this sense definition
+            def.translations?.forEach(translation => {
               allTranslations.push(`${translation.language}:${translation.translation}`);
             });
           });
@@ -178,10 +178,10 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
     const definitions: string[] = [];
     
     sortedSenses.forEach(sense => {
-      if (sense.descriptions && sense.descriptions.length > 0) {
-        sense.descriptions.forEach(desc => {
-          if (desc.description) {
-            definitions.push(desc.description);
+      if (sense.definitions && sense.definitions.length > 0) {
+        sense.definitions.forEach(def => {
+          if (def.definition) {
+            definitions.push(def.definition);
           }
         });
       }
@@ -227,12 +227,12 @@ export class TypesenseSyncService implements OnApplicationBootstrap {
       const allTranslations = [];
       
       wordData.senses?.forEach(sense => {
-        // Process sense descriptions
-        sense.descriptions?.forEach(desc => {
-          if (desc.examples) senseExamples.push(...desc.examples);
+        // Process sense definitions
+        sense.definitions?.forEach(def => {
+          if (def.examples) senseExamples.push(...def.examples);
           
-          // Add translations linked to this sense description
-          desc.translations?.forEach(translation => {
+          // Add translations linked to this sense definition
+          def.translations?.forEach(translation => {
             allTranslations.push(`${translation.language}:${translation.translation}`);
           });
         });

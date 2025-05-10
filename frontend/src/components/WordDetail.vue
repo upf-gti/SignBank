@@ -84,7 +84,7 @@
 import { ref, computed, watch } from 'vue'
 import { useQuasar } from 'quasar'
 import { debounce } from 'quasar'
-import type { Sense, Description, Video, Word } from 'src/types/database';
+import type { Sense, Definition, Video, Word } from 'src/types/database';
 import translate from 'src/utils/translate'
 import VideoPlayer from './VideoPlayer.vue'
 import SenseDetails from './SenseDetails.vue'
@@ -149,14 +149,14 @@ watch(() => props.word, (newWord) => {
 function createEmptySense(): Sense {
   return {
     priority: 0,
-    descriptions: [createEmptyDescription()],
+    definitions: [createEmptyDefinition()],
     videos: []
   }
 }
 
-function createEmptyDescription(): Description {
+function createEmptyDefinition(): Definition {
   return {
-    description: '',
+    definition: '',
     examples: [],
     translations: []
   }
@@ -204,25 +204,25 @@ function save() {
     return
   }
   
-  // Check each sense for valid descriptions
+  // Check each sense for valid definitions
   for (let i = 0; i < localWord.value.senses.length; i++) {
     const sense = localWord.value.senses[i] as Sense;
     
-    // Check if descriptions array exists and is not empty
-    if (!sense.descriptions || sense.descriptions.length === 0) {
+    // Check if definitions array exists and is not empty
+    if (!sense.definitions || sense.definitions.length === 0) {
       $q.notify({
         color: 'negative',
-        message: `${translate('word_detail.error.noDescriptions')} (${translate('word_detail.sense')} ${i + 1})`
+        message: `${translate('word_detail.error.noDefinitions')} (${translate('word_detail.sense')} ${i + 1})`
       })
       return
     }
     
-    // Check if at least one description has non-empty text
-    const hasValidDescription = sense.descriptions.some(desc => desc.description && desc.description.trim().length > 0)
-    if (!hasValidDescription) {
+    // Check if at least one definition has non-empty text
+    const hasValidDefinition = sense.definitions.some(desc => desc.definition && desc.definition.trim().length > 0)
+    if (!hasValidDefinition) {
       $q.notify({
         color: 'negative',
-        message: `${translate('word_detail.error.emptyDescription')} (${translate('word_detail.sense')} ${i + 1})`
+        message: `${translate('word_detail.error.emptyDefinition')} (${translate('word_detail.sense')} ${i + 1})`
       })
       return
     }

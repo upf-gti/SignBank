@@ -50,7 +50,7 @@
   const columns: QTableProps['columns'] = [
     { name: 'word',  label: translate('word'),  sortable: true, align: 'left', field: (row: WordRequest) => {
       return row.requestedWordData.word} },
-    { name: 'description', label: translate('description'), align: 'left', field: (row: WordRequest) => row.requestedWordData.senses[0]?.descriptions[0]?.description },
+    { name: 'definition', label: translate('definition'), align: 'left', field: (row: WordRequest) => row.requestedWordData.senses[0]?.definitions[0]?.definition },
     { name: 'status', label: translate('status'), sortable: true, align: 'left', field: (row: WordRequest) => row.status },
     { name: 'denyReason',  label: translate('denyReason'), sortable: true, align: 'left', field: (row: WordRequest) => row.denyReason }
   ]
