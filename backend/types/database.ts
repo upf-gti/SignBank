@@ -50,7 +50,7 @@ export enum Hand {
   BOTH = 'BOTH'
 }
 
-export enum WordStatus {
+export enum GlossStatus {
   PUBLISHED = 'PUBLISHED',
   ARCHIVED = 'ARCHIVED'
 }
@@ -61,121 +61,133 @@ export enum EditStatus {
   REJECTED = 'REJECTED'
 }
 
-// Embedded types
-export type SenseTranslation = {
+export type DictionaryEntry = {
+  createdAt: Date;
+  updatedAt: Date;
+  status: GlossStatus;
+  editComment?: string;
+  currentVersion: number;
+  isCreatedFromRequest: boolean;
+  isCreatedFromEdit: boolean;
+  glossRequestId?: string;
+  gloss: Gloss;
+}
+
+export type RelatedGlosses = {
+  glossId: string;
+  relationType: RelationType;
+}
+
+export type Gloss = {
+  createdAt: Date;
+  updatedAt: Date;
+  editComment?: string;
+  currentVersion: number;
+  isCreatedFromRequest: boolean;
+  isCreatedFromEdit: boolean;
+  relatedGlosses: RelatedGlosses[];
+  sense: Sense;
+
+}
+export type Sense = {
+  senseTitle: string;
+  priority: number;
+  definitions: Definition[];
+  lexicalCategory?: LexicalCategory;
+  signVideos: SignVideo[];
+};
+
+export type Definition = {
+  title?: string;
+  definition: string;
+  examples: string[];
+  translations: DefinitionTranslation[]; // Embedded translations
+  videoDefinition: VideoDefinition;
+};
+
+export type VideoDefinition = {
+  url: string;
+}
+
+export type DefinitionTranslation = {
   translation: string;
   language: Language;
 };
 
-export type Definition = {
-  definition: string;
-  examples: string[];
-  translations: SenseTranslation[]; // Embedded translations
+
+export type SignVideo = {
+  title: string
+  videos: Video[];
+  url: string;
+  priority: number;
+  videoData: {
+    hands: Hand
+    configuration: string
+    configurationChanges: string
+    relationBetweenArticulators: string
+    location: string
+    movementRelatedOrientation: string
+    locationRelatedOrientation: string
+    orientationChange: string
+    contactType: string
+    movementType: string
+    vocalization: string
+    nonManualComponent: string
+    inicialization: string
+  }
+  minimalPairs: MinimalPair[]
 };
 
+export type MinimalPair = {
+  glossId: string,
+  distinction: string
+}
 export type Video = {
   url: string;
   angle: string;
   priority: number;
-  dominantHand?: Hand;
-  facialExpression?: string;
-  hasContact?: boolean;
-  phonologicalTranscription?: string;
-  nonManualComponents?: string;
-  movementType?: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
+}
 
-export type Sense = {
-  priority: number;
-  morphologicalVariants?: string;
-  usageEra?: string;
-  usageFrequency?: string;
-  definitions: Definition[];
-  videoIds: string[]; // For storage/reference
-  lexicalCategory?: LexicalCategory;
-};
-
-export type RelatedWord = {
-  wordId: string;
-  relationType: RelationType;
-};
-
-export type Word = {
-  word: string;
-  isNative: boolean;
-  senses: Sense[];
-  relatedWords: RelatedWord[];
-  dialectId?: string;
-};
-
-// Model types
 export type User = {
-  id: string;
   username: string;
   email: string;
   password: string;
   role: Role;
   createdAt: Date;
+  accessToken: string;
+  refreshToken: string;
 };
 
-export type Dialect = {
-  id: string;
-  name: string;
-  region: string;
-  mapCoordinates?: string;
-  definition?: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export type WordEntry = {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  status: WordStatus;
-  editComment?: string;
-  currentVersion: number;
-  isCreatedFromRequest: boolean;
-  isCreatedFromEdit: boolean;
-  wordRequestId?: string;
-  wordData: Word;
-};
-
-export type WordEdit = {
-  id: string;
-  wordId: string;
-  editorId: string;
-  comment?: string;
-  status: EditStatus;
-  denyReason?: string;
-  newWordVersionId?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  currentWordData?: Word;
-  proposedWordData?: Word;
-  proposedChanges?: any; // Represented as Json in the schema
-};
-
-export type WordEditHistoric = {
-  id: string;
-  originalWordId: string;
-  archivedAt: Date;
-  wordData: any; // Represented as Json in the schema
-  versionNumber: number;
-};
-
-export type WordRequest = {
-  id: string;
+export type GlossRequest = {
   creatorId: string;
-  activeWordId?: string;
   status: RequestStatus;
   createdAt: Date;
   updatedAt: Date;
   denyReason?: string;
   acceptedById?: string;
-  denyerId?: string;
-  requestedWordData: Word;
-  wordId?: string;
+  deniedById?: string;
+  requestedGlossData: Gloss;
+  glossId?: string;
 }; 
+
+// export type GlossEdit = {
+//   glossId: string;
+//   editorId: string;
+//   comment?: string;
+//   status: EditStatus;
+//   denyReason?: string;
+//   newGlossVersionId?: string;
+//   createdAt: Date;
+//   updatedAt: Date;
+//   currentGlossData?: Gloss;
+//   proposedGlossData?: Gloss;
+//   proposedChanges?: any; // Represented as Json in the schema
+// };
+
+// export type WordEditHistoric = {
+//   id: string;
+//   originalWordId: string;
+//   archivedAt: Date;
+//   wordData: any; // Represented as Json in the schema
+//   versionNumber: number;
+// };
