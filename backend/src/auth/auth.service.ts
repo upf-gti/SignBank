@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
 import { MongoDBService } from '../mongodb/mongodb.service';
 import { User, Role } from '../../types/database';
+import { randomBytes } from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -41,8 +42,25 @@ export class AuthService {
       role: user.role
     };
     
+    // Generate refresh token
+    const refreshToken = randomBytes(40).toString('hex');
+    const accessToken = this.jwtService.sign(payload);
+    
+    // Update user with new tokens
+    await this.mongodb.users.updateOne(
+      { _id: this.mongodb.toObjectId(user.id) },
+      {
+        $set: {
+          accessToken,
+          refreshToken,
+          tokenExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
+        }
+      }
+    );
+    
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: accessToken,
+      refresh_token: refreshToken,
       user: {
         id: user.id,
         username: user.username,
@@ -74,7 +92,10 @@ export class AuthService {
       email: userData.email,
       password: hashedPassword,
       role: userData.role || Role.USER,
-      createdAt: new Date()
+      createdAt: new Date(),
+      accessToken: null,
+      refreshToken: null,
+      tokenExpiresAt: null
     };
     
     // Insert into database
@@ -109,5 +130,72 @@ export class AuthService {
     const { password: _, ...userWithoutPassword } = formattedUser;
     
     return userWithoutPassword;
+  }
+
+  async refreshTokens(refreshToken: string) {
+    // Find user with the refresh token
+    const user = await this.mongodb.users.findOne({ refreshToken });
+    if (!user) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+    
+    // Check if token is expired
+    if (new Date() > user.tokenExpiresAt) {
+      // Clear expired tokens
+      await this.mongodb.users.updateOne(
+        { _id: user._id },
+        {
+          $set: {
+            accessToken: null,
+            refreshToken: null,
+            tokenExpiresAt: null
+          }
+        }
+      );
+      throw new UnauthorizedException('Refresh token expired');
+    }
+    
+    const formattedUser = this.mongodb.formatDocument<User>(user);
+    // Generate new tokens
+    const payload = {
+      email: formattedUser.email,
+      sub: formattedUser.id,
+      role: formattedUser.role
+    };
+    
+    const newAccessToken = this.jwtService.sign(payload);
+    const newRefreshToken = randomBytes(40).toString('hex');
+    
+    // Update user with new tokens
+    await this.mongodb.users.updateOne(
+      { _id: user._id },
+      {
+        $set: {
+          accessToken: newAccessToken,
+          refreshToken: newRefreshToken,
+          tokenExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
+        }
+      }
+    );
+    
+    return {
+      access_token: newAccessToken,
+      refresh_token: newRefreshToken
+    };
+  }
+
+  async logout(userId: string) {
+    // Clear tokens from user document
+    await this.mongodb.users.updateOne(
+      { _id: this.mongodb.toObjectId(userId) },
+      {
+        $set: {
+          accessToken: null,
+          refreshToken: null,
+          tokenExpiresAt: null
+        }
+      }
+    );
+    return { message: 'Logged out successfully' };
   }
 }

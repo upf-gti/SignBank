@@ -1,11 +1,20 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import { MongoClient, Db, Collection, ObjectId } from 'mongodb';
+import { MongoClient, Db, Collection, ObjectId, Document } from 'mongodb';
+import { 
+  User, 
+  GlossRequest, 
+  DictionaryEntry
+} from '../../types/database';
 
 @Injectable()
 export class MongoDBService implements OnModuleInit, OnModuleDestroy {
   private client: MongoClient;
   private db: Db;
-  private collections: Record<string, Collection> = {};
+  private collections: {
+    users: Collection<User>;
+    dictionaryEntries: Collection<DictionaryEntry>;
+    glossRequests: Collection<GlossRequest>;
+  };
   private isConnected = false;
 
   constructor() {
@@ -31,15 +40,11 @@ export class MongoDBService implements OnModuleInit, OnModuleDestroy {
       this.db = this.client.db();
       this.isConnected = true;
       
-      // Initialize collections
+      // Initialize collections based on new schema
       this.collections = {
-        users: this.db.collection('users'),
-        dialects: this.db.collection('dialects'),
-        words: this.db.collection('words'),
-        wordEdits: this.db.collection('wordEdits'),
-        wordEditHistoric: this.db.collection('wordEditHistoric'),
-        wordRequests: this.db.collection('wordRequests'),
-        videos: this.db.collection('videos')
+        users: this.db.collection<User>('users'),
+        dictionaryEntries: this.db.collection<DictionaryEntry>('dictionaryEntries'),
+        glossRequests: this.db.collection<GlossRequest>('glossRequests'),
       };
       
     } catch (error) {
@@ -60,39 +65,23 @@ export class MongoDBService implements OnModuleInit, OnModuleDestroy {
   }
 
   // Get MongoDB collections
-  get users(): Collection {
+  get users(): Collection<User> {
     return this.collections.users;
   }
 
-  get dialects(): Collection {
-    return this.collections.dialects;
+  get dictionaryEntries(): Collection<DictionaryEntry> {
+    return this.collections.dictionaryEntries;
   }
 
-  get words(): Collection {
-    return this.collections.words;
-  }
-
-  get wordEdits(): Collection {
-    return this.collections.wordEdits;
-  }
-
-  get wordEditHistoric(): Collection {
-    return this.collections.wordEditHistoric;
-  }
-
-  get wordRequests(): Collection {
-    return this.collections.wordRequests;
-  }
-
-  get videos(): Collection {
-    return this.collections.videos;
+  get glossRequests(): Collection<GlossRequest> {
+    return this.collections.glossRequests;
   }
 
   // Helper to convert string IDs to ObjectIds
   toObjectId(id: string): ObjectId {
     return ObjectId.createFromHexString(id);
   }
-
+  
   // Helper to convert ObjectIds to strings in retrieved documents
   formatDocument<T>(doc: any): T {
     if (!doc) return doc;
@@ -141,9 +130,11 @@ export class MongoDBService implements OnModuleInit, OnModuleDestroy {
 
     // Convert string IDs to ObjectIds in specific fields
     const objectIdFields = [
-      'wordId', 'editorId', 'creatorId', 'newWordVersionId', 
-      'acceptedById', 'denyerId', 'originalWordId', 'activeWordId',
-      'dialectId', 'wordRequestId'
+      'glossId',
+      'creatorId',
+      'acceptedById',
+      'deniedById',
+      'glossRequestId'
     ];
     
     objectIdFields.forEach(field => {
@@ -152,17 +143,15 @@ export class MongoDBService implements OnModuleInit, OnModuleDestroy {
         if (typeof result[field] === 'string' && /^[0-9a-fA-F]{24}$/.test(result[field])) {
           result[field] = ObjectId.createFromHexString(result[field]);
         }
-        // If not a valid ObjectId string, leave it as is to be handled by the application
       }
     });
 
     // Handle nested documents
-    if (result.wordData?.relatedWords) {
-      result.wordData.relatedWords = result.wordData.relatedWords.map((rel: any) => {
+    if (result.gloss?.relatedGlosses) {
+      result.gloss.relatedGlosses = result.gloss.relatedGlosses.map((rel: any) => {
         const mapped = { ...rel };
-        // Check if wordId is a valid ObjectId string before converting
-        if (rel.wordId && typeof rel.wordId === 'string' && /^[0-9a-fA-F]{24}$/.test(rel.wordId)) {
-          mapped.wordId = ObjectId.createFromHexString(rel.wordId);
+        if (rel.glossId && typeof rel.glossId === 'string' && /^[0-9a-fA-F]{24}$/.test(rel.glossId)) {
+          mapped.glossId = ObjectId.createFromHexString(rel.glossId);
         }
         return mapped;
       });

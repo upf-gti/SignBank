@@ -14,8 +14,8 @@ import { JwtGuard } from './guard/jwt.guard';
       session: false 
     }),
     JwtModule.register({
-      secret: 'super-secret', // Match the secret key in JwtStrategy
-      signOptions: { expiresIn: '1d' },
+      secret: process.env.JWT_SECRET || 'super-secret',
+      signOptions: { expiresIn: '15m' }, // Access tokens expire in 15 minutes
     }),
   ],
   providers: [AuthService, JwtStrategy, JwtGuard],

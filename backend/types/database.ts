@@ -62,6 +62,7 @@ export enum EditStatus {
 }
 
 export type DictionaryEntry = {
+  id?: string;
   createdAt: Date;
   updatedAt: Date;
   status: GlossStatus;
@@ -149,6 +150,7 @@ export type Video = {
 }
 
 export type User = {
+  id?: string;
   username: string;
   email: string;
   password: string;
@@ -156,9 +158,11 @@ export type User = {
   createdAt: Date;
   accessToken: string;
   refreshToken: string;
+  tokenExpiresAt: Date;
 };
 
 export type GlossRequest = {
+  id?: string;
   creatorId: string;
   status: RequestStatus;
   createdAt: Date;
