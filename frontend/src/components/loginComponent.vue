@@ -69,7 +69,7 @@
               color="primary"              
               :label="translate('login')"
               class="full-width"
-              :loading="loading"
+              :loading="isLoading"
             />
           </div>
         </q-form>
@@ -81,10 +81,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { Notify } from 'quasar'
-import api from '../services/api'
-import useUser from 'src/stores/user.store'
+import { useAuthentication } from '../hooks/useAuthentication'
 import translate from '../utils/translate'
-const userStore = useUser()
 
 // Props
 const props = defineProps({
@@ -102,7 +100,6 @@ const email = ref('')
 const password = ref('')
 const isPwd = ref(true)
 const rememberMe = ref(false)
-const loading = ref(false)
 
 // Computed
 const isOpen = computed({
@@ -110,16 +107,12 @@ const isOpen = computed({
   set: (value: boolean) => emit('update:modelValue', value)
 })
 
+const { login, isLoading, error } = useAuthentication()
+
 // Methods
 const handleLogin = async () => {
   try {
-    loading.value = true
-    const { data: response } = await api.login({
-      email: email.value,
-      password: password.value
-    })
-    userStore.setUserData(response)    
-
+    await login(email.value, password.value)
     Notify.create({
       type: 'positive',
       message: 'Login successful'
@@ -132,16 +125,11 @@ const handleLogin = async () => {
     email.value = ''
     password.value = ''
     rememberMe.value = false
-
-    // Handle successful login (e.g., redirect, store token, etc.)
-  } catch (error) {
-    console.log(error)
+  } catch {
     Notify.create({
       type: 'negative',
-      message: 'Login failed. Please check your credentials.'
+      message: error.value || 'Login failed. Please check your credentials.'
     })
-  } finally {
-    loading.value = false
   }
 }
 </script>

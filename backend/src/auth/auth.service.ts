@@ -133,6 +133,9 @@ export class AuthService {
   }
 
   async refreshTokens(refreshToken: string) {
+    if (!refreshToken) {
+      throw new Error('No refresh token provided');
+    }
     // Find user with the refresh token
     const user = await this.mongodb.users.findOne({ refreshToken });
     if (!user) {

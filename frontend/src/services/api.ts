@@ -11,6 +11,9 @@ export const api = {
   register(credentials: { username: string, email: string, password: string }) {
     return apiClient.post('/auth/register', credentials)
   },
+  refreshToken() {
+    return apiClient.post('/auth/refresh')
+  },
   wordRequests: {
     get(id?: string): Promise<AxiosResponse<WordRequest | WordRequest[]>> {
       return apiClient.get(`/word-requests${id ? `/${id}` : ''}`)

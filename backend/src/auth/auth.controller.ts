@@ -33,6 +33,7 @@ export class AuthController {
   @Public()
   @Post('refresh')
   async refreshTokens(@Body() body: { refresh_token: string }) {
+    debugger
     return this.authService.refreshTokens(body.refresh_token);
   }
 
