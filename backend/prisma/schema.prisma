@@ -65,18 +65,19 @@ enum EditStatus {
 }
 
 model User {
-    id               String         @id @default(uuid())
-    username         String         @unique
-    email            String         @unique
-    password         String
-    role             Role           @default(USER)
-    createdAt        DateTime       @default(now())
-    accessToken      String?
-    refreshToken     String?
-    tokenExpiresAt   DateTime?
-    glossRequests    GlossRequest[] @relation("Creator")
-    acceptedRequests GlossRequest[] @relation("Acceptor")
-    deniedRequests   GlossRequest[] @relation("Denier")
+    id                    String         @id @default(uuid())
+    username              String         @unique
+    email                 String         @unique
+    password              String
+    role                  Role           @default(USER)
+    createdAt             DateTime       @default(now())
+    accessToken           String?
+    refreshToken          String?
+    tokenExpiresAt        DateTime?
+    refreshTokenExpiresAt DateTime?
+    glossRequests         GlossRequest[] @relation("Creator")
+    acceptedRequests      GlossRequest[] @relation("Acceptor")
+    deniedRequests        GlossRequest[] @relation("Denier")
 }
 
 model DictionaryEntry {
@@ -131,12 +132,20 @@ model Definition {
     id                String                  @id @default(uuid())
     title             String?
     definition        String
-    examples          String[]
     translations      DefinitionTranslation[]
     videoDefinition   VideoDefinition         @relation(fields: [videoDefinitionId], references: [id])
     videoDefinitionId String                  @unique
     sense             Sense                   @relation(fields: [senseId], references: [id])
     senseId           String
+    examples          Example[]
+}
+
+model Example {
+    id              String     @id @default(uuid())
+    example         String
+    exampleVideoURL String
+    definition      Definition @relation(fields: [definitionId], references: [id])
+    definitionId    String
 }
 
 model VideoDefinition {

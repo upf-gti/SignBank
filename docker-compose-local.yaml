@@ -11,7 +11,7 @@ services:
     container_name: backend
     environment:
       - PORT=443
-      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_URL=${DATABASE_URL_DOCKER}
       - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}
       - BASE_URL=${BASE_URL}
     ports:
@@ -25,6 +25,7 @@ services:
       - /app/node_modules #Exclude node_modules directory
     depends_on:
       - typesense
+      - postgres
     
   frontend:
     build:

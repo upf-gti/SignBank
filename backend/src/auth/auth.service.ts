@@ -34,7 +34,8 @@ export class AuthService {
     await this.users.update(user.id, {
       accessToken,
       refreshToken,
-      tokenExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+      tokenExpiresAt: new Date(Date.now() + 60 * 1000),
+      refreshTokenExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
     });
 
     return {
@@ -76,6 +77,7 @@ export class AuthService {
   }
 
   async refreshTokens(refreshToken: string) {
+    debugger
     if (!refreshToken) throw new Error('No refresh token provided');
     const user = await this.users.findAll().then(users => users.find(u => u.refreshToken === refreshToken));
     if (!user) throw new UnauthorizedException('Invalid refresh token');
@@ -83,7 +85,8 @@ export class AuthService {
       await this.users.update(user.id, {
         accessToken: null,
         refreshToken: null,
-        tokenExpiresAt: null
+        tokenExpiresAt: null,
+        refreshTokenExpiresAt: null
       });
       throw new UnauthorizedException('Refresh token expired');
     }
@@ -97,7 +100,8 @@ export class AuthService {
     await this.users.update(user.id, {
       accessToken: newAccessToken,
       refreshToken: newRefreshToken,
-      tokenExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+      tokenExpiresAt: new Date(Date.now() + 60 * 1000),
+      refreshTokenExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
     });
     return {
       access_token: newAccessToken,
@@ -109,7 +113,8 @@ export class AuthService {
     await this.users.update(userId, {
       accessToken: null,
       refreshToken: null,
-      tokenExpiresAt: null
+      tokenExpiresAt: null,
+      refreshTokenExpiresAt: null
     });
     return { message: 'Logged out successfully' };
   }

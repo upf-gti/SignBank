@@ -2,12 +2,12 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { MongoDBService } from '../../mongodb/mongodb.service';
 import { User } from '../../../types/database';
+import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor(private readonly mongodb: MongoDBService) {
+  constructor(private readonly prisma: PrismaService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: 'super-secret',
@@ -20,19 +20,17 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     }
 
     try {
-      const objectId = this.mongodb.toObjectId(payload.sub);
-      
       // Find the user by ID from the token payload
-      const user = await this.mongodb.users.findOne({ _id: objectId });
+      const user = await this.prisma.user.findUnique({
+        where: { id: payload.sub }
+      });
+      
       if (!user) {
         throw new UnauthorizedException('User not found');
       }
       
-      // Format the document and remove sensitive data
-      const formattedUser = this.mongodb.formatDocument<User>(user);
-      
       // Remove password from user object
-      const { password, ...userWithoutPassword } = formattedUser;
+      const { password, ...userWithoutPassword } = user;
       
       return {
         ...userWithoutPassword,

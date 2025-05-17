@@ -1,9 +1,8 @@
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
-import { MongoDBService } from '../mongodb/mongodb.service';
-
+import { PrismaService } from '../prisma/prisma.service';
 @Injectable()
 export class TypesenseSyncService implements OnApplicationBootstrap {
-  constructor(private readonly mongodb: MongoDBService) {}
+  constructor(private readonly prisma: PrismaService) {}
   onApplicationBootstrap() {
     this.syncWordsToTypesense();
   }

@@ -65,6 +65,9 @@
   "license": "UNLICENSED",
   "name": "sign-bank-backend",
   "private": true,
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
