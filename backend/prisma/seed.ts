@@ -6,15 +6,16 @@ const prisma = new PrismaClient();
 async function main() {
   // Delete all existing data
   await prisma.$transaction([
-    prisma.dictionaryEntry.deleteMany(),
-    prisma.relatedGloss.deleteMany(),
-    prisma.gloss.deleteMany(),
+    prisma.example.deleteMany(),
     prisma.definitionTranslation.deleteMany(),
     prisma.definition.deleteMany(),
     prisma.video.deleteMany(),
     prisma.minimalPair.deleteMany(),
     prisma.signVideo.deleteMany(),
     prisma.videoDefinition.deleteMany(),
+    prisma.dictionaryEntry.deleteMany(),
+    prisma.relatedGloss.deleteMany(),
+    prisma.gloss.deleteMany(),
     prisma.sense.deleteMany(),
     prisma.glossRequest.deleteMany(),
     prisma.user.deleteMany(),
@@ -132,13 +133,28 @@ async function main() {
           title: `${sense.senseTitle} Sign Video`,
           url: `https://example.com/videos/${sense.senseTitle.toLowerCase()}-sign.mp4`,
           priority: 1,
-          videoData: {
-            hand: Hand.RIGHT,
-            speed: 'normal',
-            location: 'neutral space',
-            movement: 'single movement',
+          sense: {
+            connect: {
+              id: sense.id
+            }
           },
-          senseId: sense.id,
+          videoData: {
+            create: {
+              hands: Hand.RIGHT,
+              configuration: "default",
+              configurationChanges: "none",
+              relationBetweenArticulators: "none",
+              location: "neutral space",
+              movementRelatedOrientation: "forward",
+              locationRelatedOrientation: "neutral",
+              orientationChange: "none",
+              contactType: "none",
+              movementType: "single",
+              vocalization: "none",
+              nonManualComponent: "none",
+              inicialization: "none"
+            }
+          },
           videos: {
             create: [
               {

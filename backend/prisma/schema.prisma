@@ -108,6 +108,8 @@ model Gloss {
     sense                Sense            @relation(fields: [senseId], references: [id])
     senseId              String           @unique
     RelatedGloss         RelatedGloss[]
+
+    MinimalPair MinimalPair[]
 }
 
 model RelatedGloss {
@@ -168,10 +170,29 @@ model SignVideo {
     videos       Video[]
     url          String
     priority     Int           @default(0)
-    videoData    Json // Using Json type for complex nested data
+    videoData    VideoData     @relation(fields: [videoDataid], references: [id]) // Using Json type for complex nested data
+    videoDataid  String
     minimalPairs MinimalPair[]
     sense        Sense         @relation(fields: [senseId], references: [id])
     senseId      String
+}
+
+model VideoData {
+    hands                       Hand
+    configuration               String
+    configurationChanges        String
+    relationBetweenArticulators String
+    location                    String
+    movementRelatedOrientation  String
+    locationRelatedOrientation  String
+    orientationChange           String
+    contactType                 String
+    movementType                String
+    vocalization                String
+    nonManualComponent          String
+    inicialization              String
+    signVideo                   SignVideo[]
+    id                          String      @id @default(uuid())
 }
 
 model Video {
@@ -184,11 +205,13 @@ model Video {
 }
 
 model MinimalPair {
-    id          String    @id @default(uuid())
+    id          String @id @default(uuid())
+    gloss       Gloss  @relation(fields: [glossId], references: [id])
     glossId     String
     distinction String
-    signVideo   SignVideo @relation(fields: [signVideoId], references: [id])
-    signVideoId String
+
+    SignVideo   SignVideo? @relation(fields: [signVideoId], references: [id])
+    signVideoId String?
 }
 
 model GlossRequest {
