@@ -3,11 +3,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { TypesenseSyncService } from './typesense/sync';
-import { MongoDBModule } from './mongodb/mongodb.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
-    MongoDBModule,
+    PrismaModule,
     AuthModule, 
   ],
   controllers: [AppController],
