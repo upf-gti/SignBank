@@ -1,0 +1,201 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+enum Role {
+    ADMIN
+    USER
+}
+
+enum RequestStatus {
+    PENDING
+    ACCEPTED
+    DENIED
+}
+
+enum Language {
+    CATALAN
+    SPANISH
+    ENGLISH
+    OTHER
+}
+
+enum LexicalCategory {
+    NOUN
+    VERB
+    ADJECTIVE
+    ADVERB
+    PRONOUN
+    DETERMINER
+    PREPOSITION
+    CONJUNCTION
+    INTERJECTION
+    OTHER
+}
+
+enum RelationType {
+    SYNONYM
+    REGIONAL_VARIANT
+    ASSOCIATED_CONCEPT
+    ANTONYM
+    HYPERNYM
+    HYPONYM
+}
+
+enum Hand {
+    RIGHT
+    LEFT
+    BOTH
+}
+
+enum GlossStatus {
+    PUBLISHED
+    ARCHIVED
+}
+
+enum EditStatus {
+    PENDING
+    APPROVED
+    REJECTED
+}
+
+model User {
+    id               String         @id @default(uuid())
+    username         String         @unique
+    email            String         @unique
+    password         String
+    role             Role           @default(USER)
+    createdAt        DateTime       @default(now())
+    accessToken      String?
+    refreshToken     String?
+    tokenExpiresAt   DateTime?
+    glossRequests    GlossRequest[] @relation("Creator")
+    acceptedRequests GlossRequest[] @relation("Acceptor")
+    deniedRequests   GlossRequest[] @relation("Denier")
+}
+
+model DictionaryEntry {
+    id                   String        @id @default(uuid())
+    createdAt            DateTime      @default(now())
+    updatedAt            DateTime      @updatedAt
+    status               GlossStatus   @default(PUBLISHED)
+    editComment          String?
+    currentVersion       Int           @default(1)
+    isCreatedFromRequest Boolean       @default(false)
+    isCreatedFromEdit    Boolean       @default(false)
+    glossRequest         GlossRequest? @relation(fields: [glossRequestId], references: [id])
+    glossRequestId       String?       @unique
+    gloss                Gloss         @relation(fields: [glossId], references: [id])
+    glossId              String        @unique
+}
+
+model Gloss {
+    id                   String           @id @default(uuid())
+    createdAt            DateTime         @default(now())
+    updatedAt            DateTime         @updatedAt
+    editComment          String?
+    currentVersion       Int              @default(1)
+    isCreatedFromRequest Boolean          @default(false)
+    isCreatedFromEdit    Boolean          @default(false)
+    dictionaryEntry      DictionaryEntry?
+    glossRequest         GlossRequest?
+    sense                Sense            @relation(fields: [senseId], references: [id])
+    senseId              String           @unique
+    RelatedGloss         RelatedGloss[]
+}
+
+model RelatedGloss {
+    id             String       @id @default(uuid())
+    gloss          Gloss        @relation(fields: [glossId], references: [id])
+    glossId        String
+    relatedGlossId String
+    relationType   RelationType
+}
+
+model Sense {
+    id              String           @id @default(uuid())
+    senseTitle      String
+    priority        Int              @default(0)
+    definitions     Definition[]
+    lexicalCategory LexicalCategory?
+    signVideos      SignVideo[]
+    gloss           Gloss?
+}
+
+model Definition {
+    id                String                  @id @default(uuid())
+    title             String?
+    definition        String
+    examples          String[]
+    translations      DefinitionTranslation[]
+    videoDefinition   VideoDefinition         @relation(fields: [videoDefinitionId], references: [id])
+    videoDefinitionId String                  @unique
+    sense             Sense                   @relation(fields: [senseId], references: [id])
+    senseId           String
+}
+
+model VideoDefinition {
+    id         String      @id @default(uuid())
+    url        String
+    definition Definition?
+}
+
+model DefinitionTranslation {
+    id           String     @id @default(uuid())
+    translation  String
+    language     Language
+    definition   Definition @relation(fields: [definitionId], references: [id])
+    definitionId String
+}
+
+model SignVideo {
+    id           String        @id @default(uuid())
+    title        String
+    videos       Video[]
+    url          String
+    priority     Int           @default(0)
+    videoData    Json // Using Json type for complex nested data
+    minimalPairs MinimalPair[]
+    sense        Sense         @relation(fields: [senseId], references: [id])
+    senseId      String
+}
+
+model Video {
+    id          String    @id @default(uuid())
+    url         String
+    angle       String
+    priority    Int       @default(0)
+    signVideo   SignVideo @relation(fields: [signVideoId], references: [id])
+    signVideoId String
+}
+
+model MinimalPair {
+    id          String    @id @default(uuid())
+    glossId     String
+    distinction String
+    signVideo   SignVideo @relation(fields: [signVideoId], references: [id])
+    signVideoId String
+}
+
+model GlossRequest {
+    id                   String           @id @default(uuid())
+    creator              User             @relation("Creator", fields: [creatorId], references: [id])
+    creatorId            String
+    status               RequestStatus    @default(PENDING)
+    createdAt            DateTime         @default(now())
+    updatedAt            DateTime         @updatedAt
+    denyReason           String?
+    acceptedBy           User?            @relation("Acceptor", fields: [acceptedById], references: [id])
+    acceptedById         String?
+    deniedBy             User?            @relation("Denier", fields: [deniedById], references: [id])
+    deniedById           String?
+    requestedGlossData   Gloss            @relation(fields: [requestedGlossDataId], references: [id])
+    requestedGlossDataId String           @unique
+    glossId              String?
+    dictionaryEntry      DictionaryEntry?
+}

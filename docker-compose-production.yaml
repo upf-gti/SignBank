@@ -36,22 +36,19 @@ services:
       - signbank    
     restart: always  # Add restart policy
 
-  mongoDB:
-    image: mongo
-    container_name: mongoDB
-    hostname: mongoDB
+  postgres:
+    image: postgres:16
+    container_name: postgres-prod
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-      MONGO_REPLICA_SET_NAME: rs0
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-signbank_prod}
     networks:
       - signbank
     volumes:
-      - ./mongoDB/data:/data/db
-      - ./mongoDB/init-rs.sh:/init-rs.sh
+      - postgres_prod_data:/var/lib/postgresql/data
     ports:
-      - 27017:27017
-    command: bash /init-rs.sh
+      - "5432:5432"
     restart: always
 
   typesense:
@@ -94,5 +91,5 @@ services:
     restart: always
 
 volumes:
-  database:
+  postgres_prod_data:
   typesense_data:
