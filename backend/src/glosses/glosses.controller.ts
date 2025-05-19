@@ -7,7 +7,6 @@ export class GlossesController {
 
   @Get(':id')
   async getGlossById(@Param('id') id: string) {
-    debugger
     return this.glossesService.getGlossById(id);
   }
 } 

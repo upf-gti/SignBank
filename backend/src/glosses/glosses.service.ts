@@ -6,28 +6,69 @@ export class GlossesService {
   constructor(private prisma: PrismaService) {}
 
   async getGlossById(id: string) {
-    const gloss = await this.prisma.gloss.findUnique({
+    const gloss = await this.prisma.glossData.findUnique({
       where: { id },
       include: {
-        sense: {
+        senses: {
           include: {
-                definitions: {
+            definitions: {
+              include: {
+                definitionTranslations: true,
+                videoDefinition: true,
+              },
+            },
+            signVideos: {
+              include: {
+                videos: true,
+                minimalPairs: true,
+                videoData: true,
+              },
+            },
+            examples: {
+              include: {
+                exampleTranslations: true,
+              },
+            },
+            senseTranslations: true,
+          },
+        },
+        relatedGlosses: {
+          include: {
+            relatedGloss: {
+              include: {
+                senses: {
                   include: {
-                    translations: true,
-                    examples: true,
-                    videoDefinition: true,
-                  },
-                },
-                signVideos: {
-                  include: {
-                    videos: true,
-                    minimalPairs: true,
+                    signVideos: true,
                   },
                 },
               },
             },
-            RelatedGloss: true,
           },
+          omit: {
+            glossId: true,
+            id: true,
+          },
+        },
+        minimalPairs: {
+          include: {
+            minimalPairGlossData: {
+              include: {
+                senses: {
+                  include: {
+                    signVideos: true,
+                  },
+                },
+              },
+            },
+          },
+          omit: {
+            glossDataId: true,
+            id: true,
+          },
+        },
+        dictionaryEntry: true,
+        glossRequest: true,
+      },
     });
 
     if (!gloss) {

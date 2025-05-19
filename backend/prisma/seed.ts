@@ -6,6 +6,8 @@ const prisma = new PrismaClient();
 async function main() {
   // Delete all existing data
   await prisma.$transaction([
+    prisma.exampleTranslation.deleteMany(),
+    prisma.senseTranslation.deleteMany(),
     prisma.example.deleteMany(),
     prisma.definitionTranslation.deleteMany(),
     prisma.definition.deleteMany(),
@@ -15,8 +17,8 @@ async function main() {
     prisma.videoDefinition.deleteMany(),
     prisma.dictionaryEntry.deleteMany(),
     prisma.relatedGloss.deleteMany(),
-    prisma.gloss.deleteMany(),
     prisma.sense.deleteMany(),
+    prisma.glossData.deleteMany(),
     prisma.glossRequest.deleteMany(),
     prisma.user.deleteMany(),
   ]);
@@ -47,6 +49,34 @@ async function main() {
     },
   });
 
+  // Create gloss data for each sign
+  const glossData = await Promise.all([
+    prisma.glossData.create({
+      data: {
+        gloss: 'HELLO',
+        currentVersion: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    }),
+    prisma.glossData.create({
+      data: {
+        gloss: 'THANK_YOU',
+        currentVersion: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    }),
+    prisma.glossData.create({
+      data: {
+        gloss: 'GOOD',
+        currentVersion: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    }),
+  ]);
+
   // Create multiple senses for different signs
   const senses = await Promise.all([
     prisma.sense.create({
@@ -54,6 +84,67 @@ async function main() {
         senseTitle: 'Hello',
         priority: 1,
         lexicalCategory: LexicalCategory.INTERJECTION,
+        glossDataId: glossData[0].id,
+        senseTranslations: {
+          create: [
+            {
+              translation: 'Hola',
+              language: Language.SPANISH,
+            },
+            {
+              translation: 'Hola',
+              language: Language.CATALAN,
+            },
+            {
+              translation: 'Hello',
+              language: Language.ENGLISH,
+            },
+          ],
+        },
+        examples: {
+          create: [
+            {
+              example: 'Example of using Hello',
+              exampleVideoURL: 'https://signbank.upf.com/lscassets/videos/LSC_-_Camell.mp4',
+              exampleTranslations: {
+                create: [
+                  {
+                    translation: 'Ejemplo de uso de Hola',
+                    language: Language.SPANISH,
+                  },
+                  {
+                    translation: 'Exemple d\'ús de Hola',
+                    language: Language.CATALAN,
+                  },
+                  {
+                    translation: 'Example of using Hello',
+                    language: Language.ENGLISH,
+                  },
+                ],
+              },
+            },
+            {
+              example: 'Another example with Hello',
+              exampleVideoURL: 'https://signbank.upf.com/lscassets/videos/LSC_-_Cames.mp4',
+              exampleTranslations: {
+                create: [
+                  {
+                    translation: 'Otro ejemplo con Hola',
+                    language: Language.SPANISH,
+                  },
+                  {
+                    translation: 'Un altre exemple amb Hola',
+                    language: Language.CATALAN,
+                  },
+                  {
+                    translation: 'Another example with Hello',
+                    language: Language.ENGLISH,
+                  },
+                ],
+              },
+            },
+          ],
+        },
       },
     }),
     prisma.sense.create({
@@ -61,6 +152,67 @@ async function main() {
         senseTitle: 'Thank you',
         priority: 1,
         lexicalCategory: LexicalCategory.INTERJECTION,
+        glossDataId: glossData[1].id,
+        senseTranslations: {
+          create: [
+            {
+              translation: 'Gracias',
+              language: Language.SPANISH,
+            },
+            {
+              translation: 'Gràcies',
+              language: Language.CATALAN,
+            },
+            {
+              translation: 'Thank you',
+              language: Language.ENGLISH,
+            },
+          ],
+        },
+        examples: {
+          create: [
+            {
+              example: 'Example of using Thank you',
+              exampleVideoURL: 'https://signbank.upf.com/lscassets/videos/LSC_-_Camell.mp4',
+              exampleTranslations: {
+                create: [
+                  {
+                    translation: 'Ejemplo de uso de Gracias',
+                    language: Language.SPANISH,
+                  },
+                  {
+                    translation: 'Exemple d\'ús de Gràcies',
+                    language: Language.CATALAN,
+                  },
+                  {
+                    translation: 'Example of using Thank you',
+                    language: Language.ENGLISH,
+                  },
+                ],
+              },
+            },
+            {
+              example: 'Another example with Thank you',
+              exampleVideoURL: 'https://signbank.upf.com/lscassets/videos/LSC_-_Cames.mp4',
+              exampleTranslations: {
+                create: [
+                  {
+                    translation: 'Otro ejemplo con Gracias',
+                    language: Language.SPANISH,
+                  },
+                  {
+                    translation: 'Un altre exemple amb Gràcies',
+                    language: Language.CATALAN,
+                  },
+                  {
+                    translation: 'Another example with Thank you',
+                    language: Language.ENGLISH,
+                  },
+                ],
+              },
+            },
+          ],
+        },
       },
     }),
     prisma.sense.create({
@@ -68,6 +220,135 @@ async function main() {
         senseTitle: 'Good',
         priority: 1,
         lexicalCategory: LexicalCategory.ADJECTIVE,
+        glossDataId: glossData[2].id,
+        senseTranslations: {
+          create: [
+            {
+              translation: 'Bueno',
+              language: Language.SPANISH,
+            },
+            {
+              translation: 'Bo',
+              language: Language.CATALAN,
+            },
+            {
+              translation: 'Good',
+              language: Language.ENGLISH,
+            },
+          ],
+        },
+        examples: {
+          create: [
+            {
+              example: 'Example of using Good',
+              exampleVideoURL: 'https://signbank.upf.com/lscassets/videos/LSC_-_Camell.mp4',
+              exampleTranslations: {
+                create: [
+                  {
+                    translation: 'Ejemplo de uso de Bueno',
+                    language: Language.SPANISH,
+                  },
+                  {
+                    translation: 'Exemple d\'ús de Bo',
+                    language: Language.CATALAN,
+                  },
+                  {
+                    translation: 'Example of using Good',
+                    language: Language.ENGLISH,
+                  },
+                ],
+              },
+            },
+            {
+              example: 'Another example with Good',
+              exampleVideoURL: 'https://signbank.upf.com/lscassets/videos/LSC_-_Cames.mp4',
+              exampleTranslations: {
+                create: [
+                  {
+                    translation: 'Otro ejemplo con Bueno',
+                    language: Language.SPANISH,
+                  },
+                  {
+                    translation: 'Un altre exemple amb Bo',
+                    language: Language.CATALAN,
+                  },
+                  {
+                    translation: 'Another example with Good',
+                    language: Language.ENGLISH,
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    }),
+    prisma.sense.create({
+      data: {
+        senseTitle: 'Well',
+        priority: 2,
+        lexicalCategory: LexicalCategory.ADVERB,
+        glossDataId: glossData[2].id,
+        senseTranslations: {
+          create: [
+            {
+              translation: 'Bien',
+              language: Language.SPANISH,
+            },
+            {
+              translation: 'Bé',
+              language: Language.CATALAN,
+            },
+            {
+              translation: 'Well',
+              language: Language.ENGLISH,
+            },
+          ],
+        },
+        examples: {
+          create: [
+            {
+              example: 'Example of using Well',
+              exampleVideoURL: 'https://signbank.upf.com/lscassets/videos/LSC_-_Camell.mp4',
+              exampleTranslations: {
+                create: [
+                  {
+                    translation: 'Ejemplo de uso de Bien',
+                    language: Language.SPANISH,
+                  },
+                  {
+                    translation: 'Exemple d\'ús de Bé',
+                    language: Language.CATALAN,
+                  },
+                  {
+                    translation: 'Example of using Well',
+                    language: Language.ENGLISH,
+                  },
+                ],
+              },
+            },
+            {
+              example: 'Another example with Well',
+              exampleVideoURL: 'https://signbank.upf.com/lscassets/videos/LSC_-_Cames.mp4',
+              exampleTranslations: {
+                create: [
+                  {
+                    translation: 'Otro ejemplo con Bien',
+                    language: Language.SPANISH,
+                  },
+                  {
+                    translation: 'Un altre exemple amb Bé',
+                    language: Language.CATALAN,
+                  },
+                  {
+                    translation: 'Another example with Well',
+                    language: Language.ENGLISH,
+                  },
+                ],
+              },
+            },
+          ],
+        },
       },
     }),
   ]);
@@ -77,7 +358,7 @@ async function main() {
     senses.map((sense) =>
       prisma.videoDefinition.create({
         data: {
-          url: `https://example.com/videos/${sense.senseTitle.toLowerCase()}-definition.mp4`,
+          url: `https://signbank.upf.com/lscassets/videos/LSC_-_Cafe.mp4`,
         },
       })
     )
@@ -92,7 +373,7 @@ async function main() {
           definition: `Definition for the sign "${sense.senseTitle}"`,
           videoDefinitionId: videoDefinitions[index].id,
           senseId: sense.id,
-          translations: {
+          definitionTranslations: {
             create: [
               {
                 translation: `${sense.senseTitle} in Spanish`,
@@ -108,18 +389,6 @@ async function main() {
               },
             ],
           },
-          examples: {
-            create: [
-              {
-                example: `Example of using ${sense.senseTitle}`,
-                exampleVideoURL: `https://example.com/videos/${sense.senseTitle.toLowerCase()}-example1.mp4`,
-              },
-              {
-                example: `Another example with ${sense.senseTitle}`,
-                exampleVideoURL: `https://example.com/videos/${sense.senseTitle.toLowerCase()}-example2.mp4`,
-              },
-            ],
-          },
         },
       })
     )
@@ -131,7 +400,7 @@ async function main() {
       prisma.signVideo.create({
         data: {
           title: `${sense.senseTitle} Sign Video`,
-          url: `https://example.com/videos/${sense.senseTitle.toLowerCase()}-sign.mp4`,
+          url: `https://signbank.upf.com/lscassets/videos/LSC_-_Cami.mp4`,
           priority: 1,
           sense: {
             connect: {
@@ -158,17 +427,17 @@ async function main() {
           videos: {
             create: [
               {
-                url: `https://example.com/videos/${sense.senseTitle.toLowerCase()}-front.mp4`,
+                url: `https://signbank.upf.com/lscassets/videos/LSC_-_Cap.mp4`,
                 angle: 'front',
                 priority: 1,
               },
               {
-                url: `https://example.com/videos/${sense.senseTitle.toLowerCase()}-side.mp4`,
+                url: `https://signbank.upf.com/lscassets/videos/LSC_-_Capa.mp4`,
                 angle: 'side',
                 priority: 2,
               },
               {
-                url: `https://example.com/videos/${sense.senseTitle.toLowerCase()}-close.mp4`,
+                url: `https://signbank.upf.com/lscassets/videos/LSC_-_Car.mp4`,
                 angle: 'close-up',
                 priority: 3,
               },
@@ -179,37 +448,79 @@ async function main() {
     )
   );
 
-  // Create glosses for each sense
-  const glosses = await Promise.all(
-    senses.map((sense) =>
-      prisma.gloss.create({
+  // Create related glosses for each gloss data
+  await Promise.all([
+    // HELLO relationships
+    prisma.relatedGloss.create({
+      data: {
+        glossId: glossData[0].id, // HELLO
+        relatedGlossId: glossData[1].id, // THANK_YOU
+        relationType: RelationType.ASSOCIATED_CONCEPT,
+      },
+    }),
+    prisma.relatedGloss.create({
+      data: {
+        glossId: glossData[0].id, // HELLO
+        relatedGlossId: glossData[2].id, // GOOD
+        relationType: RelationType.ASSOCIATED_CONCEPT,
+      },
+    }),
+    // THANK_YOU relationships
+    prisma.relatedGloss.create({
+      data: {
+        glossId: glossData[1].id, // THANK_YOU
+        relatedGlossId: glossData[0].id, // HELLO
+        relationType: RelationType.ASSOCIATED_CONCEPT,
+      },
+    }),
+    prisma.relatedGloss.create({
+      data: {
+        glossId: glossData[1].id, // THANK_YOU
+        relatedGlossId: glossData[2].id, // GOOD
+        relationType: RelationType.ASSOCIATED_CONCEPT,
+      },
+    }),
+    // GOOD relationships
+    prisma.relatedGloss.create({
+      data: {
+        glossId: glossData[2].id, // GOOD
+        relatedGlossId: glossData[0].id, // HELLO
+        relationType: RelationType.ASSOCIATED_CONCEPT,
+      },
+    }),
+    prisma.relatedGloss.create({
+      data: {
+        glossId: glossData[2].id, // GOOD
+        relatedGlossId: glossData[1].id, // THANK_YOU
+        relationType: RelationType.ASSOCIATED_CONCEPT,
+      },
+    }),
+  ]);
+
+  // Create minimal pairs for each gloss data
+  await Promise.all(
+    glossData.map((data, index) =>
+      prisma.minimalPair.create({
         data: {
-          senseId: sense.id,
-          RelatedGloss: {
-            create: [
-              {
-                relatedGlossId: 'related-gloss-1',
-                relationType: RelationType.SYNONYM,
-              },
-              {
-                relatedGlossId: 'related-gloss-2',
-                relationType: RelationType.REGIONAL_VARIANT,
-              },
-            ],
-          },
+          glossDataId: data.id,
+          minimalPairGlossDataId: glossData[(index + 1) % glossData.length].id,
+          distinction: `Distinction for ${['Hello', 'Thank you', 'Good'][index]}`,
+          signVideoId: signVideos[index].id,
         },
       })
     )
   );
 
-  // Create dictionary entries for each gloss
-  const dictionaryEntries = await Promise.all(
-    glosses.map((gloss) =>
+  // Create dictionary entries for each gloss data
+  await Promise.all(
+    glossData.map((data) =>
       prisma.dictionaryEntry.create({
         data: {
           status: GlossStatus.PUBLISHED,
-          glossId: gloss.id,
           currentVersion: 1,
+          glossDataId: data.id,
+          createdAt: new Date(),
+          updatedAt: new Date(),
         },
       })
     )

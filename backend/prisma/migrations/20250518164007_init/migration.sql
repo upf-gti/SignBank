@@ -33,6 +33,7 @@ CREATE TABLE "User" (
     "accessToken" TEXT,
     "refreshToken" TEXT,
     "tokenExpiresAt" TIMESTAMP(3),
+    "refreshTokenExpiresAt" TIMESTAMP(3),
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -48,23 +49,23 @@ CREATE TABLE "DictionaryEntry" (
     "isCreatedFromRequest" BOOLEAN NOT NULL DEFAULT false,
     "isCreatedFromEdit" BOOLEAN NOT NULL DEFAULT false,
     "glossRequestId" TEXT,
-    "glossId" TEXT NOT NULL,
+    "glossDataId" TEXT NOT NULL,
 
     CONSTRAINT "DictionaryEntry_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Gloss" (
+CREATE TABLE "GlossData" (
     "id" TEXT NOT NULL,
+    "gloss" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "editComment" TEXT,
     "currentVersion" INTEGER NOT NULL DEFAULT 1,
     "isCreatedFromRequest" BOOLEAN NOT NULL DEFAULT false,
     "isCreatedFromEdit" BOOLEAN NOT NULL DEFAULT false,
-    "senseId" TEXT NOT NULL,
 
-    CONSTRAINT "Gloss_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "GlossData_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -83,8 +84,19 @@ CREATE TABLE "Sense" (
     "senseTitle" TEXT NOT NULL,
     "priority" INTEGER NOT NULL DEFAULT 0,
     "lexicalCategory" "LexicalCategory",
+    "glossDataId" TEXT NOT NULL,
 
     CONSTRAINT "Sense_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "SenseTranslation" (
+    "id" TEXT NOT NULL,
+    "translation" TEXT NOT NULL,
+    "language" "Language" NOT NULL,
+    "senseId" TEXT NOT NULL,
+
+    CONSTRAINT "SenseTranslation_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -92,11 +104,30 @@ CREATE TABLE "Definition" (
     "id" TEXT NOT NULL,
     "title" TEXT,
     "definition" TEXT NOT NULL,
-    "examples" TEXT[],
     "videoDefinitionId" TEXT NOT NULL,
     "senseId" TEXT NOT NULL,
 
     CONSTRAINT "Definition_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Example" (
+    "id" TEXT NOT NULL,
+    "example" TEXT NOT NULL,
+    "exampleVideoURL" TEXT NOT NULL,
+    "senseId" TEXT NOT NULL,
+
+    CONSTRAINT "Example_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ExampleTranslation" (
+    "id" TEXT NOT NULL,
+    "translation" TEXT NOT NULL,
+    "language" "Language" NOT NULL,
+    "exampleId" TEXT,
+
+    CONSTRAINT "ExampleTranslation_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -123,10 +154,30 @@ CREATE TABLE "SignVideo" (
     "title" TEXT NOT NULL,
     "url" TEXT NOT NULL,
     "priority" INTEGER NOT NULL DEFAULT 0,
-    "videoData" JSONB NOT NULL,
+    "videoDataId" TEXT NOT NULL,
     "senseId" TEXT NOT NULL,
 
     CONSTRAINT "SignVideo_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "VideoData" (
+    "hands" "Hand" NOT NULL,
+    "configuration" TEXT NOT NULL,
+    "configurationChanges" TEXT NOT NULL,
+    "relationBetweenArticulators" TEXT NOT NULL,
+    "location" TEXT NOT NULL,
+    "movementRelatedOrientation" TEXT NOT NULL,
+    "locationRelatedOrientation" TEXT NOT NULL,
+    "orientationChange" TEXT NOT NULL,
+    "contactType" TEXT NOT NULL,
+    "movementType" TEXT NOT NULL,
+    "vocalization" TEXT NOT NULL,
+    "nonManualComponent" TEXT NOT NULL,
+    "inicialization" TEXT NOT NULL,
+    "id" TEXT NOT NULL,
+
+    CONSTRAINT "VideoData_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -143,9 +194,9 @@ CREATE TABLE "Video" (
 -- CreateTable
 CREATE TABLE "MinimalPair" (
     "id" TEXT NOT NULL,
-    "glossId" TEXT NOT NULL,
+    "glossDataId" TEXT NOT NULL,
     "distinction" TEXT NOT NULL,
-    "signVideoId" TEXT NOT NULL,
+    "signVideoId" TEXT,
 
     CONSTRAINT "MinimalPair_pkey" PRIMARY KEY ("id")
 );
@@ -176,10 +227,7 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 CREATE UNIQUE INDEX "DictionaryEntry_glossRequestId_key" ON "DictionaryEntry"("glossRequestId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "DictionaryEntry_glossId_key" ON "DictionaryEntry"("glossId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Gloss_senseId_key" ON "Gloss"("senseId");
+CREATE UNIQUE INDEX "DictionaryEntry_glossDataId_key" ON "DictionaryEntry"("glossDataId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Definition_videoDefinitionId_key" ON "Definition"("videoDefinitionId");
@@ -191,13 +239,16 @@ CREATE UNIQUE INDEX "GlossRequest_requestedGlossDataId_key" ON "GlossRequest"("r
 ALTER TABLE "DictionaryEntry" ADD CONSTRAINT "DictionaryEntry_glossRequestId_fkey" FOREIGN KEY ("glossRequestId") REFERENCES "GlossRequest"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "DictionaryEntry" ADD CONSTRAINT "DictionaryEntry_glossId_fkey" FOREIGN KEY ("glossId") REFERENCES "Gloss"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "DictionaryEntry" ADD CONSTRAINT "DictionaryEntry_glossDataId_fkey" FOREIGN KEY ("glossDataId") REFERENCES "GlossData"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Gloss" ADD CONSTRAINT "Gloss_senseId_fkey" FOREIGN KEY ("senseId") REFERENCES "Sense"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "RelatedGloss" ADD CONSTRAINT "RelatedGloss_relatedGlossId_fkey" FOREIGN KEY ("relatedGlossId") REFERENCES "GlossData"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "RelatedGloss" ADD CONSTRAINT "RelatedGloss_glossId_fkey" FOREIGN KEY ("glossId") REFERENCES "Gloss"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Sense" ADD CONSTRAINT "Sense_glossDataId_fkey" FOREIGN KEY ("glossDataId") REFERENCES "GlossData"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SenseTranslation" ADD CONSTRAINT "SenseTranslation_senseId_fkey" FOREIGN KEY ("senseId") REFERENCES "Sense"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Definition" ADD CONSTRAINT "Definition_videoDefinitionId_fkey" FOREIGN KEY ("videoDefinitionId") REFERENCES "VideoDefinition"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -206,7 +257,16 @@ ALTER TABLE "Definition" ADD CONSTRAINT "Definition_videoDefinitionId_fkey" FORE
 ALTER TABLE "Definition" ADD CONSTRAINT "Definition_senseId_fkey" FOREIGN KEY ("senseId") REFERENCES "Sense"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Example" ADD CONSTRAINT "Example_senseId_fkey" FOREIGN KEY ("senseId") REFERENCES "Sense"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ExampleTranslation" ADD CONSTRAINT "ExampleTranslation_exampleId_fkey" FOREIGN KEY ("exampleId") REFERENCES "Example"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "DefinitionTranslation" ADD CONSTRAINT "DefinitionTranslation_definitionId_fkey" FOREIGN KEY ("definitionId") REFERENCES "Definition"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SignVideo" ADD CONSTRAINT "SignVideo_videoDataId_fkey" FOREIGN KEY ("videoDataId") REFERENCES "VideoData"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "SignVideo" ADD CONSTRAINT "SignVideo_senseId_fkey" FOREIGN KEY ("senseId") REFERENCES "Sense"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -215,7 +275,10 @@ ALTER TABLE "SignVideo" ADD CONSTRAINT "SignVideo_senseId_fkey" FOREIGN KEY ("se
 ALTER TABLE "Video" ADD CONSTRAINT "Video_signVideoId_fkey" FOREIGN KEY ("signVideoId") REFERENCES "SignVideo"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "MinimalPair" ADD CONSTRAINT "MinimalPair_signVideoId_fkey" FOREIGN KEY ("signVideoId") REFERENCES "SignVideo"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "MinimalPair" ADD CONSTRAINT "MinimalPair_glossDataId_fkey" FOREIGN KEY ("glossDataId") REFERENCES "GlossData"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "MinimalPair" ADD CONSTRAINT "MinimalPair_signVideoId_fkey" FOREIGN KEY ("signVideoId") REFERENCES "SignVideo"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "GlossRequest" ADD CONSTRAINT "GlossRequest_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -227,4 +290,4 @@ ALTER TABLE "GlossRequest" ADD CONSTRAINT "GlossRequest_acceptedById_fkey" FOREI
 ALTER TABLE "GlossRequest" ADD CONSTRAINT "GlossRequest_deniedById_fkey" FOREIGN KEY ("deniedById") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "GlossRequest" ADD CONSTRAINT "GlossRequest_requestedGlossDataId_fkey" FOREIGN KEY ("requestedGlossDataId") REFERENCES "Gloss"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "GlossRequest" ADD CONSTRAINT "GlossRequest_requestedGlossDataId_fkey" FOREIGN KEY ("requestedGlossDataId") REFERENCES "GlossData"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -91,12 +91,13 @@ model DictionaryEntry {
     isCreatedFromEdit    Boolean       @default(false)
     glossRequest         GlossRequest? @relation(fields: [glossRequestId], references: [id])
     glossRequestId       String?       @unique
-    gloss                Gloss         @relation(fields: [glossId], references: [id])
-    glossId              String        @unique
+    glossData            GlossData     @relation(fields: [glossDataId], references: [id])
+    glossDataId          String        @unique
 }
 
-model Gloss {
+model GlossData {
     id                   String           @id @default(uuid())
+    gloss                String
     createdAt            DateTime         @default(now())
     updatedAt            DateTime         @updatedAt
     editComment          String?
@@ -105,49 +106,66 @@ model Gloss {
     isCreatedFromEdit    Boolean          @default(false)
     dictionaryEntry      DictionaryEntry?
     glossRequest         GlossRequest?
-    sense                Sense            @relation(fields: [senseId], references: [id])
-    senseId              String           @unique
-    RelatedGloss         RelatedGloss[]
-
-    MinimalPair MinimalPair[]
+    senses               Sense[]
+    relatedGlosses       RelatedGloss[]
+    minimalPairs         MinimalPair[]
 }
 
 model RelatedGloss {
     id             String       @id @default(uuid())
-    gloss          Gloss        @relation(fields: [glossId], references: [id])
     glossId        String
+    relatedGloss   GlossData    @relation(fields: [relatedGlossId], references: [id])
     relatedGlossId String
     relationType   RelationType
 }
 
 model Sense {
-    id              String           @id @default(uuid())
-    senseTitle      String
-    priority        Int              @default(0)
-    definitions     Definition[]
-    lexicalCategory LexicalCategory?
-    signVideos      SignVideo[]
-    gloss           Gloss?
+    id                String             @id @default(uuid())
+    senseTitle        String
+    priority          Int                @default(0)
+    definitions       Definition[]
+    lexicalCategory   LexicalCategory?
+    signVideos        SignVideo[]
+    glossDataId       String
+    glossData         GlossData          @relation(fields: [glossDataId], references: [id])
+    examples          Example[]
+    senseTranslations SenseTranslation[]
+}
+
+model SenseTranslation {
+    id          String   @id @default(uuid())
+    translation String
+    language    Language
+    sense       Sense    @relation(fields: [senseId], references: [id])
+    senseId     String
 }
 
 model Definition {
-    id                String                  @id @default(uuid())
-    title             String?
-    definition        String
-    translations      DefinitionTranslation[]
-    videoDefinition   VideoDefinition         @relation(fields: [videoDefinitionId], references: [id])
-    videoDefinitionId String                  @unique
-    sense             Sense                   @relation(fields: [senseId], references: [id])
-    senseId           String
-    examples          Example[]
+    id                     String                  @id @default(uuid())
+    title                  String?
+    definition             String
+    definitionTranslations DefinitionTranslation[]
+    videoDefinition        VideoDefinition         @relation(fields: [videoDefinitionId], references: [id])
+    videoDefinitionId      String                  @unique
+    sense                  Sense                   @relation(fields: [senseId], references: [id])
+    senseId                String
 }
 
 model Example {
-    id              String     @id @default(uuid())
-    example         String
-    exampleVideoURL String
-    definition      Definition @relation(fields: [definitionId], references: [id])
-    definitionId    String
+    id                  String               @id @default(uuid())
+    example             String
+    exampleVideoURL     String
+    sense               Sense                @relation(fields: [senseId], references: [id])
+    senseId             String
+    exampleTranslations ExampleTranslation[]
+}
+
+model ExampleTranslation {
+    id          String   @id @default(uuid())
+    translation String
+    language    Language
+    Example     Example? @relation(fields: [exampleId], references: [id])
+    exampleId   String?
 }
 
 model VideoDefinition {
@@ -170,8 +188,8 @@ model SignVideo {
     videos       Video[]
     url          String
     priority     Int           @default(0)
-    videoData    VideoData     @relation(fields: [videoDataid], references: [id]) // Using Json type for complex nested data
-    videoDataid  String
+    videoData    VideoData     @relation(fields: [videoDataId], references: [id]) // Using Json type for complex nested data
+    videoDataId  String
     minimalPairs MinimalPair[]
     sense        Sense         @relation(fields: [senseId], references: [id])
     senseId      String
@@ -205,13 +223,13 @@ model Video {
 }
 
 model MinimalPair {
-    id          String @id @default(uuid())
-    gloss       Gloss  @relation(fields: [glossId], references: [id])
-    glossId     String
-    distinction String
-
-    SignVideo   SignVideo? @relation(fields: [signVideoId], references: [id])
-    signVideoId String?
+    id                     String     @id @default(uuid())
+    glossDataId            String
+    distinction            String
+    minimalPairGlossData   GlossData  @relation(fields: [minimalPairGlossDataId], references: [id])
+    minimalPairGlossDataId String
+    SignVideo              SignVideo? @relation(fields: [signVideoId], references: [id])
+    signVideoId            String?
 }
 
 model GlossRequest {
@@ -226,7 +244,7 @@ model GlossRequest {
     acceptedById         String?
     deniedBy             User?            @relation("Denier", fields: [deniedById], references: [id])
     deniedById           String?
-    requestedGlossData   Gloss            @relation(fields: [requestedGlossDataId], references: [id])
+    requestedGlossData   GlossData        @relation(fields: [requestedGlossDataId], references: [id])
     requestedGlossDataId String           @unique
     glossId              String?
     dictionaryEntry      DictionaryEntry?
