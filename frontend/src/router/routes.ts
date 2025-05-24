@@ -20,6 +20,13 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/GlossPage.vue') }],
   },
+  {
+    path: '/requests',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/RequestGlossPage.vue') },
+      { path: 'create', component: () => import('pages/CreateRequestGlossPage.vue') },
+    ],
+  },
   
 
   // Always leave this as last one,

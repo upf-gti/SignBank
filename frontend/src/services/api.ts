@@ -1,5 +1,7 @@
 import type { AxiosResponse } from "axios"
 import { apiClient } from "src/boot/axios"
+import type { GlossRequest } from 'src/types/models'
+
 // Create API service object
 export const api = {
   glosses: {
@@ -21,6 +23,14 @@ export const api = {
     removeMinimalPair(glossId: string, pairId: string): Promise<AxiosResponse<any>> {
       return apiClient.delete(`/glosses/${glossId}/minimal-pairs/${pairId}`)
     }
+  },
+  requests: {
+    getAll(): Promise<AxiosResponse<GlossRequest[]>> {
+      return apiClient.get('/gloss-requests/my-requests')
+    },
+    create(request: Partial<GlossRequest>): Promise<AxiosResponse<GlossRequest>> {
+      return apiClient.post('/gloss-requests', request)
+    },
   },
   login(credentials: { email: string, password: string }) {
     return apiClient.post('/auth/login', credentials)

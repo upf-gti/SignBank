@@ -1,4 +1,5 @@
 export type WordStatus = 'PUBLISHED' | 'DRAFT' | 'PENDING';
+export type RequestStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
 
 export interface Translation {
   id: string;
@@ -174,7 +175,6 @@ export interface GlossData {
   senses: Sense[];
   relatedGlosses: RelatedGloss[];
   minimalPairs: MinimalPair[];
-  dictionaryEntry: dictionaryEntry;
   glossRequest: string | null; // You might want to define a specific type for glossRequest
 }
 
@@ -190,4 +190,17 @@ export interface dictionaryEntry {
   glossRequestId: string | null;
   glossId: string;
   glossData: GlossData;
+}
+
+export interface GlossRequest {
+  id: string;
+  gloss: string;
+  description: string;
+  videoUrl?: string;
+  status: RequestStatus;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
+  glossId?: string;
+  gloss_data?: GlossData;
 }
