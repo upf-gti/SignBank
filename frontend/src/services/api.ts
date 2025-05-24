@@ -16,6 +16,13 @@ export const api = {
   refreshToken() {
     return apiClient.post('/auth/refresh')
   },
+  videos: {
+    upload(file: File): Promise<AxiosResponse<{ url: string }>> {
+      const formData = new FormData()
+      formData.append('video', file)
+      return apiClient.post('/videos/upload', formData)
+    }
+  }
 }
 
 export default api

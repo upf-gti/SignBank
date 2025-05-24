@@ -12,7 +12,8 @@
       }"
     />
     <div v-else-if="editMode !== 'none'" class="col fit row justify-center items-center">
-      <q-btn flat icon="upload" :label="translate('uploadVideo')" @click="uploadVideo" />
+      <q-btn flat icon="upload" :label="translate('uploadVideo')" @click="showUploadDialog = true" />
+      <UploadVideoComponent v-model:show-dialog="showUploadDialog" @upload-complete="uploadVideo" />
     </div>
     <div class="column col q-pt-md justify-start items-start">
       <div class="row justify-between items-center full-width">
@@ -31,20 +32,13 @@
           })) || []"
         />
       </div>
-      <div v-if="editMode !== 'none' && selectedVideoData" class="row justify-between items-center full-width q-mt-md">
+      <div v-if="editMode !== 'none' && selectedVideoData" class="row justify-between no-wrap items-center full-width q-mt-md">
         <q-input
           v-model="selectedVideoData.angle"
           :label="translate('angle')"
           outlined
           dense
-          class="col-4"
-        />
-        <q-input
-          v-model="selectedVideoData.url"
-          :label="translate('url')"
-          outlined
-          dense
-          class="col-7"
+          class="col"
         />
         <q-btn flat round icon="delete" @click="removeAngle" />
       </div>
@@ -56,10 +50,15 @@
 import { ref, computed } from 'vue';
 import { SignVideo } from 'src/types/models';
 import translate from 'src/utils/translate';
+import UploadVideoComponent from 'src/components/UploadVideoComponent.vue';
 
 const { signVideo, editMode } = defineProps<{
   signVideo: SignVideo;
   editMode: "strict" | "full" | "none";
+}>();
+
+const emit = defineEmits<{
+  (e: 'update:signVideo', value: SignVideo): void
 }>();
 
 const selectedVideo = ref<string>(signVideo?.videos[0]?.id || '');
@@ -67,9 +66,18 @@ const selectedVideoData = computed(() => {
   return signVideo?.videos.find((video) => video.id === selectedVideo.value) || signVideo?.videos[0];
 });
 
-const uploadVideo = () => {
-  // TODO: Implement video upload functionality
-  console.log('Upload video')
+const showUploadDialog = ref(false)
+
+const uploadVideo = (url: string) => {
+  
+  const newSignVideo = {
+    ...signVideo,
+  }
+  const videoToUpdate = newSignVideo.videos.find(video => video.id === selectedVideo.value)
+  if (videoToUpdate) {
+    videoToUpdate.url = url
+  }
+  emit('update:signVideo', newSignVideo)
 }
 
 const addAngle = () => {

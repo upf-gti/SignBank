@@ -8,7 +8,7 @@
       <div
         v-for="(video, index) in sense.signVideos"
         :key="video.id"
-        class="col-12 col-sm-6 col-md-3"
+        class="col-12 col-sm-6 col-md-4"
       >
         <q-card
           flat
@@ -32,6 +32,7 @@
             <GlossVideoComponent
               :sign-video="video"
               :edit-mode="editMode"
+              @update:sign-video="updateSignVideo"
             />
           </q-card-section>
           <q-card-section>
@@ -65,7 +66,12 @@ const addVideo = () => {
     priority: sense.signVideos.length + 1,
     videoDataId: '',
     senseId: sense.id || '',
-    videos: [],
+    videos: [{
+      id: Date.now().toString(),
+      angle: translate('newAngle'),
+      url: '',
+      priority: 1,
+    }],
     minimalPairs: [],
     videoData: {
       hands: '',
@@ -88,6 +94,13 @@ const addVideo = () => {
 
 const removeVideo = (index: number) => {
   sense.signVideos.splice(index, 1)
+}
+
+const updateSignVideo = (signVideo: SignVideo) => {
+  const index = sense.signVideos.findIndex(video => video.id === signVideo.id)
+  if (index > -1) {
+    sense.signVideos[index] = signVideo
+  }
 }
 </script>
 

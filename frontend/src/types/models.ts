@@ -49,7 +49,6 @@ export interface Video {
   url: string;
   angle: string;
   priority: number;
-  signVideoId: string;
 }
 
 export interface VideoData {
