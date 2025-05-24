@@ -9,7 +9,7 @@
             "database": "signbank",
             "username": "postgres",
             "password": "postgres",
-            "name": "SignBankDB"
+            "name": "Signbank"
         }
     ],
     "dotnet.defaultSolution": "disable",

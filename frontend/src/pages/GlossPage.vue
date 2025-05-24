@@ -16,7 +16,7 @@
         color="primary"
         :label="translate('common.goBack')"
         class="q-mt-md"
-        @click="$router.go(-1)"
+        @click="router.go(-1)"
       />
     </div>
 
@@ -26,23 +26,26 @@
       style="height: fit-content"
     >
       <GlossDetailComponent
+        v-if="glossData"
         class="col full-width"
-        :gloss-data="glossData ?? null"
-        :edit-mode="editMode"
+        :gloss-data="glossData"
+        v-model:edit-mode="editMode"
       />
     </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import translate from 'src/utils/translate'
 import LoadingComponent from 'src/components/LoadingComponent.vue'
 import GlossDetailComponent from 'src/components/GlossDetail/GlossDetailComponent.vue'
 import { api } from 'src/services/api'
 import type { GlossData } from 'src/types/models'
+
 const route = useRoute()
+const router = useRouter()
 
 // State
 const loading = ref(true)
@@ -56,15 +59,16 @@ onMounted(() => {
 
 function getGlossData() {
   if(route.params.gloss) {
-  api.glosses.get(route.params.gloss as string)
-    .then((response) => {
-      glossData.value = response.data
-    })
-    .catch((error) => {
-      console.error(error)
-    }).finally(() => {
-      loading.value = false
-    })
+    api.glosses.get(route.params.gloss as string)
+      .then((response) => {
+        glossData.value = response.data
+      })
+      .catch((error) => {
+        console.error(error)
+        error.value = translate('errors.failedToLoadGloss')
+      }).finally(() => {
+        loading.value = false
+      })
   }
 }
 </script>

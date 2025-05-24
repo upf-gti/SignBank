@@ -143,7 +143,7 @@ export interface SignVideo {
 }
 
 export interface Sense {
-  id: string;
+  id?: string;
   senseTitle: string;
   priority: number;
   lexicalCategory: string;

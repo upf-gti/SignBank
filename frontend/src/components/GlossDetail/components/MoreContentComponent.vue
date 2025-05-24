@@ -43,19 +43,23 @@
       <DefinitionsComponent
         v-if="selectedContent === 'definitions'"
         :sense="sense"
+        :edit-mode="editMode"
       />
       <ExamplesComponent
         v-if="selectedContent === 'examples'"
         :sense="sense"
+        :edit-mode="editMode"
       />
       <VideosComponent
         v-if="selectedContent === 'videos'"
         :sense="sense"
+        :edit-mode="editMode"
       />
       <RelatedGlosses
         v-if="selectedContent === 'relatedGlosses'"
         :related-glosses="glossData.relatedGlosses"
         :minimal-pairs="glossData.minimalPairs"
+        :edit-mode="editMode"
       />
       <q-card-section v-if="selectedContent === 'technicalTerms'">
         <div class="text-h6">
@@ -77,8 +81,9 @@ import RelatedGlosses from './RelatedGlosses.vue';
 
 const selectedContent = ref<string>('definitions')
 
-const { sense, glossData } = defineProps<{
+const { sense, glossData, editMode } = defineProps<{
   sense: Sense;
   glossData: GlossData;
+  editMode: "strict" | "full" | "none";
 }>();
 </script>

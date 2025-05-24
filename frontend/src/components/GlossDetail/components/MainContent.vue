@@ -19,6 +19,7 @@
       <q-card-section class="column">
         <GlossVideoComponent
           :sign-video="selectedSense?.signVideos[0]"
+          edit-mode="none"
         />
       </q-card-section>
     </q-card>
