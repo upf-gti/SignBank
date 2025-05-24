@@ -4,7 +4,7 @@
       <div v-if="editMode !== 'full'" class="text-h6">
         {{ glossData.gloss }}
       </div>
-      <q-input v-else v-model="glossData.gloss" />
+      <q-input v-else v-model="glossData.gloss" :label="translate('gloss')" />
       <div class="text-subtitle2">
         {{ translate('last_updated') }}: {{ glossData.updatedAt }}
       </div>

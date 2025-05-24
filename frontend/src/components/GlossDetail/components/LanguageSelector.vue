@@ -5,7 +5,6 @@
       :label="translate('language')"
       outlined
       dense
-      class="col-4"
       @update:model-value="$emit('update:modelValue', $event)"
     />    
 </template>

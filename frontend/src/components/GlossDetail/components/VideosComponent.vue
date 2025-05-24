@@ -2,7 +2,7 @@
   <q-card-section>
     <div class="text-h5 q-mb-md row justify-between items-center">
       {{ translate('videos') }}
-      <q-btn v-if="editMode !== 'none'" flat round icon="add" @click="addVideo" />
+      <q-btn v-if="editMode !== 'none'" flat round icon="add" @click="addVideo" :label="translate('addVideo')" />
     </div>
     <div class="row q-col-gutter-md no-wrap overflow-auto">
       <div
@@ -26,7 +26,7 @@
             <q-item-label v-else>
               {{ video.title }}
             </q-item-label>
-            <q-btn v-if="editMode !== 'none'" flat round icon="delete" @click="removeVideo(index)" />
+            <q-btn v-if="editMode !== 'none'" flat round icon="delete" @click="removeVideo(index)" :label="translate('deleteVideo')" />
           </q-card-section>
           <q-card-section>
             <GlossVideoComponent

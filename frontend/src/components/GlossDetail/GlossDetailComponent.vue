@@ -12,6 +12,7 @@
       :selected-sense="selectedSense"
     />
     <MoreContentComponent
+      v-if="glossData.senses.length > 0"
       :sense="selectedSense"
       :gloss-data="glossData"
       :edit-mode="editMode"

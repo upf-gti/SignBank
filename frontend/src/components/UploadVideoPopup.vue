@@ -1,5 +1,13 @@
 <template>
-    <q-card-section>
+    <q-dialog v-model="showDialog" >
+        <q-card class="upload-dialog">
+            <q-card-section class="row items-center">
+                <div class="text-h6">Upload Video</div>
+                <q-space />
+                <q-btn icon="close" flat round dense v-close-popup />
+            </q-card-section>
+
+            <q-card-section>
                 <div class="upload-area q-pa-md" @dragover.prevent @drop.prevent="handleDrop">
                     <q-file
                         v-model="videoFile"
@@ -31,10 +39,29 @@
                     </div>
                 </div>
             </q-card-section>
+
+            <q-card-actions align="right">
+                <q-btn 
+                    flat 
+                    label="Cancel" 
+                    color="primary" 
+                    v-close-popup 
+                    :disable="isUploading" 
+                />
+                <q-btn 
+                    flat 
+                    label="Upload" 
+                    color="primary" 
+                    @click="uploadVideo" 
+                    :loading="isUploading"
+                    :disable="!videoFile || isUploading" 
+                />
+            </q-card-actions>
+        </q-card>
+    </q-dialog>
 </template>
 
 <script setup lang="ts">
-
 import { ref, watch } from 'vue';
 import axios from 'axios';
 import api from 'src/services/api'
@@ -104,5 +131,22 @@ const uploadVideo = async () => {
         isUploading.value = false;
     }
 };
-
 </script>
+
+<style scoped>
+.upload-dialog {
+    min-width: 400px;
+}
+
+.upload-area {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    transition: border-color 0.3s;
+}
+
+.upload-area:hover {
+    border-color: #1976d2;
+}
+</style>

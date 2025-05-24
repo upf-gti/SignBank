@@ -11,24 +11,23 @@
       >
         <!-- List of definitions -->
         <q-item-label class="row justify-between items-center">
+          <q-btn v-if="editMode !== 'none'" flat round icon="delete" :label="translate('deleteDefinition')" @click="removeDefinition(index)"  class="float-right"/>
           <q-input
             v-if="editMode !== 'none'"
             v-model="definition.title"
-            :label="translate('title')"
+            :label="translate('definitionTitle')"
             outlined
             dense
             class="col-12 q-mb-sm"
           />
           <div v-else>{{ definition.title }}</div>
-          <q-btn v-if="editMode !== 'none'" flat round icon="delete" @click="removeDefinition(index)" />
         </q-item-label>
         <q-item-label>
           <q-input
             v-if="editMode !== 'none'"
             v-model="definition.definition"
             :label="translate('definition')"
-            outlined
-            
+            outlined            
             dense
             class="col-12 q-mb-sm"
           />
@@ -41,6 +40,7 @@
           >
             <div class="row justify-between items-center q-mb-sm">
               <LanguageSelector 
+                class="col"
                 v-if="editMode !== 'none'"
                 v-model="translation.language" />
               <div v-else>
@@ -48,14 +48,13 @@
                   {{ translation.language }}
                 </q-chip>
               </div>
-              <q-btn v-if="editMode !== 'none'" flat round icon="delete" @click="removeTranslation(definition, tIndex)" />
+              <q-btn v-if="editMode !== 'none'" flat round icon="delete" :label="translate('deleteDefinitionTranslation')" @click="removeTranslation(definition, tIndex)" class="q-mx-md" />
             </div>
             <q-input
               v-if="editMode !== 'none'"
               v-model="translation.translation"
               :label="translate('translation')"
               outlined
-              
               dense
               class="col-12"
             />
@@ -68,7 +67,7 @@
             flat
             class="q-mt-sm"
             icon="add"
-            :label="translate('addTranslation')"
+            :label="translate('addDefinitionTranslation')"
             @click="addTranslation(definition)"
           />
         </q-item-label>
@@ -78,8 +77,8 @@
     <!-- Translations of the sense -->
     <div class="column">
       <div class="text-h5 q-mt-md row justify-between items-center">
-        {{ translate('translations') }}
-        <q-btn v-if="editMode !== 'none'" flat round icon="add" @click="addSenseTranslation" />
+        {{ translate('glossTranslations') }}
+        <q-btn v-if="editMode !== 'none'" flat round icon="add" :label="translate('addGlossTranslation')" @click="addSenseTranslation" />
       </div>
       <q-list class="row">
         <q-item
@@ -95,10 +94,11 @@
           >
             <div class="row justify-between items-center">
               <LanguageSelector 
+                class="col"
                 v-if="editMode !== 'none'"
                 v-model="translation.language" />
               <div v-else>{{ translation.language }}</div>
-              <q-btn v-if="editMode !== 'none'" flat round icon="delete" @click="removeSenseTranslation(index)" />
+              <q-btn v-if="editMode !== 'none'" flat round icon="delete" :label="translate('deleteGlossTranslation')" @click="removeSenseTranslation(index)" class="q-mx-md" />
             </div>
             <q-input
               v-if="editMode !== 'none'"

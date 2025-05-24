@@ -8,7 +8,7 @@
         value: sense.id,
       }))"
     />
-    <q-btn v-if="editMode !== 'none' && !addSense" icon="add" @click="addSense = true" />
+    <q-btn v-if="editMode !== 'none' && !addSense" icon="add" :label="translate('addSense')" @click="addSense = true" />
     <q-dialog v-model="addSense">
       <q-card style="width: 500px">
         <q-card-section>

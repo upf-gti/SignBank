@@ -20,7 +20,7 @@
         <span class="text-bold">
           {{ translate('videoAngles') }}
         </span>
-        <q-btn v-if="editMode !== 'none'" flat round icon="add" @click="addAngle" />
+        <q-btn v-if="editMode !== 'none'" flat round icon="add" @click="addAngle" :label="translate('addAngle')" />
       </div>
       <div class="row justify-center items-center q-pt-md">
         <q-btn-toggle
@@ -32,15 +32,15 @@
           })) || []"
         />
       </div>
-      <div v-if="editMode !== 'none' && selectedVideoData" class="row justify-between no-wrap items-center full-width q-mt-md">
+      <div v-if="editMode !== 'none' && selectedVideoData" class="column justify-center no-wrap items-start full-width q-mt-md">
+        <q-btn flat round icon="delete" @click="removeAngle" :label="translate('deleteAngle')" />
         <q-input
           v-model="selectedVideoData.angle"
           :label="translate('angle')"
           outlined
           dense
-          class="col"
+          class="col full-width"
         />
-        <q-btn flat round icon="delete" @click="removeAngle" />
       </div>
     </div>
   </q-card-section>
@@ -50,7 +50,7 @@
 import { ref, computed } from 'vue';
 import { SignVideo } from 'src/types/models';
 import translate from 'src/utils/translate';
-import UploadVideoComponent from 'src/components/UploadVideoComponent.vue';
+import UploadVideoComponent from 'src/components/UploadVideoPopup.vue';
 
 const { signVideo, editMode } = defineProps<{
   signVideo: SignVideo;
