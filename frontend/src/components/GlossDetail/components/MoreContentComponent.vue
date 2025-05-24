@@ -60,6 +60,10 @@
         :related-glosses="glossData.relatedGlosses"
         :minimal-pairs="glossData.minimalPairs"
         :edit-mode="editMode"
+        @add-relation="onAddRelation"
+        @remove-relation="onRemoveRelation"
+        @add-minimal-pair="onAddMinimalPair"
+        @remove-pair="onRemovePair"
       />
       <q-card-section v-if="selectedContent === 'technicalTerms'">
         <div class="text-h6">
@@ -74,7 +78,7 @@
 import DefinitionsComponent from './DefinitionsComponent.vue';
 import translate from 'src/utils/translate';
 import { ref } from 'vue';
-import { Sense, GlossData } from 'src/types/models';
+import { Sense, GlossData, RelatedGloss, MinimalPair } from 'src/types/models';
 import ExamplesComponent from './ExamplesComponent.vue';
 import VideosComponent from './VideosComponent.vue';
 import RelatedGlosses from './RelatedGlosses.vue';
@@ -86,4 +90,27 @@ const { sense, glossData, editMode } = defineProps<{
   glossData: GlossData;
   editMode: "strict" | "full" | "none";
 }>();
+
+const emit = defineEmits<{
+  (e: 'add-relation', relation: Partial<RelatedGloss>): void;
+  (e: 'remove-relation', id: string): void;
+  (e: 'add-minimal-pair', pair: Partial<MinimalPair>): void;
+  (e: 'remove-pair', id: string): void;
+}>();
+
+const onAddRelation = (relation: Partial<RelatedGloss>) => {
+  emit('add-relation', relation);
+};
+
+const onRemoveRelation = (id: string) => {
+  emit('remove-relation', id);
+};
+
+const onAddMinimalPair = (pair: Partial<MinimalPair>) => {
+  emit('add-minimal-pair', pair);
+};
+
+const onRemovePair = (id: string) => {
+  emit('remove-pair', id);
+};
 </script>

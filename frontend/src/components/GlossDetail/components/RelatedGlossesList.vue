@@ -17,10 +17,20 @@
             {{ relatedGloss.relatedGloss.gloss }}
           </div>
         </div>
-        <div>
+        <div class="row items-center">
           <q-btn
             outline
             :label="translate('viewGloss')"
+            class="q-mr-sm"
+            @click="$router.push(`/gloss/${relatedGloss.relatedGlossId}`)"
+          />
+          <q-btn
+            v-if="editMode !== 'none'"
+            flat
+            round
+            icon="delete"
+            color="negative"
+            @click="$emit('remove-relation', relatedGloss.id)"
           />
         </div>
       </q-card-section>
@@ -31,8 +41,16 @@
 <script setup lang="ts">
 import translate from 'src/utils/translate';
 import type { RelatedGloss } from 'src/types/models';
+import { useRouter } from 'vue-router';
 
-const { relatedGlosses } = defineProps<{
+const $router = useRouter();
+
+const { relatedGlosses, editMode } = defineProps<{
   relatedGlosses: RelatedGloss[];
+  editMode: "strict" | "full" | "none";
+}>();
+
+defineEmits<{
+  (e: 'remove-relation', id: string): void;
 }>();
 </script>

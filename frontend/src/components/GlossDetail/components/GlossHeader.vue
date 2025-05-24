@@ -1,7 +1,7 @@
 <template>
   <q-card-section class="row justify-between items-center">
     <div class="column">
-      <div v-if="editMode === 'none'" class="text-h6">
+      <div v-if="editMode !== 'full'" class="text-h6">
         {{ glossData.gloss }}
       </div>
       <q-input v-else v-model="glossData.gloss" />

@@ -84,10 +84,9 @@ const addAngle = () => {
   if (!signVideo?.videos) return;
   const newVideo = {
     id: Date.now().toString(),
-    angle: '',
+    angle: translate('newAngle'),
     url: '',
     priority: signVideo.videos.length + 1,
-    signVideoId: signVideo.id
   }
   signVideo.videos.push(newVideo)
   selectedVideo.value = newVideo.id
