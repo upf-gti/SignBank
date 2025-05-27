@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 import { Cookies } from 'quasar'
-import type { User } from 'src/types/database'
 import { ref, computed } from 'vue'
+import type { User } from 'src/types/models'
+import router from 'src/router'
 
 const useUser = defineStore('user', () => {
     const access_token = ref(Cookies.get('access_token') ?? '')
@@ -28,16 +29,13 @@ const useUser = defineStore('user', () => {
     }
     
     function logout() {
-        debugger
-        access_token.value = ''
-        refresh_token.value = ''
-        role.value = ''
         Cookies.remove('access_token')
         Cookies.remove('refresh_token')
         Cookies.remove('role')
-        setTimeout(() => {
-            window.location.reload()
-        }, 100)
+        access_token.value = ''
+        refresh_token.value = ''
+        role.value = ''
+        router.push('/')
     }
 
     return { 

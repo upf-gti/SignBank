@@ -7,7 +7,7 @@
     <div class="row q-col-gutter-md no-wrap overflow-auto">
       <div
         v-for="(video, index) in sense.signVideos"
-        :key="video.id"
+        :key="video.id || index"
         class="col-12 col-sm-6 col-md-4"
       >
         <q-card
@@ -53,19 +53,19 @@ import translate from 'src/utils/translate';
 import GlossVideoComponent from './GlossVideoComponent.vue';
 import SignFonologyComponent from './SignFonologyComponent.vue';
 
-const { sense, editMode } = defineProps<{
-  sense: Sense;
+const sense = defineModel<Sense>({ required: true })
+const { editMode } = defineProps<{
   editMode: "strict" | "full" | "none";
 }>();
 
 const addVideo = () => {
-  sense.signVideos.push({
+  sense.value.signVideos.push({
     id: Date.now().toString(),
     title: '',
     url: '',
-    priority: sense.signVideos.length + 1,
+    priority: sense.value.signVideos.length + 1,
     videoDataId: '',
-    senseId: sense.id || '',
+    senseId: sense.value.id || '',
     videos: [{
       id: Date.now().toString(),
       angle: translate('newAngle'),
@@ -93,13 +93,13 @@ const addVideo = () => {
 }
 
 const removeVideo = (index: number) => {
-  sense.signVideos.splice(index, 1)
+  sense.value.signVideos.splice(index, 1)
 }
 
 const updateSignVideo = (signVideo: SignVideo) => {
-  const index = sense.signVideos.findIndex(video => video.id === signVideo.id)
+  const index = sense.value.signVideos.findIndex(video => video.id === signVideo.id)
   if (index > -1) {
-    sense.signVideos[index] = signVideo
+    sense.value.signVideos[index] = signVideo
   }
 }
 </script>

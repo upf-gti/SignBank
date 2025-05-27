@@ -27,7 +27,7 @@
         <q-card>
           <q-card-section>
             <div class="row items-center justify-between">
-              <div class="text-h6">{{ request.gloss }}</div>
+              <div class="text-h6">{{ request.requestedGlossData.gloss }}</div>
               <q-chip
                 :color="getStatusColor(request.status)"
                 text-color="white"
@@ -36,16 +36,6 @@
                 {{ request.status }}
               </q-chip>
             </div>
-            <q-separator class="q-my-sm" />
-            <div class="text-body2">{{ request.description }}</div>
-          </q-card-section>
-
-          <q-card-section v-if="request.videoUrl">
-            <video
-              :src="request.videoUrl"
-              style="width: 100%; max-height: 200px; object-fit: cover;"
-              controls
-            />
           </q-card-section>
 
           <q-card-section class="row justify-between items-center">
@@ -64,9 +54,9 @@
               <q-btn
                 flat
                 dense
-                icon="delete"
-                color="negative"
-                @click="deleteRequest(request.id)"
+                icon="visibility"
+                :label="translate('viewGloss')"
+                @click="$router.push(`/requests/view/${request.id}`)"
               />
             </div>
           </q-card-section>
@@ -81,11 +71,11 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { api } from 'src/services/api';
 import translate from 'src/utils/translate';
-import type { GlossRequest, RequestStatus } from 'src/types/models';
+import type {GlossRequest, RequestStatus } from 'src/types/models';
 
 const $router = useRouter();
 
-const requests = ref<GlossRequest[]>([]);
+const requests = ref<GlossRequest[]>();
 const loading = ref(true);
 const error = ref<string | null>(null);
 

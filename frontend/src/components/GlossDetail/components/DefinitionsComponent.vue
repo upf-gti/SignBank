@@ -124,17 +124,17 @@ import { Sense, Definition, Translation, SenseTranslation } from 'src/types/mode
 import translate from 'src/utils/translate';
 import LanguageSelector from './LanguageSelector.vue'
 
-const { sense, editMode } = defineProps<{
-  sense: Sense;
+const sense = defineModel<Sense>({ required: true })
+const { editMode } = defineProps<{
   editMode: "strict" | "full" | "none";
 }>();
 
 const addDefinition = () => {
-  sense.definitions.push({
+  sense.value.definitions.push({
     id: Date.now().toString(),
     title: '',
     definition: '',
-    senseId: sense.id || '',
+    senseId: sense.value.id || '',
     definitionTranslations: [],
     videoDefinitionId: '',
     videoDefinition: {
@@ -145,15 +145,15 @@ const addDefinition = () => {
 }
 
 const removeDefinition = (index: number) => {
-  sense.definitions.splice(index, 1)
+  sense.value.definitions.splice(index, 1)
 }
 
 const addTranslation = (definition: Definition) => {
   definition.definitionTranslations.push({
     id: Date.now().toString(),
-    language: 'ca',
+    language: 'CATALAN',
     translation: '',
-    definitionId: definition.id
+    definitionId: definition.id || ''
   })
 }
 
@@ -162,16 +162,16 @@ const removeTranslation = (definition: Definition, index: number) => {
 }
 
 const addSenseTranslation = () => {
-  sense.senseTranslations.push({
+  sense.value.senseTranslations.push({
     id: Date.now().toString(),
-    language: 'ca',
+    language: 'CATALAN',
     translation: '',
-    senseId: sense.id || ''
+    senseId: sense.value.id || ''
   })
 }
 
 const removeSenseTranslation = (index: number) => {
-  sense.senseTranslations.splice(index, 1)
+  sense.value.senseTranslations.splice(index, 1)
 }
 </script>
 

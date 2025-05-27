@@ -27,29 +27,37 @@ api.interceptors.request.use(config => {
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    debugger
     const originalRequest = error.config;
     const auth = useAuthentication();
 
     // If the error is 401 and we haven't tried to refresh the token yet
-    if (error.response?.status === 401 && !originalRequest?.headers['X-Retry-After-Refresh']) {
-      try {
-        // Try to refresh the token
-        await auth.refreshToken();
-        
-        // Update the original request with the new token
-        if (originalRequest) {
-          originalRequest.headers['X-Retry-After-Refresh'] = 'true';
-          const userStore = useUser();
-          originalRequest.headers.Authorization = `Bearer ${userStore.access_token}`;
-          
-          // Retry the original request
-          return api(originalRequest);
-        }
-      } catch {
-        // If refresh fails, logout the user and reject with a specific error
+    if (error.response?.status === 401) {
+      // Check if this is the refresh token request
+      if (originalRequest?.url?.includes('/auth/refresh')) {
         auth.logout();
         return Promise.reject(new Error('Session expired. Please login again.'));
+      }
+
+      // For other 401s, try refreshing if we haven't already
+      if (!originalRequest?.headers['X-Retry-After-Refresh']) {
+        try {
+          // Try to refresh the token
+          await auth.refreshToken();
+          
+          // Update the original request with the new token
+          if (originalRequest) {
+            originalRequest.headers['X-Retry-After-Refresh'] = 'true';
+            const userStore = useUser();
+            originalRequest.headers.Authorization = `Bearer ${userStore.access_token}`;
+            
+            // Retry the original request
+            return api(originalRequest);
+          }
+        } catch {
+          // If refresh fails, logout the user and reject with a specific error
+          auth.logout();
+          return Promise.reject(new Error('Session expired. Please login again.'));
+        }
       }
     }
 

@@ -18,8 +18,8 @@ async function main() {
     prisma.dictionaryEntry.deleteMany(),
     prisma.relatedGloss.deleteMany(),
     prisma.sense.deleteMany(),
-    prisma.glossData.deleteMany(),
     prisma.glossRequest.deleteMany(),
+    prisma.glossData.deleteMany(),
     prisma.user.deleteMany(),
   ]);
 

@@ -19,7 +19,7 @@
         <q-form @submit.prevent.stop="saveSense">
         <q-card-section>
           <q-input v-model="newSense.senseTitle" hide-bottom-space :label="translate('senseTitle')" :rules="[val => !!val || translate('required')]" />
-          <q-select :label="translate('lexicalCategory')" hide-bottom-space v-model="newSense.lexicalCategory" :options="lexicalCategories" :rules="[val => !!val || translate('required')]" />
+          <q-select :label="translate('lexicalCategory')" hide-bottom-space v-model="newSense.lexicalCategory" :options="lexicalCategories" :rules="[val => !!val || translate('required')]" :display-value="translate(newSense.lexicalCategory)" />
         </q-card-section>
         <q-card-actions>
           <q-btn :label="translate('cancel')" @click="addSense = false" flat type="button" />
@@ -52,34 +52,13 @@ const newSense = ref({
   lexicalCategory: ''
 })
 const lexicalCategories = ref([
-  {
-    label: 'Noun',
-    value: 'noun'
-  },
-  {
-    label: 'Verb',
-    value: 'verb'
-  },
-  {
-    label: 'Adjective',
-    value: 'adjective'
-  },
-  {
-    label: 'Adverb',
-    value: 'adverb'
-  },
-  {
-    label: 'Preposition',
-    value: 'preposition'
-  },
-  {
-    label: 'Conjunction',
-    value: 'conjunction'
-  },
-  {
-    label: 'Interjection',
-    value: 'interjection'
-  }
+  'noun',
+  'verb',
+  'adjective',
+  'adverb',
+  'preposition',
+  'conjunction',
+  'interjection'
 ])
 
 const saveSense = () => {

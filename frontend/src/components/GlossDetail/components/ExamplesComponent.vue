@@ -35,7 +35,7 @@
                   {{ translation.language }}
                 </q-item-label>
               </q-item-section>
-              <q-item-section>
+              <q-item-section class="col">
                 <q-input
                   v-if="editMode !== 'none'"
                   v-model="translation.translation"
@@ -86,36 +86,37 @@ import translate from 'src/utils/translate';
 import LanguageSelector from './LanguageSelector.vue';
 import UploadVideoComponent from 'src/components/UploadVideoPopup.vue'
 
-const { sense, editMode } = defineProps<{
-  sense: Sense;
+const sense = defineModel<Sense>({ required: true })
+const { editMode } = defineProps<{
   editMode: "strict" | "full" | "none";
 }>();
 
 const addExample = () => {
-  sense.examples.push({
+  sense.value.examples.push({
     id: Date.now().toString(),
     example: '',
     exampleVideoURL: '',
-    senseId: sense.id || '',
+    senseId: sense.value.id || '',
     exampleTranslations: []
   })
 }
 
 const removeExample = (index: number) => {
-  sense.examples.splice(index, 1)
+  sense.value.examples.splice(index, 1)
 }
 
 const addTranslation = (example: Example) => {
   example.exampleTranslations.push({
     id: Date.now().toString(),
-    language: 'ca',
+    language: 'CATALAN',
     translation: '',
-    exampleId: example.id
+    exampleId: example.id || ''
   })
 }
 
 const removeTranslation = (example: Example, index: number) => {
   example.exampleTranslations.splice(index, 1)
+  sense.value.examples.splice(index, 1)
 }
 
 const openVideo = (url: string) => {

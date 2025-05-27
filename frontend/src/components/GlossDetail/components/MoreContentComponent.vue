@@ -42,17 +42,17 @@
     >
       <DefinitionsComponent
         v-if="selectedContent === 'definitions'"
-        :sense="sense"
+        v-model="sense"
         :edit-mode="editMode"
       />
       <ExamplesComponent
         v-if="selectedContent === 'examples'"
-        :sense="sense"
+        v-model="sense"
         :edit-mode="editMode"
       />
       <VideosComponent
         v-if="selectedContent === 'videos'"
-        :sense="sense"
+        v-model="sense"
         :edit-mode="editMode"
       />
       <RelatedGlosses
@@ -84,9 +84,9 @@ import VideosComponent from './VideosComponent.vue';
 import RelatedGlosses from './RelatedGlosses.vue';
 
 const selectedContent = ref<string>('definitions')
+const sense = defineModel<Sense>({ required: true })
 
-const { sense, glossData, editMode } = defineProps<{
-  sense: Sense;
+const { glossData, editMode } = defineProps<{
   glossData: GlossData;
   editMode: "strict" | "full" | "none";
 }>();

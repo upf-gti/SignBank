@@ -48,6 +48,12 @@ export class UserRepository {
     return this.prisma.user.findMany();
   }
 
+  async findByRefreshToken(refreshToken: string): Promise<User | null> {
+    return this.prisma.user.findFirst({
+      where: { refreshToken },
+    });
+  }
+
   async findByRole(role: Role): Promise<User[]> {
     return this.prisma.user.findMany({
       where: { role },

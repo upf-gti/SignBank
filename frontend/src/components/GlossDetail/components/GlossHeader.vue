@@ -4,16 +4,15 @@
       <div v-if="editMode !== 'full'" class="text-h6">
         {{ glossData.gloss }}
       </div>
-      <q-input v-else v-model="glossData.gloss" :label="translate('gloss')" />
+      <q-input v-else outlined v-model="glossData.gloss" :label="translate('gloss')" />
       <div class="text-subtitle2">
         {{ translate('last_updated') }}: {{ glossData.updatedAt }}
       </div>
     </div>
-    <div class="row">
+    <div class="row" v-if="allowEdit">
       <q-btn v-if="editMode === 'none'" icon="edit" @click="editGloss" />
-      <q-btn v-else icon="save" @click="saveGloss" />
+      <q-btn v-else icon="save" @click="saveGloss" :label="translate('saveGloss')" outline />
       <q-btn v-if="editMode === 'strict'" icon="cancel" @click="cancelGloss" />
-      <q-btn icon="more_vert" />
     </div>
   </q-card-section>
 </template>
@@ -30,7 +29,8 @@ const emit = defineEmits<{
 
 const { glossData } = defineProps<{
   glossData: GlossData,
-  editMode: "strict" | "full" | "none"
+  editMode: "strict" | "full" | "none",
+  allowEdit: boolean
 }>()
 
 const editGloss = () => {

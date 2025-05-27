@@ -1,6 +1,6 @@
 <template>
   <q-card flat style="max-width: 1200px">
-    <GlossHeader :gloss-data="glossData" :edit-mode="editMode" @edit-gloss="editGloss" @save-gloss="saveGloss" @cancel-gloss="cancelGloss" />
+    <GlossHeader :gloss-data="glossData" :edit-mode="editMode" :allow-edit="allowEdit" @edit-gloss="editGloss" @save-gloss="saveGloss" @cancel-gloss="cancelGloss" />
     <SenseSelector
       v-model="selectedSenseId"
       :senses="glossData.senses"
@@ -13,7 +13,7 @@
     />
     <MoreContentComponent
       v-if="glossData.senses.length > 0"
-      :sense="selectedSense"
+      v-model="selectedSense"
       :gloss-data="glossData"
       :edit-mode="editMode"
       @add-relation="addRelation"
@@ -35,25 +35,30 @@ import { api } from 'src/services/api';
 
 const emit = defineEmits<{
   (e: 'update:editMode', mode: 'none' | 'strict' | 'full'): void
+  (e: 'saveGloss', glossData: GlossData): void
 }>()
 
-const { glossData, editMode } = defineProps<{
+const { glossData, editMode, allowEdit } = defineProps<{
   glossData: GlossData,
-  editMode: "strict" | "full" | "none"
+  editMode: "strict" | "full" | "none",
+  allowEdit: boolean
 }>()
 
 const selectedSenseId = ref<string>(glossData.senses[0]?.id as string)
 const selectedSense = computed<Sense>(() => glossData.senses.find((sense) => sense.id === selectedSenseId.value) as Sense) 
 
 const editGloss = () => {
+  if (!allowEdit) return
   emit('update:editMode', 'strict')
 }
 
 const saveGloss = () => {
-  emit('update:editMode', 'none')
+  if (!allowEdit) return
+  emit('saveGloss', glossData)
 }
 
 const cancelGloss = () => {
+  if (!allowEdit) return
   emit('update:editMode', 'none')
 }
 
@@ -63,7 +68,7 @@ const addSense = (sense: { senseTitle: string, lexicalCategory: string }) => {
     senseTitle: sense.senseTitle,
     priority: glossData.senses.length + 1,
     lexicalCategory: sense.lexicalCategory,
-    glossDataId: glossData.id,
+    glossDataId: glossData.id || '',
     definitions: [],
     signVideos: [],
     examples: [],
@@ -74,7 +79,7 @@ const addSense = (sense: { senseTitle: string, lexicalCategory: string }) => {
 
 const addRelation = async (relation: Partial<RelatedGloss>) => {
   try {
-    const response = await api.glosses.addRelation(glossData.id, {
+    const response = await api.glosses.addRelation(glossData.id || '', {
       relationType: relation.relationType!,
       relatedGlossId: relation.relatedGlossId!
     });
@@ -86,7 +91,7 @@ const addRelation = async (relation: Partial<RelatedGloss>) => {
 
 const removeRelation = async (relationId: string) => {
   try {
-    await api.glosses.removeRelation(glossData.id, relationId);
+    await api.glosses.removeRelation(glossData.id || '', relationId);
     const index = glossData.relatedGlosses.findIndex(r => r.id === relationId);
     if (index > -1) {
       glossData.relatedGlosses.splice(index, 1);
@@ -98,7 +103,7 @@ const removeRelation = async (relationId: string) => {
 
 const addMinimalPair = async (pair: Partial<MinimalPair>) => {
   try {
-    const response = await api.glosses.addMinimalPair(glossData.id, {
+    const response = await api.glosses.addMinimalPair(glossData.id || '', {
       distinction: pair.distinction!,
       signVideoId: pair.signVideoId!,
       minimalPairGlossDataId: pair.minimalPairGlossDataId!
@@ -111,7 +116,7 @@ const addMinimalPair = async (pair: Partial<MinimalPair>) => {
 
 const removeMinimalPair = async (pairId: string) => {
   try {
-    await api.glosses.removeMinimalPair(glossData.id, pairId);
+    await api.glosses.removeMinimalPair(glossData.id || ''  , pairId);
     const index = glossData.minimalPairs.findIndex(p => p.id === pairId);
     if (index > -1) {
       glossData.minimalPairs.splice(index, 1);

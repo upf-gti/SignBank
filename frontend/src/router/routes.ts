@@ -25,6 +25,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/RequestGlossPage.vue') },
       { path: 'create', component: () => import('pages/CreateRequestGlossPage.vue') },
+      { path: 'view/:id', component: () => import('pages/ViewRequestGlossPage.vue') }
     ],
   },
   

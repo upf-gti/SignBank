@@ -13,17 +13,9 @@
 import translate from 'src/utils/translate';
 
 const languageOptions = [
-  'ca',
-  'es',
-  'en',
-  'fr',
-  'de',
-  'it',
-  'pt',
-  'ru',
-  'zh',
-  'ja',
-  'ko'
+  'CATALAN',
+  'SPANISH',
+  'ENGLISH'
 ] as const
 
 const modelValue = defineModel<string>('modelValue')

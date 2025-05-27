@@ -33,9 +33,7 @@ export class AuthService {
 
     await this.users.update(user.id, {
       accessToken,
-      refreshToken,
-      tokenExpiresAt: new Date(Date.now() + 60 * 1000),
-      refreshTokenExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+      refreshToken
     });
 
     return {
@@ -78,31 +76,39 @@ export class AuthService {
 
   async refreshTokens(refreshToken: string) {
     debugger
-    if (!refreshToken) throw new Error('No refresh token provided');
-    const user = await this.users.findAll().then(users => users.find(u => u.refreshToken === refreshToken));
-    if (!user) throw new UnauthorizedException('Invalid refresh token');
-    if (user.tokenExpiresAt && new Date() > user.tokenExpiresAt) {
-      await this.users.update(user.id, {
-        accessToken: null,
-        refreshToken: null,
-        tokenExpiresAt: null,
-        refreshTokenExpiresAt: null
-      });
-      throw new UnauthorizedException('Refresh token expired');
+    // Check if refresh token exists and has valid format
+    if (!refreshToken || typeof refreshToken !== 'string' || refreshToken.length !== 80) {
+      throw new UnauthorizedException('Invalid refresh token format');
     }
+
+    // Find user with the provided refresh token
+    const user = await this.users.findByRefreshToken(refreshToken);
+    if (!user) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+
+    // Invalidate old tokens immediately for security
+    await this.users.update(user.id, {
+      accessToken: null,
+      refreshToken: null,
+    });
+
+    // Generate new tokens
     const payload = {
       email: user.email,
       sub: user.id,
       role: user.role
     };
+    
     const newAccessToken = this.jwtService.sign(payload);
     const newRefreshToken = randomBytes(40).toString('hex');
+    
+    // Update user with new tokens
     await this.users.update(user.id, {
       accessToken: newAccessToken,
       refreshToken: newRefreshToken,
-      tokenExpiresAt: new Date(Date.now() + 60 * 1000),
-      refreshTokenExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
     });
+
     return {
       access_token: newAccessToken,
       refresh_token: newRefreshToken
@@ -113,8 +119,6 @@ export class AuthService {
     await this.users.update(userId, {
       accessToken: null,
       refreshToken: null,
-      tokenExpiresAt: null,
-      refreshTokenExpiresAt: null
     });
     return { message: 'Logged out successfully' };
   }

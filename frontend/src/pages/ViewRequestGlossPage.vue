@@ -1,0 +1,75 @@
+<template>
+    <q-page>
+      <LoadingComponent
+        v-if="loading"
+        :loading="loading"
+      />
+  
+      <div
+        v-else-if="error"
+        class="text-center q-pa-md"
+      >
+        <div class="text-negative text-h6">
+          {{ error }}
+        </div>
+        <q-btn
+          color="primary"
+          :label="translate('common.goBack')"
+          class="q-mt-md"
+          @click="router.go(-1)"
+        />
+      </div>
+  
+      <div
+        v-else
+        class="column full-width justify-center items-center"
+        style="height: fit-content"
+      >
+        <GlossDetailComponent
+          v-if="glossData"
+          class="col full-width"
+          :gloss-data="glossData"
+          v-model:edit-mode="editMode"
+          :allow-edit="false"
+        />
+      </div>
+    </q-page>
+  </template>
+  
+  <script setup lang="ts">
+  import { useRoute, useRouter } from 'vue-router'
+  import { ref, onMounted } from 'vue'
+  import translate from 'src/utils/translate'
+  import LoadingComponent from 'src/components/LoadingComponent.vue'
+  import GlossDetailComponent from 'src/components/GlossDetail/GlossDetailComponent.vue'
+  import { api } from 'src/services/api'
+  import type { GlossData } from 'src/types/models'
+  
+  const route = useRoute()
+  const router = useRouter()
+  
+  // State
+  const loading = ref(true)
+  const error = ref<string | null>(null)
+  const editMode = ref<'none' | 'strict' | 'full'>('none')
+  const glossData = ref<GlossData>()
+  
+  onMounted(() => {
+    getGlossRequestData()
+  })
+  
+  function getGlossRequestData() {
+    if(route.params.id) {
+      api.requests.get(route.params.id as string)
+        .then((response) => {
+          glossData.value = response.data.requestedGlossData
+        })
+        .catch((error) => {
+          console.error(error)
+          error.value = translate('errors.failedToLoadGloss')
+        }).finally(() => {
+          loading.value = false
+        })
+    }
+  }
+  </script>

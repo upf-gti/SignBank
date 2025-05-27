@@ -31,6 +31,9 @@ export const api = {
     create(request: Partial<GlossRequest>): Promise<AxiosResponse<GlossRequest>> {
       return apiClient.post('/gloss-requests', request)
     },
+    get(id: string): Promise<AxiosResponse<GlossRequest>> {
+      return apiClient.get(`/gloss-requests/${id}`)
+    }
   },
   login(credentials: { email: string, password: string }) {
     return apiClient.post('/auth/login', credentials)
@@ -38,8 +41,8 @@ export const api = {
   register(credentials: { username: string, email: string, password: string }) {
     return apiClient.post('/auth/register', credentials)
   },
-  refreshToken() {
-    return apiClient.post('/auth/refresh')
+  refreshToken(body: { refresh_token: string }) {
+    return apiClient.post('/auth/refresh', body)
   },
   videos: {
     upload(file: File): Promise<AxiosResponse<{ url: string }>> {

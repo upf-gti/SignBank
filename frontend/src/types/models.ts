@@ -1,29 +1,31 @@
+import { Gloss } from "./api"
+
 export type WordStatus = 'PUBLISHED' | 'DRAFT' | 'PENDING';
 export type RequestStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
 
 export interface Translation {
-  id: string;
+  id?: string;
   translation: string;
   language: string;
   definitionId: string;
 }
 
 export interface ExampleTranslation {
-  id: string;
+  id?: string;
   translation: string;
   language: string;
   exampleId: string;
 }
 
 export interface SenseTranslation {
-  id: string;
+  id?: string;
   translation: string;
   language: string;
   senseId: string;
 }
 
 export interface Example {
-  id: string;
+  id?: string;
   example: string;
   exampleVideoURL: string;
   senseId: string;
@@ -31,12 +33,12 @@ export interface Example {
 }
 
 export interface VideoDefinition {
-  id: string;
+  id?: string;
   url: string;
 }
 
 export interface Definition {
-  id: string;
+  id?: string;
   title: string;
   definition: string;
   videoDefinitionId: string;
@@ -46,7 +48,7 @@ export interface Definition {
 }
 
 export interface Video {
-  id: string;
+  id?: string;
   url: string;
   angle: string;
   priority: number;
@@ -66,11 +68,11 @@ export interface VideoData {
   vocalization: string;
   nonManualComponent: string;
   inicialization: string;
-  id: string;
+  id?: string;
 }
 
 export interface MinimalPairGlossData {
-  id: string;
+  id?: string;
   gloss: string;
   createdAt: string;
   updatedAt: string;
@@ -79,13 +81,13 @@ export interface MinimalPairGlossData {
   isCreatedFromRequest: boolean;
   isCreatedFromEdit: boolean;
   senses: {
-    id: string;
+    id?: string;
     senseTitle: string;
     priority: number;
     lexicalCategory: string;
     glossDataId: string;
     signVideos: {
-      id: string;
+      id?: string;
       title: string;
       url: string;
       priority: number;
@@ -96,7 +98,7 @@ export interface MinimalPairGlossData {
 }
 
 export interface RelatedGlossData {
-  id: string;
+  id?: string;
   gloss: string;
   createdAt: string;
   updatedAt: string;
@@ -105,13 +107,13 @@ export interface RelatedGlossData {
   isCreatedFromRequest: boolean;
   isCreatedFromEdit: boolean;
   senses: {
-    id: string;
+    id?: string;
     senseTitle: string;
     priority: number;
     lexicalCategory: string;
     glossDataId: string;
     signVideos: {
-      id: string;
+      id?: string;
       title: string;
       url: string;
       priority: number;
@@ -122,7 +124,7 @@ export interface RelatedGlossData {
 }
 
 export interface MinimalPair {
-  id: string;
+  id?: string;
   glossDataId: string;
   distinction: string;
   signVideoId: string;
@@ -131,7 +133,7 @@ export interface MinimalPair {
 }
 
 export interface SignVideo {
-  id: string;
+  id?: string;
   title: string;
   url: string;
   priority: number;
@@ -155,7 +157,7 @@ export interface Sense {
 }
 
 export interface RelatedGloss {
-  id: string;
+  id?: string;
   glossId: string;
   relatedGlossId: string;
   relationType: string;
@@ -163,7 +165,7 @@ export interface RelatedGloss {
 }
 
 export interface GlossData {
-  id: string;
+  id?: string;
   gloss: string;
   createdAt: string;
   updatedAt: string;
@@ -171,7 +173,6 @@ export interface GlossData {
   currentVersion: number;
   isCreatedFromRequest: boolean;
   isCreatedFromEdit: boolean;
-  senseId: string;
   senses: Sense[];
   relatedGlosses: RelatedGloss[];
   minimalPairs: MinimalPair[];
@@ -179,7 +180,7 @@ export interface GlossData {
 }
 
 export interface dictionaryEntry {
-  id: string;
+  id?: string;
   createdAt: string;
   updatedAt: string;
   status: WordStatus;
@@ -192,15 +193,25 @@ export interface dictionaryEntry {
   glossData: GlossData;
 }
 
+export interface User {
+  id: string;
+  username: string;
+  email: string;
+}
+
 export interface GlossRequest {
   id: string;
-  gloss: string;
-  description: string;
-  videoUrl?: string;
+  creatorId: string;
   status: RequestStatus;
   createdAt: string;
   updatedAt: string;
-  userId: string;
-  glossId?: string;
-  gloss_data?: GlossData;
+  denyReason: string | null;
+  acceptedById: string | null;
+  deniedById: string | null;
+  requestedGlossDataId: string;
+  glossId: string | null;
+  creator: User;
+  acceptedBy: User | null;
+  deniedBy: User | null;
+  requestedGlossData: GlossData;
 }

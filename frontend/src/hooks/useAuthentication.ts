@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue'
 import { api } from 'src/services/api'
 import useUser from 'src/stores/user.store'
+import router from 'src/router'
 
 export function useAuthentication() {
   const userStore = useUser()
@@ -55,7 +56,8 @@ export function useAuthentication() {
 
     try {
       isRefreshing.value = true
-      const { data } = await api.refreshToken()
+      const { data } = await api.refreshToken({ refresh_token: userStore.refresh_token })
+      debugger
       userStore.setTokens(data)
       return data
     } catch (err: any) {
@@ -68,8 +70,8 @@ export function useAuthentication() {
   }
 
   function logout() {
-    debugger
     userStore.logout()
+    router.push()
   }
 
   return {
