@@ -25,10 +25,14 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/RequestGlossPage.vue') },
       { path: 'create', component: () => import('pages/CreateRequestGlossPage.vue') },
-      { path: 'view/:id', component: () => import('pages/ViewRequestGlossPage.vue') }
+      { path: 'view/:id', component: () => import('pages/ViewRequestGlossPage.vue') },
     ],
   },
-  
+  {
+    path: '/confirm-requests',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/ConfirmRequestsPage.vue') }],
+  },
 
   // Always leave this as last one,
   // but you can also remove it

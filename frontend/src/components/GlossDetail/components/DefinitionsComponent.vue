@@ -6,7 +6,7 @@
     <q-list>
       <q-item
         v-for="(definition, index) in sense.definitions"
-        :key="definition.id"
+        :key="definition.id || index"
         class="column q-mb-lg"
       >
         <!-- List of definitions -->
@@ -35,7 +35,7 @@
           <!-- Definition translations -->
           <q-item
             v-for="(translation, tIndex) in definition.definitionTranslations"
-            :key="translation.id"
+            :key="translation.id || tIndex"
             class="column"
           >
             <div class="row justify-between items-center q-mb-sm">
@@ -83,7 +83,7 @@
       <q-list class="row">
         <q-item
           v-for="(translation, index) in sense.senseTranslations"
-          :key="translation.id"
+          :key="translation.id || index"
           class="col"
           style="min-width: 300px"
         >

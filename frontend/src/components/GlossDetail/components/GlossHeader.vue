@@ -1,13 +1,10 @@
 <template>
   <q-card-section class="row justify-between items-center">
     <div class="column">
-      <div v-if="editMode !== 'full'" class="text-h6">
+      <div v-if="editMode !== 'full'" class="text-h4">
         {{ glossData.gloss }}
       </div>
       <q-input v-else outlined v-model="glossData.gloss" :label="translate('gloss')" />
-      <div class="text-subtitle2">
-        {{ translate('last_updated') }}: {{ glossData.updatedAt }}
-      </div>
     </div>
     <div class="row" v-if="allowEdit">
       <q-btn v-if="editMode === 'none'" icon="edit" @click="editGloss" />

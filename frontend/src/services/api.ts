@@ -33,6 +33,9 @@ export const api = {
     },
     get(id: string): Promise<AxiosResponse<GlossRequest>> {
       return apiClient.get(`/gloss-requests/${id}`)
+    },
+    getPending(): Promise<AxiosResponse<GlossRequest[]>> {
+      return apiClient.get('/gloss-requests/pending')
     }
   },
   login(credentials: { email: string, password: string }) {
