@@ -1,5 +1,6 @@
-import { IsString, IsOptional, IsNumber } from 'class-validator';
+import { IsString, IsOptional, IsInt, Min, IsArray } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform, Type } from 'class-transformer';
 
 export class SearchQueryDto {
   @ApiProperty({
@@ -14,8 +15,11 @@ export class SearchQueryDto {
     required: false,
     default: 1,
   })
-  @IsNumber()
+  @IsInt()
+  @Min(1)
   @IsOptional()
+  @Type(() => Number)
+  @Transform(({ value }) => parseInt(value))
   page?: number = 1;
 
   @ApiProperty({
@@ -23,7 +27,26 @@ export class SearchQueryDto {
     required: false,
     default: 10,
   })
-  @IsNumber()
+  @IsInt()
+  @Min(1)
   @IsOptional()
+  @Type(() => Number)
+  @Transform(({ value }) => parseInt(value))
   limit?: number = 10;
+
+  @ApiProperty({
+    description: 'Fields to facet by',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  facet_by?: string;
+
+  @ApiProperty({
+    description: 'Filter expression',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  filter_by?: string;
 } 

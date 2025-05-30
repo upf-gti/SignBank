@@ -1,0 +1,18 @@
+export enum LexicalCategory {
+  NOUN = 'NOUN',
+  VERB = 'VERB',
+  ADJECTIVE = 'ADJECTIVE',
+  ADVERB = 'ADVERB',
+  PRONOUN = 'PRONOUN',
+  DETERMINER = 'DETERMINER',
+  PREPOSITION = 'PREPOSITION',
+  CONJUNCTION = 'CONJUNCTION',
+  INTERJECTION = 'INTERJECTION',
+  OTHER = 'OTHER'
+}
+
+export enum Hand {
+  RIGHT = 'RIGHT',
+  LEFT = 'LEFT',
+  BOTH = 'BOTH'
+}

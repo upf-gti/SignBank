@@ -50,6 +50,20 @@ interface TranslateKeys {
   vocalization: string;
   nonManualComponent: string;
   inicialization: string;
+  searchSigns: string;
+  filters: string;
+  clear: string;
+  applyFilters: string;
+  lexicalCategory: string;
+  selectCategory: string;
+  rightHand: string;
+  leftHand: string;
+  bothHands: string;
+  showConfigurationDetails: string;
+  configurationDetails: string;
+  resultsFound: string;
+  viewDetails: string;
+  noResults: string;
 }
 
 export default TranslateKeys;

@@ -6,6 +6,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { GlossesModule } from './glosses/glosses.module';
 import { VideosModule } from './videos/videos.module';
 import { TypesenseModule } from './typesense/typesense.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { TypesenseModule } from './typesense/typesense.module';
     GlossesModule,
     VideosModule,
     TypesenseModule,
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [AppService],

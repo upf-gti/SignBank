@@ -10,7 +10,9 @@ export class SearchService {
     try {
       const searchParameters = {
         q: searchQuery.query,
-        query_by: 'name,definition,tags',
+        query_by: 'gloss,senseTitle,signVideoTitle',
+        filter_by: searchQuery.filter_by,
+        facet_by: searchQuery.facet_by,
         page: searchQuery.page,
         per_page: searchQuery.limit,
       };
@@ -20,8 +22,8 @@ export class SearchService {
       return {
         hits: searchResults.hits,
         page: searchResults.page,
-        totalPages: Math.ceil(searchResults.found / searchQuery.limit),
-        totalHits: searchResults.found,
+        found: searchResults.found,
+        facet_counts: searchResults.facet_counts
       };
     } catch (error) {
       throw new Error(`Search failed: ${error.message}`);

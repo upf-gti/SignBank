@@ -1,6 +1,7 @@
 import type { AxiosResponse } from "axios"
 import { apiClient } from "src/boot/axios"
 import type { GlossRequest } from 'src/types/models'
+import { SearchParams } from "./search.service"
 
 // Create API service object
 export const api = {
@@ -55,6 +56,11 @@ export const api = {
     },
     search(query: string): Promise<AxiosResponse<any>> {
       return apiClient.get(`/videos/search`, { params: { q: query } })
+    }
+  },
+  search: {
+    search(params: SearchParams): Promise<AxiosResponse<any>> {
+      return apiClient.get(`/search`, { params })
     }
   }
 }

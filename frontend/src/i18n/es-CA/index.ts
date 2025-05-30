@@ -1,6 +1,21 @@
 import type TranslateKeys from '../translateKeys';
 
 export default {
+  // Search page
+  searchSigns: 'Cercar signes',
+  filters: 'Filtres',
+  clear: 'Netejar',
+  applyFilters: 'Aplicar filtres',
+  lexicalCategory: 'Categoría lèxica',
+  selectCategory: 'Seleccionar categoria',
+  rightHand: 'Dreta',
+  leftHand: 'Esquerra',
+  bothHands: 'Ambdues',
+  showConfigurationDetails: 'Mostra detalls de configuració',
+  configurationDetails: 'Detalls de configuració',
+  resultsFound: 'Resultats trobats',
+  viewDetails: 'Veure detalls',
+  noResults: 'No hi ha resultats',  
   enterAWord: 'Introduïu una paraula',
   search: 'Cercar',
   signLanguageDictionary: 'Diccionari Signbank de la llengua',
