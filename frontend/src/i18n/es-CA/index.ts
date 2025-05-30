@@ -1,6 +1,9 @@
 import type TranslateKeys from '../translateKeys';
 
 export default {
+  enterAWord: 'Introduïu una paraula',
+  search: 'Cercar',
+  signLanguageDictionary: 'Diccionari Signbank de la llengua',
   adjective: 'Adjectiu',
   adverb: 'Adverbi',
   noun: 'Nom',

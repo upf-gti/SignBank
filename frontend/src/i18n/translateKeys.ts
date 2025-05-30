@@ -1,4 +1,7 @@
 interface TranslateKeys {
+  signLanguageDictionary: string;
+  enterAWord: string;
+  search: string;
   gloss: string;
   definitions: string;
   definitionTitle: string;

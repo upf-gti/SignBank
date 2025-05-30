@@ -1,15 +1,40 @@
 <template>
   <q-card-section class="row justify-between items-center">
     <div class="column">
-      <div v-if="editMode !== 'full'" class="text-h4">
+      <div
+        v-if="editMode !== 'full'"
+        class="text-h4"
+      >
         {{ glossData.gloss }}
       </div>
-      <q-input v-else outlined v-model="glossData.gloss" :label="translate('gloss')" />
+      <q-input
+        v-else
+        v-model="glossData.gloss"
+        outlined
+        :label="translate('gloss')"
+      />
     </div>
-    <div class="row" v-if="allowEdit">
-      <q-btn v-if="editMode === 'none'" icon="edit" @click="editGloss" />
-      <q-btn v-else icon="save" @click="saveGloss" :label="translate('saveGloss')" outline />
-      <q-btn v-if="editMode === 'strict'" icon="cancel" @click="cancelGloss" />
+    <div
+      v-if="allowEdit"
+      class="row"
+    >
+      <q-btn
+        v-if="editMode === 'none'"
+        icon="edit"
+        @click="editGloss"
+      />
+      <q-btn
+        v-else
+        icon="save"
+        :label="translate('saveGloss')"
+        outline
+        @click="saveGloss"
+      />
+      <q-btn
+        v-if="editMode === 'strict'"
+        icon="cancel"
+        @click="cancelGloss"
+      />
     </div>
   </q-card-section>
 </template>
@@ -24,7 +49,7 @@ const emit = defineEmits<{
   (e: 'cancelGloss'): void
 }>()
 
-const { glossData } = defineProps<{
+const { glossData, allowEdit = true } = defineProps<{
   glossData: GlossData,
   editMode: "strict" | "full" | "none",
   allowEdit: boolean

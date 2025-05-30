@@ -1,6 +1,5 @@
    #!/bin/sh
-   set -e
-
+   # set -e
    # Run migrations
    npx prisma migrate dev
 
