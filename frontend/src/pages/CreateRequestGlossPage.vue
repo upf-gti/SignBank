@@ -18,7 +18,6 @@
             :label="translate('gloss')"
             outlined
             class="q-mb-md"
-            :rules="[val => !!val || translate('glossRequired')]"
           />
           <div class="text-subtitle2 q-mb-sm">{{ translate('firstSense') }}</div>
           <q-input
@@ -93,7 +92,6 @@ const lexicalCategories = [
 
 const canContinue = computed(() => {
   return !!initialGlossData.value.gloss &&
-         !!initialGlossData.value.senseTitle &&
          !!initialGlossData.value.lexicalCategory;
 });
 
