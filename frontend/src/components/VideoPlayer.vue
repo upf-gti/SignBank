@@ -62,7 +62,7 @@
     <!-- Sign information below the video -->
     <SignInfo 
       :video="currentVideo" 
-      :is-edit-mode="editMode !== 'none'"
+      :is-edit-mode="editMode"
       @update:video="updateVideo"
     />
   </div>
@@ -77,13 +77,13 @@ import { getVideoUrl } from 'src/utils/videoUrl'
 
 interface Props {
   videos: Video[]
-  editMode: 'none' | 'strict' | 'full'
+  editMode: boolean
 }
 
 const emit = defineEmits<{
   (e: 'update:videos', videos: Video[]): void
 }>()
-const { videos, editMode = 'none' } = defineProps<Props>()
+const { videos, editMode = false } = defineProps<Props>()
 
 const currentIndex = ref(0)
 
