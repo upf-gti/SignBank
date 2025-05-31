@@ -4,7 +4,7 @@
     <q-btn-toggle
       v-model="selectedSenseId"
       :options="senses.map((sense) => ({
-        label: sense.senseTitle,
+        label: (sense.senseTitle || glossData.gloss) + ' (' + translate(sense.lexicalCategory) + ')',
         value: sense.id,
       }))"
     />
@@ -18,8 +18,12 @@
         </q-card-section>
         <q-form @submit.prevent.stop="saveSense">
         <q-card-section>
-          <q-input v-model="newSense.senseTitle" hide-bottom-space :label="translate('senseTitle')" :rules="[val => !!val || translate('required')]" />
-          <q-select :label="translate('lexicalCategory')" hide-bottom-space v-model="newSense.lexicalCategory" :options="lexicalCategories" :rules="[val => !!val || translate('required')]" :display-value="translate(newSense.lexicalCategory)" />
+          <q-input v-model="newSense.senseTitle" hide-bottom-space :label="translate('senseTitle')" :placeholder="translate('addAditionalInformation')" />
+          <q-select :label="translate('lexicalCategory')" emit-value hide-bottom-space v-model="newSense.lexicalCategory" :options="lexicalCategories" :rules="[val => !!val || translate('required')]" >
+            <template v-slot:selected>
+              {{ translate(newSense.lexicalCategory) }}
+            </template>
+          </q-select>
         </q-card-section>
         <q-card-actions>
           <q-btn :label="translate('cancel')" @click="addSense = false" flat type="button" />
@@ -32,7 +36,7 @@
   </q-card-section>
 </template>
 <script setup lang="ts">
-import { Sense } from 'src/types/models'
+import { Sense, GlossData } from 'src/types/models'
 import translate from 'src/utils/translate'
 import { ref } from 'vue'
 
@@ -43,7 +47,8 @@ const emit = defineEmits<{
 
 const { senses } = defineProps<{
   senses: Sense[],
-  editMode: "strict" | "full" | "none"
+  editMode: "strict" | "full" | "none",
+  glossData: GlossData
 }>()
 
 const addSense = ref(false)
@@ -52,13 +57,13 @@ const newSense = ref({
   lexicalCategory: ''
 })
 const lexicalCategories = ref([
-  'noun',
-  'verb',
-  'adjective',
-  'adverb',
-  'preposition',
-  'conjunction',
-  'interjection'
+  { label: translate('noun'), value: 'noun' },
+  { label: translate('verb'), value: 'verb' },
+  { label: translate('adjective'), value: 'adjective' },
+  { label: translate('adverb'), value: 'adverb' },
+  { label: translate('preposition'), value: 'preposition' },
+  { label: translate('conjunction'), value: 'conjunction' },
+  { label: translate('interjection'), value: 'interjection' }
 ])
 
 const saveSense = () => {

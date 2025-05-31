@@ -10,6 +10,7 @@
         :gloss-data="glossData"
         v-model:edit-mode="editMode"
         @save-gloss="saveGloss"
+        :allow-edit="true"
       />
     </div>
   </q-page>

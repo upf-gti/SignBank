@@ -141,7 +141,8 @@ export class DefinitionDto {
 
 export class SenseDto {
   @IsString()
-  senseTitle: string;
+  @IsOptional()
+  senseTitle?: string;
 
   @IsInt()
   @Min(0)

@@ -108,7 +108,7 @@ export default defineConfig(() => {
       }, */
       hmr: {
         clientPort: 443,
-        host: process.env.BASE_URL || 'localhost',
+        host: 'localhost',
         path: '/ws',
         protocol: 'wss'
       }

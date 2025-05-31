@@ -5,6 +5,7 @@
       v-model="selectedSenseId"
       :senses="glossData.senses"
       :edit-mode="editMode"
+      :gloss-data="glossData"
       @add-sense="addSense"
     />
     <MainContent
@@ -32,13 +33,16 @@ import SenseSelector from './components/SenseSelector.vue';
 import MainContent from './components/MainContent.vue';
 import MoreContentComponent from './components/MoreContentComponent.vue';
 import { api } from 'src/services/api';
+import { validateGloss } from 'src/utils/glossValidation';
+import { useQuasar } from 'quasar';
+import translate from 'src/utils/translate'
 
 const emit = defineEmits<{
   (e: 'update:editMode', mode: 'none' | 'strict' | 'full'): void
   (e: 'saveGloss', glossData: GlossData): void
 }>()
 
-const { glossData, editMode, allowEdit } = defineProps<{
+const { glossData, editMode, allowEdit = true } = defineProps<{
   glossData: GlossData,
   editMode: "strict" | "full" | "none",
   allowEdit: boolean
@@ -46,6 +50,7 @@ const { glossData, editMode, allowEdit } = defineProps<{
 
 const selectedSenseId = ref<string>(glossData.senses[0]?.id as string)
 const selectedSense = computed<Sense>(() => glossData.senses.find((sense) => sense.id === selectedSenseId.value) as Sense) 
+const $q = useQuasar()
 
 const editGloss = () => {
   if (!allowEdit) return
@@ -54,6 +59,30 @@ const editGloss = () => {
 
 const saveGloss = () => {
   if (!allowEdit) return
+
+  // Validate the gloss data
+  const validationErrors = validateGloss(glossData)
+  
+  if (validationErrors.length > 0) {
+    // Show validation errors to the user
+    $q.dialog({
+      title: translate('validationErrors'),
+      message: `
+        <ul style="list-style-type: disc; margin: 0; padding-left: 20px;">
+          ${validationErrors.map(error => `<li>${error.message}</li>`).join('')}
+        </ul>
+      `,
+      html: true,
+      style: 'min-width: 300px',
+      ok: {
+        label: translate('ok'),
+        flat: true,
+        color: 'primary'
+      }
+    })
+    return
+  }
+
   emit('saveGloss', glossData)
 }
 
@@ -125,4 +154,6 @@ const removeMinimalPair = async (pairId: string) => {
     console.error('Error removing minimal pair:', error);
   }
 };
+
+
 </script>

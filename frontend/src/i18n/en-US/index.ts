@@ -66,5 +66,35 @@ export default {
   configurationDetails: 'Configuration Details',
   resultsFound: 'results found',
   viewDetails: 'View Details',
-  noResults: 'No results found'
+  noResults: 'No results found',
+
+  validation: {
+    glossRequired: 'Gloss must have a value',
+    senseRequired: 'Gloss must have at least one sense',
+    definitionRequired: 'Sense "{senseTitle}" must have at least one definition',
+    definitionValueRequired: 'Definition in sense "{senseTitle}" must have a value',
+    definitionTranslationRequired: 'Definition translation in sense "{senseTitle}" must have a value',
+    exampleValueRequired: 'Example in sense "{senseTitle}" must have a value',
+    exampleTranslationRequired: 'Example translation in sense "{senseTitle}" must have a value',
+    videoRequired: 'Sense "{senseTitle}" must have at least one sign video',
+    videoAngleRequired: 'Video in sense "{senseTitle}" must have an angle name',
+    videoUrlRequired: 'Video in sense "{senseTitle}" must have a URL',
+    videoUrlRequiredForAngle: 'Video for angle "{angle}" in sense "{senseTitle}" must have a URL',
+    videoAngleRequiredForVideo: '"{videoTitle}" in sense "{senseTitle}" must have an angle name',
+    videoUrlRequiredForAngleAndVideo: '"{videoTitle}" for angle "{angle}" in sense "{senseTitle}" must have a URL',
+    senseTranslationRequired: 'Sense translation in sense "{senseTitle}" must have a value'
+  },
+
+  ok: 'OK',
+  validationErrors: 'Validation Errors',
+  deleteExample: 'Delete Example',
+  deleteDefinition: 'Delete Definition',
+  deleteGlossTranslation: 'Delete Gloss Translation',
+  deleteDefinitionTranslation: 'Delete Definition Translation',
+  deleteSenseTranslation: 'Delete Sense Translation',
+  deleteVideo: 'Delete Video',
+  deleteExampleTranslation: 'Delete Example Translation',
+  deleteVideoTranslation: 'Delete Video Translation',
+  deleteSense: 'Delete Sense',
+  deleteGloss: 'Delete Gloss',  
 }; 
