@@ -23,20 +23,14 @@ export class TypesenseService implements OnModuleInit {
 
   async onModuleInit() {
     try {
-      this.logger.log('Initializing Typesense service...');
-      let needsSync = false;
-      
-      try {
-        const status = await this.getCollectionStatus();
-        needsSync = status.numberOfDocuments === 0;
-      } catch (error) {
-        await this.initializeCollection();
-      }
+      this.logger.log('Initializing Typesense service...');      
 
-      if (needsSync) {
-        await this.syncVideos();
-        this.logger.log('Initial sync completed');
-      }
+      // First, initialize the collection
+      await this.initializeCollection();
+      
+      // Then sync all videos
+      await this.syncAllVideos();
+      this.logger.log('Initial sync completed');
     } catch (error) {
       this.logger.error('Error during Typesense initialization:', error.stack);
       throw error;
@@ -100,7 +94,10 @@ export class TypesenseService implements OnModuleInit {
   async getCollectionStatus() {
     try {
       const collection = await this.client.collections(VIDEOS_COLLECTION_NAME).retrieve();
-      const stats = await this.client.collections(VIDEOS_COLLECTION_NAME).documents().search({ q: '*' });
+      const stats = await this.client.collections(VIDEOS_COLLECTION_NAME).documents().search({ 
+        q: '*',
+        filter_by: '' // Empty string means no filtering
+      });
       
       return {
         name: collection.name,
@@ -116,7 +113,7 @@ export class TypesenseService implements OnModuleInit {
     }
   }
 
-  async syncVideos() {
+  async syncAllVideos() {
     this.logger.log('Starting video sync...');
     try {
       const senses = await this.prisma.sense.findMany({
@@ -223,7 +220,7 @@ export class TypesenseService implements OnModuleInit {
       const defaultParams = {
         q: searchParameters.q || '*',
         query_by: searchParameters.query_by || 'gloss,senseTitle,configuration,location,hands',
-        filter_by: searchParameters.filter_by,
+        filter_by: searchParameters.filter_by || '', // Add default empty string
         facet_by: searchParameters.facet_by,
         max_hits: searchParameters.max_hits || 100,
         page: searchParameters.page || 1,

@@ -11,7 +11,7 @@ export class TypesenseScheduler {
   async handleDailySync() {
     console.log('Starting daily Typesense sync...');
     try {
-      const result = await this.typesenseService.syncVideos();
+      const result = await this.typesenseService.syncAllVideos();
       console.log('Daily sync completed:', result);
     } catch (error) {
       console.error('Daily sync failed:', error);

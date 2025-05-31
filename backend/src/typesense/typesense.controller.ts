@@ -9,8 +9,8 @@ export class TypesenseController {
 
   @Post('sync')
   @ApiOperation({ summary: 'Sync all videos to Typesense' })
-  async syncVideos() {
-    return this.typesenseService.syncVideos();
+  async syncAllVideos() {
+    return this.typesenseService.syncAllVideos();
   }
 
   @Post('sync/init')
