@@ -39,6 +39,7 @@
             <SignFonologyComponent
               :video-data="video.videoData"
               :edit-mode="editMode"
+              @update:video-data="updateVideoData(index, $event)"
             />
           </q-card-section>
         </q-card>
@@ -74,7 +75,7 @@ const addVideo = () => {
     }],
     minimalPairs: [],
     videoData: {
-      hands: '',
+      hands: '',  // Empty string for unselected state
       configuration: '',
       configurationChanges: '',
       relationBetweenArticulators: '',
@@ -100,6 +101,12 @@ const updateSignVideo = (signVideo: SignVideo) => {
   const index = sense.value.signVideos.findIndex(video => video.id === signVideo.id)
   if (index > -1) {
     sense.value.signVideos[index] = signVideo
+  }
+}
+
+const updateVideoData = (index: number, videoData: VideoData) => {
+  if (sense.value.signVideos[index]) {
+    sense.value.signVideos[index].videoData = videoData
   }
 }
 </script>

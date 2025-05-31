@@ -1,4 +1,5 @@
 export interface FilterInputs {
+  hands: string;
   configuration: string;
   configurationChanges: string;
   relationBetweenArticulators: string;

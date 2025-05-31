@@ -31,9 +31,7 @@
 
       <FilterCategories
         :selected-category="selectedCategory"
-        :selected-hands="selectedHands"
         @update:selected-category="$emit('update:selectedCategory', $event)"
-        @update:selected-hands="$emit('update:selectedHands', $event)"
       />
 
       <FilterInputs
@@ -74,6 +72,7 @@ function clearFilters() {
   emit('update:selectedCategory', '');
   emit('update:selectedHands', '');
   emit('update:filterInputs', {
+    hands: '',
     configuration: '',
     configurationChanges: '',
     relationBetweenArticulators: '',

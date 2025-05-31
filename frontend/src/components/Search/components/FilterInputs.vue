@@ -1,14 +1,9 @@
 <template>
-  <div class="q-mt-md">
-    <q-input
-      v-for="(value, field) in modelValue"
-      :key="field"
-      :model-value="value"
-      :label="t(field)"
-      outlined
-      dense
-      clearable
-      @update:model-value="updateField(field, $event)"
+  <div >
+    <PhonologyFilters
+      :model-value="modelValue"
+      :is-editable="true"
+      @update:model-value="$emit('update:model-value', $event)"
     />
   </div>
 </template>
@@ -16,6 +11,7 @@
 <script setup lang="ts">
 import translate from 'src/utils/translate';
 import type { FilterInputs } from '../types';
+import PhonologyFilters from 'src/components/Shared/PhonologyFilters.vue';
 
 const t = (key: string) => translate(key);
 

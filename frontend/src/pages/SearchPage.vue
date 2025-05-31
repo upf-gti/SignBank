@@ -25,6 +25,7 @@ const showDetails = ref(false);
 const selectedLexicalCategory = ref<string>('');
 const selectedHands = ref<string>('');
 const filterInputs = ref<FilterInputs>({
+  hands: '',
   configuration: '',
   configurationChanges: '',
   relationBetweenArticulators: '',
