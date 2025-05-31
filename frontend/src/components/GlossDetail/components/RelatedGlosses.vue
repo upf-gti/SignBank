@@ -23,7 +23,7 @@
           {{ translate('relatedGlosses') }}
         </q-item-label>
         <q-btn
-          v-if="editMode !== 'none'"
+          v-if="editMode"
           flat
           round
           icon="add"
@@ -47,7 +47,7 @@
           {{ translate('minimalPairs') }}
         </q-item-label>
         <q-btn
-          v-if="editMode !== 'none'"
+          v-if="editMode"
           flat
           round
           icon="add"
@@ -224,6 +224,9 @@ import MinimalPairsList from './MinimalPairsList.vue';
 import type { RelatedGloss, MinimalPair } from 'src/types/models';
 import { ref } from 'vue';
 import { api } from 'src/services/api';
+import { useQuasar } from 'quasar';
+
+const $q = useQuasar();
 
 interface SearchResult {
   id: string;
@@ -237,7 +240,7 @@ const selectedContent = ref('relatedGlosses');
 const { relatedGlosses, minimalPairs, editMode } = defineProps<{
   relatedGlosses: RelatedGloss[];
   minimalPairs: MinimalPair[];
-  editMode: "strict" | "full" | "none";
+  editMode: boolean;
 }>();
 
 const emit = defineEmits<{

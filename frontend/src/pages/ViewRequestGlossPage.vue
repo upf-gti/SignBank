@@ -36,40 +36,40 @@
   </q-page>
 </template>
   
-  <script setup lang="ts">
-  import { useRoute, useRouter } from 'vue-router'
-  import { ref, onMounted } from 'vue'
-  import translate from 'src/utils/translate'
-  import LoadingComponent from 'src/components/LoadingComponent.vue'
-  import GlossDetailComponent from 'src/components/GlossDetail/GlossDetailComponent.vue'
-  import { api } from 'src/services/api'
-  import type { GlossData } from 'src/types/models'
-  
-  const route = useRoute()
-  const router = useRouter()
-  
-  // State
-  const loading = ref(true)
-  const error = ref<string | null>(null)
-  const editMode = ref<'none' | 'strict' | 'full'>('none')
-  const glossData = ref<GlossData>()
-  
-  onMounted(() => {
-    getGlossRequestData()
-  })
-  
-  function getGlossRequestData() {
-    if(route.params.id) {
-      api.requests.get(route.params.id as string)
-        .then((response) => {
-          glossData.value = response.data.requestedGlossData
-        })
-        .catch((error) => {
-          console.error(error)
-          error.value = translate('errors.failedToLoadGloss')
-        }).finally(() => {
-          loading.value = false
-        })
-    }
+<script setup lang="ts">
+import { useRoute, useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import translate from 'src/utils/translate'
+import LoadingComponent from 'src/components/LoadingComponent.vue'
+import GlossDetailComponent from 'src/components/GlossDetail/GlossDetailComponent.vue'
+import { api } from 'src/services/api'
+import type { GlossData } from 'src/types/models'
+
+const route = useRoute()
+const router = useRouter()
+
+// State
+const loading = ref(true)
+const error = ref<string | null>(null)
+const editMode = ref(false)
+const glossData = ref<GlossData>()
+
+onMounted(() => {
+  getGlossRequestData()
+})
+
+function getGlossRequestData() {
+  if(route.params.id) {
+    api.requests.get(route.params.id as string)
+      .then((response) => {
+        glossData.value = response.data.requestedGlossData
+      })
+      .catch((error) => {
+        console.error(error)
+        error.value = translate('errors.failedToLoadGloss')
+      }).finally(() => {
+        loading.value = false
+      })
   }
-  </script>
+}
+</script>

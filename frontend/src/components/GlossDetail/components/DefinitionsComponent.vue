@@ -12,7 +12,7 @@
         <!-- List of definitions -->
         <q-item-label class="row justify-between items-center">
           <q-btn
-            v-if="editMode !== 'none'"
+            v-if="editMode"
             flat
             round
             icon="delete"
@@ -21,7 +21,7 @@
             @click="removeDefinition(index)"
           />
           <q-input
-            v-if="editMode !== 'none'"
+            v-if="editMode"
             v-model="definition.title"
             :label="translate('definitionTitle')"
             outlined
@@ -34,7 +34,7 @@
         </q-item-label>
         <q-item-label>
           <q-input
-            v-if="editMode !== 'none'"
+            v-if="editMode"
             v-model="definition.definition"
             :label="translate('definition')"
             outlined            
@@ -52,7 +52,7 @@
           >
             <div class="row justify-between items-center q-mb-sm">
               <LanguageSelector 
-                v-if="editMode !== 'none'"
+                v-if="editMode"
                 v-model="translation.language"
                 class="col"
               />
@@ -62,7 +62,7 @@
                 </q-chip>
               </div>
               <q-btn
-                v-if="editMode !== 'none'"
+                v-if="editMode"
                 flat
                 round
                 icon="delete"
@@ -72,7 +72,7 @@
               />
             </div>
             <q-input
-              v-if="editMode !== 'none'"
+              v-if="editMode"
               v-model="translation.translation"
               :label="translate('translation')"
               outlined
@@ -87,7 +87,7 @@
             </q-item-label>
           </q-item>
           <q-btn
-            v-if="editMode !== 'none'"
+            v-if="editMode"
             flat
             class="q-mt-sm"
             icon="add"
@@ -97,7 +97,7 @@
         </q-item-label>
       </q-item>
       <q-btn
-        v-if="editMode !== 'none'"
+        v-if="editMode"
         unelevated
         outline
         color="primary"
@@ -111,7 +111,7 @@
       <div class="text-h5 q-mt-md row justify-between items-center">
         {{ translate('glossTranslations') }}
         <q-btn
-          v-if="editMode !== 'none'"
+          v-if="editMode"
           flat
           round
           icon="add"
@@ -133,7 +133,7 @@
           >
             <div class="row justify-between items-center">
               <LanguageSelector 
-                v-if="editMode !== 'none'"
+                v-if="editMode"
                 v-model="translation.language"
                 class="col"
               />
@@ -141,7 +141,7 @@
                 {{ translation.language }}
               </div>
               <q-btn
-                v-if="editMode !== 'none'"
+                v-if="editMode"
                 flat
                 round
                 icon="delete"
@@ -151,11 +151,10 @@
               />
             </div>
             <q-input
-              v-if="editMode !== 'none'"
+              v-if="editMode"
               v-model="translation.translation"
               :label="translate('translation')"
               outlined
-              
               dense
               class="col-12 q-mt-sm"
             />
@@ -179,7 +178,7 @@ import LanguageSelector from './LanguageSelector.vue'
 
 const sense = defineModel<Sense>({ required: true })
 const { editMode } = defineProps<{
-  editMode: "strict" | "full" | "none";
+  editMode: boolean;
 }>();
 
 const addDefinition = () => {

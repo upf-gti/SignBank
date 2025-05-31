@@ -30,6 +30,7 @@
         v-model:edit-mode="editMode"
         class="col full-width"
         :gloss-data="glossData"
+        :allow-edit="true"
       />
     </div>
   </q-page>
@@ -50,7 +51,7 @@ const router = useRouter()
 // State
 const loading = ref(true)
 const error = ref<string | null>(null)
-const editMode = ref<'none' | 'strict' | 'full'>('none')
+const editMode = ref(false)
 const glossData = ref<GlossData | null>(null)
 
 onMounted(() => {

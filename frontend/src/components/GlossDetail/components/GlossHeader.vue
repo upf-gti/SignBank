@@ -2,7 +2,7 @@
   <q-card-section class="row justify-between items-center">
     <div class="column">
       <div
-        v-if="editMode !== 'full'"
+        v-if="!editMode"
         class="text-h4"
       >
         {{ glossData.gloss }}
@@ -19,7 +19,7 @@
       class="row"
     >
       <q-btn
-        v-if="editMode === 'none'"
+        v-if="!editMode"
         icon="edit"
         @click="editGloss"
       />
@@ -31,7 +31,7 @@
         @click="saveGloss"
       />
       <q-btn
-        v-if="editMode === 'strict'"
+        v-if="editMode"
         icon="cancel"
         @click="cancelGloss"
       />
@@ -51,7 +51,7 @@ const emit = defineEmits<{
 
 const { glossData, allowEdit = true } = defineProps<{
   glossData: GlossData,
-  editMode: "strict" | "full" | "none",
+  editMode: boolean,
   allowEdit: boolean
 }>()
 

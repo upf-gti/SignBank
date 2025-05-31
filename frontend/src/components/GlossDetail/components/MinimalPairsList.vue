@@ -25,7 +25,7 @@
             @click="$router.push(`/gloss/${minimalPair.minimalPairGlossDataId}`)"
           />
           <q-btn
-            v-if="editMode !== 'none'"
+            v-if="editMode"
             flat
             round
             icon="delete"
@@ -47,7 +47,7 @@ const $router = useRouter();
 
 const { minimalPairs, editMode } = defineProps<{
   minimalPairs: MinimalPair[];
-  editMode: "strict" | "full" | "none";
+  editMode: boolean;
 }>();
 
 defineEmits<{

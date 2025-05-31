@@ -10,7 +10,7 @@
     </span>
     <PhonologyFilters
       :model-value="videoData"
-      :is-editable="editMode !== 'none'"
+      :is-editable="editMode"
       @update:model-value="$emit('update:video-data', $event)"
     />
   </q-card-section>
@@ -23,7 +23,7 @@ import PhonologyFilters from 'src/components/Shared/PhonologyFilters.vue';
 
 const { videoData, editMode } = defineProps<{
   videoData: VideoData;
-  editMode: "strict" | "full" | "none";
+  editMode: boolean;
 }>();
 
 defineEmits<{

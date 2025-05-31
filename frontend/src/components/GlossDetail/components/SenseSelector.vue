@@ -1,66 +1,68 @@
 <template>
-  <q-card-section>
-    <div class="row">
-      <q-btn-toggle
-        v-model="selectedSenseId"
-        :options="senses.map((sense) => ({
-          label: (sense.senseTitle || glossData.gloss) + ' (' + translate(sense.lexicalCategory) + ')',
-          value: sense.id,
-        }))"
-      />
-      <q-btn
-        v-if="editMode !== 'none' && !addSense"
-        icon="add"
-        :label="translate('addSense')"
-        @click="addSense = true"
-      />
-      <q-dialog v-model="addSense">
-        <q-card style="width: 500px">
-          <q-card-section>
-            <div class="text-h6">
-              {{ translate('addSense') }}
-            </div>
-          </q-card-section>
-          <q-form @submit.prevent.stop="saveSense">
-            <q-card-section>
-              <q-input
-                v-model="newSense.senseTitle"
-                hide-bottom-space
-                :label="translate('senseTitle')"
-                :placeholder="translate('addAditionalInformation')"
-              />
-              <q-select
-                v-model="newSense.lexicalCategory"
-                :label="translate('lexicalCategory')"
-                emit-value
-                hide-bottom-space
-                :options="lexicalCategories"
-                :rules="[val => !!val || translate('required')]"
-              >
-                <template #selected>
-                  {{ translate(newSense.lexicalCategory) }}
-                </template>
-              </q-select>
-            </q-card-section>
-            <q-card-actions>
-              <q-btn
-                :label="translate('cancel')"
-                flat
-                type="button"
-                @click="addSense = false"
-              />
-              <q-btn
-                :label="translate('save')"
-                flat
-                type="submit"
-              />
-            </q-card-actions>
-          </q-form>
-        </q-card>
-      </q-dialog>
-    </div>
+  <q-card-section class="row justify-between items-center">
+    <q-select
+      v-model="selectedSenseId"
+      :options="senses.map((sense) => ({
+        label: sense.senseTitle,
+        value: sense.id,
+      }))"
+      :label="translate('sense')"
+      outlined
+      dense
+      class="col-6"
+    />
+    <q-btn
+      v-if="editMode"
+      flat
+      round
+      icon="add"
+      :label="translate('addSense')"
+      @click="addSense = true"
+    />
   </q-card-section>
+  <q-dialog v-model="addSense">
+    <q-card>
+      <q-card-section>
+        <div class="text-h6">
+          {{ translate('addSense') }}
+        </div>
+      </q-card-section>
+
+      <q-card-section>
+        <q-input
+          v-model="newSense.senseTitle"
+          :label="translate('senseTitle')"
+          outlined
+          dense
+          class="q-mb-md"
+        />
+        <q-select
+          v-model="newSense.lexicalCategory"
+          :options="lexicalCategories"
+          :label="translate('lexicalCategory')"
+          outlined
+          dense
+        />
+      </q-card-section>
+
+      <q-card-actions align="right">
+        <q-btn
+          flat
+          :label="translate('cancel')"
+          color="primary"
+          @click="cancelSense"
+        />
+        <q-btn
+          flat
+          :label="translate('save')"
+          color="primary"
+          @click="saveSense"
+        />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 </template>
+
 <script setup lang="ts">
 import { Sense, GlossData } from 'src/types/models'
 import translate from 'src/utils/translate'
@@ -73,7 +75,7 @@ const emit = defineEmits<{
 
 const { senses } = defineProps<{
   senses: Sense[],
-  editMode: "strict" | "full" | "none",
+  editMode: boolean,
   glossData: GlossData
 }>()
 

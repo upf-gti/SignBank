@@ -118,6 +118,7 @@ interface TranslateKeys {
   deleteAngle: string;
   angle: string;
   signFonology: string;
+  myGlossRequests: string;
 }
 
 export default TranslateKeys;

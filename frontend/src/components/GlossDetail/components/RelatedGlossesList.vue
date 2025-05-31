@@ -25,7 +25,7 @@
             @click="$router.push(`/gloss/${relatedGloss.relatedGlossId}`)"
           />
           <q-btn
-            v-if="editMode !== 'none'"
+            v-if="editMode"
             flat
             round
             icon="delete"
@@ -47,7 +47,7 @@ const $router = useRouter();
 
 const { relatedGlosses, editMode } = defineProps<{
   relatedGlosses: RelatedGloss[];
-  editMode: "strict" | "full" | "none";
+  editMode: boolean;
 }>();
 
 defineEmits<{

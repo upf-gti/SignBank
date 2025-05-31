@@ -19,7 +19,7 @@
       @add-sense="addSense"
     />
     <MainContent
-      v-if="editMode === 'none' && selectedSense"
+      v-if="!editMode && selectedSense"
       :selected-sense="selectedSense"
     />
     <MoreContentComponent
@@ -48,13 +48,13 @@ import { useQuasar } from 'quasar';
 import translate from 'src/utils/translate'
 
 const emit = defineEmits<{
-  (e: 'update:editMode', mode: 'none' | 'strict' | 'full'): void
+  (e: 'update:editMode', mode: boolean): void
   (e: 'saveGloss', glossData: GlossData): void
 }>()
 
 const { glossData, editMode, allowEdit = true } = defineProps<{
   glossData: GlossData,
-  editMode: "strict" | "full" | "none",
+  editMode: boolean,
   allowEdit: boolean
 }>()
 
@@ -64,7 +64,7 @@ const $q = useQuasar()
 
 const editGloss = () => {
   if (!allowEdit) return
-  emit('update:editMode', 'strict')
+  emit('update:editMode', true)
 }
 
 const saveGloss = () => {
@@ -98,7 +98,7 @@ const saveGloss = () => {
 
 const cancelGloss = () => {
   if (!allowEdit) return
-  emit('update:editMode', 'none')
+  emit('update:editMode', false)
 }
 
 const addSense = (sense: { senseTitle: string, lexicalCategory: string }) => {
@@ -164,6 +164,5 @@ const removeMinimalPair = async (pairId: string) => {
     console.error('Error removing minimal pair:', error);
   }
 };
-
 
 </script>

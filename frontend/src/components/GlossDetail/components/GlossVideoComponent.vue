@@ -12,7 +12,7 @@
       }"
     />
     <div
-      v-else-if="editMode !== 'none'"
+      v-else-if="editMode"
       class="col fit row justify-center items-center"
     >
       <q-btn
@@ -32,7 +32,7 @@
           {{ translate('videoAngles') }}
         </span>
         <q-btn
-          v-if="editMode !== 'none'"
+          v-if="editMode"
           flat
           round
           icon="add"
@@ -51,7 +51,7 @@
         />
       </div>
       <div
-        v-if="editMode !== 'none' && selectedVideoData"
+        v-if="editMode && selectedVideoData"
         class="column justify-center no-wrap items-start full-width q-mt-md"
       >
         <q-btn
@@ -82,7 +82,7 @@ import { getVideoUrl } from 'src/utils/videoUrl';
 
 const { signVideo, editMode } = defineProps<{
   signVideo: SignVideo;
-  editMode: "strict" | "full" | "none";
+  editMode: boolean;
 }>();
 
 const emit = defineEmits<{

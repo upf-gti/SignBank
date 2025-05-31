@@ -1,9 +1,9 @@
 <template>
-  <q-card-section>
+  <q-card-section class="column">
     <div class="text-h5 q-mb-md row justify-between items-center">
       {{ translate('videos') }}
       <q-btn
-        v-if="editMode !== 'none'"
+        v-if="editMode"
         flat
         round
         icon="add"
@@ -23,7 +23,7 @@
         >
           <q-card-section class="row justify-between items-center">
             <q-input
-              v-if="editMode !== 'none'"
+              v-if="editMode"
               v-model="video.title"
               :label="translate('title')"
               outlined
@@ -34,7 +34,7 @@
               {{ video.title }}
             </q-item-label>
             <q-btn
-              v-if="editMode !== 'none'"
+              v-if="editMode"
               flat
               round
               icon="delete"
@@ -70,7 +70,7 @@ import SignFonologyComponent from './SignFonologyComponent.vue';
 
 const sense = defineModel<Sense>({ required: true })
 const { editMode } = defineProps<{
-  editMode: "strict" | "full" | "none";
+  editMode: boolean;
 }>();
 
 const addVideo = () => {

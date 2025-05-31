@@ -88,7 +88,7 @@ const sense = defineModel<Sense>({ required: true })
 
 const { glossData, editMode } = defineProps<{
   glossData: GlossData;
-  editMode: "strict" | "full" | "none";
+  editMode: boolean;
 }>();
 
 const emit = defineEmits<{

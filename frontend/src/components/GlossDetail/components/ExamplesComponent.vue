@@ -14,7 +14,7 @@
       >
         <div class="row justify-between no-wrap items-start full-width no-wrap">
           <q-input
-            v-if="editMode !== 'none'"
+            v-if="editMode"
             v-model="example.example"
             :label="translate('example')"
             outlined            
@@ -28,7 +28,7 @@
             {{ example.example }}
           </q-item-label>
           <q-btn
-            v-if="editMode !== 'none'"
+            v-if="editMode"
             outline
             icon="delete"
             :label="translate('deleteExample')"
@@ -37,61 +37,57 @@
             @click="removeExample(index)"
           />
         </div>
-        <q-item-section>
-          <q-list separator>
-            <q-item
+        <div class="row justify-between no-wrap items-start full-width">
+          <div class="col">
+            <div
               v-for="(translation, tIndex) in example.exampleTranslations"
               :key="translation.id"
+              class="row justify-between no-wrap items-center q-mb-sm"
             >
-              <q-item-section>
+              <div class="col">
                 <LanguageSelector
-                  v-if="editMode !== 'none'"
+                  v-if="editMode"
                   v-model="translation.language"
+                  class="q-mb-sm"
                 />
-                <q-item-label v-else>
-                  {{ translation.language }}
-                </q-item-label>
-              </q-item-section>
-              <q-item-section class="col">
+                <div v-else>
+                  <q-chip size="sm">
+                    {{ translation.language }}
+                  </q-chip>
+                </div>
                 <q-input
-                  v-if="editMode !== 'none'"
+                  v-if="editMode"
                   v-model="translation.translation"
                   :label="translate('translation')"
                   outlined
                   dense
                 />
-                <q-item-label v-else>
+                <div v-else>
                   {{ translation.translation }}
-                </q-item-label>
-              </q-item-section>
-              <q-item-section
-                v-if="editMode !== 'none'"
-                side
-              >
-                <q-btn
-                  outline
-                  icon="delete"
-                  :label="translate('deleteExampleTranslation')"
-                  color="negative"
-                  @click="removeTranslation(example, tIndex)"
-                />
-              </q-item-section>
-            </q-item>
-            <q-item v-if="editMode !== 'none'">
-              <q-item-section>
-                <q-btn
-                  flat
-                  icon="add"
-                  :label="translate('addExampleTranslation')"
-                  @click="addTranslation(example)"
-                />
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-item-section>
+                </div>
+              </div>
+              <q-btn
+                v-if="editMode"
+                flat
+                round
+                icon="delete"
+                :label="translate('deleteExampleTranslation')"
+                class="q-mx-sm"
+                @click="removeTranslation(example, tIndex)"
+              />
+            </div>
+            <q-btn
+              v-if="editMode"
+              flat
+              :label="translate('addExampleTranslation')"
+              icon="add"
+              @click="addTranslation(example)"
+            />
+          </div>
+        </div>
         <q-item-section>
           <UploadVideoComponent
-            v-if="editMode !== 'none'"
+            v-if="editMode"
             v-model:show-dialog="showUploadDialog"
             @upload-complete="uploadVideo"
           />
@@ -106,7 +102,7 @@
         </q-item-section>
       </q-item>
       <q-btn
-        v-if="editMode !== 'none'"
+        v-if="editMode"
         outline
         color="primary"
         :label="translate('addExample')"
@@ -125,7 +121,7 @@ import UploadVideoComponent from 'src/components/UploadVideoPopup.vue'
 
 const sense = defineModel<Sense>({ required: true })
 const { editMode } = defineProps<{
-  editMode: "strict" | "full" | "none";
+  editMode: boolean;
 }>();
 
 const addExample = () => {
