@@ -6,8 +6,9 @@
           <video
             class="full-width"
             :src="getVideoUrl(document.url)"
-            controls
-            preload="none"
+            preload="none"            
+            loop
+            autoplay
           />
         </q-card-section>
       </template>

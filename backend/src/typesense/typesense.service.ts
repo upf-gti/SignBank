@@ -123,6 +123,9 @@ export class TypesenseService implements OnModuleInit {
             include: {
               videos: true,
               videoData: true
+            },
+            orderBy: {
+              priority: 'desc'
             }
           }
         }
@@ -133,6 +136,7 @@ export class TypesenseService implements OnModuleInit {
       const documents: VideoIndex[] = [];
 
       for (const sense of senses) {
+        // If there are no sign videos, create a placeholder document
         if (sense.signVideos.length === 0) {
           documents.push({
             id: `sense-${sense.id}`,
@@ -159,34 +163,33 @@ export class TypesenseService implements OnModuleInit {
           });
           totalDocuments++;
         } else {
-          for (const signVideo of sense.signVideos) {
-            for (const video of signVideo.videos) {
-              documents.push({
-                id: video.id,
-                url: video.url,
-                signVideoTitle: signVideo.title,
-                hands: signVideo.videoData?.hands,
-                configuration: signVideo.videoData?.configuration,
-                configurationChanges: signVideo.videoData?.configurationChanges,
-                relationBetweenArticulators: signVideo.videoData?.relationBetweenArticulators,
-                location: signVideo.videoData?.location,
-                movementRelatedOrientation: signVideo.videoData?.movementRelatedOrientation,
-                locationRelatedOrientation: signVideo.videoData?.locationRelatedOrientation,
-                orientationChange: signVideo.videoData?.orientationChange,
-                contactType: signVideo.videoData?.contactType,
-                movementType: signVideo.videoData?.movementType,
-                vocalization: signVideo.videoData?.vocalization,
-                nonManualComponent: signVideo.videoData?.nonManualComponent,
-                inicialization: signVideo.videoData?.inicialization,
-                senseId: sense.id,
-                senseTitle: sense.senseTitle,
-                lexicalCategory: sense.lexicalCategory || 'OTHER',
-                glossId: sense.glossData.id,
-                gloss: sense.glossData.gloss
-              });
-              totalDocuments++;
-            }
-          }
+          // Take only the highest priority SignVideo (first one due to orderBy)
+          const highestPrioritySignVideo = sense.signVideos[0];
+          
+          documents.push({
+            id: highestPrioritySignVideo.id,
+            url: highestPrioritySignVideo.videos[0].url || null,
+            signVideoTitle: highestPrioritySignVideo.title,
+            hands: highestPrioritySignVideo.videoData?.hands,
+            configuration: highestPrioritySignVideo.videoData?.configuration,
+            configurationChanges: highestPrioritySignVideo.videoData?.configurationChanges,
+            relationBetweenArticulators: highestPrioritySignVideo.videoData?.relationBetweenArticulators,
+            location: highestPrioritySignVideo.videoData?.location,
+            movementRelatedOrientation: highestPrioritySignVideo.videoData?.movementRelatedOrientation,
+            locationRelatedOrientation: highestPrioritySignVideo.videoData?.locationRelatedOrientation,
+            orientationChange: highestPrioritySignVideo.videoData?.orientationChange,
+            contactType: highestPrioritySignVideo.videoData?.contactType,
+            movementType: highestPrioritySignVideo.videoData?.movementType,
+            vocalization: highestPrioritySignVideo.videoData?.vocalization,
+            nonManualComponent: highestPrioritySignVideo.videoData?.nonManualComponent,
+            inicialization: highestPrioritySignVideo.videoData?.inicialization,
+            senseId: sense.id,
+            senseTitle: sense.senseTitle,
+            lexicalCategory: sense.lexicalCategory || 'OTHER',
+            glossId: sense.glossData.id,
+            gloss: sense.glossData.gloss
+          });
+          totalDocuments++;
         }
 
         if (documents.length >= BATCH_SIZE) {
