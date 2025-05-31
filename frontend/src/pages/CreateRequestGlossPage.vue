@@ -25,13 +25,13 @@
             :label="translate('senseTitle')"
             outlined
             class="q-mb-md"
-            :rules="[val => !!val || translate('senseTitleRequired')]"
           />
           <q-select
             v-model="initialGlossData.lexicalCategory"
             :options="lexicalCategories"
             :label="translate('lexicalCategory')"
             outlined
+            emit-value
             class="q-mb-md"
             :rules="[val => !!val || translate('lexicalCategoryRequired')]"
           />
