@@ -1,7 +1,9 @@
 <template>
   <!-- Lexical Category Select -->
   <div class="q-mb-md">
-    <div class="text-subtitle2 q-mb-sm">{{ t('lexicalCategory') }}</div>
+    <div class="text-subtitle2 q-mb-sm">
+      {{ t('lexicalCategory') }}
+    </div>
     <q-select
       :model-value="selectedCategory"
       :options="lexicalCategories"

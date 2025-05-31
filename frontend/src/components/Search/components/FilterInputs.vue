@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <PhonologyFilters
       :model-value="modelValue"
       :is-editable="true"

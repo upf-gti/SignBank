@@ -1,5 +1,8 @@
 <template>
-  <q-card flat bordered>
+  <q-card
+    flat
+    bordered
+  >
     <SearchInput
       :model-value="searchQuery"
       @update:model-value="$emit('update:searchQuery', $event)"
@@ -10,15 +13,17 @@
 
     <q-card-section>
       <div class="row items-center justify-between q-mb-sm">
-        <div class="text-subtitle2">{{ t('filters') }}</div>
+        <div class="text-subtitle2">
+          {{ t('filters') }}
+        </div>
         <div class="row q-gutter-sm">
           <q-btn
             flat
             dense
             color="grey"
             :label="t('clear')"
-            @click="clearFilters"
             :disable="!selectedCategory && !selectedHands && Object.keys(filterInputs).length === 0"
+            @click="clearFilters"
           />
           <q-btn
             color="primary"

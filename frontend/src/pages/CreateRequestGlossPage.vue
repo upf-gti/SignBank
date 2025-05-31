@@ -1,16 +1,16 @@
 <template>
-   <q-page>
+  <q-page>
     <div
       class="column full-width justify-center items-center"
       style="height: fit-content"
     >
       <GlossDetailComponent
         v-if="glossData"
+        v-model:edit-mode="editMode"
         class="col full-width"
         :gloss-data="glossData"
-        v-model:edit-mode="editMode"
-        @save-gloss="saveGloss"
         :allow-edit="true"
+        @save-gloss="saveGloss"
       />
     </div>
   </q-page>

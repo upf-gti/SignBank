@@ -1,7 +1,9 @@
 <template>
   <q-page class="q-pa-md">
     <div class="row justify-between items-center q-mb-md">
-      <div class="text-h5">{{ translate('myGlossRequests') }}</div>
+      <div class="text-h5">
+        {{ translate('myGlossRequests') }}
+      </div>
       <q-btn
         color="primary"
         :label="translate('newRequest')"
@@ -10,15 +12,28 @@
       />
     </div>
 
-    <div v-if="loading" class="row justify-center items-center" style="height: 200px;">
-      <q-spinner color="primary" size="3em" />
+    <div
+      v-if="loading"
+      class="row justify-center items-center"
+      style="height: 200px;"
+    >
+      <q-spinner
+        color="primary"
+        size="3em"
+      />
     </div>
 
-    <div v-else-if="error" class="text-negative text-center">
+    <div
+      v-else-if="error"
+      class="text-negative text-center"
+    >
       {{ error }}
     </div>
 
-    <div v-else class="row q-col-gutter-md">
+    <div
+      v-else
+      class="row q-col-gutter-md"
+    >
       <div
         v-for="request in requests"
         :key="request.id"
@@ -27,7 +42,9 @@
         <q-card>
           <q-card-section>
             <div class="row items-center justify-between">
-              <div class="text-h6">{{ request.requestedGlossData.gloss }}</div>
+              <div class="text-h6">
+                {{ request.requestedGlossData.gloss }}
+              </div>
               <q-chip
                 :color="getStatusColor(request.status)"
                 text-color="white"

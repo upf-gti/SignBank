@@ -23,7 +23,9 @@
             class="full-width"
             @update:model-value="updateField('hands', $event)"
           />
-          <q-item-label v-else>{{ modelValue.hands }}</q-item-label>
+          <q-item-label v-else>
+            {{ modelValue.hands }}
+          </q-item-label>
         </q-item-section>
       </q-item>
 
@@ -40,7 +42,9 @@
             dense
             @update:model-value="updateField('configuration', $event)"
           />
-          <q-item-label v-else>{{ modelValue.configuration }}</q-item-label>
+          <q-item-label v-else>
+            {{ modelValue.configuration }}
+          </q-item-label>
         </q-item-section>
       </q-item>
 
@@ -57,7 +61,9 @@
             dense
             @update:model-value="updateField('configurationChanges', $event)"
           />
-          <q-item-label v-else>{{ modelValue.configurationChanges }}</q-item-label>
+          <q-item-label v-else>
+            {{ modelValue.configurationChanges }}
+          </q-item-label>
         </q-item-section>
       </q-item>
 
@@ -74,7 +80,9 @@
             dense
             @update:model-value="updateField('relationBetweenArticulators', $event)"
           />
-          <q-item-label v-else>{{ modelValue.relationBetweenArticulators }}</q-item-label>
+          <q-item-label v-else>
+            {{ modelValue.relationBetweenArticulators }}
+          </q-item-label>
         </q-item-section>
       </q-item>
 
@@ -91,7 +99,9 @@
             dense
             @update:model-value="updateField('location', $event)"
           />
-          <q-item-label v-else>{{ modelValue.location }}</q-item-label>
+          <q-item-label v-else>
+            {{ modelValue.location }}
+          </q-item-label>
         </q-item-section>
       </q-item>
 
@@ -108,7 +118,9 @@
             dense
             @update:model-value="updateField('movementRelatedOrientation', $event)"
           />
-          <q-item-label v-else>{{ modelValue.movementRelatedOrientation }}</q-item-label>
+          <q-item-label v-else>
+            {{ modelValue.movementRelatedOrientation }}
+          </q-item-label>
         </q-item-section>
       </q-item>
 
@@ -125,7 +137,9 @@
             dense
             @update:model-value="updateField('locationRelatedOrientation', $event)"
           />
-          <q-item-label v-else>{{ modelValue.locationRelatedOrientation }}</q-item-label>
+          <q-item-label v-else>
+            {{ modelValue.locationRelatedOrientation }}
+          </q-item-label>
         </q-item-section>
       </q-item>
 
@@ -142,7 +156,9 @@
             dense
             @update:model-value="updateField('orientationChange', $event)"
           />
-          <q-item-label v-else>{{ modelValue.orientationChange }}</q-item-label>
+          <q-item-label v-else>
+            {{ modelValue.orientationChange }}
+          </q-item-label>
         </q-item-section>
       </q-item>
 
@@ -159,7 +175,9 @@
             dense
             @update:model-value="updateField('contactType', $event)"
           />
-          <q-item-label v-else>{{ modelValue.contactType }}</q-item-label>
+          <q-item-label v-else>
+            {{ modelValue.contactType }}
+          </q-item-label>
         </q-item-section>
       </q-item>
 
@@ -176,7 +194,9 @@
             dense
             @update:model-value="updateField('movementType', $event)"
           />
-          <q-item-label v-else>{{ modelValue.movementType }}</q-item-label>
+          <q-item-label v-else>
+            {{ modelValue.movementType }}
+          </q-item-label>
         </q-item-section>
       </q-item>
 
@@ -193,7 +213,9 @@
             dense
             @update:model-value="updateField('vocalization', $event)"
           />
-          <q-item-label v-else>{{ modelValue.vocalization }}</q-item-label>
+          <q-item-label v-else>
+            {{ modelValue.vocalization }}
+          </q-item-label>
         </q-item-section>
       </q-item>
 
@@ -210,7 +232,9 @@
             dense
             @update:model-value="updateField('nonManualComponent', $event)"
           />
-          <q-item-label v-else>{{ modelValue.nonManualComponent }}</q-item-label>
+          <q-item-label v-else>
+            {{ modelValue.nonManualComponent }}
+          </q-item-label>
         </q-item-section>
       </q-item>
 
@@ -227,7 +251,9 @@
             dense
             @update:model-value="updateField('inicialization', $event)"
           />
-          <q-item-label v-else>{{ modelValue.inicialization }}</q-item-label>
+          <q-item-label v-else>
+            {{ modelValue.inicialization }}
+          </q-item-label>
         </q-item-section>
       </q-item>
     </q-list>

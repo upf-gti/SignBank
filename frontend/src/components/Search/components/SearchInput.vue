@@ -1,6 +1,8 @@
 <template>
   <q-card-section>
-    <div class="text-h6">{{ t('search') }}</div>
+    <div class="text-h6">
+      {{ t('search') }}
+    </div>
     <q-input
       :model-value="modelValue"
       :placeholder="t('searchPlaceholder')"
@@ -11,7 +13,7 @@
       @update:model-value="(val) => $emit('update:model-value', String(val || ''))"
       @keyup.enter="$emit('search')"
     >
-      <template v-slot:append>
+      <template #append>
         <q-icon
           name="search"
           class="cursor-pointer"

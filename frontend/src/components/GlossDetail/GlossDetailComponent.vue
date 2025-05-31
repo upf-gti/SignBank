@@ -1,6 +1,16 @@
 <template>
-  <q-card flat style="max-width: 1200px">
-    <GlossHeader :gloss-data="glossData" :edit-mode="editMode" :allow-edit="allowEdit" @edit-gloss="editGloss" @save-gloss="saveGloss" @cancel-gloss="cancelGloss" />
+  <q-card
+    flat
+    style="max-width: 1200px"
+  >
+    <GlossHeader
+      :gloss-data="glossData"
+      :edit-mode="editMode"
+      :allow-edit="allowEdit"
+      @edit-gloss="editGloss"
+      @save-gloss="saveGloss"
+      @cancel-gloss="cancelGloss"
+    />
     <SenseSelector
       v-model="selectedSenseId"
       :senses="glossData.senses"

@@ -13,14 +13,25 @@
     </div>
 
     <q-inner-loading :showing="loading">
-      <q-spinner-dots size="50px" color="primary" />
+      <q-spinner-dots
+        size="50px"
+        color="primary"
+      />
     </q-inner-loading>
 
-    <div v-if="!hasResults && !loading" class="text-center q-mt-xl">
-      <p class="text-h6">{{ t('noResults') }}</p>
+    <div
+      v-if="!hasResults && !loading"
+      class="text-center q-mt-xl"
+    >
+      <p class="text-h6">
+        {{ t('noResults') }}
+      </p>
     </div>
 
-    <div v-else-if="hasResults" class="row q-col-gutter-md">
+    <div
+      v-else-if="hasResults"
+      class="row q-col-gutter-md"
+    >
       <div
         v-for="hit in results?.hits"
         :key="hit.document.id"

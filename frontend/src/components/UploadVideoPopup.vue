@@ -1,64 +1,85 @@
 <template>
-    <q-dialog v-model="showDialog" >
-        <q-card class="upload-dialog">
-            <q-card-section class="row items-center">
-                <div class="text-h6">Upload Video</div>
-                <q-space />
-                <q-btn icon="close" flat round dense v-close-popup />
-            </q-card-section>
+  <q-dialog v-model="showDialog">
+    <q-card class="upload-dialog">
+      <q-card-section class="row items-center">
+        <div class="text-h6">
+          Upload Video
+        </div>
+        <q-space />
+        <q-btn
+          v-close-popup
+          icon="close"
+          flat
+          round
+          dense
+        />
+      </q-card-section>
 
-            <q-card-section>
-                <div class="upload-area q-pa-md" @dragover.prevent @drop.prevent="handleDrop">
-                    <q-file
-                        v-model="videoFile"
-                        label="Choose video file"
-                        filled
-                        accept="video/*"
-                        @update:model-value="handleFileSelect"
-                        :loading="isUploading"
-                        :disable="isUploading"
-                    >
-                        <template v-slot:prepend>
-                            <q-icon name="movie" />
-                        </template>
-                    </q-file>
+      <q-card-section>
+        <div
+          class="upload-area q-pa-md"
+          @dragover.prevent
+          @drop.prevent="handleDrop"
+        >
+          <q-file
+            v-model="videoFile"
+            label="Choose video file"
+            filled
+            accept="video/*"
+            :loading="isUploading"
+            :disable="isUploading"
+            @update:model-value="handleFileSelect"
+          >
+            <template #prepend>
+              <q-icon name="movie" />
+            </template>
+          </q-file>
 
-                    <div class="text-center q-mt-sm text-grey">
-                        or drag and drop your video here
-                    </div>
+          <div class="text-center q-mt-sm text-grey">
+            or drag and drop your video here
+          </div>
 
-                    <div v-if="uploadProgress > 0 && uploadProgress < 100" class="q-mt-md">
-                        <q-linear-progress :value="uploadProgress / 100" color="primary" />
-                        <div class="text-center q-mt-sm">
-                            {{ Math.round(uploadProgress) }}%
-                        </div>
-                    </div>
+          <div
+            v-if="uploadProgress > 0 && uploadProgress < 100"
+            class="q-mt-md"
+          >
+            <q-linear-progress
+              :value="uploadProgress / 100"
+              color="primary"
+            />
+            <div class="text-center q-mt-sm">
+              {{ Math.round(uploadProgress) }}%
+            </div>
+          </div>
 
-                    <div v-if="errorMessage" class="text-negative q-mt-sm">
-                        {{ errorMessage }}
-                    </div>
-                </div>
-            </q-card-section>
+          <div
+            v-if="errorMessage"
+            class="text-negative q-mt-sm"
+          >
+            {{ errorMessage }}
+          </div>
+        </div>
+      </q-card-section>
 
-            <q-card-actions align="right">
-                <q-btn 
-                    flat 
-                    label="Cancel" 
-                    color="primary" 
-                    v-close-popup 
-                    :disable="isUploading" 
-                />
-                <q-btn 
-                    flat 
-                    label="Upload" 
-                    color="primary" 
-                    @click="uploadVideo" 
-                    :loading="isUploading"
-                    :disable="!videoFile || isUploading" 
-                />
-            </q-card-actions>
-        </q-card>
-    </q-dialog>
+      <q-card-actions align="right">
+        <q-btn 
+          v-close-popup 
+          flat 
+          label="Cancel" 
+          color="primary" 
+          :disable="isUploading" 
+        />
+        <q-btn 
+          flat 
+          label="Upload" 
+          color="primary" 
+          :loading="isUploading" 
+          :disable="!videoFile || isUploading"
+          @click="uploadVideo" 
+        />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup lang="ts">

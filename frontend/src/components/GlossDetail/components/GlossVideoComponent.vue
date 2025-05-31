@@ -11,16 +11,34 @@
         maxHeight: '40dvh',
       }"
     />
-    <div v-else-if="editMode !== 'none'" class="col fit row justify-center items-center">
-      <q-btn flat icon="upload" :label="translate('uploadVideo')" @click="showUploadDialog = true" />
-      <UploadVideoComponent v-model:show-dialog="showUploadDialog" @upload-complete="uploadVideo" />
+    <div
+      v-else-if="editMode !== 'none'"
+      class="col fit row justify-center items-center"
+    >
+      <q-btn
+        flat
+        icon="upload"
+        :label="translate('uploadVideo')"
+        @click="showUploadDialog = true"
+      />
+      <UploadVideoComponent
+        v-model:show-dialog="showUploadDialog"
+        @upload-complete="uploadVideo"
+      />
     </div>
     <div class="column col q-pt-md justify-start items-start">
       <div class="row justify-between items-center full-width">
         <span class="text-bold">
           {{ translate('videoAngles') }}
         </span>
-        <q-btn v-if="editMode !== 'none'" flat round icon="add" @click="addAngle" :label="translate('addAngle')" />
+        <q-btn
+          v-if="editMode !== 'none'"
+          flat
+          round
+          icon="add"
+          :label="translate('addAngle')"
+          @click="addAngle"
+        />
       </div>
       <div class="row justify-center items-center q-pt-md">
         <q-btn-toggle
@@ -32,8 +50,17 @@
           })) || []"
         />
       </div>
-      <div v-if="editMode !== 'none' && selectedVideoData" class="column justify-center no-wrap items-start full-width q-mt-md">
-        <q-btn flat round icon="delete" @click="removeAngle" :label="translate('deleteAngle')" />
+      <div
+        v-if="editMode !== 'none' && selectedVideoData"
+        class="column justify-center no-wrap items-start full-width q-mt-md"
+      >
+        <q-btn
+          flat
+          round
+          icon="delete"
+          :label="translate('deleteAngle')"
+          @click="removeAngle"
+        />
         <q-input
           v-model="selectedVideoData.angle"
           :label="translate('angle')"

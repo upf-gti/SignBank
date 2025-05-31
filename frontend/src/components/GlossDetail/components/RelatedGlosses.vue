@@ -65,9 +65,17 @@
     <q-dialog v-model="showAddRelatedGlossDialog">
       <q-card style="min-width: 350px">
         <q-card-section class="row items-center">
-          <div class="text-h6">{{ translate('addRelatedGloss') }}</div>
+          <div class="text-h6">
+            {{ translate('addRelatedGloss') }}
+          </div>
           <q-space />
-          <q-btn icon="close" flat round dense v-close-popup />
+          <q-btn
+            v-close-popup
+            icon="close"
+            flat
+            round
+            dense
+          />
         </q-card-section>
 
         <q-card-section>
@@ -91,12 +99,17 @@
             </template>
           </q-input>
 
-          <q-list v-if="searchResults.length > 0" bordered separator class="q-mt-sm">
+          <q-list
+            v-if="searchResults.length > 0"
+            bordered
+            separator
+            class="q-mt-sm"
+          >
             <q-item
               v-for="result in searchResults"
               :key="result.id"
-              clickable
               v-close-popup
+              clickable
               @click="selectGloss(result)"
             >
               <q-item-section>
@@ -107,8 +120,19 @@
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat :label="translate('cancel')" color="primary" v-close-popup />
-          <q-btn flat :label="translate('add')" color="primary" @click="addRelation" :disable="!newRelation.relatedGlossId" />
+          <q-btn
+            v-close-popup
+            flat
+            :label="translate('cancel')"
+            color="primary"
+          />
+          <q-btn
+            flat
+            :label="translate('add')"
+            color="primary"
+            :disable="!newRelation.relatedGlossId"
+            @click="addRelation"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -117,9 +141,17 @@
     <q-dialog v-model="showAddMinimalPairDialog">
       <q-card style="min-width: 350px">
         <q-card-section class="row items-center">
-          <div class="text-h6">{{ translate('addMinimalPair') }}</div>
+          <div class="text-h6">
+            {{ translate('addMinimalPair') }}
+          </div>
           <q-space />
-          <q-btn icon="close" flat round dense v-close-popup />
+          <q-btn
+            v-close-popup
+            icon="close"
+            flat
+            round
+            dense
+          />
         </q-card-section>
 
         <q-card-section>
@@ -142,25 +174,43 @@
             </template>
           </q-input>
 
-          <q-list v-if="videoSearchResults.length > 0" bordered separator class="q-mt-sm">
+          <q-list
+            v-if="videoSearchResults.length > 0"
+            bordered
+            separator
+            class="q-mt-sm"
+          >
             <q-item
               v-for="result in videoSearchResults"
               :key="result.id"
-              clickable
               v-close-popup
+              clickable
               @click="selectVideo(result)"
             >
               <q-item-section>
                 <q-item-label>{{ result.title }}</q-item-label>
-                <q-item-label caption>{{ result.gloss }}</q-item-label>
+                <q-item-label caption>
+                  {{ result.gloss }}
+                </q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat :label="translate('cancel')" color="primary" v-close-popup />
-          <q-btn flat :label="translate('add')" color="primary" @click="addMinimalPair" :disable="!newPair.signVideoId" />
+          <q-btn
+            v-close-popup
+            flat
+            :label="translate('cancel')"
+            color="primary"
+          />
+          <q-btn
+            flat
+            :label="translate('add')"
+            color="primary"
+            :disable="!newPair.signVideoId"
+            @click="addMinimalPair"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>

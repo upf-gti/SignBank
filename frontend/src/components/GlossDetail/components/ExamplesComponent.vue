@@ -3,13 +3,16 @@
     <div class="text-h5 q-mb-md row justify-between items-center">
       {{ translate('examples') }}
     </div>
-    <q-list class="column" separator>
+    <q-list
+      class="column"
+      separator
+    >
       <q-item
         v-for="(example, index) in sense.examples"
         :key="example.id"
         class="column q-mb-lg"
       >
-        <div  class="row justify-between no-wrap items-start full-width no-wrap">
+        <div class="row justify-between no-wrap items-start full-width no-wrap">
           <q-input
             v-if="editMode !== 'none'"
             v-model="example.example"
@@ -18,10 +21,21 @@
             dense
             class="col q-mb-sm"
           />
-          <q-item-label v-else class="q-pb-md text-h6 text-weight-bold">
+          <q-item-label
+            v-else
+            class="q-pb-md text-h6 text-weight-bold"
+          >
             {{ example.example }}
           </q-item-label>
-          <q-btn v-if="editMode !== 'none'" outline icon="delete" :label="translate('deleteExample')" @click="removeExample(index)" class="q-mx-sm" color="negative"/>
+          <q-btn
+            v-if="editMode !== 'none'"
+            outline
+            icon="delete"
+            :label="translate('deleteExample')"
+            class="q-mx-sm"
+            color="negative"
+            @click="removeExample(index)"
+          />
         </div>
         <q-item-section>
           <q-list separator>
@@ -30,7 +44,10 @@
               :key="translation.id"
             >
               <q-item-section>
-                <LanguageSelector v-if="editMode !== 'none'" v-model="translation.language" />
+                <LanguageSelector
+                  v-if="editMode !== 'none'"
+                  v-model="translation.language"
+                />
                 <q-item-label v-else>
                   {{ translation.language }}
                 </q-item-label>
@@ -47,8 +64,17 @@
                   {{ translation.translation }}
                 </q-item-label>
               </q-item-section>
-              <q-item-section side v-if="editMode !== 'none'">
-                <q-btn outline icon="delete" @click="removeTranslation(example, tIndex)" :label="translate('deleteExampleTranslation')" color="negative" />
+              <q-item-section
+                v-if="editMode !== 'none'"
+                side
+              >
+                <q-btn
+                  outline
+                  icon="delete"
+                  :label="translate('deleteExampleTranslation')"
+                  color="negative"
+                  @click="removeTranslation(example, tIndex)"
+                />
               </q-item-section>
             </q-item>
             <q-item v-if="editMode !== 'none'">
@@ -64,7 +90,11 @@
           </q-list>
         </q-item-section>
         <q-item-section>
-          <UploadVideoComponent v-if="editMode !== 'none'" v-model:show-dialog="showUploadDialog" @upload-complete="uploadVideo" />
+          <UploadVideoComponent
+            v-if="editMode !== 'none'"
+            v-model:show-dialog="showUploadDialog"
+            @upload-complete="uploadVideo"
+          />
           <q-btn
             v-else
             outline
@@ -75,7 +105,14 @@
           />
         </q-item-section>
       </q-item>
-      <q-btn v-if="editMode !== 'none'" outline color="primary" :label="translate('addExample')" icon="add" @click="addExample" />
+      <q-btn
+        v-if="editMode !== 'none'"
+        outline
+        color="primary"
+        :label="translate('addExample')"
+        icon="add"
+        @click="addExample"
+      />
     </q-list>
   </q-card-section>
 </template>

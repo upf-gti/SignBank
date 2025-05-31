@@ -1,36 +1,49 @@
 <template>
-    <q-card-section>
-                <div class="upload-area q-pa-md" @dragover.prevent @drop.prevent="handleDrop">
-                    <q-file
-                        v-model="videoFile"
-                        label="Choose video file"
-                        filled
-                        accept="video/*"
-                        @update:model-value="handleFileSelect"
-                        :loading="isUploading"
-                        :disable="isUploading"
-                    >
-                        <template v-slot:prepend>
-                            <q-icon name="movie" />
-                        </template>
-                    </q-file>
+  <q-card-section>
+    <div
+      class="upload-area q-pa-md"
+      @dragover.prevent
+      @drop.prevent="handleDrop"
+    >
+      <q-file
+        v-model="videoFile"
+        label="Choose video file"
+        filled
+        accept="video/*"
+        :loading="isUploading"
+        :disable="isUploading"
+        @update:model-value="handleFileSelect"
+      >
+        <template #prepend>
+          <q-icon name="movie" />
+        </template>
+      </q-file>
 
-                    <div class="text-center q-mt-sm text-grey">
-                        or drag and drop your video here
-                    </div>
+      <div class="text-center q-mt-sm text-grey">
+        or drag and drop your video here
+      </div>
 
-                    <div v-if="uploadProgress > 0 && uploadProgress < 100" class="q-mt-md">
-                        <q-linear-progress :value="uploadProgress / 100" color="primary" />
-                        <div class="text-center q-mt-sm">
-                            {{ Math.round(uploadProgress) }}%
-                        </div>
-                    </div>
+      <div
+        v-if="uploadProgress > 0 && uploadProgress < 100"
+        class="q-mt-md"
+      >
+        <q-linear-progress
+          :value="uploadProgress / 100"
+          color="primary"
+        />
+        <div class="text-center q-mt-sm">
+          {{ Math.round(uploadProgress) }}%
+        </div>
+      </div>
 
-                    <div v-if="errorMessage" class="text-negative q-mt-sm">
-                        {{ errorMessage }}
-                    </div>
-                </div>
-            </q-card-section>
+      <div
+        v-if="errorMessage"
+        class="text-negative q-mt-sm"
+      >
+        {{ errorMessage }}
+      </div>
+    </div>
+  </q-card-section>
 </template>
 
 <script setup lang="ts">

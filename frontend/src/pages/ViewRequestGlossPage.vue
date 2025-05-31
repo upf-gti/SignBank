@@ -1,40 +1,40 @@
 <template>
-    <q-page>
-      <LoadingComponent
-        v-if="loading"
-        :loading="loading"
+  <q-page>
+    <LoadingComponent
+      v-if="loading"
+      :loading="loading"
+    />
+  
+    <div
+      v-else-if="error"
+      class="text-center q-pa-md"
+    >
+      <div class="text-negative text-h6">
+        {{ error }}
+      </div>
+      <q-btn
+        color="primary"
+        :label="translate('common.goBack')"
+        class="q-mt-md"
+        @click="router.go(-1)"
       />
+    </div>
   
-      <div
-        v-else-if="error"
-        class="text-center q-pa-md"
-      >
-        <div class="text-negative text-h6">
-          {{ error }}
-        </div>
-        <q-btn
-          color="primary"
-          :label="translate('common.goBack')"
-          class="q-mt-md"
-          @click="router.go(-1)"
-        />
-      </div>
-  
-      <div
-        v-else
-        class="column full-width justify-center items-center"
-        style="height: fit-content"
-      >
-        <GlossDetailComponent
-          v-if="glossData"
-          class="col full-width"
-          :gloss-data="glossData"
-          v-model:edit-mode="editMode"
-          :allow-edit="false"
-        />
-      </div>
-    </q-page>
-  </template>
+    <div
+      v-else
+      class="column full-width justify-center items-center"
+      style="height: fit-content"
+    >
+      <GlossDetailComponent
+        v-if="glossData"
+        v-model:edit-mode="editMode"
+        class="col full-width"
+        :gloss-data="glossData"
+        :allow-edit="false"
+      />
+    </div>
+  </q-page>
+</template>
   
   <script setup lang="ts">
   import { useRoute, useRouter } from 'vue-router'

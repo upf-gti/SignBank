@@ -11,7 +11,15 @@
       >
         <!-- List of definitions -->
         <q-item-label class="row justify-between items-center">
-          <q-btn v-if="editMode !== 'none'" flat round icon="delete" :label="translate('deleteDefinition')" @click="removeDefinition(index)"  class="float-right"/>
+          <q-btn
+            v-if="editMode !== 'none'"
+            flat
+            round
+            icon="delete"
+            :label="translate('deleteDefinition')"
+            class="float-right"
+            @click="removeDefinition(index)"
+          />
           <q-input
             v-if="editMode !== 'none'"
             v-model="definition.title"
@@ -20,7 +28,9 @@
             dense
             class="col-12 q-mb-sm"
           />
-          <div v-else>{{ definition.title }}</div>
+          <div v-else>
+            {{ definition.title }}
+          </div>
         </q-item-label>
         <q-item-label>
           <q-input
@@ -31,7 +41,9 @@
             dense
             class="col-12 q-mb-sm"
           />
-          <div v-else>{{ definition.definition }}</div>
+          <div v-else>
+            {{ definition.definition }}
+          </div>
           <!-- Definition translations -->
           <q-item
             v-for="(translation, tIndex) in definition.definitionTranslations"
@@ -40,15 +52,24 @@
           >
             <div class="row justify-between items-center q-mb-sm">
               <LanguageSelector 
-                class="col"
                 v-if="editMode !== 'none'"
-                v-model="translation.language" />
+                v-model="translation.language"
+                class="col"
+              />
               <div v-else>
                 <q-chip size="sm">
                   {{ translation.language }}
                 </q-chip>
               </div>
-              <q-btn v-if="editMode !== 'none'" flat round icon="delete" :label="translate('deleteDefinitionTranslation')" @click="removeTranslation(definition, tIndex)" class="q-mx-md" />
+              <q-btn
+                v-if="editMode !== 'none'"
+                flat
+                round
+                icon="delete"
+                :label="translate('deleteDefinitionTranslation')"
+                class="q-mx-md"
+                @click="removeTranslation(definition, tIndex)"
+              />
             </div>
             <q-input
               v-if="editMode !== 'none'"
@@ -58,7 +79,10 @@
               dense
               class="col-12"
             />
-            <q-item-label v-else class="q-ml-lg">
+            <q-item-label
+              v-else
+              class="q-ml-lg"
+            >
               {{ translation.translation }}
             </q-item-label>
           </q-item>
@@ -72,13 +96,28 @@
           />
         </q-item-label>
       </q-item>
-      <q-btn v-if="editMode !== 'none'" unelevated outline color="primary" :label="translate('addDefinition')" icon="add" @click="addDefinition" />
+      <q-btn
+        v-if="editMode !== 'none'"
+        unelevated
+        outline
+        color="primary"
+        :label="translate('addDefinition')"
+        icon="add"
+        @click="addDefinition"
+      />
     </q-list>
     <!-- Translations of the sense -->
     <div class="column">
       <div class="text-h5 q-mt-md row justify-between items-center">
         {{ translate('glossTranslations') }}
-        <q-btn v-if="editMode !== 'none'" flat round icon="add" :label="translate('addGlossTranslation')" @click="addSenseTranslation" />
+        <q-btn
+          v-if="editMode !== 'none'"
+          flat
+          round
+          icon="add"
+          :label="translate('addGlossTranslation')"
+          @click="addSenseTranslation"
+        />
       </div>
       <q-list class="row">
         <q-item
@@ -94,11 +133,22 @@
           >
             <div class="row justify-between items-center">
               <LanguageSelector 
-                class="col"
                 v-if="editMode !== 'none'"
-                v-model="translation.language" />
-              <div v-else>{{ translation.language }}</div>
-              <q-btn v-if="editMode !== 'none'" flat round icon="delete" :label="translate('deleteGlossTranslation')" @click="removeSenseTranslation(index)" class="q-mx-md" />
+                v-model="translation.language"
+                class="col"
+              />
+              <div v-else>
+                {{ translation.language }}
+              </div>
+              <q-btn
+                v-if="editMode !== 'none'"
+                flat
+                round
+                icon="delete"
+                :label="translate('deleteGlossTranslation')"
+                class="q-mx-md"
+                @click="removeSenseTranslation(index)"
+              />
             </div>
             <q-input
               v-if="editMode !== 'none'"
@@ -109,7 +159,10 @@
               dense
               class="col-12 q-mt-sm"
             />
-            <q-item-label v-else class="text-h6">
+            <q-item-label
+              v-else
+              class="text-h6"
+            >
               {{ translation.translation }}
             </q-item-label>
           </q-card>

@@ -114,10 +114,10 @@ onMounted(() => {
     <!-- Left Sidebar -->
     <div class="col-12 col-md-3 q-pr-md">
       <SearchFilters
-        v-model:searchQuery="searchQuery"
-        v-model:selectedCategory="selectedLexicalCategory"
-        v-model:selectedHands="selectedHands"
-        v-model:filterInputs="filterInputs"
+        v-model:search-query="searchQuery"
+        v-model:selected-category="selectedLexicalCategory"
+        v-model:selected-hands="selectedHands"
+        v-model:filter-inputs="filterInputs"
         @search="performSearch"
         @clear="performSearch"
       />

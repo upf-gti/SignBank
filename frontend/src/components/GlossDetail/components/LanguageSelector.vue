@@ -1,12 +1,12 @@
 <template>
-    <q-select
-      v-model="modelValue"
-      :options="languageOptions"
-      :label="translate('language')"
-      outlined
-      dense
-      @update:model-value="$emit('update:modelValue', $event)"
-    />    
+  <q-select
+    v-model="modelValue"
+    :options="languageOptions"
+    :label="translate('language')"
+    outlined
+    dense
+    @update:model-value="$emit('update:modelValue', $event)"
+  />    
 </template>
 
 <script setup lang="ts">

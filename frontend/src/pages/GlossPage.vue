@@ -27,9 +27,9 @@
     >
       <GlossDetailComponent
         v-if="glossData"
+        v-model:edit-mode="editMode"
         class="col full-width"
         :gloss-data="glossData"
-        v-model:edit-mode="editMode"
       />
     </div>
   </q-page>

@@ -15,8 +15,12 @@
       <q-card-section class="col">
         <div class="row items-center justify-between">
           <div>
-            <div class="text-h6">{{ document.gloss }}</div>
-            <div class="text-subtitle2">{{ document.senseTitle }}</div>
+            <div class="text-h6">
+              {{ document.gloss }}
+            </div>
+            <div class="text-subtitle2">
+              {{ document.senseTitle }}
+            </div>
             
             <q-chip
               v-if="document.lexicalCategory"
@@ -44,12 +48,20 @@
           <q-card>
             <q-card-section>
               <div v-if="document.hands">
-                <div class="text-caption text-grey">{{ t('hands') }}</div>
-                <div class="q-mb-xs">{{ document.hands }}</div>
+                <div class="text-caption text-grey">
+                  {{ t('hands') }}
+                </div>
+                <div class="q-mb-xs">
+                  {{ document.hands }}
+                </div>
               </div>
               <div v-if="document.lexicalCategory">
-                <div class="text-caption text-grey">{{ t('lexicalCategory') }}</div>
-                <div class="q-mb-xs">{{ document.lexicalCategory }}</div>
+                <div class="text-caption text-grey">
+                  {{ t('lexicalCategory') }}
+                </div>
+                <div class="q-mb-xs">
+                  {{ document.lexicalCategory }}
+                </div>
               </div>
             </q-card-section>
           </q-card>
