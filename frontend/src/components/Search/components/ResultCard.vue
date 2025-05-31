@@ -5,7 +5,7 @@
         <q-card-section class="col-4">
           <video
             class="full-width"
-            :src="document.url"
+            :src="getVideoUrl(document.url)"
             controls
             preload="none"
           />
@@ -61,6 +61,7 @@
 
 <script setup lang="ts">
 import translate from 'src/utils/translate';
+import { getVideoUrl } from 'src/utils/videoUrl';
 import type { SearchResult } from 'src/services/search.service';
 
 const t = (key: string) => translate(key);

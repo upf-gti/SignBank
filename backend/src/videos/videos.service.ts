@@ -29,8 +29,9 @@ export class VideosService {
       // Clean up the temporary file
       await unlink(file.path);
 
+      // Return relative path instead of full URL
       return {
-        url: `https://${process.env.BASE_URL}/lscassets/videos/${uniqueFilename}`,
+        url: `videos/${uniqueFilename}`,
       };
     } catch (error) {
       // Clean up the temporary file in case of error

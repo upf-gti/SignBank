@@ -105,7 +105,7 @@ async function main() {
           create: [
             {
               example: 'Example of using Hello',
-              exampleVideoURL: 'https://signbank.upf.com/lscassets/videos/LSC_-_Camell.mp4',
+              exampleVideoURL: 'videos/LSC_-_Camell.mp4',
               exampleTranslations: {
                 create: [
                   {
@@ -125,7 +125,7 @@ async function main() {
             },
             {
               example: 'Another example with Hello',
-              exampleVideoURL: 'https://signbank.upf.com/lscassets/videos/LSC_-_Cames.mp4',
+              exampleVideoURL: 'videos/LSC_-_Cames.mp4',
               exampleTranslations: {
                 create: [
                   {
@@ -173,7 +173,7 @@ async function main() {
           create: [
             {
               example: 'Example of using Thank you',
-              exampleVideoURL: 'https://signbank.upf.com/lscassets/videos/LSC_-_Camell.mp4',
+              exampleVideoURL: 'videos/LSC_-_Camell.mp4',
               exampleTranslations: {
                 create: [
                   {
@@ -193,7 +193,7 @@ async function main() {
             },
             {
               example: 'Another example with Thank you',
-              exampleVideoURL: 'https://signbank.upf.com/lscassets/videos/LSC_-_Cames.mp4',
+              exampleVideoURL: 'videos/LSC_-_Cames.mp4',
               exampleTranslations: {
                 create: [
                   {
@@ -241,7 +241,7 @@ async function main() {
           create: [
             {
               example: 'Example of using Good',
-              exampleVideoURL: 'https://signbank.upf.com/lscassets/videos/LSC_-_Camell.mp4',
+              exampleVideoURL: 'videos/LSC_-_Camell.mp4',
               exampleTranslations: {
                 create: [
                   {
@@ -261,7 +261,7 @@ async function main() {
             },
             {
               example: 'Another example with Good',
-              exampleVideoURL: 'https://signbank.upf.com/lscassets/videos/LSC_-_Cames.mp4',
+              exampleVideoURL: 'videos/LSC_-_Cames.mp4',
               exampleTranslations: {
                 create: [
                   {
@@ -309,7 +309,7 @@ async function main() {
           create: [
             {
               example: 'Example of using Well',
-              exampleVideoURL: 'https://signbank.upf.com/lscassets/videos/LSC_-_Camell.mp4',
+              exampleVideoURL: 'videos/LSC_-_Camell.mp4',
               exampleTranslations: {
                 create: [
                   {
@@ -329,7 +329,7 @@ async function main() {
             },
             {
               example: 'Another example with Well',
-              exampleVideoURL: 'https://signbank.upf.com/lscassets/videos/LSC_-_Cames.mp4',
+              exampleVideoURL: 'videos/LSC_-_Cames.mp4',
               exampleTranslations: {
                 create: [
                   {
@@ -358,7 +358,7 @@ async function main() {
     senses.map((sense) =>
       prisma.videoDefinition.create({
         data: {
-          url: `https://signbank.upf.com/lscassets/videos/LSC_-_Cafe.mp4`,
+          url: `videos/LSC_-_Cafe.mp4`,
         },
       })
     )
@@ -400,7 +400,7 @@ async function main() {
       prisma.signVideo.create({
         data: {
           title: `${sense.senseTitle} Sign Video`,
-          url: `https://signbank.upf.com/lscassets/videos/LSC_-_Cami.mp4`,
+          url: `videos/LSC_-_Cami.mp4`,
           priority: 1,
           sense: {
             connect: {
@@ -427,17 +427,17 @@ async function main() {
           videos: {
             create: [
               {
-                url: `https://signbank.upf.com/lscassets/videos/LSC_-_Cap.mp4`,
+                url: `videos/LSC_-_Cap.mp4`,
                 angle: 'front',
                 priority: 1,
               },
               {
-                url: `https://signbank.upf.com/lscassets/videos/LSC_-_Capa.mp4`,
+                url: `videos/LSC_-_Capa.mp4`,
                 angle: 'side',
                 priority: 2,
               },
               {
-                url: `https://signbank.upf.com/lscassets/videos/LSC_-_Car.mp4`,
+                url: `videos/LSC_-_Car.mp4`,
                 angle: 'close-up',
                 priority: 3,
               },

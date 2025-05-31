@@ -5,7 +5,7 @@
       class="col fit"
       loop
       autoplay
-      :src="selectedVideoData.url"
+      :src="getVideoUrl(selectedVideoData.url)"
       :style="{
         objectFit: 'contain',
         maxHeight: '40dvh',
@@ -51,6 +51,7 @@ import { ref, computed } from 'vue';
 import { SignVideo } from 'src/types/models';
 import translate from 'src/utils/translate';
 import UploadVideoComponent from 'src/components/UploadVideoPopup.vue';
+import { getVideoUrl } from 'src/utils/videoUrl';
 
 const { signVideo, editMode } = defineProps<{
   signVideo: SignVideo;
