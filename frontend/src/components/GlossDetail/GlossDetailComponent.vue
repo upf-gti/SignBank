@@ -34,7 +34,8 @@
 </template>
 
 <script setup lang="ts">
-import { GlossData, Sense, RelatedGloss, MinimalPair } from 'src/types/models'
+import { GlossData, Sense } from 'src/types/models'
+import type { RelatedGloss, MinimalPair } from 'src/types/gloss'
 import GlossHeader from './components/GlossHeader.vue'
 import { ref, computed } from 'vue'
 import SenseSelector from './components/SenseSelector.vue';
@@ -114,7 +115,7 @@ const addSense = (sense: { senseTitle: string, lexicalCategory: string }) => {
   selectedSenseId.value = glossData.senses[glossData.senses.length - 1]?.id as string
 }
 
-const addRelation = async (relatedGloss: RelatedGloss) => {
+const addRelation = (relatedGloss: RelatedGloss) => {
   try { 
     glossData.relationsAsSource.push(relatedGloss);
   } catch (error) {
@@ -122,9 +123,9 @@ const addRelation = async (relatedGloss: RelatedGloss) => {
   }
 };
 
-const addMinimalPair = async (minimalPair: MinimalPair) => {
+const addMinimalPair = (minimalPair: MinimalPair) => {
   try {
-    glossData.minimalPairsTo.push(minimalPair);
+    glossData.minimalPairsAsSource.push(minimalPair);
   } catch (error) {
     console.error('Error adding minimal pair:', error);
   }

@@ -6,7 +6,7 @@
         <div class="row items-center justify-between">
           <div>
             <div class="text-h6 gloss-title">
-              {{ pair.glossTo.gloss }}
+              {{ pair.targetGloss.gloss }}
               <q-tooltip>{{ t('clickToView') }}</q-tooltip>
             </div>
             <div class="distinction-section q-mt-sm">
@@ -20,7 +20,7 @@
               color="primary"
               :label="t('view')"
               :loading="loading"
-              @click="$emit('view', pair.glossToId || '')"
+              @click="$emit('view', pair.targetGlossId || '')"
             />
             <q-btn
               v-if="editMode"

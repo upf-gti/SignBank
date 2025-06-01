@@ -63,9 +63,9 @@ export class GlossesService {
             id: true,
           },
         },
-        minimalPairsTo: {
+        minimalPairsAsSource: {
           include: {
-            glossTo: {
+            sourceGloss: {
               include: {
                 senses: {
                   include: {

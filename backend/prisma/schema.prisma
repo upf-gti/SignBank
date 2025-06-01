@@ -107,8 +107,8 @@ model GlossData {
     senses               Sense[]
     relationsAsSource    RelatedGloss[]   @relation("RelationSource")
     relationsAsTarget    RelatedGloss[]   @relation("RelationTarget")
-    minimalPairsTo       MinimalPair[]    @relation("MinimalPairTo")
-    minimalPairsFrom     MinimalPair[]    @relation("MinimalPairFrom")
+    minimalPairsAsSource MinimalPair[]    @relation("MinimalPairSource")
+    minimalPairsAsTarget MinimalPair[]    @relation("MinimalPairTarget")
 }
 
 model RelatedGloss {
@@ -225,14 +225,14 @@ model Video {
 }
 
 model MinimalPair {
-    id          String    @id @default(uuid())
-    distinction String
-    glossTo     GlossData @relation("MinimalPairTo", fields: [glossToId], references: [id])
-    glossToId   String
-    glossFrom   GlossData @relation("MinimalPairFrom", fields: [glossFromId], references: [id])
-    glossFromId String
+    id            String    @id @default(uuid())
+    distinction   String
+    sourceGloss   GlossData @relation("MinimalPairSource", fields: [sourceGlossId], references: [id])
+    sourceGlossId String
+    targetGloss   GlossData @relation("MinimalPairTarget", fields: [targetGlossId], references: [id])
+    targetGlossId String
 
-    @@unique([glossToId, glossFromId])
+    @@unique([sourceGlossId, targetGlossId])
 }
 
 model GlossRequest {

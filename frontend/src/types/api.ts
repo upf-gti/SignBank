@@ -54,7 +54,8 @@ export interface Sense {
 
 export interface RelatedGloss {
   id: string;
-  glossId: string;
+  sourceGlossId: string;
+  targetGlossId: string;
   relationType: string;
 }
 

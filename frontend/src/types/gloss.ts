@@ -18,9 +18,13 @@ export interface RelatedGloss {
 
 export interface MinimalPair {
   id?: string;
-  glossToId?: string;
+  sourceGlossId?: string;
+  targetGlossId?: string;
   distinction: string;
-  glossTo: {
+  sourceGloss?: {
+    gloss: string;
+  };
+  targetGloss: {
     gloss: string;
   };
 }

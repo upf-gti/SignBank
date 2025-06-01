@@ -1,4 +1,5 @@
 import { Gloss } from "./api"
+import { RelatedGloss, MinimalPair } from "./gloss"
 
 export type WordStatus = 'PUBLISHED' | 'DRAFT' | 'PENDING';
 export type RequestStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
@@ -123,15 +124,6 @@ export interface RelatedGlossData {
   }[];
 }
 
-export interface MinimalPair {
-  id?: string;
-  distinction: string;
-  glossTo: GlossData;
-  glossToId: string;
-  glossFrom: GlossData;
-  glossFromId: string;
-}
-
 export interface SignVideo {
   id?: string;
   title: string;
@@ -156,15 +148,6 @@ export interface Sense {
   senseTranslations: SenseTranslation[];
 }
 
-export interface RelatedGloss {
-  id?: string;
-  relationType: string;
-  sourceGloss?: GlossData;
-  sourceGlossId?: string;
-  targetGloss?: GlossData;
-  targetGlossId?: string;
-}
-
 export interface GlossData {
   id?: string;
   gloss: string;
@@ -177,8 +160,8 @@ export interface GlossData {
   senses: Sense[];
   relationsAsSource: RelatedGloss[];
   relationsAsTarget: RelatedGloss[];
-  minimalPairsTo: MinimalPair[];
-  minimalPairsFrom: MinimalPair[];
+  minimalPairsAsSource: MinimalPair[];
+  minimalPairsAsTarget: MinimalPair[];
   glossRequest: string | null;
 }
 

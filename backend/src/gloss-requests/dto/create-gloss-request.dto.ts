@@ -174,7 +174,7 @@ export class SenseDto {
 export class MinimalPairDto {
   @IsString()
   @IsNotEmpty()
-  glossToId: string;
+  targetGlossId: string;
 
   @IsString()
   @IsNotEmpty()
@@ -205,7 +205,7 @@ export class CreateGlossRequestDto {
   @ValidateNested({ each: true })
   @Type(() => MinimalPairDto)
   @IsOptional()
-  minimalPairsTo?: MinimalPairDto[];
+  minimalPairsAsSource?: MinimalPairDto[];
 
   @ValidateNested({ each: true })
   @Type(() => RelatedGlossDto)

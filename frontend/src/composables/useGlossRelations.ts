@@ -56,9 +56,9 @@ export function useGlossRelations(
       error.value = null;
 
       await onAddMinimalPair({
-        glossToId: selectedGloss.value.glossId,
+        targetGlossId: selectedGloss.value.glossId,
         distinction: distinction.value,
-        glossTo: {
+        targetGloss: {
           gloss: selectedGloss.value.gloss
         }
       } as MinimalPair);

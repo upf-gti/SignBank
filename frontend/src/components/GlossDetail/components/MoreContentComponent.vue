@@ -58,7 +58,7 @@
       <RelatedGlosses
         v-if="selectedContent === 'relatedGlosses'" 
         :related-glosses="glossData.relationsAsSource as RelatedGloss[]"
-        :minimal-pairs="glossData.minimalPairsTo"
+        :minimal-pairs="glossData.minimalPairsAsSource"
         :edit-mode="editMode"
         @add-relation="onAddRelation"
         @remove-relation="onRemoveRelation"

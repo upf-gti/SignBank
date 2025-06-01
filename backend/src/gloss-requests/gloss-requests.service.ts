@@ -78,7 +78,7 @@ export class GlossRequestsService {
   }
 
   async createGlossRequest(userId: string, createGlossRequestDto: CreateGlossRequestDto) {
-    const { gloss, senses, minimalPairsTo, relationsAsSource } = createGlossRequestDto;
+    const { gloss, senses, minimalPairsAsSource, relationsAsSource } = createGlossRequestDto;
   
     // Step 1: Create GlossRequest without minimalPairs/relatedGlosses
     const glossRequest = await this.prisma.glossRequest.create({
@@ -144,22 +144,22 @@ export class GlossRequestsService {
     const glossDataId = glossRequest.requestedGlossData.id;
   
     // Step 2: Add minimalPairs and relatedGlosses if they exist
-    if (minimalPairsTo && minimalPairsTo.length > 0) {
-      for (const pair of minimalPairsTo) {
+    if (minimalPairsAsSource && minimalPairsAsSource.length > 0) {
+      for (const pair of minimalPairsAsSource) {
         // Verify that the target GlossData exists
         const targetGloss = await this.prisma.glossData.findUnique({
-          where: { id: pair.glossToId }
+          where: { id: pair.targetGlossId }
         });
 
         if (!targetGloss) {
-          throw new Error(`GlossData with id ${pair.glossToId} not found`);
+          throw new Error(`GlossData with id ${pair.targetGlossId} not found`);
         }
 
         await this.prisma.minimalPair.create({
           data: {
             distinction: pair.distinction,
-            glossToId: glossDataId,
-            glossFromId: pair.glossToId
+            sourceGlossId: glossDataId,
+            targetGlossId: pair.targetGlossId 
           }
         });
       }
@@ -215,14 +215,16 @@ export class GlossRequestsService {
                 },
               },
             },
-            minimalPairsTo: {
+            minimalPairsAsSource: {
               include: {
-                glossTo: true,
+                sourceGloss: true,
+                targetGloss: true
               }
             },
-            minimalPairsFrom: {
+            minimalPairsAsTarget: {
               include: {
-                glossTo: true,
+                targetGloss: true,
+                sourceGloss: true
               }
             },
             relationsAsSource: {
@@ -275,9 +277,18 @@ export class GlossRequestsService {
                 senseTranslations: true,
               },
             },
-            minimalPairsTo: {
+            minimalPairsAsSource: {
               include: {
-                glossTo: {
+                sourceGloss: {
+                  include: {
+                    senses: {
+                      include: {
+                        signVideos: true,
+                      },
+                    },
+                  },
+                },
+                targetGloss: {
                   include: {
                     senses: {
                       include: {
@@ -303,12 +314,14 @@ export class GlossRequestsService {
             },
             relationsAsTarget: {
               include: {
-                sourceGloss: true
+                sourceGloss: true,
+                targetGloss: true
               }
             },
-            minimalPairsFrom: {
+            minimalPairsAsTarget: {
               include: {
-                glossTo: true
+                targetGloss: true,
+                sourceGloss: true
               }
             },
             dictionaryEntry: true,
