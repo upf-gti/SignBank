@@ -96,5 +96,17 @@ export default {
   deleteExampleTranslation: 'Delete Example Translation',
   deleteVideoTranslation: 'Delete Video Translation',
   deleteSense: 'Delete Sense',
-  deleteGloss: 'Delete Gloss',  
+  deleteGloss: 'Delete Gloss',
+
+  // Request actions
+  declineRequest: 'Decline Request',
+  enterDeclineReason: 'Please enter a reason for declining this request',
+  requestAccepted: 'Request accepted successfully',
+  requestDeclined: 'Request declined',
+  errors: {
+    failedToAcceptRequest: 'Failed to accept request',
+    failedToDeclineRequest: 'Failed to decline request',
+    failedToLoadRequests: 'Failed to load requests',
+    failedToLoadGloss: 'Failed to load gloss'
+  },
 }; 

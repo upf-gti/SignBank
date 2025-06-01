@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateGlossRequestDto } from './dto/create-gloss-request.dto';
+import { AcceptGlossRequestDto } from './dto/accept-gloss-request.dto';
+import { DeclineGlossRequestDto } from './dto/decline-gloss-request.dto';
+import { GlossStatus, RequestStatus } from '@prisma/client';
 
 @Injectable()
 export class GlossRequestsService {
@@ -9,7 +12,7 @@ export class GlossRequestsService {
   async getAllPendingRequests() {
     return this.prisma.glossRequest.findMany({
       where: {
-        status: 'PENDING',
+        status: RequestStatus.PENDING,
       },
       include: {
         creator: {
@@ -77,6 +80,78 @@ export class GlossRequestsService {
     });
   }
 
+  async getGlossRequest(id: string) {
+    return this.prisma.glossRequest.findUnique({
+      where: { id },
+      include: {
+        creator: true,
+        acceptedBy: true,
+        deniedBy: true,
+        requestedGlossData: {
+          include: {
+            senses: {
+              include: {
+                definitions: {
+                  include: {
+                    definitionTranslations: true,
+                    videoDefinition: true,
+                  },
+                },
+                signVideos: {
+                  include: {
+                    videos: true,
+                    videoData: true,
+                  },
+                },
+                examples: {
+                  include: {
+                    exampleTranslations: true,
+                  },
+                },
+                senseTranslations: true,
+              },
+            },
+            minimalPairsAsSource: {
+              include: {
+                sourceGloss: {
+                  include: {
+                    senses: {
+                      include: {
+                        signVideos: true,
+                      },
+                    },
+                  },
+                },
+                targetGloss: {
+                  include: {
+                    senses: {
+                      include: {
+                        signVideos: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            relationsAsSource: {
+              include: {
+                targetGloss: {
+                  include: {
+                    senses: {
+                      include: {
+                        signVideos: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
   async createGlossRequest(userId: string, createGlossRequestDto: CreateGlossRequestDto) {
     const { gloss, senses, minimalPairsAsSource, relationsAsSource } = createGlossRequestDto;
   
@@ -89,6 +164,7 @@ export class GlossRequestsService {
               id: userId,
             },
           },
+          status: RequestStatus.PENDING,
           requestedGlossData: {
             create: {
               gloss,
@@ -246,87 +322,69 @@ export class GlossRequestsService {
       });
     });
   }
-  
 
-  async getGlossRequest(id: string) {
-    return this.prisma.glossRequest.findUnique({
+  async acceptGlossRequest(
+    id: string,
+    userId: string,
+    // acceptGlossRequestDto: AcceptGlossRequestDto,
+  ) {
+    return this.prisma.$transaction(async (prisma) => {
+      // Update the request status
+      const updatedRequest = await prisma.glossRequest.update({
+        where: { id },
+        data: {
+          status: RequestStatus.ACCEPTED,
+          acceptedById: userId,
+        },
+      });
+
+      const dictionaryEntry = await prisma.dictionaryEntry.create({
+        data: {
+          glossDataId: updatedRequest.requestedGlossDataId,
+          isCreatedFromRequest: true,
+          status: GlossStatus.PUBLISHED,
+        },
+      });
+
+      return dictionaryEntry;
+    });
+  }
+
+  async declineGlossRequest(
+    id: string,
+    userId: string,
+    declineGlossRequestDto: DeclineGlossRequestDto,
+  ) {
+    return this.prisma.glossRequest.update({
       where: { id },
+      data: {
+        status: RequestStatus.DENIED,
+        deniedById: userId,
+        denyReason: declineGlossRequestDto.reason,
+      },
       include: {
-        creator: true,
-        acceptedBy: true,
-        deniedBy: true,
+        creator: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+          },
+        },
+        deniedBy: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
         requestedGlossData: {
           include: {
             senses: {
               include: {
-                definitions: {
-                  include: {
-                    definitionTranslations: true,
-                    videoDefinition: true,
-                  },
-                },
-                signVideos: {
-                  include: {
-                    videos: true,
-                    videoData: true,
-                  },
-                },
-                examples: {
-                  include: {
-                    exampleTranslations: true,
-                  },
-                },
-                senseTranslations: true,
+                definitions: true,
+                signVideos: true,
+                examples: true,
               },
             },
-            minimalPairsAsSource: {
-              include: {
-                sourceGloss: {
-                  include: {
-                    senses: {
-                      include: {
-                        signVideos: true,
-                      },
-                    },
-                  },
-                },
-                targetGloss: {
-                  include: {
-                    senses: {
-                      include: {
-                        signVideos: true,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            relationsAsSource: {
-              include: {
-                targetGloss: {
-                  include: {
-                    senses: {
-                      include: {
-                        signVideos: true,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            relationsAsTarget: {
-              include: {
-                sourceGloss: true,
-                targetGloss: true
-              }
-            },
-            minimalPairsAsTarget: {
-              include: {
-                targetGloss: true,
-                sourceGloss: true
-              }
-            },
-            dictionaryEntry: true,
           },
         },
       },

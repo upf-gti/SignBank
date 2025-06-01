@@ -1,8 +1,8 @@
 TODOS
-- Accept Request
 - Edit Glosses
 - Minimal Pairs relations to videos and not to entire gloss
 - Delete Relations
+- Edit Senses and delete
 
 ## How to change the app host
 

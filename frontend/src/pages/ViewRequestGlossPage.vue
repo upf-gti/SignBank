@@ -31,6 +31,10 @@
         class="col full-width"
         :gloss-data="glossData"
         :allow-edit="false"
+        :is-confirm-request-page="true"
+        @save-gloss="saveGloss"
+        @accept-request="acceptRequest"
+        @decline-request="declineRequest"
       />
     </div>
   </q-page>
@@ -44,14 +48,16 @@ import LoadingComponent from 'src/components/LoadingComponent.vue'
 import GlossDetailComponent from 'src/components/GlossDetail/GlossDetailComponent.vue'
 import { api } from 'src/services/api'
 import type { GlossData } from 'src/types/models'
+import { useQuasar } from 'quasar'
 
 const route = useRoute()
 const router = useRouter()
+const $q = useQuasar()
 
 // State
 const loading = ref(true)
 const error = ref<string | null>(null)
-const editMode = ref(false)
+const editMode = ref(true)
 const glossData = ref<GlossData>()
 
 onMounted(() => {
@@ -72,4 +78,77 @@ function getGlossRequestData() {
       })
   }
 }
+
+
+const saveGloss = (glossData: GlossData) => {
+  api.requests.update(route.params.id as string, glossData).then((response) => {
+    router.push(`/requests/view/${response.data.id}`);
+    $q.notify({
+      message: translate('glossCreatedSuccessfully'),
+      color: 'positive',
+      icon: 'check'
+    });
+  }).catch((error) => {
+    console.error('Error creating gloss request:', error);
+  });
+};
+
+const acceptRequest = () => {
+  debugger
+  if (!glossData.value) return;
+
+  api.requests.accept(route.params.id as string, glossData.value)
+    .then(() => {
+      $q.notify({
+        message: translate('requestAccepted'),
+        color: 'positive',
+        icon: 'check'
+      });
+      router.push('/glosses');
+    })
+    .catch((error) => {
+      console.error(error);
+      $q.notify({
+        message: translate('errors.failedToAcceptRequest'),
+        color: 'negative',
+        icon: 'error'
+      });
+    });
+};
+
+const declineRequest = () => {
+  $q.dialog({
+    title: translate('declineRequest'),
+    message: translate('enterDeclineReason'),
+    prompt: {
+      model: '',
+      type: 'text',
+      isValid: val => val.length > 0, // Require some reason
+    },
+    cancel: true,
+    persistent: true,
+  }).onOk((reason) => {
+    api.requests.decline({
+      id: route.params.id as string,
+      reason
+    })
+      .then(() => {
+        $q.notify({
+          message: translate('requestDeclined'),
+          color: 'info',
+          icon: 'check'
+        });
+        router.push('/glosses');
+      })
+      .catch((error) => {
+        console.error(error);
+        $q.notify({
+          message: translate('errors.failedToDeclineRequest'),
+          color: 'negative',
+          icon: 'error'
+        });
+      });
+  });
+};
+
 </script>

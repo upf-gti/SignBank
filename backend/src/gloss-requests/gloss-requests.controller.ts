@@ -5,6 +5,8 @@ import { RolesGuard } from '../auth/guard/roles.guard';
 import { Roles } from '../auth/decorator/roles.decorator';
 import { Role } from '@prisma/client';
 import { CreateGlossRequestDto } from './dto/create-gloss-request.dto';
+// import { AcceptGlossRequestDto } from './dto/accept-gloss-request.dto';
+import { DeclineGlossRequestDto } from './dto/decline-gloss-request.dto';
 
 @Controller('gloss-requests')
 @UseGuards(JwtGuard, RolesGuard)
@@ -36,6 +38,34 @@ export class GlossRequestsController {
     return this.glossRequestsService.createGlossRequest(
       req.user.id,
       createGlossRequestDto,
+    );
+  }
+
+  @Post(':id/accept')
+  @Roles(Role.ADMIN)
+  async acceptGlossRequest(
+    @Request() req,
+    @Param('id') id: string,
+    // @Body() acceptGlossRequestDto: AcceptGlossRequestDto,
+  ) {
+    return this.glossRequestsService.acceptGlossRequest(
+      id,
+      req.user.id,
+      // acceptGlossRequestDto,
+    );
+  }
+
+  @Post(':id/decline')
+  @Roles(Role.ADMIN)
+  async declineGlossRequest(
+    @Request() req,
+    @Param('id') id: string,
+    @Body() declineGlossRequestDto: DeclineGlossRequestDto,
+  ) {
+    return this.glossRequestsService.declineGlossRequest(
+      id,
+      req.user.id,
+      declineGlossRequestDto,
     );
   }
 } 

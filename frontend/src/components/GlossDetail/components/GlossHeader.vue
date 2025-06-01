@@ -14,27 +14,47 @@
         :label="translate('gloss')"
       />
     </div>
-    <div
-      v-if="allowEdit"
-      class="row"
-    >
-      <q-btn
-        v-if="!editMode"
-        icon="edit"
-        @click="editGloss"
-      />
-      <q-btn
-        v-else
-        icon="save"
-        :label="translate('saveGloss')"
-        outline
-        @click="saveGloss"
-      />
-      <q-btn
-        v-if="editMode"
-        icon="cancel"
-        @click="cancelGloss"
-      />
+    <div class="row">
+      <template v-if="isConfirmRequestPage">
+        <q-btn
+          icon="check"
+          color="positive"
+          :label="translate('accept')"
+          outline
+          class="q-mr-sm"
+          @click="acceptRequest"
+        />
+        <q-btn
+          icon="close"
+          color="negative"
+          :label="translate('decline')"
+          outline
+          class="q-mr-sm"
+          @click="declineRequest"
+        />
+      </template>
+      <div
+        v-if="allowEdit"
+        class="row"
+      >
+        <q-btn
+          v-if="!editMode"
+          icon="edit"
+          @click="editGloss"
+        />
+        <q-btn
+          v-else
+          icon="save"
+          :label="translate('saveGloss')"
+          outline
+          @click="saveGloss"
+        />
+        <q-btn
+          v-if="editMode"
+          icon="cancel"
+          @click="cancelGloss"
+        />
+      </div>
     </div>
   </q-card-section>
 </template>
@@ -47,12 +67,15 @@ const emit = defineEmits<{
   (e: 'editGloss'): void
   (e: 'saveGloss'): void
   (e: 'cancelGloss'): void
+  (e: 'acceptRequest'): void
+  (e: 'declineRequest'): void
 }>()
 
-const { glossData, allowEdit = true } = defineProps<{
+const { glossData, allowEdit = true, isConfirmRequestPage = false } = defineProps<{
   glossData: GlossData,
   editMode: boolean,
-  allowEdit: boolean
+  allowEdit: boolean,
+  isConfirmRequestPage?: boolean
 }>()
 
 const editGloss = () => {
@@ -65,5 +88,13 @@ const saveGloss = () => {
 
 const cancelGloss = () => {
   emit('cancelGloss')
+}
+
+const acceptRequest = () => {
+  emit('acceptRequest')
+}
+
+const declineRequest = () => {
+  emit('declineRequest')
 }
 </script>

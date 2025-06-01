@@ -141,5 +141,17 @@ export default {
   noMinimalPairs: 'No hi ha parells mínims',
   noTechnicalTerms: 'No hi ha termes tècnics',
   noRelations: 'No hi ha relacions',
-  noGlosses: 'No hi ha glosses'
+  noGlosses: 'No hi ha glosses',
+  
+  // Request actions
+  declineRequest: 'Rebutjar sol·licitud',
+  enterDeclineReason: 'Si us plau, introduïu un motiu per rebutjar aquesta sol·licitud',
+  requestAccepted: 'Sol·licitud acceptada correctament',
+  requestDeclined: 'Sol·licitud rebutjada',
+  errors: {
+    failedToAcceptRequest: 'No s\'ha pogut acceptar la sol·licitud',
+    failedToDeclineRequest: 'No s\'ha pogut rebutjar la sol·licitud',
+    failedToLoadRequests: 'No s\'han pogut carregar les sol·licituds',
+    failedToLoadGloss: 'No s\'ha pogut carregar la glossa'
+  }
 } as TranslateKeys; 

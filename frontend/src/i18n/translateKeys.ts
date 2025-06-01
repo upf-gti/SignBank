@@ -131,6 +131,16 @@ interface TranslateKeys {
   noRelations: string;
   noMinimalPairs: string;
   noTechnicalTerms: string;
+  declineRequest: string;
+  enterDeclineReason: string;
+  requestAccepted: string;
+  requestDeclined: string;
+  errors: {
+    failedToAcceptRequest: string;
+    failedToDeclineRequest: string;
+    failedToLoadRequests: string;
+    failedToLoadGloss: string;
+  };
 }
 
 export default TranslateKeys;
