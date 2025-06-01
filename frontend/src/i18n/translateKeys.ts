@@ -141,6 +141,10 @@ interface TranslateKeys {
     failedToLoadRequests: string;
     failedToLoadGloss: string;
   };
+  ACCEPTED: string;
+  DENIED: string;
+  PENDING: string;
+  details: string;
 }
 
 export default TranslateKeys;

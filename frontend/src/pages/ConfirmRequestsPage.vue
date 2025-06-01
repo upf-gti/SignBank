@@ -44,7 +44,7 @@
                 text-color="white"
                 dense
               >
-                {{ request.status }}
+                {{ translate(request.status) }}
               </q-chip>
             </div>
           </q-card-section>
@@ -110,9 +110,9 @@
   
   const getStatusColor = (status: RequestStatus): string => {
     switch (status) {
-      case 'APPROVED':
+      case 'ACCEPTED':
         return 'positive';
-      case 'REJECTED':
+      case 'DENIED':
         return 'negative';
       default:
         return 'warning';

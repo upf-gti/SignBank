@@ -2,7 +2,7 @@ import { Gloss } from "./api"
 import { RelatedGloss, MinimalPair } from "./gloss"
 
 export type WordStatus = 'PUBLISHED' | 'DRAFT' | 'PENDING';
-export type RequestStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+export type RequestStatus = 'PENDING' | 'ACCEPTED' | 'DENIED';
 
 export interface Translation {
   id?: string;
