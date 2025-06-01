@@ -1,7 +1,8 @@
 TODOS
-- Unit testing
-- Code coverage
-- Integration testing
+- Accept Request
+- Edit Glosses
+- Minimal Pairs relations to videos and not to entire gloss
+- Delete Relations
 
 ## How to change the app host
 

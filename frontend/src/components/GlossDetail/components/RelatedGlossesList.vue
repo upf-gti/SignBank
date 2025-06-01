@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 import translate from 'src/utils/translate';
-import type { RelatedGloss } from 'src/types/models';
+import type { RelatedGloss } from 'src/types/gloss';
 import { useRouter } from 'vue-router';
 
 const $router = useRouter();

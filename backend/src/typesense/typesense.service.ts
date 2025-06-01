@@ -116,20 +116,31 @@ export class TypesenseService implements OnModuleInit {
   async syncAllVideos() {
     this.logger.log('Starting video sync...');
     try {
-      const senses = await this.prisma.sense.findMany({
+      const dictionaryEntries = await this.prisma.dictionaryEntry.findMany({
         include: {
-          glossData: true,
-          signVideos: {
+          glossData: {
             include: {
-              videos: true,
-              videoData: true
-            },
-            orderBy: {
-              priority: 'desc'
+              senses: {
+                include: {
+                  glossData: true,
+                  signVideos: {
+                    include: {
+                      videos: true,
+                      videoData: true
+                    },
+                    orderBy: {
+                      priority: 'desc'
+                    }
+                  }
+                }
+              }
             }
           }
         }
       });
+      
+      
+      const senses = dictionaryEntries.flatMap(entry => entry.glossData.senses);
 
       let totalDocuments = 0;
       const BATCH_SIZE = 100;
