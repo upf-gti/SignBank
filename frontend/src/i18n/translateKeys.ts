@@ -119,6 +119,18 @@ interface TranslateKeys {
   angle: string;
   signFonology: string;
   myGlossRequests: string;
+  createNewGloss: string;
+  firstSense: string;
+  pending: string;
+  viewGloss: string;
+  requested: string;
+  relatedGlosses: string;
+  minimalPairs: string;
+  technicalTerms: string;
+  relations: string;
+  noRelations: string;
+  noMinimalPairs: string;
+  noTechnicalTerms: string;
 }
 
 export default TranslateKeys;

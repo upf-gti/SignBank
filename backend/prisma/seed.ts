@@ -448,69 +448,6 @@ async function main() {
     )
   );
 
-  // Create related glosses for each gloss data
-  await Promise.all([
-    // HELLO relationships
-    prisma.relatedGloss.create({
-      data: {
-        glossId: glossData[0].id, // HELLO
-        relatedGlossId: glossData[1].id, // THANK_YOU
-        relationType: RelationType.ASSOCIATED_CONCEPT,
-      },
-    }),
-    prisma.relatedGloss.create({
-      data: {
-        glossId: glossData[0].id, // HELLO
-        relatedGlossId: glossData[2].id, // GOOD
-        relationType: RelationType.ASSOCIATED_CONCEPT,
-      },
-    }),
-    // THANK_YOU relationships
-    prisma.relatedGloss.create({
-      data: {
-        glossId: glossData[1].id, // THANK_YOU
-        relatedGlossId: glossData[0].id, // HELLO
-        relationType: RelationType.ASSOCIATED_CONCEPT,
-      },
-    }),
-    prisma.relatedGloss.create({
-      data: {
-        glossId: glossData[1].id, // THANK_YOU
-        relatedGlossId: glossData[2].id, // GOOD
-        relationType: RelationType.ASSOCIATED_CONCEPT,
-      },
-    }),
-    // GOOD relationships
-    prisma.relatedGloss.create({
-      data: {
-        glossId: glossData[2].id, // GOOD
-        relatedGlossId: glossData[0].id, // HELLO
-        relationType: RelationType.ASSOCIATED_CONCEPT,
-      },
-    }),
-    prisma.relatedGloss.create({
-      data: {
-        glossId: glossData[2].id, // GOOD
-        relatedGlossId: glossData[1].id, // THANK_YOU
-        relationType: RelationType.ASSOCIATED_CONCEPT,
-      },
-    }),
-  ]);
-
-  // Create minimal pairs for each gloss data
-  await Promise.all(
-    glossData.map((data, index) =>
-      prisma.minimalPair.create({
-        data: {
-          glossDataId: data.id,
-          minimalPairGlossDataId: glossData[(index + 1) % glossData.length].id,
-          distinction: `Distinction for ${['Hello', 'Thank you', 'Good'][index]}`,
-          signVideoId: signVideos[index].id,
-        },
-      })
-    )
-  );
-
   // Create dictionary entries for each gloss data
   await Promise.all(
     glossData.map((data) =>

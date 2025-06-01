@@ -14,7 +14,7 @@
             {{ minimalPair.distinction }}
           </q-chip>
           <div class="text-h6">
-            {{ minimalPair.minimalPairGlossData.gloss }}
+            {{ minimalPair.minimalPairGloss.gloss }}
           </div>
         </div>
         <div class="row items-center">
@@ -22,7 +22,7 @@
             outline
             :label="translate('viewGloss')"
             class="q-mr-sm"
-            @click="$router.push(`/gloss/${minimalPair.minimalPairGlossDataId}`)"
+            @click="$router.push(`/gloss/${minimalPair.minimalPairGlossId}`)"
           />
           <q-btn
             v-if="editMode"
@@ -30,7 +30,7 @@
             round
             icon="delete"
             color="negative"
-            @click="$emit('remove-pair', minimalPair.id)"
+            @click="$emit('remove-pair', minimalPair.minimalPairGlossId)"
           />
         </div>
       </q-card-section>

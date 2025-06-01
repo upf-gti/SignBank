@@ -78,9 +78,10 @@ export class GlossRequestsService {
   }
 
   async createGlossRequest(userId: string, createGlossRequestDto: CreateGlossRequestDto) {
-    const { gloss, senses } = createGlossRequestDto;
-
-    return this.prisma.glossRequest.create({
+    const { gloss, senses, minimalPairsTo, relatedToGlosses } = createGlossRequestDto;
+  
+    // Step 1: Create GlossRequest without minimalPairs/relatedGlosses
+    const glossRequest = await this.prisma.glossRequest.create({
       data: {
         creator: {
           connect: {
@@ -136,6 +137,60 @@ export class GlossRequestsService {
         },
       },
       include: {
+        requestedGlossData: true,
+      },
+    });
+
+    const glossDataId = glossRequest.requestedGlossData.id;
+  
+    // Step 2: Add minimalPairs and relatedGlosses if they exist
+    debugger;
+    if (minimalPairsTo && minimalPairsTo.length > 0) {
+      for (const pair of minimalPairsTo) {
+        // Verify that the target GlossData exists
+        const targetGloss = await this.prisma.glossData.findUnique({
+          where: { id: pair.glossToId }
+        });
+
+        if (!targetGloss) {
+          throw new Error(`GlossData with id ${pair.glossToId} not found`);
+        }
+
+        await this.prisma.minimalPair.create({
+          data: {
+            distinction: pair.distinction,
+            glossToId: glossDataId,
+            glossFromId: pair.glossToId
+          }
+        });
+      }
+    }
+  
+    if (relatedToGlosses && relatedToGlosses.length > 0) {
+      for (const related of relatedToGlosses) {
+        // Verify that the target GlossData exists
+        const targetGloss = await this.prisma.glossData.findUnique({
+          where: { id: related.relatedGlossId }
+        });
+
+        if (!targetGloss) {
+          throw new Error(`GlossData with id ${related.relatedGlossId} not found`);
+        }
+
+        await this.prisma.relatedGloss.create({
+          data: {
+            relationType: related.relationType,
+            relatedToId: glossDataId,
+            relatedFromId: related.relatedGlossId
+          }
+        });
+      }
+    }
+  
+    // Return the full GlossRequest with all relations
+    return this.prisma.glossRequest.findUnique({
+      where: { id: glossRequest.id },
+      include: {
         creator: {
           select: {
             id: true,
@@ -161,11 +216,36 @@ export class GlossRequestsService {
                 },
               },
             },
+            minimalPairsTo: {
+              include: {
+                glossFrom: true,
+                glossTo: true
+              }
+            },
+            minimalPairsFrom: {
+              include: {
+                glossTo: true,
+                glossFrom: true
+              }
+            },
+            relatedToGlosses: {
+              include: {
+                relatedTo: true,
+                relatedFrom: true
+              }
+            },
+            relatedFromGlosses: {
+              include: {
+                relatedFrom: true,
+                relatedTo: true
+              }
+            }
           },
         },
-      },
+      }
     });
   }
+  
 
   async getGlossRequest(id: string) {
     return this.prisma.glossRequest.findUnique({
@@ -187,7 +267,6 @@ export class GlossRequestsService {
                 signVideos: {
                   include: {
                     videos: true,
-                    minimalPairs: true,
                     videoData: true,
                   },
                 },
@@ -199,9 +278,9 @@ export class GlossRequestsService {
                 senseTranslations: true,
               },
             },
-            relatedGlosses: {
+            minimalPairsTo: {
               include: {
-                relatedGloss: {
+                glossTo: {
                   include: {
                     senses: {
                       include: {
@@ -210,15 +289,11 @@ export class GlossRequestsService {
                     },
                   },
                 },
-              },
-              omit: {
-                glossId: true,
-                id: true,
               },
             },
-            minimalPairs: {
+            relatedToGlosses: {
               include: {
-                minimalPairGlossData: {
+                relatedTo: {
                   include: {
                     senses: {
                       include: {
@@ -228,10 +303,16 @@ export class GlossRequestsService {
                   },
                 },
               },
-              omit: {
-                glossDataId: true,
-                id: true,
-              },
+            },
+            relatedFromGlosses: {
+              include: {
+                relatedTo: true
+              }
+            },
+            minimalPairsFrom: {
+              include: {
+                glossTo: true
+              }
             },
             dictionaryEntry: true,
           },

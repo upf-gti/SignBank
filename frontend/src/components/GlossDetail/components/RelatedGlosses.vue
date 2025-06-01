@@ -1,215 +1,253 @@
 <template>
-  <q-card-section
-    class="justify-around no-wrap"
-  >
-    <q-btn-toggle
-      v-if="$q.screen.lt.md"
-      v-model="selectedContent"
-      class="no-wrap"
-      spread
-      :options="[
-        { label: 'Related Glosses', value: 'relatedGlosses' },
-        { label: 'Minimal Pairs', value: 'minimalPairs' },
-      ]"
-    />
-    <q-card
-      v-if="$q.screen.gt.md || selectedContent === 'relatedGlosses'"
-      class="col-12 col-sm-6 q-ma-sm"
-      flat
-      bordered
-    >
-      <q-card-section class="row justify-between items-center">
-        <q-item-label class="text-h6">
-          {{ translate('relatedGlosses') }}
-        </q-item-label>
-        <q-btn
-          v-if="editMode"
-          flat
-          round
-          icon="add"
-          @click="showAddRelatedGlossDialog = true"
-        />
-      </q-card-section>
-      <RelatedGlossesList 
-        :related-glosses="relatedGlosses" 
-        :edit-mode="editMode"
-        @remove-relation="removeRelation"
-      />
-    </q-card>
-    <q-card
-      v-if="$q.screen.gt.md || selectedContent === 'minimalPairs'"
-      class="col-12 col-sm-6 q-ma-sm"
-      flat
-      bordered
-    >
-      <q-card-section class="row justify-between items-center">
-        <q-item-label class="text-h6">
-          {{ translate('minimalPairs') }}
-        </q-item-label>
-        <q-btn
-          v-if="editMode"
-          flat
-          round
-          icon="add"
-          @click="showAddMinimalPairDialog = true"
-        />
-      </q-card-section>
-      <MinimalPairsList 
-        :minimal-pairs="minimalPairs" 
-        :edit-mode="editMode"
-        @remove-pair="removePair"
-      />
-    </q-card>
+  <q-card-section class="related-glosses">
+    <div class="text-h5 q-mb-md">
+      {{ t('relatedGlosses') }}
+    </div>
 
-    <!-- Dialog for adding related glosses -->
-    <q-dialog v-model="showAddRelatedGlossDialog">
-      <q-card style="min-width: 350px">
-        <q-card-section class="row items-center">
+    <!-- Tabs for Relations and Minimal Pairs -->
+    <q-tabs
+      v-model="selectedTab"
+      class="text-primary"
+      indicator-color="primary"
+      active-color="primary"
+      align="justify"
+    >
+      <q-tab
+        name="relations"
+        :label="t('relations')"
+        icon="link"
+      />
+      <q-tab
+        name="minimal-pairs"
+        :label="t('minimalPairs')"
+        icon="compare"
+      />
+    </q-tabs>
+
+    <q-separator />
+
+    <!-- Error Alert -->
+    <q-banner
+      v-if="error"
+      class="bg-negative text-white q-my-md"
+      rounded
+    >
+      {{ error }}
+      <template v-slot:action>
+        <q-btn
+          flat
+          color="white"
+          label="Dismiss"
+          @click="error = null"
+        />
+      </template>
+    </q-banner>
+
+    <q-tab-panels
+      v-model="selectedTab"
+      animated
+      class="q-mt-md"
+    >
+      <!-- Relations Panel -->
+      <q-tab-panel name="relations">
+        <div class="row items-center justify-between q-mb-md">
           <div class="text-h6">
-            {{ translate('addRelatedGloss') }}
+            {{ t('relations') }}
+            <q-badge
+              color="primary"
+              :label="relatedGlosses.length"
+              class="q-ml-sm"
+            />
           </div>
-          <q-space />
           <q-btn
-            v-close-popup
-            icon="close"
-            flat
-            round
-            dense
+            v-if="editMode"
+            color="primary"
+            :label="t('addRelation')"
+            icon="add_link"
+            :loading="loading"
+            @click="showRelationDialog = true"
           />
+        </div>
+
+        <div
+          v-if="relatedGlosses.length === 0"
+          class="text-center q-pa-md text-grey"
+        >
+          <q-icon
+            name="link_off"
+            size="48px"
+            class="q-mb-md"
+          />
+          <div>{{ t('noRelations') }}</div>
+        </div>
+
+        <div
+          v-else
+          class="row q-col-gutter-md"
+        >
+          <div
+            v-for="relation in relatedGlosses"
+            :key="relation.id || Math.random()"
+            class="col-12"
+          >
+            <RelatedGlossCard
+              :gloss="relation"
+              :edit-mode="editMode"
+              @view="viewGloss"
+              @delete="removeRelation"
+            />
+          </div>
+        </div>
+      </q-tab-panel>
+
+      <!-- Minimal Pairs Panel -->
+      <q-tab-panel name="minimal-pairs">
+        <div class="row items-center justify-between q-mb-md">
+          <div class="text-h6">
+            {{ t('minimalPairs') }}
+            <q-badge
+              color="primary"
+              :label="minimalPairs.length"
+              class="q-ml-sm"
+            />
+          </div>
+          <q-btn
+            v-if="editMode"
+            color="primary"
+            :label="t('addMinimalPair')"
+            icon="add"
+            :loading="loading"
+            @click="showMinimalPairDialog = true"
+          />
+        </div>
+
+        <div
+          v-if="minimalPairs.length === 0"
+          class="text-center q-pa-md text-grey"
+        >
+          <q-icon
+            name="compare_arrows"
+            size="48px"
+            class="q-mb-md"
+          />
+          <div>{{ t('noMinimalPairs') }}</div>
+        </div>
+
+        <div
+          v-else
+          class="row q-col-gutter-md"
+        >
+          <div
+            v-for="pair in minimalPairs"
+            :key="pair.id || Math.random()"
+            class="col-12"
+          >
+            <MinimalPairCard
+              :pair="pair"
+              :edit-mode="editMode"
+              @view="viewGloss"
+              @delete="removeMinimalPair"
+            />
+          </div>
+        </div>
+      </q-tab-panel>
+    </q-tab-panels>
+
+    <!-- Search Dialog -->
+    <GlossSearch
+      v-model="showRelationDialog"
+      :title="t('addRelation')"
+      :loading="loading"
+      @select="handleRelationSelect"
+    />
+
+    <GlossSearch
+      v-model="showMinimalPairDialog"
+      :title="t('addMinimalPair')"
+      :loading="loading"
+      @select="handleMinimalPairSelect"
+    />
+
+    <!-- Relation Type Dialog -->
+    <q-dialog v-model="showRelationTypeDialog">
+      <q-card class="relation-type-dialog">
+        <q-card-section>
+          <div class="text-h6">{{ t('selectRelationType') }}</div>
         </q-card-section>
 
         <q-card-section>
           <q-select
-            v-model="newRelation.relationType"
+            v-model="selectedRelationType"
             :options="relationTypes"
-            :label="translate('relationType')"
+            :label="t('relationType')"
             outlined
-            dense
-            class="q-mb-md"
-          />
-          <q-input
-            v-model="glossSearch"
-            :label="translate('searchGloss')"
-            outlined
-            dense
-            @update:model-value="searchGlosses"
-          >
-            <template #append>
-              <q-icon name="search" />
-            </template>
-          </q-input>
-
-          <q-list
-            v-if="searchResults.length > 0"
-            bordered
-            separator
-            class="q-mt-sm"
-          >
-            <q-item
-              v-for="result in searchResults"
-              :key="result.id"
-              v-close-popup
-              clickable
-              @click="selectGloss(result)"
-            >
-              <q-item-section>
-                <q-item-label>{{ result.gloss }}</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
+            emit-value
+            map-options
+            :options-dense="true"
+            :loading="loading"
+            :disable="loading"
+            option-value="value"
+            option-label="label"
+          >            
+          </q-select>
         </q-card-section>
 
         <q-card-actions align="right">
           <q-btn
-            v-close-popup
             flat
-            :label="translate('cancel')"
+            :label="t('cancel')"
             color="primary"
+            v-close-popup
+            :disable="loading"
           />
           <q-btn
             flat
-            :label="translate('add')"
+            :label="t('add')"
             color="primary"
-            :disable="!newRelation.relatedGlossId"
-            @click="addRelation"
+            :disable="!selectedRelationType || loading"
+            @click="handleAddRelation"
           />
         </q-card-actions>
       </q-card>
     </q-dialog>
 
-    <!-- Dialog for adding minimal pairs -->
-    <q-dialog v-model="showAddMinimalPairDialog">
-      <q-card style="min-width: 350px">
-        <q-card-section class="row items-center">
-          <div class="text-h6">
-            {{ translate('addMinimalPair') }}
-          </div>
-          <q-space />
-          <q-btn
-            v-close-popup
-            icon="close"
-            flat
-            round
-            dense
-          />
+    <!-- Distinction Dialog -->
+    <q-dialog v-model="showDistinctionDialog">
+      <q-card class="distinction-dialog">
+        <q-card-section>
+          <div class="text-h6">{{ t('enterDistinction') }}</div>
         </q-card-section>
 
         <q-card-section>
           <q-input
-            v-model="newPair.distinction"
-            :label="translate('distinction')"
+            v-model="distinction"
+            :label="t('distinction')"
             outlined
             dense
-            class="q-mb-md"
-          />
-          <q-input
-            v-model="videoSearch"
-            :label="translate('searchVideo')"
-            outlined
-            dense
-            @update:model-value="searchVideos"
+            autofocus
+            :disable="loading"
+            :rules="[val => !!val || t('distinctionRequired')]"
           >
-            <template #append>
-              <q-icon name="search" />
+            <template v-slot:hint>
+              {{ t('distinctionHint') }}
             </template>
           </q-input>
-
-          <q-list
-            v-if="videoSearchResults.length > 0"
-            bordered
-            separator
-            class="q-mt-sm"
-          >
-            <q-item
-              v-for="result in videoSearchResults"
-              :key="result.id"
-              v-close-popup
-              clickable
-              @click="selectVideo(result)"
-            >
-              <q-item-section>
-                <q-item-label>{{ result.title }}</q-item-label>
-                <q-item-label caption>
-                  {{ result.gloss }}
-                </q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
         </q-card-section>
 
         <q-card-actions align="right">
           <q-btn
-            v-close-popup
             flat
-            :label="translate('cancel')"
+            :label="t('cancel')"
             color="primary"
+            v-close-popup
+            :disable="loading"
           />
           <q-btn
             flat
-            :label="translate('add')"
+            :label="t('add')"
             color="primary"
-            :disable="!newPair.signVideoId"
-            @click="addMinimalPair"
+            :disable="!distinction || loading"
+            @click="handleAddMinimalPair"
           />
         </q-card-actions>
       </q-card>
@@ -218,137 +256,106 @@
 </template>
 
 <script setup lang="ts">
-import translate from 'src/utils/translate';
-import RelatedGlossesList from './RelatedGlossesList.vue';
-import MinimalPairsList from './MinimalPairsList.vue';
-import type { RelatedGloss, MinimalPair } from 'src/types/models';
 import { ref } from 'vue';
-import { api } from 'src/services/api';
-import { useQuasar } from 'quasar';
+import { useRouter } from 'vue-router';
+import translate from 'src/utils/translate';
+import { useGlossRelations } from 'src/composables/useGlossRelations';
+import GlossSearch from './GlossSearch.vue';
+import RelatedGlossCard from './RelatedGlossCard.vue';
+import MinimalPairCard from './MinimalPairCard.vue';
+import { RelationType } from 'src/types/gloss';
+import type { RelatedGloss, MinimalPair, SearchResult } from 'src/types/gloss';
 
-const $q = useQuasar();
+const t = (key: string) => translate(key);
+const router = useRouter();
 
-interface SearchResult {
-  id: string;
-  gloss: string;
-  title?: string;
-  glossDataId?: string;
-}
-
-const selectedContent = ref('relatedGlosses');
-
-const { relatedGlosses, minimalPairs, editMode } = defineProps<{
+const props = defineProps<{
   relatedGlosses: RelatedGloss[];
   minimalPairs: MinimalPair[];
   editMode: boolean;
 }>();
 
 const emit = defineEmits<{
-  (e: 'add-relation', relation: Partial<RelatedGloss>): void;
+  (e: 'add-relation', relatedGloss: RelatedGloss): void;
   (e: 'remove-relation', id: string): void;
-  (e: 'add-minimal-pair', pair: Partial<MinimalPair>): void;
+  (e: 'add-minimal-pair', minimalPair: MinimalPair): void;
   (e: 'remove-pair', id: string): void;
 }>();
 
-// Related glosses
-const showAddRelatedGlossDialog = ref(false);
-const glossSearch = ref('');
-const searchResults = ref<SearchResult[]>([]);
-const newRelation = ref({
-  relationType: '',
-  relatedGlossId: ''
-});
+// UI state
+const selectedTab = ref('relations');
+const showRelationDialog = ref(false);
+const showMinimalPairDialog = ref(false);
+const showRelationTypeDialog = ref(false);
+const showDistinctionDialog = ref(false);
 
-const relationTypes = [
-  'synonym',
-  'antonym',
-  'homonym',
-  'variant'
-];
+const {
+  selectedGloss,
+  selectedRelationType,
+  distinction,
+  loading,
+  error,
+  relationTypes,
+  addRelation,
+  addMinimalPair,
+  removeRelation,
+  removeMinimalPair
+} = useGlossRelations(
+  props.relatedGlosses,
+  props.minimalPairs,
+  (gloss) => emit('add-relation', gloss),
+  (id) => emit('remove-relation', id),
+  (pair) => emit('add-minimal-pair', pair),
+  (id) => emit('remove-pair', id)
+);
 
-// Minimal pairs
-const showAddMinimalPairDialog = ref(false);
-const videoSearch = ref('');
-const videoSearchResults = ref<SearchResult[]>([]);
-const newPair = ref({
-  distinction: '',
-  signVideoId: '',
-  minimalPairGlossDataId: ''
-});
+function viewGloss(glossId: string) {
+  router.push(`/gloss/${glossId}`);
+}
 
-const searchGlosses = async () => {
-  if (glossSearch.value.length < 2) return;
-  try {
-    const response = await api.glosses.search(glossSearch.value);
-    searchResults.value = response.data;
-  } catch (error) {
-    console.error('Error searching glosses:', error);
+async function handleRelationSelect(gloss: SearchResult) {
+  selectedGloss.value = gloss;
+  showRelationDialog.value = false;
+  showRelationTypeDialog.value = true;
+}
+
+async function handleMinimalPairSelect(gloss: SearchResult) {
+  selectedGloss.value = gloss;
+  showMinimalPairDialog.value = false;
+  showDistinctionDialog.value = true;
+}
+
+async function handleAddRelation() {
+  const success = await addRelation();
+  if (success) {
+    showRelationTypeDialog.value = false;
   }
-};
+}
 
-const selectGloss = (gloss: SearchResult) => {
-  newRelation.value.relatedGlossId = gloss.id;
-  showAddRelatedGlossDialog.value = false;
-  emit('add-relation', newRelation.value);
-  // Reset form
-  newRelation.value = {
-    relationType: '',
-    relatedGlossId: ''
-  };
-};
-
-const searchVideos = async () => {
-  if (videoSearch.value.length < 2) return;
-  try {
-    const response = await api.videos.search(videoSearch.value);
-    videoSearchResults.value = response.data;
-  } catch (error) {
-    console.error('Error searching videos:', error);
+async function handleAddMinimalPair() {
+  const success = await addMinimalPair();
+  if (success) {
+    showDistinctionDialog.value = false;
   }
-};
-
-const selectVideo = (video: SearchResult) => {
-  if (!video.glossDataId) return;
-  newPair.value.signVideoId = video.id;
-  newPair.value.minimalPairGlossDataId = video.glossDataId;
-  showAddMinimalPairDialog.value = false;
-  emit('add-minimal-pair', newPair.value);
-  // Reset form
-  newPair.value = {
-    distinction: '',
-    signVideoId: '',
-    minimalPairGlossDataId: ''
-  };
-};
-
-const removeRelation = (id: string) => {
-  emit('remove-relation', id);
-};
-
-const removePair = (id: string) => {
-  emit('remove-pair', id);
-};
-
-const addRelation = () => {
-  if (!newRelation.value.relatedGlossId || !newRelation.value.relationType) return;
-  emit('add-relation', newRelation.value);
-  showAddRelatedGlossDialog.value = false;
-  // Reset form
-  newRelation.value = {
-    relationType: '',
-    relatedGlossId: ''
-  };
-};
-
-const addMinimalPair = () => {
-  if (!newPair.value.signVideoId || !newPair.value.distinction || !newPair.value.minimalPairGlossDataId) return;
-  emit('add-minimal-pair', newPair.value);
-  showAddMinimalPairDialog.value = false;
-  // Reset form
-  newPair.value = {
-    distinction: '',
-    signVideoId: '',
-    minimalPairGlossDataId: ''
-  };
-};
+}
 </script>
+
+<style scoped>
+.related-glosses {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.relation-type-dialog,
+.distinction-dialog {
+  min-width: 400px;
+  max-width: 90vw;
+}
+
+@media (max-width: 600px) {
+  .relation-type-dialog,
+  .distinction-dialog {
+    min-width: 300px;
+  }
+}
+</style>

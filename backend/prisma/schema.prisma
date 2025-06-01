@@ -105,16 +105,21 @@ model GlossData {
     dictionaryEntry      DictionaryEntry?
     glossRequest         GlossRequest?
     senses               Sense[]
-    relatedGlosses       RelatedGloss[]
-    minimalPairs         MinimalPair[]
+    relatedToGlosses     RelatedGloss[]   @relation("RelatedTo")
+    relatedFromGlosses   RelatedGloss[]   @relation("RelatedFrom")
+    minimalPairsTo       MinimalPair[]    @relation("MinimalPairTo")
+    minimalPairsFrom     MinimalPair[]    @relation("MinimalPairFrom")
 }
 
 model RelatedGloss {
-    id             String       @id @default(uuid())
-    glossId        String
-    relatedGloss   GlossData    @relation(fields: [relatedGlossId], references: [id])
-    relatedGlossId String
-    relationType   RelationType
+    id            String       @id @default(uuid())
+    relationType  RelationType
+    relatedTo     GlossData    @relation("RelatedTo", fields: [relatedToId], references: [id])
+    relatedToId   String
+    relatedFrom   GlossData    @relation("RelatedFrom", fields: [relatedFromId], references: [id])
+    relatedFromId String
+
+    @@unique([relatedToId, relatedFromId])
 }
 
 model Sense {
@@ -181,16 +186,15 @@ model DefinitionTranslation {
 }
 
 model SignVideo {
-    id           String        @id @default(uuid())
-    title        String
-    videos       Video[]
-    url          String
-    priority     Int           @default(0)
-    videoData    VideoData     @relation(fields: [videoDataId], references: [id]) // Using Json type for complex nested data
-    videoDataId  String
-    minimalPairs MinimalPair[]
-    sense        Sense         @relation(fields: [senseId], references: [id])
-    senseId      String
+    id          String    @id @default(uuid())
+    title       String
+    videos      Video[]
+    url         String
+    priority    Int       @default(0)
+    videoData   VideoData @relation(fields: [videoDataId], references: [id]) // Using Json type for complex nested data
+    videoDataId String
+    sense       Sense     @relation(fields: [senseId], references: [id])
+    senseId     String
 }
 
 model VideoData {
@@ -221,13 +225,14 @@ model Video {
 }
 
 model MinimalPair {
-    id                     String     @id @default(uuid())
-    glossDataId            String
-    distinction            String
-    minimalPairGlossData   GlossData  @relation(fields: [minimalPairGlossDataId], references: [id])
-    minimalPairGlossDataId String
-    SignVideo              SignVideo? @relation(fields: [signVideoId], references: [id])
-    signVideoId            String?
+    id          String    @id @default(uuid())
+    distinction String
+    glossTo     GlossData @relation("MinimalPairTo", fields: [glossToId], references: [id])
+    glossToId   String
+    glossFrom   GlossData @relation("MinimalPairFrom", fields: [glossFromId], references: [id])
+    glossFromId String
+
+    @@unique([glossToId, glossFromId])
 }
 
 model GlossRequest {

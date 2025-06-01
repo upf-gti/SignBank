@@ -126,5 +126,20 @@ export default {
   deleteAngle: 'Eliminar angle',
   signFonology: 'Fonologia de signes',
   title: 'Títol',
-  uploadVideo: 'Carregar vídeo'
+  uploadVideo: 'Carregar vídeo',
+  glossCreatedSuccessfully: 'Glossa creada correctament',
+  createNewGloss: 'Crear nova glossa',
+  firstSense: 'Primera accepció',
+  pending: 'Pendent',
+  viewGloss: 'Veure glossa',
+  requested: 'Sol·licitat',
+  myGlossRequests: 'Les meves sol·licituds de glosses',
+  relatedGlosses: 'Glosses relacionades',
+  minimalPairs: 'Parells mínims',
+  technicalTerms: 'Termes tècnics',
+  relations: 'Relacions',
+  noMinimalPairs: 'No hi ha parells mínims',
+  noTechnicalTerms: 'No hi ha termes tècnics',
+  noRelations: 'No hi ha relacions',
+  noGlosses: 'No hi ha glosses'
 } as TranslateKeys; 

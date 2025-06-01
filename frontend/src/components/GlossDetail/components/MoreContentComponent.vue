@@ -57,8 +57,8 @@
       />
       <RelatedGlosses
         v-if="selectedContent === 'relatedGlosses'"
-        :related-glosses="glossData.relatedGlosses"
-        :minimal-pairs="glossData.minimalPairs"
+        :related-glosses="glossData.relatedToGlosses"
+        :minimal-pairs="glossData.minimalPairsTo"
         :edit-mode="editMode"
         @add-relation="onAddRelation"
         @remove-relation="onRemoveRelation"
@@ -92,22 +92,22 @@ const { glossData, editMode } = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'add-relation', relation: Partial<RelatedGloss>): void;
+  (e: 'add-relation', relatedGloss: RelatedGloss): void;
   (e: 'remove-relation', id: string): void;
-  (e: 'add-minimal-pair', pair: Partial<MinimalPair>): void;
+  (e: 'add-minimal-pair', minimalPair: MinimalPair): void;
   (e: 'remove-pair', id: string): void;
 }>();
 
-const onAddRelation = (relation: Partial<RelatedGloss>) => {
-  emit('add-relation', relation);
+const onAddRelation = (relatedGloss: RelatedGloss) => {
+  emit('add-relation', relatedGloss);
 };
 
 const onRemoveRelation = (id: string) => {
   emit('remove-relation', id);
 };
 
-const onAddMinimalPair = (pair: Partial<MinimalPair>) => {
-  emit('add-minimal-pair', pair);
+const onAddMinimalPair = (minimalPair: MinimalPair) => {
+  emit('add-minimal-pair', minimalPair);
 };
 
 const onRemovePair = (id: string) => {

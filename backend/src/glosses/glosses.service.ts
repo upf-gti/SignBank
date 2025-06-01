@@ -20,7 +20,6 @@ export class GlossesService {
             signVideos: {
               include: {
                 videos: true,
-                minimalPairs: true,
                 videoData: true,
               },
             },
@@ -32,9 +31,9 @@ export class GlossesService {
             senseTranslations: true,
           },
         },
-        relatedGlosses: {
+        relatedToGlosses: {
           include: {
-            relatedGloss: {
+            relatedTo: {
               include: {
                 senses: {
                   include: {
@@ -45,13 +44,12 @@ export class GlossesService {
             },
           },
           omit: {
-            glossId: true,
             id: true,
           },
         },
-        minimalPairs: {
+        minimalPairsTo: {
           include: {
-            minimalPairGlossData: {
+            glossTo: {
               include: {
                 senses: {
                   include: {
@@ -62,13 +60,12 @@ export class GlossesService {
             },
           },
           omit: {
-            glossDataId: true,
             id: true,
           },
         },
         dictionaryEntry: true,
         glossRequest: true,
-      },
+      }
     });
 
     if (!gloss) {

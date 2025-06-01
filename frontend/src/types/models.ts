@@ -125,11 +125,11 @@ export interface RelatedGlossData {
 
 export interface MinimalPair {
   id?: string;
-  glossDataId: string;
   distinction: string;
-  signVideoId: string;
-  minimalPairGlossDataId: string;
-  minimalPairGlossData: MinimalPairGlossData;
+  glossTo: GlossData;
+  glossToId: string;
+  glossFrom: GlossData;
+  glossFromId: string;
 }
 
 export interface SignVideo {
@@ -158,10 +158,11 @@ export interface Sense {
 
 export interface RelatedGloss {
   id?: string;
-  glossId: string;
-  relatedGlossId: string;
   relationType: string;
-  relatedGloss: RelatedGlossData;
+  relatedTo: GlossData;
+  relatedToId: string;
+  relatedFrom: GlossData;
+  relatedFromId: string;
 }
 
 export interface GlossData {
@@ -174,9 +175,11 @@ export interface GlossData {
   isCreatedFromRequest: boolean;
   isCreatedFromEdit: boolean;
   senses: Sense[];
-  relatedGlosses: RelatedGloss[];
-  minimalPairs: MinimalPair[];
-  glossRequest: string | null; // You might want to define a specific type for glossRequest
+  relatedToGlosses: RelatedGloss[];
+  relatedFromGlosses: RelatedGloss[];
+  minimalPairsTo: MinimalPair[];
+  minimalPairsFrom: MinimalPair[];
+  glossRequest: string | null;
 }
 
 export interface dictionaryEntry {

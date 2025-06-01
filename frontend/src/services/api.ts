@@ -8,21 +8,6 @@ export const api = {
   glosses: {
     get(id: string): Promise<AxiosResponse<any>> {
       return apiClient.get(`/glosses/${id}`)
-    },
-    search(query: string): Promise<AxiosResponse<any>> {
-      return apiClient.get(`/glosses/search`, { params: { q: query } })
-    },
-    addRelation(glossId: string, relation: { relationType: string, relatedGlossId: string }): Promise<AxiosResponse<any>> {
-      return apiClient.post(`/glosses/${glossId}/relations`, relation)
-    },
-    removeRelation(glossId: string, relationId: string): Promise<AxiosResponse<any>> {
-      return apiClient.delete(`/glosses/${glossId}/relations/${relationId}`)
-    },
-    addMinimalPair(glossId: string, pair: { distinction: string, signVideoId: string, minimalPairGlossDataId: string }): Promise<AxiosResponse<any>> {
-      return apiClient.post(`/glosses/${glossId}/minimal-pairs`, pair)
-    },
-    removeMinimalPair(glossId: string, pairId: string): Promise<AxiosResponse<any>> {
-      return apiClient.delete(`/glosses/${glossId}/minimal-pairs/${pairId}`)
     }
   },
   requests: {

@@ -57,7 +57,6 @@ export function useAuthentication() {
     try {
       isRefreshing.value = true
       const { data } = await api.refreshToken({ refresh_token: userStore.refresh_token })
-      debugger
       userStore.setTokens(data)
       return data
     } catch (err: any) {

@@ -89,7 +89,7 @@ const addVideo = () => {
     }],
     minimalPairs: [],
     videoData: {
-      hands: '',  // Empty string for unselected state
+      hands: 'RIGHT',
       configuration: '',
       configurationChanges: '',
       relationBetweenArticulators: '',

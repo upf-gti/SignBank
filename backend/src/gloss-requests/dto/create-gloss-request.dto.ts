@@ -1,6 +1,6 @@
 import { IsString, IsOptional, ValidateNested, IsEnum, IsNotEmpty, ArrayNotEmpty, IsInt, Min } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
-import { Language, LexicalCategory, Hand } from '@prisma/client';
+import { Language, LexicalCategory, Hand, RelationType } from '@prisma/client';
 
 export class VideoDataDto {
   @IsString()
@@ -171,6 +171,26 @@ export class SenseDto {
   definitions: DefinitionDto[];
 }
 
+export class MinimalPairDto {
+  @IsString()
+  @IsNotEmpty()
+  glossToId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  distinction: string;
+}
+
+export class RelatedGlossDto {
+  @IsString()
+  @IsNotEmpty()
+  relatedGlossId: string;
+
+  @IsEnum(RelationType)
+  @IsNotEmpty()
+  relationType: RelationType;
+}
+
 export class CreateGlossRequestDto {
   
   @IsString()
@@ -181,4 +201,14 @@ export class CreateGlossRequestDto {
   @ValidateNested({ each: true })
   @Type(() => SenseDto)
   senses: SenseDto[];
+
+  @ValidateNested({ each: true })
+  @Type(() => MinimalPairDto)
+  @IsOptional()
+  minimalPairsTo?: MinimalPairDto[];
+
+  @ValidateNested({ each: true })
+  @Type(() => RelatedGlossDto)
+  @IsOptional()
+  relatedToGlosses?: RelatedGlossDto[];
 } 

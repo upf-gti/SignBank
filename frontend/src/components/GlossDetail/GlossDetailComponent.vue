@@ -28,9 +28,7 @@
       :gloss-data="glossData"
       :edit-mode="editMode"
       @add-relation="addRelation"
-      @remove-relation="removeRelation"
       @add-minimal-pair="addMinimalPair"
-      @remove-pair="removeMinimalPair"
     />
   </q-card>
 </template>
@@ -116,52 +114,19 @@ const addSense = (sense: { senseTitle: string, lexicalCategory: string }) => {
   selectedSenseId.value = glossData.senses[glossData.senses.length - 1]?.id as string
 }
 
-const addRelation = async (relation: Partial<RelatedGloss>) => {
+const addRelation = async (relatedGloss: RelatedGloss) => {
   try {
-    const response = await api.glosses.addRelation(glossData.id || '', {
-      relationType: relation.relationType!,
-      relatedGlossId: relation.relatedGlossId!
-    });
-    glossData.relatedGlosses.push(response.data);
+    glossData.relatedToGlosses.push(relatedGloss);
   } catch (error) {
     console.error('Error adding relation:', error);
   }
 };
 
-const removeRelation = async (relationId: string) => {
+const addMinimalPair = async (minimalPair: MinimalPair) => {
   try {
-    await api.glosses.removeRelation(glossData.id || '', relationId);
-    const index = glossData.relatedGlosses.findIndex(r => r.id === relationId);
-    if (index > -1) {
-      glossData.relatedGlosses.splice(index, 1);
-    }
-  } catch (error) {
-    console.error('Error removing relation:', error);
-  }
-};
-
-const addMinimalPair = async (pair: Partial<MinimalPair>) => {
-  try {
-    const response = await api.glosses.addMinimalPair(glossData.id || '', {
-      distinction: pair.distinction!,
-      signVideoId: pair.signVideoId!,
-      minimalPairGlossDataId: pair.minimalPairGlossDataId!
-    });
-    glossData.minimalPairs.push(response.data);
+    glossData.minimalPairsTo.push(minimalPair);
   } catch (error) {
     console.error('Error adding minimal pair:', error);
-  }
-};
-
-const removeMinimalPair = async (pairId: string) => {
-  try {
-    await api.glosses.removeMinimalPair(glossData.id || ''  , pairId);
-    const index = glossData.minimalPairs.findIndex(p => p.id === pairId);
-    if (index > -1) {
-      glossData.minimalPairs.splice(index, 1);
-    }
-  } catch (error) {
-    console.error('Error removing minimal pair:', error);
   }
 };
 

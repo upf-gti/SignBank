@@ -67,9 +67,11 @@ import api from 'src/services/api';
 import useUserStore from 'src/stores/user.store';
 import { useRouter } from 'vue-router';
 import translate from 'src/utils/translate';
+import { useQuasar } from 'quasar'; 
 
 const router = useRouter();
 const userStore = useUserStore();
+const $q = useQuasar();
 
 const hasInitialData = ref(false);
 const editMode = ref(true);
@@ -103,8 +105,10 @@ const glossData = ref<GlossData>({
   editComment: '',
   currentVersion: 0,
   isCreatedFromRequest: false,
-  minimalPairs: [],
-  relatedGlosses: [],
+  minimalPairsTo: [],
+  relatedToGlosses: [],
+  minimalPairsFrom: [],
+  relatedFromGlosses: [],
   senses: [],
   glossRequest: null,
   isCreatedFromEdit: false,
@@ -128,7 +132,12 @@ const initializeGlossData = () => {
 
 const saveGloss = (glossData: GlossData) => {
   api.requests.create(glossData).then((response) => {
-    router.push(`/gloss/${response.data.id}`);
+    router.push(`/requests/view/${response.data.id}`);
+    $q.notify({
+      message: translate('glossCreatedSuccessfully'),
+      color: 'positive',
+      icon: 'check'
+    });
   }).catch((error) => {
     console.error('Error creating gloss request:', error);
   });
