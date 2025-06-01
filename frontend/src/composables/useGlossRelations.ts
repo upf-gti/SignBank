@@ -29,9 +29,9 @@ export function useGlossRelations(
       error.value = null;
       
       await onAddRelation({
-        relatedGlossId: selectedGloss.value.glossId,
+        targetGlossId: selectedGloss.value.glossId,
         relationType: selectedRelationType.value,
-        relatedTo: {
+        targetGloss: {
           gloss: selectedGloss.value.gloss
         }
       } as RelatedGloss);

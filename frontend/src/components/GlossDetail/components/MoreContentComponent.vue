@@ -56,8 +56,8 @@
         :edit-mode="editMode"
       />
       <RelatedGlosses
-        v-if="selectedContent === 'relatedGlosses'"
-        :related-glosses="glossData.relatedToGlosses"
+        v-if="selectedContent === 'relatedGlosses'" 
+        :related-glosses="glossData.relationsAsSource as RelatedGloss[]"
         :minimal-pairs="glossData.minimalPairsTo"
         :edit-mode="editMode"
         @add-relation="onAddRelation"
@@ -78,7 +78,9 @@
 import DefinitionsComponent from './DefinitionsComponent.vue';
 import translate from 'src/utils/translate';
 import { ref } from 'vue';
-import { Sense, GlossData, RelatedGloss, MinimalPair } from 'src/types/models';
+import { Sense } from 'src/types/models';
+import type { RelatedGloss, MinimalPair } from 'src/types/gloss';
+import type { GlossData } from 'src/types/models';
 import ExamplesComponent from './ExamplesComponent.vue';
 import VideosComponent from './VideosComponent.vue';
 import RelatedGlosses from './RelatedGlosses.vue';

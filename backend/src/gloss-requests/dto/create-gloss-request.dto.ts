@@ -184,7 +184,7 @@ export class MinimalPairDto {
 export class RelatedGlossDto {
   @IsString()
   @IsNotEmpty()
-  relatedGlossId: string;
+  targetGlossId: string;
 
   @IsEnum(RelationType)
   @IsNotEmpty()
@@ -210,5 +210,5 @@ export class CreateGlossRequestDto {
   @ValidateNested({ each: true })
   @Type(() => RelatedGlossDto)
   @IsOptional()
-  relatedToGlosses?: RelatedGlossDto[];
+  relationsAsSource?: RelatedGlossDto[];
 } 

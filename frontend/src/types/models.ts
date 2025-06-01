@@ -159,10 +159,10 @@ export interface Sense {
 export interface RelatedGloss {
   id?: string;
   relationType: string;
-  relatedTo: GlossData;
-  relatedToId: string;
-  relatedFrom: GlossData;
-  relatedFromId: string;
+  sourceGloss?: GlossData;
+  sourceGlossId?: string;
+  targetGloss?: GlossData;
+  targetGlossId?: string;
 }
 
 export interface GlossData {
@@ -175,8 +175,8 @@ export interface GlossData {
   isCreatedFromRequest: boolean;
   isCreatedFromEdit: boolean;
   senses: Sense[];
-  relatedToGlosses: RelatedGloss[];
-  relatedFromGlosses: RelatedGloss[];
+  relationsAsSource: RelatedGloss[];
+  relationsAsTarget: RelatedGloss[];
   minimalPairsTo: MinimalPair[];
   minimalPairsFrom: MinimalPair[];
   glossRequest: string | null;

@@ -2,7 +2,7 @@
   <q-card-section class="q-gutter-y-md">
     <q-card
       v-for="relatedGloss in relatedGlosses"
-      :key="relatedGloss.id"
+      :key="relatedGloss.id || Math.random()"
       dense
       class="column"
       flat
@@ -14,7 +14,7 @@
             {{ relatedGloss.relationType }}
           </q-chip>
           <div class="text-h6">
-            {{ relatedGloss.relatedGloss.gloss }}
+            {{ relatedGloss.targetGloss?.gloss || '' }}
           </div>
         </div>
         <div class="row items-center">
@@ -22,7 +22,8 @@
             outline
             :label="translate('viewGloss')"
             class="q-mr-sm"
-            @click="$router.push(`/gloss/${relatedGloss.relatedGlossId}`)"
+            :disabled="!relatedGloss.targetGlossId"
+            @click="relatedGloss.targetGlossId && $router.push(`/gloss/${relatedGloss.targetGlossId}`)"
           />
           <q-btn
             v-if="editMode"
@@ -30,7 +31,7 @@
             round
             icon="delete"
             color="negative"
-            @click="$emit('remove-relation', relatedGloss.id)"
+            @click="$emit('remove-relation', relatedGloss.id || '')"
           />
         </div>
       </q-card-section>

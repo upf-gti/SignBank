@@ -6,7 +6,7 @@
         <div class="row items-center justify-between">
           <div>
             <div class="text-h6 gloss-title">
-              {{ gloss.relatedTo.gloss }}
+              {{ gloss.targetGloss.gloss }}
               <q-tooltip>{{ t('clickToView') }}</q-tooltip>
             </div>
             <div class="relation-type">
@@ -26,7 +26,7 @@
               color="primary"
               :label="t('view')"
               :loading="loading"
-              @click="$emit('view', gloss.relatedToId || '')"
+              @click="$emit('view', gloss.targetGlossId || '')"
             />
             <q-btn
               v-if="editMode"

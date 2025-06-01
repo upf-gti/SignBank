@@ -105,8 +105,8 @@ model GlossData {
     dictionaryEntry      DictionaryEntry?
     glossRequest         GlossRequest?
     senses               Sense[]
-    relatedToGlosses     RelatedGloss[]   @relation("RelatedTo")
-    relatedFromGlosses   RelatedGloss[]   @relation("RelatedFrom")
+    relationsAsSource    RelatedGloss[]   @relation("RelationSource")
+    relationsAsTarget    RelatedGloss[]   @relation("RelationTarget")
     minimalPairsTo       MinimalPair[]    @relation("MinimalPairTo")
     minimalPairsFrom     MinimalPair[]    @relation("MinimalPairFrom")
 }
@@ -114,12 +114,12 @@ model GlossData {
 model RelatedGloss {
     id            String       @id @default(uuid())
     relationType  RelationType
-    relatedTo     GlossData    @relation("RelatedTo", fields: [relatedToId], references: [id])
-    relatedToId   String
-    relatedFrom   GlossData    @relation("RelatedFrom", fields: [relatedFromId], references: [id])
-    relatedFromId String
+    sourceGloss   GlossData    @relation("RelationSource", fields: [sourceGlossId], references: [id])
+    sourceGlossId String
+    targetGloss   GlossData    @relation("RelationTarget", fields: [targetGlossId], references: [id])
+    targetGlossId String
 
-    @@unique([relatedToId, relatedFromId])
+    @@unique([sourceGlossId, targetGlossId])
 }
 
 model Sense {

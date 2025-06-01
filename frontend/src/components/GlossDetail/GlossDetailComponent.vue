@@ -115,8 +115,8 @@ const addSense = (sense: { senseTitle: string, lexicalCategory: string }) => {
 }
 
 const addRelation = async (relatedGloss: RelatedGloss) => {
-  try {
-    glossData.relatedToGlosses.push(relatedGloss);
+  try { 
+    glossData.relationsAsSource.push(relatedGloss);
   } catch (error) {
     console.error('Error adding relation:', error);
   }

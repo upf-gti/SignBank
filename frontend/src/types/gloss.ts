@@ -5,9 +5,13 @@ export interface SearchResult {
 
 export interface RelatedGloss {
   id?: string;
-  relatedToId?: string;
+  sourceGlossId?: string;
+  targetGlossId?: string;
   relationType: RelationType;
-  relatedTo: {
+  sourceGloss?: {
+    gloss: string;
+  };
+  targetGloss: {
     gloss: string;
   };
 }

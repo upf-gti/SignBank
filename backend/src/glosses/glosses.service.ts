@@ -31,9 +31,25 @@ export class GlossesService {
             senseTranslations: true,
           },
         },
-        relatedToGlosses: {
+        relationsAsSource: {
           include: {
-            relatedTo: {
+            targetGloss: {
+              include: {
+                senses: {
+                  include: {
+                    signVideos: true,
+                  },
+                },
+              },
+            },
+          },
+          omit: {
+            id: true,
+          },
+        },
+        relationsAsTarget: {
+          include: {
+            sourceGloss: {
               include: {
                 senses: {
                   include: {
