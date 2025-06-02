@@ -14,7 +14,6 @@ async function main() {
     prisma.video.deleteMany(),
     prisma.minimalPair.deleteMany(),
     prisma.signVideo.deleteMany(),
-    prisma.videoDefinition.deleteMany(),
     prisma.dictionaryEntry.deleteMany(),
     prisma.relatedGloss.deleteMany(),
     prisma.sense.deleteMany(),
@@ -353,17 +352,6 @@ async function main() {
     }),
   ]);
 
-  // Create video definitions for each sense
-  const videoDefinitions = await Promise.all(
-    senses.map((sense) =>
-      prisma.videoDefinition.create({
-        data: {
-          url: `videos/LSC_-_Cafe.mp4`,
-        },
-      })
-    )
-  );
-
   // Create definitions with translations for each sense
   const definitions = await Promise.all(
     senses.map((sense, index) =>
@@ -371,7 +359,6 @@ async function main() {
         data: {
           title: `${sense.senseTitle} Definition`,
           definition: `Definition for the sign "${sense.senseTitle}"`,
-          videoDefinitionId: videoDefinitions[index].id,
           senseId: sense.id,
           definitionTranslations: {
             create: [

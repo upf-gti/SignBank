@@ -14,7 +14,6 @@ export class GlossesService {
             definitions: {
               include: {
                 definitionTranslations: true,
-                videoDefinition: true,
               },
             },
             signVideos: {

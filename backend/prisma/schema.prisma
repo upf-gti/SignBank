@@ -13,7 +13,8 @@ enum Role {
 }
 
 enum RequestStatus {
-    PENDING
+    NOT_COMPLETED
+    WAITING_FOR_APPROVAL
     ACCEPTED
     DENIED
 }
@@ -148,8 +149,7 @@ model Definition {
     title                  String?
     definition             String
     definitionTranslations DefinitionTranslation[]
-    videoDefinition        VideoDefinition         @relation(fields: [videoDefinitionId], references: [id], onDelete: Cascade)
-    videoDefinitionId      String                  @unique
+    videoDefinitionUrl     String?
     sense                  Sense                   @relation(fields: [senseId], references: [id], onDelete: Cascade)
     senseId                String
 }
@@ -169,12 +169,6 @@ model ExampleTranslation {
     language    Language
     Example     Example? @relation(fields: [exampleId], references: [id], onDelete: Cascade)
     exampleId   String?
-}
-
-model VideoDefinition {
-    id         String      @id @default(uuid())
-    url        String
-    definition Definition?
 }
 
 model DefinitionTranslation {
@@ -239,9 +233,10 @@ model GlossRequest {
     id                   String           @id @default(uuid())
     creator              User             @relation("Creator", fields: [creatorId], references: [id])
     creatorId            String
-    status               RequestStatus    @default(PENDING)
+    status               RequestStatus    @default(NOT_COMPLETED)
     createdAt            DateTime         @default(now())
     updatedAt            DateTime         @updatedAt
+    lastEditedSection    String? // Tracks which section was last edited (e.g. "definitions", "examples", etc.)
     denyReason           String?
     acceptedBy           User?            @relation("Acceptor", fields: [acceptedById], references: [id])
     acceptedById         String?

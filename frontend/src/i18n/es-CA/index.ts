@@ -158,7 +158,11 @@ export default {
     failedToAcceptRequest: 'No s\'ha pogut acceptar la sol·licitud',
     failedToDeclineRequest: 'No s\'ha pogut rebutjar la sol·licitud',
     failedToLoadRequests: 'No s\'han pogut carregar les sol·licituds',
-    failedToLoadGloss: 'No s\'ha pogut carregar la glossa'
+    failedToLoadGloss: 'No s\'ha pogut carregar la glossa',
+    failedToSaveDefinition: 'No s\'ha pogut desar la definició',
+    failedToDeleteDefinition: 'No s\'ha pogut eliminar la definició',
+    failedToSaveTranslation: 'No s\'ha pogut desar la traducció',
+    failedToDeleteTranslation: 'No s\'ha pogut eliminar la traducció'
   },
   editSenses: 'Editar accepcions',
   addAditionalInformation: 'Afegir informació addicional',

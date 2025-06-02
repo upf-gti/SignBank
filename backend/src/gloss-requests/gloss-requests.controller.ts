@@ -5,7 +5,6 @@ import { RolesGuard } from '../auth/guard/roles.guard';
 import { Roles } from '../auth/decorator/roles.decorator';
 import { Role } from '@prisma/client';
 import { CreateGlossRequestDto } from './dto/create-gloss-request.dto';
-// import { AcceptGlossRequestDto } from './dto/accept-gloss-request.dto';
 import { DeclineGlossRequestDto } from './dto/decline-gloss-request.dto';
 
 @Controller('gloss-requests')
@@ -20,7 +19,6 @@ export class GlossRequestsController {
   }
 
   @Get('my-requests')
-  // No @Roles decorator needed since we just need authentication via JwtGuard
   async getUserRequests(@Request() req) {
     return this.glossRequestsService.getUserRequests(req.user.id);
   }
@@ -46,12 +44,10 @@ export class GlossRequestsController {
   async acceptGlossRequest(
     @Request() req,
     @Param('id') id: string,
-    // @Body() acceptGlossRequestDto: AcceptGlossRequestDto,
   ) {
     return this.glossRequestsService.acceptGlossRequest(
       id,
       req.user.id,
-      // acceptGlossRequestDto,
     );
   }
 

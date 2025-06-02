@@ -192,26 +192,35 @@
 <script setup lang="ts">
 import type { Sense, GlossData, Definition, SignVideo, Example, SenseTranslation } from 'src/types/models'
 import translate from 'src/utils/translate'
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
+import { api } from 'src/services/api'
+import { useQuasar } from 'quasar'
 
-const selectedSenseId = defineModel<string>()
-const emit = defineEmits<{
-  (e: 'addSense', sense: { senseTitle: string, lexicalCategory: string }): void
-  (e: 'updateSenses', senses: Sense[]): void
-  (e: 'updateSense', sense: Sense): void
-  (e: 'deleteSense', senseId: string): void
-}>()
+const $q = useQuasar()
 
-const { senses, editMode, glossData } = defineProps<{
+const props = defineProps<{
   senses: Sense[],
   editMode: boolean,
   glossData: GlossData
 }>()
 
+const selectedSenseId = defineModel<string>()
+const emit = defineEmits<{
+  (e: 'update:glossData', glossData: GlossData): void
+}>()
+
 const addSense = ref(false)
 const editSensesDialog = ref(false)
 const editSingleSenseDialog = ref(false)
+const loading = ref(false)
+
+// Create a ref for local senses
 const localSenses = ref<Sense[]>([])
+
+// Watch for changes in props.senses to update local state
+watch(() => props.senses, (newSenses) => {
+  localSenses.value = [...newSenses]
+}, { immediate: true })
 
 // Create a properly typed editingSense object with all required fields
 const editingSense = ref<Sense>({
@@ -232,88 +241,146 @@ const newSense = ref({
 })
 
 const lexicalCategories = ref([
-  { label: translate('noun'), value: 'noun' },
-  { label: translate('verb'), value: 'verb' },
-  { label: translate('adjective'), value: 'adjective' },
-  { label: translate('adverb'), value: 'adverb' },
-  { label: translate('preposition'), value: 'preposition' },
-  { label: translate('conjunction'), value: 'conjunction' },
+  { label: translate('noun'), value: 'NOUN' },
+  { label: translate('verb'), value: 'VERB' },
+  { label: translate('adjective'), value: 'ADJECTIVE' },
+  { label: translate('adverb'), value: 'ADVERB' },
+  { label: translate('preposition'), value: 'PREPOSITION' },
+  { label: translate('conjunction'), value: 'CONJUNCTION' },
   { label: translate('interjection'), value: 'interjection' }
 ])
 
-const saveSense = () => {
-  addSense.value = false
-  emit('addSense', newSense.value)
-  newSense.value = {
-    senseTitle: '',
-    lexicalCategory: ''
-  }
-}
-
-// Helper function to safely deep clone objects
-const safeDeepClone = <T>(obj: T): T => {
+const saveSense = async () => {
   try {
-    return JSON.parse(JSON.stringify(obj))
-  } catch (e) {
-    console.error('Failed to clone object:', e)
-    return obj
+    loading.value = true
+    const response = await api.glossData.createSense(props.glossData.id || '', {
+      senseTitle: newSense.value.senseTitle,
+      lexicalCategory: newSense.value.lexicalCategory
+    })
+
+    // Close dialog and reset form
+    addSense.value = false
+    newSense.value = {
+      senseTitle: '',
+      lexicalCategory: ''
+    }
+
+    // Emit the updated gloss data to parent
+    emit('update:glossData', response.data)
+
+    $q.notify({
+      message: translate('senseCreatedSuccessfully'),
+      color: 'positive',
+      icon: 'check'
+    })
+  } catch (error) {
+    console.error('Error creating sense:', error)
+    $q.notify({
+      message: translate('errors.failedToCreateSense'),
+      color: 'negative',
+      icon: 'error'
+    })
+  } finally {
+    loading.value = false
   }
 }
 
-// Helper function to update priorities based on current order
-const updatePriorities = () => {
-  localSenses.value.forEach((sense, index) => {
-    sense.priority = index
-  })
-}
+const moveSense = async (index: number, direction: 'up' | 'down') => {
+  try {
+    const newIndex = direction === 'up' ? index - 1 : index + 1
+    if ((direction === 'up' && index > 0) || 
+        (direction === 'down' && index < localSenses.value.length - 1)) {
+      
+      loading.value = true
+      const senseToMove = localSenses.value[index]
+      const otherSense = localSenses.value[newIndex]
+      
+      if (!senseToMove || !senseToMove.id || !otherSense || !otherSense.id) return
 
-const openEditSenses = () => {
-  localSenses.value = safeDeepClone(senses)
-  updatePriorities() // Ensure initial priorities match the order
-  editSensesDialog.value = true
-}
+      // Update priorities
+      const tempPriority = senseToMove.priority
+      senseToMove.priority = otherSense.priority
+      otherSense.priority = tempPriority
 
-const moveSense = (index: number, direction: 'up' | 'down') => {
-  if (direction === 'up' && index > 0) {
-    const temp = safeDeepClone(localSenses.value[index])
-    localSenses.value[index] = safeDeepClone(localSenses.value[index - 1])
-    localSenses.value[index - 1] = temp
-    updatePriorities() // Update priorities after reordering
-  } else if (direction === 'down' && index < localSenses.value.length - 1) {
-    const temp = safeDeepClone(localSenses.value[index])
-    localSenses.value[index] = safeDeepClone(localSenses.value[index + 1])
-    localSenses.value[index + 1] = temp
-    updatePriorities() // Update priorities after reordering
+      // Update both senses
+      const [response1, response2] = await Promise.all([
+        api.glossData.editSense(props.glossData.id || '', senseToMove.id, {
+          senseTitle: senseToMove.senseTitle,
+          lexicalCategory: senseToMove.lexicalCategory,
+          priority: senseToMove.priority
+        }),
+        api.glossData.editSense(props.glossData.id || '', otherSense.id, {
+          senseTitle: otherSense.senseTitle,
+          lexicalCategory: otherSense.lexicalCategory,
+          priority: otherSense.priority
+        })
+      ])
+
+      // Update the parent with the latest data
+      emit('update:glossData', response2.data)
+
+      // Sort the local senses by priority
+      localSenses.value.sort((a, b) => a.priority - b.priority)
+    }
+  } catch (error) {
+    console.error('Error updating sense priority:', error)
+    $q.notify({
+      message: translate('errors.failedToUpdateSensePriority'),
+      color: 'negative',
+      icon: 'error'
+    })
+  } finally {
+    loading.value = false
   }
 }
 
 const editSense = (sense: Sense) => {
-  editingSense.value = safeDeepClone(sense)
+  editingSense.value = { ...sense }
   editSingleSenseDialog.value = true
 }
 
-const saveSingleSense = () => {
-  const index = localSenses.value.findIndex(s => s.id === editingSense.value.id)
-  if (index !== -1) {
-    const updatedSense = safeDeepClone(editingSense.value)
-    localSenses.value[index] = updatedSense
-    emit('updateSense', updatedSense)
+const saveSingleSense = async () => {
+  try {
+    loading.value = true
+    if (!editingSense.value.id) return
+
+    const response = await api.glossData.editSense(props.glossData.id || '', editingSense.value.id, {
+      senseTitle: editingSense.value.senseTitle,
+      lexicalCategory: editingSense.value.lexicalCategory
+    })
+
+    editSingleSenseDialog.value = false
+    
+    // Emit the updated gloss data to parent
+    emit('update:glossData', response.data)
+
+    $q.notify({
+      message: translate('senseUpdatedSuccessfully'),
+      color: 'positive',
+      icon: 'check'
+    })
+  } catch (error) {
+    console.error('Error updating sense:', error)
+    $q.notify({
+      message: translate('errors.failedToUpdateSense'),
+      color: 'negative',
+      icon: 'error'
+    })
+  } finally {
+    loading.value = false
   }
-  editSingleSenseDialog.value = false
 }
 
 const saveEditSenses = () => {
-  // Make sure priorities are up to date before saving
-  updatePriorities()
-  // Create a new array to ensure reactivity
-  const updatedSenses = safeDeepClone(localSenses.value)
-  emit('updateSenses', updatedSenses)
+  // Emit the updated gloss data to parent
+  emit('update:glossData', props.glossData)
   editSensesDialog.value = false
 }
 
 const cancelEditSenses = () => {
   editSensesDialog.value = false
-  localSenses.value = safeDeepClone(senses)
+  // Reset local senses to match props
+  localSenses.value = [...props.senses]
 }
 
 const deleteConfirmDialog = ref(false)
@@ -324,19 +391,44 @@ const confirmDelete = (sense: Sense) => {
   deleteConfirmDialog.value = true
 }
 
-const handleDeleteConfirm = () => {
-  if (senseToDelete.value) {
-    emit('deleteSense', senseToDelete.value.id || '')
-    deleteConfirmDialog.value = false
-    editSensesDialog.value = false
+const handleDeleteConfirm = async () => {
+  if (senseToDelete.value && senseToDelete.value.id) {
+    try {
+      loading.value = true
+      const response = await api.glossData.removeSense(props.glossData.id || '', senseToDelete.value.id)
+
+      deleteConfirmDialog.value = false
+      editSensesDialog.value = false
+
+      // Emit the updated gloss data to parent
+      emit('update:glossData', response.data)
+
+      $q.notify({
+        message: translate('senseDeletedSuccessfully'),
+        color: 'positive',
+        icon: 'check'
+      })
+    } catch (error) {
+      console.error('Error deleting sense:', error)
+      $q.notify({
+        message: translate('errors.failedToDeleteSense'),
+        color: 'negative',
+        icon: 'error'
+      })
+    } finally {
+      loading.value = false
+    }
   }
 }
 
 const deleteSense = (sense: Sense) => {
-  if (senses.length <= 1) {
+  if (props.senses.length <= 1) {
     return // Don't allow deleting the last sense
   }
-  emit('deleteSense', sense.id || '')
-  editSensesDialog.value = false
+  confirmDelete(sense)
+}
+
+const openEditSenses = () => {
+  editSensesDialog.value = true
 }
 </script>

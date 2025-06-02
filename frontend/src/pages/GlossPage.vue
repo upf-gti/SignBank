@@ -31,6 +31,7 @@
         class="col full-width"
         :gloss-data="glossData"
         :allow-edit="true"
+        @save-gloss="saveGloss"
       />
     </div>
   </q-page>
@@ -70,6 +71,20 @@ function getGlossData() {
       }).finally(() => {
         loading.value = false
       })
+  }
+}
+
+const saveGloss = async (updatedGlossData: GlossData) => {
+  try {
+    loading.value = true
+    const response = await api.glossData.editGloss(updatedGlossData.id || '', updatedGlossData)
+    glossData.value = response.data
+    editMode.value = false
+  } catch (err) {
+    console.error(err)
+    error.value = translate('errors.failedToSaveGloss')
+  } finally {
+    loading.value = false
   }
 }
 </script>

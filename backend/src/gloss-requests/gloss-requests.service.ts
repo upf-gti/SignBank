@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateGlossRequestDto } from './dto/create-gloss-request.dto';
 import { AcceptGlossRequestDto } from './dto/accept-gloss-request.dto';
 import { DeclineGlossRequestDto } from './dto/decline-gloss-request.dto';
 import { GlossStatus, RequestStatus } from '@prisma/client';
+import { UpdateSenseDto, ReorderSenseDto } from './dto/update-sense.dto';
 
 @Injectable()
 export class GlossRequestsService {
@@ -12,27 +13,11 @@ export class GlossRequestsService {
   async getAllPendingRequests() {
     return this.prisma.glossRequest.findMany({
       where: {
-        status: RequestStatus.PENDING,
+        status: RequestStatus.WAITING_FOR_APPROVAL,
       },
       include: {
-        creator: {
-          select: {
-            id: true,
-            username: true,
-            email: true,
-          },
-        },
-        requestedGlossData: {
-          include: {
-            senses: {
-              include: {
-                definitions: true,
-                signVideos: true,
-                examples: true,
-              },
-            },
-          },
-        },
+        creator: true,
+        requestedGlossData: true,
       },
     });
   }
@@ -90,11 +75,13 @@ export class GlossRequestsService {
         requestedGlossData: {
           include: {
             senses: {
+              orderBy: {
+                priority: 'asc',
+              },
               include: {
                 definitions: {
                   include: {
                     definitionTranslations: true,
-                    videoDefinition: true,
                   },
                 },
                 signVideos: {
@@ -153,173 +140,25 @@ export class GlossRequestsService {
   }
 
   async createGlossRequest(userId: string, createGlossRequestDto: CreateGlossRequestDto) {
-    const { gloss, senses, minimalPairsAsSource, relationsAsSource } = createGlossRequestDto;
-  
-    return this.prisma.$transaction(async (prisma) => {
-      // Step 1: Create GlossRequest without minimalPairs/relatedGlosses
-      const glossRequest = await prisma.glossRequest.create({
-        data: {
-          creator: {
-            connect: {
-              id: userId,
-            },
-          },
-          status: RequestStatus.PENDING,
-          requestedGlossData: {
-            create: {
-              gloss,
-              senses: {
-                create: senses.map(sense => ({
-                  senseTitle: sense.senseTitle,
-                  lexicalCategory: sense.lexicalCategory,
-                  senseTranslations: {
-                    create: sense.senseTranslations,
-                  },
-                  examples: {
-                    create: sense.examples.map(example => ({
-                      example: example.example,
-                      exampleVideoURL: example.exampleVideoURL,
-                      exampleTranslations: {
-                        create: example.exampleTranslations,
-                      },
-                    })),
-                  },
-                  signVideos: {
-                    create: sense.signVideos.map(signVideo => ({
-                      title: signVideo.title,
-                      url: signVideo.url,
-                      videoData: {
-                        create: signVideo.videoData,
-                      },
-                      videos: {
-                        create: signVideo.videos,
-                      },
-                    })),
-                  },
-                  definitions: {
-                    create: sense.definitions.map(definition => ({
-                      title: definition.title,
-                      definition: definition.definition,
-                      definitionTranslations: {
-                        create: definition.definitionTranslations,
-                      },
-                      videoDefinition: {
-                        create: definition.videoDefinition,
-                      },
-                    })),
-                  },
-                })),
-              },
-            },
-          },
-        },
-        include: {
-          requestedGlossData: true,
-        },
-      });
+    // Create GlossData first
+    const glossData = await this.prisma.glossData.create({
+      data: {
+        gloss: createGlossRequestDto.gloss,
+        isCreatedFromRequest: true,
+      },
+    });
 
-      const glossDataId = glossRequest.requestedGlossData.id;
-    
-      // Step 2: Add minimalPairs and relatedGlosses if they exist
-      if (minimalPairsAsSource && minimalPairsAsSource.length > 0) {
-        for (const pair of minimalPairsAsSource) {
-          // Verify that the target GlossData exists
-          const targetGloss = await prisma.glossData.findUnique({
-            where: { id: pair.targetGlossId }
-          });
-
-          if (!targetGloss) {
-            throw new Error(`GlossData with id ${pair.targetGlossId} not found`);
-          }
-
-          await prisma.minimalPair.create({
-            data: {
-              distinction: pair.distinction,
-              sourceGlossId: glossDataId,
-              targetGlossId: pair.targetGlossId 
-            }
-          });
-        }
-      }
-    
-      if (relationsAsSource && relationsAsSource.length > 0) {
-        for (const related of relationsAsSource) {
-          // Verify that the target GlossData exists
-          const targetGloss = await prisma.glossData.findUnique({
-            where: { id: related.targetGlossId }
-          });
-
-          if (!targetGloss) {
-            throw new Error(`GlossData with id ${related.targetGlossId} not found`);
-          }
-
-          await prisma.relatedGloss.create({
-            data: {
-              relationType: related.relationType,
-              sourceGlossId: glossDataId,
-              targetGlossId: related.targetGlossId
-            }
-          });
-        }
-      }
-    
-      // Return the full GlossRequest with all relations
-      return prisma.glossRequest.findUnique({
-        where: { id: glossRequest.id },
-        include: {
-          creator: {
-            select: {
-              id: true,
-              username: true,
-              email: true,
-            },
-          },
-          requestedGlossData: {
-            include: {
-              senses: {
-                include: {
-                  senseTranslations: true,
-                  examples: {
-                    include: {
-                      exampleTranslations: true,
-                    },
-                  },
-                  signVideos: {
-                    include: {
-                      videoData: true,
-                      videos: true,
-                    },
-                  },
-                },
-              },
-              minimalPairsAsSource: {
-                include: {
-                  sourceGloss: true,
-                  targetGloss: true
-                }
-              },
-              minimalPairsAsTarget: {
-                include: {
-                  targetGloss: true,
-                  sourceGloss: true
-                }
-              },
-              relationsAsSource: {
-                include: {
-                  targetGloss: true,
-                  sourceGloss: true
-                }
-              },
-              relationsAsTarget: {
-                include: {
-                  sourceGloss: true,
-                  targetGloss: true
-                }
-              }
-            },
-          },
-        }
-      });
+    // Create GlossRequest
+    return this.prisma.glossRequest.create({
+      data: {
+        creatorId: userId,
+        requestedGlossDataId: glossData.id,
+        status: RequestStatus.NOT_COMPLETED,
+      },
+      include: {
+        creator: true,
+        requestedGlossData: true,
+      },
     });
   }
 
@@ -389,5 +228,151 @@ export class GlossRequestsService {
         },
       },
     });
+  }
+
+  async addSense(requestId: string, data: UpdateSenseDto) {
+    const request = await this.prisma.glossRequest.findUnique({
+      where: { id: requestId },
+      include: { requestedGlossData: true }
+    });
+
+    if (!request) {
+      throw new NotFoundException('Gloss request not found');
+    }
+
+    const senseCount = await this.prisma.sense.count({
+      where: { glossDataId: request.requestedGlossDataId }
+    });
+
+    const newSense = await this.prisma.sense.create({
+      data: {
+        senseTitle: data.senseTitle,
+        lexicalCategory: data.lexicalCategory,
+        priority: senseCount,
+        glossDataId: request.requestedGlossDataId
+      }
+    });
+
+    return this.getGlossRequest(requestId);
+  }
+
+  async updateSense(requestId: string, senseId: string, data: UpdateSenseDto) {
+    const request = await this.prisma.glossRequest.findUnique({
+      where: { id: requestId },
+      include: { requestedGlossData: { include: { senses: true } } }
+    });
+
+    if (!request) {
+      throw new NotFoundException('Gloss request not found');
+    }
+
+    const sense = request.requestedGlossData.senses.find(s => s.id === senseId);
+    if (!sense) {
+      throw new NotFoundException('Sense not found');
+    }
+
+    await this.prisma.sense.update({
+      where: { id: senseId },
+      data: {
+        senseTitle: data.senseTitle,
+        lexicalCategory: data.lexicalCategory
+      }
+    });
+
+    return this.getGlossRequest(requestId);
+  }
+
+  async updateSensePriority(requestId: string, data: ReorderSenseDto) {
+    const request = await this.prisma.glossRequest.findUnique({
+      where: { id: requestId },
+      include: { requestedGlossData: { include: { senses: true } } }
+    });
+
+    if (!request) {
+      throw new NotFoundException('Gloss request not found');
+    }
+
+    const sense = request.requestedGlossData.senses.find(s => s.id === data.senseId);
+    if (!sense) {
+      throw new NotFoundException('Sense not found');
+    }
+
+    // Update priorities for all affected senses
+    const senses = request.requestedGlossData.senses.sort((a, b) => a.priority - b.priority);
+    const oldIndex = senses.findIndex(s => s.id === data.senseId);
+    const newIndex = data.newPriority;
+
+    if (oldIndex === newIndex) {
+      return this.getGlossRequest(requestId);
+    }
+
+    const start = Math.min(oldIndex, newIndex);
+    const end = Math.max(oldIndex, newIndex);
+    const movingUp = oldIndex > newIndex;
+
+    await this.prisma.$transaction(
+      senses.slice(start, end + 1).map((sense, i) => {
+        const actualIndex = start + i;
+        let newPriority = actualIndex;
+
+        if (movingUp && actualIndex === start) {
+          newPriority = start; // The moved item
+        } else if (movingUp) {
+          newPriority = actualIndex + 1; // Shift others down
+        } else if (!movingUp && actualIndex === end) {
+          newPriority = end; // The moved item
+        } else {
+          newPriority = actualIndex - 1; // Shift others up
+        }
+
+        return this.prisma.sense.update({
+          where: { id: sense.id },
+          data: { priority: newPriority }
+        });
+      })
+    );
+
+    return this.getGlossRequest(requestId);
+  }
+
+  async deleteSense(requestId: string, senseId: string) {
+    const request = await this.prisma.glossRequest.findUnique({
+      where: { id: requestId },
+      include: { requestedGlossData: { include: { senses: true } } }
+    });
+
+    if (!request) {
+      throw new NotFoundException('Gloss request not found');
+    }
+
+    const sense = request.requestedGlossData.senses.find(s => s.id === senseId);
+    if (!sense) {
+      throw new NotFoundException('Sense not found');
+    }
+
+    // Don't allow deleting the last sense
+    if (request.requestedGlossData.senses.length <= 1) {
+      throw new BadRequestException('Cannot delete the last sense');
+    }
+
+    await this.prisma.sense.delete({
+      where: { id: senseId }
+    });
+
+    // Update priorities for remaining senses
+    const remainingSenses = request.requestedGlossData.senses
+      .filter(s => s.id !== senseId)
+      .sort((a, b) => a.priority - b.priority);
+
+    await this.prisma.$transaction(
+      remainingSenses.map((sense, index) =>
+        this.prisma.sense.update({
+          where: { id: sense.id },
+          data: { priority: index }
+        })
+      )
+    );
+
+    return this.getGlossRequest(requestId);
   }
 } 

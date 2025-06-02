@@ -19,10 +19,7 @@
       :senses="glossData.senses"
       :edit-mode="editMode"
       :gloss-data="glossData"
-      @add-sense="addSense"
-      @update-senses="updateSenses"
-      @update-sense="updateSense"
-      @delete-sense="deleteSense"
+      @update:gloss-data="handleGlossDataUpdate"
     />
     <MainContent
       v-if="!editMode && selectedSense"
@@ -33,8 +30,7 @@
       v-model="selectedSense"
       :gloss-data="glossData"
       :edit-mode="editMode"
-      @add-relation="addRelation"
-      @add-minimal-pair="addMinimalPair"
+      @update:glossData="handleGlossDataUpdate"
     />
   </q-card>
 </template>
@@ -140,41 +136,9 @@ const declineRequest = () => {
   emit('declineRequest')
 }
 
-const addSense = (sense: { senseTitle: string, lexicalCategory: string }) => {
-  glossData.senses.push({
-    id: Date.now().toString(),
-    senseTitle: sense.senseTitle,
-    priority: glossData.senses.length + 1,
-    lexicalCategory: sense.lexicalCategory,
-    glossDataId: glossData.id || '',
-    definitions: [],
-    signVideos: [],
-    examples: [],
-    senseTranslations: [],
-  })
-  selectedSenseId.value = glossData.senses[glossData.senses.length - 1]?.id as string
-}
-
-const updateSenses = (updatedSenses: Sense[]) => {
-  glossData.senses = updatedSenses
-}
-
-const updateSense = (updatedSense: Sense) => {
-  const index = glossData.senses.findIndex(s => s.id === updatedSense.id)
-  if (index !== -1) {
-    glossData.senses[index] = updatedSense
-  }
-}
-
-const deleteSense = (senseId: string) => {
-  const index = glossData.senses.findIndex(s => s.id === senseId)
-  if (index !== -1) {
-    glossData.senses.splice(index, 1)
-    // Update selectedSenseId if the deleted sense was selected
-    if (selectedSenseId.value === senseId) {
-      selectedSenseId.value = glossData.senses[0]?.id || ''
-    }
-  }
+const handleGlossDataUpdate = (updatedGlossData: GlossData) => {
+  // Update the local glossData with the new data
+  Object.assign(glossData, updatedGlossData)
 }
 
 const addRelation = (relatedGloss: RelatedGloss) => {

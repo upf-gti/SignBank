@@ -1,7 +1,18 @@
 import type { AxiosResponse } from "axios"
 import { apiClient } from "src/boot/axios"
-import type { GlossRequest, GlossData } from 'src/types/models'
+import type { GlossRequest, GlossData, Definition, Translation } from 'src/types/models'
 import type { SearchParams } from "./search.service"
+import axios from 'axios'
+import type {
+  CreateGlossRequestDto,
+  UpdateDefinitionDto,
+  UpdateExampleDto,
+  UpdateVideoDto,
+  UpdateTranslationDto,
+  GlossRequestResponse,
+  GlossRequestDetailResponse,
+  UpdateSenseDto,
+} from 'src/types/api'
 
 // Create API service object
 export const api = {
@@ -14,11 +25,20 @@ export const api = {
     get(id: string): Promise<AxiosResponse<any>> {
       return apiClient.get(`/gloss-data/${id}`)
     },
+    editGloss: (glossDataId: string, data: GlossData) =>
+      apiClient.patch<GlossData>(`/gloss-data/${glossDataId}`, data),
     deleteSense(id: string): Promise<AxiosResponse<any>> {
       return apiClient.delete(`/gloss-data/senses/${id}`)
     },
-    deleteDefinition(id: string): Promise<AxiosResponse<any>> {
+    removeDefinition(id: string): Promise<AxiosResponse<any>> {
       return apiClient.delete(`/gloss-data/definitions/${id}`)
+    },
+    editDefinition: (senseId: string, definitionId: string, data: { title: string, definition: string, videoDefinitionId: string }) =>
+      apiClient.patch<Definition>(`/gloss-data/senses/${senseId}/definitions/${definitionId}`, data),
+    editDefinitionTranslation: (definitionId: string, translationId: string, data: { translation: string, language: string }) =>
+      apiClient.patch<Translation>(`/gloss-data/definitions/${definitionId}/translations/${translationId}`, data),
+    deleteDefinitionTranslation(id: string): Promise<AxiosResponse<any>> {
+      return apiClient.delete(`/gloss-data/definition-translations/${id}`)
     },
     deleteExample(id: string): Promise<AxiosResponse<any>> {
       return apiClient.delete(`/gloss-data/examples/${id}`)
@@ -35,9 +55,6 @@ export const api = {
     deleteSenseTranslation(id: string): Promise<AxiosResponse<any>> {
       return apiClient.delete(`/gloss-data/sense-translations/${id}`)
     },
-    deleteDefinitionTranslation(id: string): Promise<AxiosResponse<any>> {
-      return apiClient.delete(`/gloss-data/definition-translations/${id}`)
-    },
     deleteExampleTranslation(id: string): Promise<AxiosResponse<any>> {
       return apiClient.delete(`/gloss-data/example-translations/${id}`)
     },
@@ -46,7 +63,28 @@ export const api = {
     },
     deleteMinimalPair(id: string): Promise<AxiosResponse<any>> {
       return apiClient.delete(`/gloss-data/minimal-pairs/${id}`)
-    }
+    },
+    // Sense management
+    createSense: (glossDataId: string, data: { senseTitle: string, lexicalCategory: string }) =>
+      apiClient.post<GlossData>(`/gloss-data/${glossDataId}/senses`, data),
+
+    editSense: (glossDataId: string, senseId: string, data: UpdateSenseDto) =>
+      apiClient.patch<GlossData>(`/gloss-data/${glossDataId}/senses/${senseId}`, data),
+
+    reorderSense: (glossDataId: string, data: { senseId: string, newPriority: number }) =>
+      apiClient.patch<GlossData>(`/gloss-data/${glossDataId}/senses/reorder`, data),
+
+    removeSense: (glossDataId: string, senseId: string) =>
+      apiClient.delete<GlossData>(`/gloss-data/${glossDataId}/senses/${senseId}`),
+
+    createDefinition: (senseId: string, data: { title: string, definition: string, videoDefinitionId?: string }) =>
+      apiClient.post<GlossData>(`/gloss-data/senses/${senseId}/definitions`, data),
+
+    updateDefinition: (senseId: string, definitionId: string, data: { title: string, definition: string, videoDefinitionId?: string }) =>
+      apiClient.patch<GlossData>(`/gloss-data/senses/${senseId}/definitions/${definitionId}`, data),
+
+    deleteDefinition: (senseId: string, definitionId: string) =>
+      apiClient.delete<GlossData>(`/gloss-data/senses/${senseId}/definitions/${definitionId}`),
   },
   requests: {
     getAll(): Promise<AxiosResponse<GlossRequest[]>> {
@@ -94,6 +132,43 @@ export const api = {
     search(params: SearchParams): Promise<AxiosResponse<any>> {
       return apiClient.get(`/search`, { params })
     }
+  },
+  // Auth endpoints
+  auth: {
+    login: (data: { email: string; password: string }) =>
+      apiClient.post('/auth/login', data),
+    register: (data: { email: string; password: string; username: string }) =>
+      apiClient.post('/auth/register', data),
+    logout: () => apiClient.post('/auth/logout'),
+  },
+  // Gloss requests endpoints
+  glossRequests: {
+    // Create initial gloss request with just the name
+    create: (data: CreateGlossRequestDto) => 
+      apiClient.post<GlossRequestResponse>('/gloss-requests', data),
+    
+    // Get all requests for the current user
+    getMine: () => 
+      apiClient.get<GlossRequestResponse[]>('/gloss-requests/my-requests'),
+    
+    // Get a specific request by ID
+    get: (id: string) => 
+      apiClient.get<GlossRequestDetailResponse>(`/gloss-requests/${id}`),
+    
+    // Get all pending requests (admin only)
+    getPending: () => 
+      apiClient.get<GlossRequestResponse[]>('/gloss-requests/pending'),
+    
+    // Submit the request for approval
+    submit: (requestId: string) =>
+      apiClient.post<GlossRequestResponse>(`/gloss-requests/${requestId}/submit`),
+
+    // Admin actions
+    accept: (requestId: string) =>
+      apiClient.post<GlossRequestResponse>(`/gloss-requests/${requestId}/accept`),
+    
+    decline: (requestId: string, data: { denyReason: string }) =>
+      apiClient.post<GlossRequestResponse>(`/gloss-requests/${requestId}/decline`, data),
   }
 }
 

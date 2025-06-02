@@ -70,85 +70,95 @@ function getGlossRequestData() {
       .then((response) => {
         glossData.value = response.data.requestedGlossData
       })
-      .catch((error) => {
-        console.error(error)
-        error.value = translate('errors.failedToLoadGloss')
+      .catch((err) => {
+        console.error(err)
+        error.value = translate('errors.failedToLoadGlossRequest')
       }).finally(() => {
         loading.value = false
       })
   }
 }
 
-
-const saveGloss = (glossData: GlossData) => {
-  api.requests.update(route.params.id as string, glossData).then((response) => {
-    router.push(`/requests/view/${response.data.id}`);
+const saveGloss = async (updatedGlossData: GlossData) => {
+  try {
+    loading.value = true
+    const response = await api.glossData.editGloss(updatedGlossData.id || '', updatedGlossData)
+    glossData.value = response.data
+    editMode.value = false
+    
+    // Show success notification
     $q.notify({
-      message: translate('glossCreatedSuccessfully'),
-      color: 'positive',
-      icon: 'check'
-    });
-  }).catch((error) => {
-    console.error('Error creating gloss request:', error);
-  });
-};
-
-const acceptRequest = () => {
-  debugger
-  if (!glossData.value) return;
-
-  api.requests.accept(route.params.id as string, glossData.value)
-    .then(() => {
-      $q.notify({
-        message: translate('requestAccepted'),
-        color: 'positive',
-        icon: 'check'
-      });
-      router.push('/glosses');
+      type: 'positive',
+      message: translate('glossSavedSuccessfully')
     })
-    .catch((error) => {
-      console.error(error);
-      $q.notify({
-        message: translate('errors.failedToAcceptRequest'),
-        color: 'negative',
-        icon: 'error'
-      });
-    });
-};
-
-const declineRequest = () => {
-  $q.dialog({
-    title: translate('declineRequest'),
-    message: translate('enterDeclineReason'),
-    prompt: {
-      model: '',
-      type: 'text',
-      isValid: val => val.length > 0, // Require some reason
-    },
-    cancel: true,
-    persistent: true,
-  }).onOk((reason) => {
-    api.requests.decline({
-      id: route.params.id as string,
-      reason
+  } catch (err) {
+    console.error(err)
+    error.value = translate('errors.failedToSaveGloss')
+    
+    // Show error notification
+    $q.notify({
+      type: 'negative',
+      message: translate('errors.failedToSaveGloss')
     })
-      .then(() => {
-        $q.notify({
-          message: translate('requestDeclined'),
-          color: 'info',
-          icon: 'check'
-        });
-        router.push('/glosses');
-      })
-      .catch((error) => {
-        console.error(error);
-        $q.notify({
-          message: translate('errors.failedToDeclineRequest'),
-          color: 'negative',
-          icon: 'error'
-        });
-      });
-  });
-};
+  } finally {
+    loading.value = false
+  }
+}
+
+const acceptRequest = async (updatedGlossData: GlossData) => {
+  try {
+    loading.value = true
+    const requestId = route.params.id as string
+    const response = await api.requests.accept(requestId, updatedGlossData)
+    
+    // Show success notification
+    $q.notify({
+      type: 'positive',
+      message: translate('requestAcceptedSuccessfully')
+    })
+    
+    // Redirect to pending requests page
+    router.push('/pending-requests')
+  } catch (err) {
+    console.error(err)
+    error.value = translate('errors.failedToAcceptRequest')
+    
+    // Show error notification
+    $q.notify({
+      type: 'negative',
+      message: translate('errors.failedToAcceptRequest')
+    })
+  } finally {
+    loading.value = false
+  }
+}
+
+const declineRequest = async () => {
+  try {
+    loading.value = true
+    const requestId = route.params.id as string
+    await api.requests.decline({ id: requestId, reason: 'Declined by admin' })
+    
+    // Show success notification
+    $q.notify({
+      type: 'positive',
+      message: translate('requestDeclinedSuccessfully')
+    })
+    
+    // Redirect to pending requests page
+    router.push('/pending-requests')
+  } catch (err) {
+    console.error(err)
+    error.value = translate('errors.failedToDeclineRequest')
+    
+    // Show error notification
+    $q.notify({
+      type: 'negative',
+      message: translate('errors.failedToDeclineRequest')
+    })
+  } finally {
+    loading.value = false
+  }
+}
 
 </script>

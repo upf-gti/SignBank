@@ -1,3 +1,6 @@
+import { Language, LexicalCategory, Hand, RelationType, RequestStatus } from './models'
+import type { GlossData } from './models'
+
 export type WordStatus = 'PUBLISHED' | 'DRAFT' | 'PENDING';
 
 export interface Translation {
@@ -70,5 +73,130 @@ export interface Gloss {
   isCreatedFromEdit: boolean;
   sense: Sense;
   RelatedGloss: RelatedGloss[];
+}
+
+// Request DTOs
+export interface CreateGlossRequestDto {
+  gloss: string;
+}
+
+export interface UpdateDefinitionDto {
+  title?: string;
+  definition: string;
+  videoDefinitionId?: string;
+}
+
+export interface UpdateExampleDto {
+  example: string;
+  exampleVideoURL: string;
+}
+
+export interface UpdateVideoDto {
+  title: string;
+  url: string;
+  priority?: number;
+  videoData: {
+    hands: Hand;
+    configuration: string;
+    configurationChanges: string;
+    relationBetweenArticulators: string;
+    location: string;
+    movementRelatedOrientation: string;
+    locationRelatedOrientation: string;
+    orientationChange: string;
+    contactType: string;
+    movementType: string;
+    vocalization: string;
+    nonManualComponent: string;
+    inicialization: string;
+  };
+}
+
+export interface UpdateTranslationDto {
+  translation: string;
+  language: Language;
+}
+
+export interface UpdateSenseDto {
+  senseTitle: string;
+  lexicalCategory: string;
+  priority?: number;
+}
+
+// Response DTOs
+export interface GlossRequestResponse {
+  id: string;
+  gloss: string;
+  status: RequestStatus;
+  createdAt: string;
+  updatedAt: string;
+  creator: {
+    id: string;
+    username: string;
+  };
+  lastEditedSection?: string;
+}
+
+export interface GlossRequestDetailResponse extends GlossRequestResponse {
+  requestedGlossData: GlossData;
+  acceptedBy?: {
+    id: string;
+    username: string;
+  };
+  deniedBy?: {
+    id: string;
+    username: string;
+  };
+  denyReason?: string;
+  definitions: Array<{
+    id: string;
+    title?: string;
+    definition: string;
+    videoDefinition: {
+      id: string;
+      url: string;
+    };
+    translations: Array<{
+      id: string;
+      translation: string;
+      language: Language;
+    }>;
+  }>;
+  examples: Array<{
+    id: string;
+    example: string;
+    exampleVideoURL: string;
+    translations: Array<{
+      id: string;
+      translation: string;
+      language: Language;
+    }>;
+  }>;
+  videos: Array<{
+    id: string;
+    title: string;
+    url: string;
+    priority: number;
+    videoData: {
+      hands: Hand;
+      configuration: string;
+      configurationChanges: string;
+      relationBetweenArticulators: string;
+      location: string;
+      movementRelatedOrientation: string;
+      locationRelatedOrientation: string;
+      orientationChange: string;
+      contactType: string;
+      movementType: string;
+      vocalization: string;
+      nonManualComponent: string;
+      inicialization: string;
+    };
+  }>;
+  translations: Array<{
+    id: string;
+    translation: string;
+    language: Language;
+  }>;
 }
 

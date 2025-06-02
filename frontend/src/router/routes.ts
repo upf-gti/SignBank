@@ -27,10 +27,12 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/GlossPage.vue') }],
   },
   {
-    path: '/requests',
+    path: '/my-requests',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/RequestGlossPage.vue') },
-      { path: 'create', component: () => import('pages/CreateRequestGlossPage.vue') },
+    children: [
+      { path: '', component: () => import('src/pages/MyRequestsPage.vue') },
+      { path: 'create', component: () => import('pages/CreateGlossRequest.vue') },
+      { path: 'edit/:id', component: () => import('pages/EditGlossRequest.vue') },
       { path: 'view/:id', component: () => import('pages/ViewRequestGlossPage.vue') },
     ],
   },

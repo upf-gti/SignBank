@@ -192,23 +192,24 @@ export class RelatedGlossDto {
 }
 
 export class CreateGlossRequestDto {
-  
   @IsString()
   @IsNotEmpty()
   gloss: string;
 
-  @ArrayNotEmpty()
-  @ValidateNested({ each: true })
-  @Type(() => SenseDto)
-  senses: SenseDto[];
+  // Commented out for initial gloss request creation
+  // These fields will be added in subsequent steps
+  // @ArrayNotEmpty()
+  // @ValidateNested({ each: true })
+  // @Type(() => SenseDto)
+  // senses: SenseDto[];
 
-  @ValidateNested({ each: true })
-  @Type(() => MinimalPairDto)
-  @IsOptional()
-  minimalPairsAsSource?: MinimalPairDto[];
+  // @ValidateNested({ each: true })
+  // @Type(() => MinimalPairDto)
+  // @IsOptional()
+  // minimalPairsAsSource?: MinimalPairDto[];
 
-  @ValidateNested({ each: true })
-  @Type(() => RelatedGlossDto)
-  @IsOptional()
-  relationsAsSource?: RelatedGlossDto[];
+  // @ValidateNested({ each: true })
+  // @Type(() => RelatedGlossDto)
+  // @IsOptional()
+  // relationsAsSource?: RelatedGlossDto[];
 } 

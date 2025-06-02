@@ -2,7 +2,6 @@ import { Gloss } from "./api"
 import { RelatedGloss, MinimalPair } from "./gloss"
 
 export type WordStatus = 'PUBLISHED' | 'DRAFT' | 'PENDING';
-export type RequestStatus = 'PENDING' | 'ACCEPTED' | 'DENIED';
 
 export interface Translation {
   id?: string;
@@ -46,6 +45,8 @@ export interface Definition {
   senseId: string;
   definitionTranslations: Translation[];
   videoDefinition: VideoDefinition;
+  isNew?: boolean;
+  isEditing?: boolean;
 }
 
 export interface Video {
@@ -200,4 +201,47 @@ export interface GlossRequest {
   acceptedBy: User | null;
   deniedBy: User | null;
   requestedGlossData: GlossData;
+}
+
+// Enums
+export enum Language {
+  CATALAN = 'CATALAN',
+  SPANISH = 'SPANISH',
+  ENGLISH = 'ENGLISH',
+  OTHER = 'OTHER'
+}
+
+export enum LexicalCategory {
+  NOUN = 'NOUN',
+  VERB = 'VERB',
+  ADJECTIVE = 'ADJECTIVE',
+  ADVERB = 'ADVERB',
+  PRONOUN = 'PRONOUN',
+  DETERMINER = 'DETERMINER',
+  PREPOSITION = 'PREPOSITION',
+  CONJUNCTION = 'CONJUNCTION',
+  INTERJECTION = 'INTERJECTION',
+  OTHER = 'OTHER'
+}
+
+export enum Hand {
+  RIGHT = 'RIGHT',
+  LEFT = 'LEFT',
+  BOTH = 'BOTH'
+}
+
+export enum RelationType {
+  SYNONYM = 'SYNONYM',
+  REGIONAL_VARIANT = 'REGIONAL_VARIANT',
+  ASSOCIATED_CONCEPT = 'ASSOCIATED_CONCEPT',
+  ANTONYM = 'ANTONYM',
+  HYPERNYM = 'HYPERNYM',
+  HYPONYM = 'HYPONYM'
+}
+
+export enum RequestStatus {
+  NOT_COMPLETED = 'NOT_COMPLETED',
+  WAITING_FOR_APPROVAL = 'WAITING_FOR_APPROVAL',
+  ACCEPTED = 'ACCEPTED',
+  DENIED = 'DENIED'
 }

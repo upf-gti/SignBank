@@ -8,7 +8,7 @@
         color="primary"
         :label="translate('newRequest')"
         icon="add"
-        @click="$router.push('/requests/create')"
+        @click="$router.push('/my-requests/create')"
       />
     </div>
 
@@ -36,6 +36,7 @@
         class="text-primary q-mb-md"
         align="justify"
       >
+        <q-tab name="not_sent" icon="edit" :label="' ' + translate('notSent') + ' (' + filteredRequests.not_sent.length + ')'"/>
         <q-tab name="pending" icon="pending" :label="' ' + translate('pending') + ' (' + filteredRequests.pending.length + ')'"/>
         <q-tab name="accepted" icon="check_circle" :label="' ' + translate('accepted') + ' (' + filteredRequests.accepted.length + ')'"/>
         <q-tab name="denied" icon="cancel" :label="' ' + translate('denied') + ' (' + filteredRequests.denied.length + ')'"/>
@@ -93,7 +94,7 @@
                     dense
                     icon="info"
                     :label="translate('details')"
-                    @click="$router.push(`/requests/view/${request.id}`)"
+                    @click="$router.push(`/my-requests/view/${request.id}`)"
                   />
                 </q-card-actions>
               </q-card>
@@ -117,7 +118,7 @@ const $router = useRouter();
 const requests = ref<GlossRequest[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
-const activeTab = ref('pending');
+const activeTab = ref('not_sent');
 
 onMounted(async () => {
   await fetchRequests();
@@ -137,7 +138,8 @@ const fetchRequests = async () => {
 
 const filteredRequests = computed(() => {
   return {
-    pending: requests.value?.filter(r => r.status === 'PENDING') || [],
+    not_sent: requests.value?.filter(r => r.status === 'NOT_COMPLETED') || [],
+    pending: requests.value?.filter(r => r.status === 'WAITING_FOR_APPROVAL') || [],
     accepted: requests.value?.filter(r => r.status === 'ACCEPTED') || [],
     denied: requests.value?.filter(r => r.status === 'DENIED') || []
   };
@@ -149,6 +151,8 @@ const getStatusColor = (status: RequestStatus): string => {
       return 'positive';
     case 'DENIED':
       return 'negative';
+    case 'NOT_COMPLETED':
+      return 'grey';
     default:
       return 'warning';
   }
@@ -159,6 +163,10 @@ const getStatusColor = (status: RequestStatus): string => {
 .request-card {
   transition: all 0.3s ease;
   border-left: 4px solid transparent;
+
+  &.not_sent {
+    border-left-color: var(--q-grey);
+  }
 
   &.pending {
     border-left-color: var(--q-warning);

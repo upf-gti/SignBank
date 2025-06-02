@@ -140,6 +140,10 @@ interface TranslateKeys {
     failedToDeclineRequest: string;
     failedToLoadRequests: string;
     failedToLoadGloss: string;
+    failedToSaveDefinition: string;
+    failedToDeleteDefinition: string;
+    failedToSaveTranslation: string;
+    failedToDeleteTranslation: string;
   };
   ACCEPTED: string;
   DENIED: string;

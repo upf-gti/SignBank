@@ -1,9 +1,11 @@
-import { Controller, Get, Delete, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards, Patch, Put } from '@nestjs/common';
 import { GlossDataService } from './gloss-data.service';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { RolesGuard } from '../auth/guard/roles.guard';
 import { Roles } from '../auth/decorator/roles.decorator';
 import { Role } from '@prisma/client';
+import { UpdateSenseDto, ReorderSenseDto } from './dto/update-sense.dto';
+import { UpdateDefinitionDto, UpdateDefinitionTranslationDto } from './dto/update-definition.dto';
 
 @Controller('gloss-data')
 @UseGuards(JwtGuard, RolesGuard)
@@ -11,22 +13,42 @@ export class GlossDataController {
   constructor(private readonly glossDataService: GlossDataService) {}
 
   @Get(':id')
-  async getGlossDataById(@Param('id') id: string) {
-    return this.glossDataService.getGlossDataById(id);
+  async getGlossData(@Param('id') id: string) {
+    return this.glossDataService.getGlossData(id);
   }
 
-  // Sense deletion
-  @Delete('senses/:id')
-  @Roles(Role.ADMIN)
-  async deleteSense(@Param('id') id: string) {
-    return this.glossDataService.deleteSense(id);
+  // Sense management
+  @Post(':id/senses')
+  async addSense(
+    @Param('id') id: string,
+    @Body() updateSenseDto: UpdateSenseDto,
+  ) {
+    return this.glossDataService.addSense(id, updateSenseDto);
   }
 
-  // Definition deletion
-  @Delete('definitions/:id')
-  @Roles(Role.ADMIN)
-  async deleteDefinition(@Param('id') id: string) {
-    return this.glossDataService.deleteDefinition(id);
+  @Patch(':id/senses/:senseId')
+  async updateSense(
+    @Param('id') id: string,
+    @Param('senseId') senseId: string,
+    @Body() updateSenseDto: UpdateSenseDto,
+  ) {
+    return this.glossDataService.updateSense(id, senseId, updateSenseDto);
+  }
+
+  @Patch(':id/senses/reorder')
+  async updateSensePriority(
+    @Param('id') id: string,
+    @Body() reorderSenseDto: ReorderSenseDto,
+  ) {
+    return this.glossDataService.updateSensePriority(id, reorderSenseDto);
+  }
+
+  @Delete(':id/senses/:senseId')
+  async deleteSense(
+    @Param('id') id: string,
+    @Param('senseId') senseId: string,
+  ) {
+    return this.glossDataService.deleteSense(id, senseId);
   }
 
   // Example deletion
@@ -90,5 +112,43 @@ export class GlossDataController {
   @Roles(Role.ADMIN)
   async deleteMinimalPair(@Param('id') id: string) {
     return this.glossDataService.deleteMinimalPair(id);
+  }
+
+  @Post('senses/:senseId/definitions')
+  @Roles(Role.ADMIN)
+  async createDefinition(
+    @Param('senseId') senseId: string,
+    @Body() data: UpdateDefinitionDto
+  ) {
+    return this.glossDataService.createDefinition(senseId, data);
+  }
+
+  @Patch('senses/:senseId/definitions/:definitionId')
+  @Roles(Role.ADMIN)
+  async updateDefinition(
+    @Param('senseId') senseId: string,
+    @Param('definitionId') definitionId: string,
+    @Body() data: UpdateDefinitionDto
+  ) {
+    return this.glossDataService.updateDefinition(senseId, definitionId, data);
+  }
+
+  @Delete('senses/:senseId/definitions/:definitionId')
+  @Roles(Role.ADMIN)
+  async deleteDefinition(
+    @Param('senseId') senseId: string,
+    @Param('definitionId') definitionId: string,
+  ) {
+    return this.glossDataService.deleteDefinition(senseId, definitionId);
+  }
+
+  @Patch('definitions/:definitionId/translations/:translationId')
+  @Roles(Role.ADMIN)
+  async updateDefinitionTranslation(
+    @Param('definitionId') definitionId: string,
+    @Param('translationId') translationId: string,
+    @Body() data: UpdateDefinitionTranslationDto
+  ) {
+    return this.glossDataService.updateDefinitionTranslation(definitionId, translationId, data);
   }
 } 

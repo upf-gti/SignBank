@@ -107,6 +107,16 @@ export default {
     failedToAcceptRequest: 'Failed to accept request',
     failedToDeclineRequest: 'Failed to decline request',
     failedToLoadRequests: 'Failed to load requests',
-    failedToLoadGloss: 'Failed to load gloss'
+    failedToLoadGloss: 'Failed to load gloss',
+    failedToSaveDefinition: 'Failed to save definition',
+    failedToDeleteDefinition: 'Failed to delete definition',
+    failedToSaveTranslation: 'Failed to save translation',
+    failedToDeleteTranslation: 'Failed to delete translation'
   },
+
+  // Definition management
+  definitionSavedSuccessfully: 'Definition saved successfully',
+  definitionDeletedSuccessfully: 'Definition deleted successfully',
+  translationSavedSuccessfully: 'Translation saved successfully',
+  translationDeletedSuccessfully: 'Translation deleted successfully',
 }; 

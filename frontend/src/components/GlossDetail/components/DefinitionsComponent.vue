@@ -2,102 +2,8 @@
   <q-card-section class="column">
     <div class="text-h5 q-mb-md row justify-between items-center">
       {{ translate('definitions') }}
-    </div>
-    <q-list>
-      <q-item
-        v-for="(definition, index) in sense.definitions"
-        :key="definition.id || index"
-        class="column q-mb-lg"
-      >
-        <!-- List of definitions -->
-        <q-item-label class="row justify-between items-center">
-          <q-btn
-            v-if="editMode"
-            flat
-            round
-            icon="delete"
-            :label="translate('deleteDefinition')"
-            class="float-right"
-            @click="removeDefinition(index)"
-          />
-          <q-input
-            v-if="editMode"
-            v-model="definition.title"
-            :label="translate('definitionTitle')"
-            outlined
-            dense
-            class="col-12 q-mb-sm"
-          />
-          <div v-else>
-            {{ definition.title }}
-          </div>
-        </q-item-label>
-        <q-item-label>
-          <q-input
-            v-if="editMode"
-            v-model="definition.definition"
-            :label="translate('definition')"
-            outlined            
-            dense
-            class="col-12 q-mb-sm"
-          />
-          <div v-else>
-            {{ definition.definition }}
-          </div>
-          <!-- Definition translations -->
-          <q-item
-            v-for="(translation, tIndex) in definition.definitionTranslations"
-            :key="translation.id || tIndex"
-            class="column"
-          >
-            <div class="row justify-between items-center q-mb-sm">
-              <LanguageSelector 
-                v-if="editMode"
-                v-model="translation.language"
-                class="col"
-              />
-              <div v-else>
-                <q-chip size="sm">
-                  {{ translation.language }}
-                </q-chip>
-              </div>
-              <q-btn
-                v-if="editMode"
-                flat
-                round
-                icon="delete"
-                :label="translate('deleteDefinitionTranslation')"
-                class="q-mx-md"
-                @click="removeTranslation(definition, tIndex)"
-              />
-            </div>
-            <q-input
-              v-if="editMode"
-              v-model="translation.translation"
-              :label="translate('translation')"
-              outlined
-              dense
-              class="col-12"
-            />
-            <q-item-label
-              v-else
-              class="q-ml-lg"
-            >
-              {{ translation.translation }}
-            </q-item-label>
-          </q-item>
-          <q-btn
-            v-if="editMode"
-            flat
-            class="q-mt-sm"
-            icon="add"
-            :label="translate('addDefinitionTranslation')"
-            @click="addTranslation(definition)"
-          />
-        </q-item-label>
-      </q-item>
       <q-btn
-        v-if="editMode"
+        v-if="allowEdit"
         unelevated
         outline
         color="primary"
@@ -105,6 +11,125 @@
         icon="add"
         @click="addDefinition"
       />
+    </div>
+    <q-list>
+      <q-item
+        v-for="(definition, index) in definitions"
+        :key="definition.id || index"
+        class="column q-mb-lg"
+      >
+        <EditableModule
+          :allow-edit="allowEdit"
+          @save="() => saveDefinition(definition)"
+          @cancel="cancelDefinitionEdit"
+        >
+          <template #default="{ isEditing }">
+            <!-- Definition Title -->
+            <q-input
+              v-if="isEditing"
+              v-model="definition.title"
+              :label="translate('definitionTitle')"
+              outlined
+              dense
+              class="col-12 q-mb-sm"
+            />
+
+            <!-- Definition Text -->
+            <q-input
+              v-if="isEditing"
+              v-model="definition.definition"
+              :label="translate('definition')"
+              outlined            
+              dense
+              class="col-12 q-mb-sm"
+            />
+            <div v-else class="q-mb-md">
+              {{ definition.definition }}
+            </div>
+
+            <!-- Definition Translations -->
+            <div class="q-mt-md">
+              <div class="text-subtitle2 q-mb-sm">{{ translate('definitionTranslations') }}</div>
+              <div v-for="(translation, tIndex) in definition.definitionTranslations" :key="translation.id || tIndex">
+                <EditableModule
+                  :allow-edit="allowEdit"
+                  @save="() => saveTranslation(definition, translation)"
+                  @cancel="cancelTranslationEdit"
+                >
+                  <template #header>
+                    <q-chip size="sm">{{ translation.language }}</q-chip>
+                  </template>
+                  <template #default="{ isEditing }">
+                    <div class="row items-center q-gutter-md">
+                      <LanguageSelector 
+                        v-if="isEditing"
+                        v-model="translation.language"
+                        class="col"
+                      />
+                      <q-input
+                        v-if="isEditing"
+                        v-model="translation.translation"
+                        :label="translate('translation')"
+                        outlined
+                        dense
+                        class="col"
+                      />
+                      <div v-else class="q-ml-lg">
+                        {{ translation.translation }}
+                      </div>
+                    </div>
+                  </template>
+                </EditableModule>
+              </div>
+              <q-btn
+                v-if="allowEdit"
+                flat
+                class="q-mt-sm"
+                icon="add"
+                :label="translate('addDefinitionTranslation')"
+                @click="addTranslation"
+              />
+            </div>
+          </template>
+        </EditableModule>
+      </q-item>
+      <q-item
+        v-if="displayCreateNewDefinition"
+        key="newDefinition"
+        class="column q-mb-lg"
+      >
+        <EditableModule
+          :allow-edit="allowEdit"
+          :initial-edit-state="true"
+          @save="createNewDefinition"
+          @cancel="displayCreateNewDefinition = false"
+        >
+          <template #default="{ isEditing }">
+            <!-- Definition Title -->
+            <q-input
+              v-if="isEditing"
+              v-model="newDefinition.title"
+              :label="translate('definitionTitle')"
+              outlined
+              dense
+              class="col-12 q-mb-sm"
+            />
+
+            <!-- Definition Text -->
+            <q-input
+              v-if="isEditing"
+              v-model="newDefinition.definition"
+              :label="translate('definition')"
+              outlined            
+              dense
+              class="col-12 q-mb-sm"
+            />
+            <div v-else class="q-mb-md">
+              {{ newDefinition.definition }}
+            </div>
+          </template>
+        </EditableModule>
+      </q-item>
     </q-list>
     <!-- Translations of the sense -->
     <div class="column">
@@ -121,7 +146,7 @@
       </div>
       <q-list class="row">
         <q-item
-          v-for="(translation, index) in sense.senseTranslations"
+          v-for="(translation, index) in senseTranslations"
           :key="translation.id || index"
           class="col"
           style="min-width: 300px"
@@ -147,7 +172,7 @@
                 icon="delete"
                 :label="translate('deleteGlossTranslation')"
                 class="q-mx-md"
-                @click="removeSenseTranslation(index)"
+                @click="removeSenseTranslation"
               />
             </div>
             <q-input
@@ -172,58 +197,228 @@
 </template>
 
 <script setup lang="ts">
-import { Sense, Definition, Translation, SenseTranslation } from 'src/types/models';
+import { Sense, Definition, Translation, SenseTranslation, GlossData } from 'src/types/models';
 import translate from 'src/utils/translate';
 import LanguageSelector from './LanguageSelector.vue'
+import EditableModule from 'src/components/Shared/EditableModule.vue'
+import { ref, computed } from 'vue';
+import { api } from 'src/services/api';
+import { useQuasar } from 'quasar';
 
-const sense = defineModel<Sense>({ required: true })
-const { editMode } = defineProps<{
+const $q = useQuasar()
+const loading = ref(false)
+const displayCreateNewDefinition = ref(false)
+const newDefinition = ref<Definition>({
+  id: '',
+  title: '',
+  definition: '',
+  videoDefinitionId: '',
+  senseId: '',
+  definitionTranslations: [],
+  isEditing: true,
+  isNew: true,
+  videoDefinition: { id: '', url: '' }
+})
+
+const props = defineProps<{
+  allowEdit: boolean;
   editMode: boolean;
+  sense: Sense;
 }>();
 
+const emit = defineEmits<{
+  (e: 'update:glossData', glossData: GlossData): void;
+}>();
+
+// Add computed properties for safe access
+const definitions = computed(() => props.sense?.definitions || []);
+const senseTranslations = computed(() => props.sense?.senseTranslations || []);
+
 const addDefinition = () => {
-  sense.value.definitions.push({
-    id: Date.now().toString(),
+  displayCreateNewDefinition.value = true;
+  newDefinition.value = {
+    id: '',
     title: '',
     definition: '',
-    senseId: sense.value.id || '',
-    definitionTranslations: [],
     videoDefinitionId: '',
-    videoDefinition: {
-      id: '',
-      url: ''
+    senseId: props.sense?.id || '',
+    definitionTranslations: [],
+    isEditing: true,
+    isNew: true,
+    videoDefinition: { id: '', url: '' }
+  };
+}
+
+const isGlossData = (data: any): data is GlossData => {
+  return data && 
+    typeof data === 'object' && 
+    'gloss' in data &&
+    'createdAt' in data &&
+    'updatedAt' in data &&
+    'senses' in data;
+}
+
+const saveDefinition = async (definition: Definition) => {
+  if (!props.sense?.id) return;
+
+  try {
+    loading.value = true;
+    
+    const response = await api.glossData.updateDefinition(props.sense.id, definition.id || '', {
+      title: definition.title,
+      definition: definition.definition,
+      videoDefinitionId: definition.videoDefinitionId
+    });
+
+    if (response.data && isGlossData(response.data)) {
+      emit('update:glossData', response.data);
+
+      $q.notify({
+        type: 'positive',
+        message: translate('definitionSavedSuccessfully')
+      });
     }
-  })
+  } catch (error) {
+    console.error('Error saving definition:', error);
+    $q.notify({
+      type: 'negative',
+      message: translate('errors.failedToSaveDefinition')
+    });
+  } finally {
+    loading.value = false;
+  }
 }
 
-const removeDefinition = (index: number) => {
-  sense.value.definitions.splice(index, 1)
+const createNewDefinition = async () => {
+  if (!props.sense?.id) return;
+
+  try {
+    loading.value = true;
+
+    const response = await api.glossData.createDefinition(props.sense.id, {
+      title: newDefinition.value.title,
+      definition: newDefinition.value.definition
+    });
+
+    if (response.data && isGlossData(response.data)) {
+      emit('update:glossData', response.data);
+
+      displayCreateNewDefinition.value = false;
+      newDefinition.value = {
+        id: '',
+        title: '',
+        definition: '',
+        videoDefinitionId: '',
+        senseId: props.sense.id,
+        definitionTranslations: [],
+        isEditing: true,
+        isNew: true,
+        videoDefinition: { id: '', url: '' }
+      }
+    }
+  } catch (error) {
+    console.error('Error creating new definition:', error);
+    $q.notify({ 
+      type: 'negative',
+      message: translate('errors.failedToCreateDefinition')
+    });
+  } finally {
+    loading.value = false;
+  }
 }
 
-const addTranslation = (definition: Definition) => {
-  definition.definitionTranslations.push({
-    id: Date.now().toString(),
-    language: 'CATALAN',
-    translation: '',
-    definitionId: definition.id || ''
-  })
+const deleteDefinition = async (definition: Definition) => {
+  if (!props.sense?.id) return;
+
+  try {
+    loading.value = true;
+    const response = await api.glossData.deleteDefinition(props.sense.id, definition.id || '');
+    emit('update:glossData', response.data);
+
+    $q.notify({
+      type: 'positive',
+      message: translate('definitionDeletedSuccessfully')
+    });
+  } catch (error) {
+    console.error('Error deleting definition:', error);
+    $q.notify({
+      type: 'negative',
+      message: translate('errors.failedToDeleteDefinition')
+    });
+  } finally {
+    loading.value = false;
+  }
 }
 
-const removeTranslation = (definition: Definition, index: number) => {
-  definition.definitionTranslations.splice(index, 1)
+const cancelDefinitionEdit = () => {
+  displayCreateNewDefinition.value = false;
+}
+
+const addTranslation = () => {
+  displayCreateNewDefinition.value = false;
+}
+
+const saveTranslation = async (definition: Definition, translation: Translation) => {
+  try {
+    loading.value = true;
+    const response = await api.glossData.editDefinitionTranslation(definition.id || '', translation.id || '', {
+      translation: translation.translation,
+      language: translation.language
+    });
+    
+    if (response.data && isGlossData(response.data)) {
+      emit('update:glossData', response.data);
+      
+      $q.notify({
+        type: 'positive',
+        message: translate('translationSavedSuccessfully')
+      });
+    }
+  } catch (error) {
+    console.error('Error saving translation:', error);
+    $q.notify({
+      type: 'negative',
+      message: translate('errors.failedToSaveTranslation')
+    });
+  } finally {
+    loading.value = false;
+  }
+}
+
+const deleteTranslation = async (definition: Definition, translation: Translation) => {
+  try {
+    loading.value = true;
+    const response = await api.glossData.deleteDefinitionTranslation(translation.id || '');
+    
+    if (response.data && isGlossData(response.data)) {
+      emit('update:glossData', response.data);
+      
+      $q.notify({
+        type: 'positive',
+        message: translate('translationDeletedSuccessfully')
+      });
+    }
+  } catch (error) {
+    console.error('Error deleting translation:', error);
+    $q.notify({
+      type: 'negative',
+      message: translate('errors.failedToDeleteTranslation')
+    });
+  } finally {
+    loading.value = false;
+  }
+}
+
+const cancelTranslationEdit = () => {
+  displayCreateNewDefinition.value = false;
 }
 
 const addSenseTranslation = () => {
-  sense.value.senseTranslations.push({
-    id: Date.now().toString(),
-    language: 'CATALAN',
-    translation: '',
-    senseId: sense.value.id || ''
-  })
+  displayCreateNewDefinition.value = false;
 }
 
-const removeSenseTranslation = (index: number) => {
-  sense.value.senseTranslations.splice(index, 1)
+const removeSenseTranslation = () => {
+  displayCreateNewDefinition.value = false;
 }
 </script>
 
