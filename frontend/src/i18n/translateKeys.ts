@@ -145,6 +145,20 @@ interface TranslateKeys {
   DENIED: string;
   PENDING: string;
   details: string;
+  video: string;
+  NOUN: string;
+  VERB: string;
+  ADJECTIVE: string;
+  ADVERB: string;
+  PRONOUN: string;
+  PREPOSITION: string;
+  CONJUNCTION: string;
+  addAditionalInformation: string;
+  deleteSense: string;
+  editSense: string;
+  editSensesDialog: string;
+  editSingleSenseDialog: string;
+  editSenses: string;  
 }
 
 export default TranslateKeys;

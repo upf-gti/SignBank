@@ -159,5 +159,19 @@ export default {
     failedToDeclineRequest: 'No s\'ha pogut rebutjar la sol·licitud',
     failedToLoadRequests: 'No s\'han pogut carregar les sol·licituds',
     failedToLoadGloss: 'No s\'ha pogut carregar la glossa'
-  }
+  },
+  editSenses: 'Editar accepcions',
+  addAditionalInformation: 'Afegir informació addicional',
+  editSense: 'Editar accepció',
+  editSensesDialog: 'Editar accepcions',
+  editSingleSenseDialog: 'Editar accepció',
+  ADJECTIVE: 'Adjectiu',
+  VERB: 'Verb',
+  NOUN: 'Nom',
+  ADVERB: 'Adverbi',
+  PRONOUN: 'Pronom',
+  PREPOSITION: 'Preposició',
+  CONJUNCTION: 'Conjunció',
+  video: 'Vídeo',
+  
 } as TranslateKeys; 

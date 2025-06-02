@@ -20,6 +20,9 @@
       :edit-mode="editMode"
       :gloss-data="glossData"
       @add-sense="addSense"
+      @update-senses="updateSenses"
+      @update-sense="updateSense"
+      @delete-sense="deleteSense"
     />
     <MainContent
       v-if="!editMode && selectedSense"
@@ -150,6 +153,28 @@ const addSense = (sense: { senseTitle: string, lexicalCategory: string }) => {
     senseTranslations: [],
   })
   selectedSenseId.value = glossData.senses[glossData.senses.length - 1]?.id as string
+}
+
+const updateSenses = (updatedSenses: Sense[]) => {
+  glossData.senses = updatedSenses
+}
+
+const updateSense = (updatedSense: Sense) => {
+  const index = glossData.senses.findIndex(s => s.id === updatedSense.id)
+  if (index !== -1) {
+    glossData.senses[index] = updatedSense
+  }
+}
+
+const deleteSense = (senseId: string) => {
+  const index = glossData.senses.findIndex(s => s.id === senseId)
+  if (index !== -1) {
+    glossData.senses.splice(index, 1)
+    // Update selectedSenseId if the deleted sense was selected
+    if (selectedSenseId.value === senseId) {
+      selectedSenseId.value = glossData.senses[0]?.id || ''
+    }
+  }
 }
 
 const addRelation = (relatedGloss: RelatedGloss) => {
