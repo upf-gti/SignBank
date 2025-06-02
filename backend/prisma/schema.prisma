@@ -89,7 +89,7 @@ model DictionaryEntry {
     isCreatedFromEdit    Boolean       @default(false)
     glossRequest         GlossRequest? @relation(fields: [glossRequestId], references: [id])
     glossRequestId       String?       @unique
-    glossData            GlossData     @relation(fields: [glossDataId], references: [id])
+    glossData            GlossData     @relation(fields: [glossDataId], references: [id], onDelete: Cascade)
     glossDataId          String        @unique
 }
 
@@ -130,7 +130,7 @@ model Sense {
     lexicalCategory   LexicalCategory?
     signVideos        SignVideo[]
     glossDataId       String
-    glossData         GlossData          @relation(fields: [glossDataId], references: [id])
+    glossData         GlossData          @relation(fields: [glossDataId], references: [id], onDelete: Cascade)
     examples          Example[]
     senseTranslations SenseTranslation[]
 }
@@ -139,7 +139,7 @@ model SenseTranslation {
     id          String   @id @default(uuid())
     translation String
     language    Language
-    sense       Sense    @relation(fields: [senseId], references: [id])
+    sense       Sense    @relation(fields: [senseId], references: [id], onDelete: Cascade)
     senseId     String
 }
 
@@ -148,9 +148,9 @@ model Definition {
     title                  String?
     definition             String
     definitionTranslations DefinitionTranslation[]
-    videoDefinition        VideoDefinition         @relation(fields: [videoDefinitionId], references: [id])
+    videoDefinition        VideoDefinition         @relation(fields: [videoDefinitionId], references: [id], onDelete: Cascade)
     videoDefinitionId      String                  @unique
-    sense                  Sense                   @relation(fields: [senseId], references: [id])
+    sense                  Sense                   @relation(fields: [senseId], references: [id], onDelete: Cascade)
     senseId                String
 }
 
@@ -158,7 +158,7 @@ model Example {
     id                  String               @id @default(uuid())
     example             String
     exampleVideoURL     String
-    sense               Sense                @relation(fields: [senseId], references: [id])
+    sense               Sense                @relation(fields: [senseId], references: [id], onDelete: Cascade)
     senseId             String
     exampleTranslations ExampleTranslation[]
 }
@@ -167,7 +167,7 @@ model ExampleTranslation {
     id          String   @id @default(uuid())
     translation String
     language    Language
-    Example     Example? @relation(fields: [exampleId], references: [id])
+    Example     Example? @relation(fields: [exampleId], references: [id], onDelete: Cascade)
     exampleId   String?
 }
 
@@ -181,7 +181,7 @@ model DefinitionTranslation {
     id           String     @id @default(uuid())
     translation  String
     language     Language
-    definition   Definition @relation(fields: [definitionId], references: [id])
+    definition   Definition @relation(fields: [definitionId], references: [id], onDelete: Cascade)
     definitionId String
 }
 
@@ -191,9 +191,9 @@ model SignVideo {
     videos      Video[]
     url         String
     priority    Int       @default(0)
-    videoData   VideoData @relation(fields: [videoDataId], references: [id]) // Using Json type for complex nested data
+    videoData   VideoData @relation(fields: [videoDataId], references: [id], onDelete: Cascade)
     videoDataId String
-    sense       Sense     @relation(fields: [senseId], references: [id])
+    sense       Sense     @relation(fields: [senseId], references: [id], onDelete: Cascade)
     senseId     String
 }
 
@@ -220,7 +220,7 @@ model Video {
     url         String
     angle       String
     priority    Int       @default(0)
-    signVideo   SignVideo @relation(fields: [signVideoId], references: [id])
+    signVideo   SignVideo @relation(fields: [signVideoId], references: [id], onDelete: Cascade)
     signVideoId String
 }
 
@@ -247,7 +247,7 @@ model GlossRequest {
     acceptedById         String?
     deniedBy             User?            @relation("Denier", fields: [deniedById], references: [id])
     deniedById           String?
-    requestedGlossData   GlossData        @relation(fields: [requestedGlossDataId], references: [id])
+    requestedGlossData   GlossData        @relation(fields: [requestedGlossDataId], references: [id], onDelete: Cascade)
     requestedGlossDataId String           @unique
     glossId              String?
     dictionaryEntry      DictionaryEntry?

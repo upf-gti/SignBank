@@ -10,6 +10,44 @@ export const api = {
       return apiClient.get(`/glosses/${id}`)
     }
   },
+  glossData: {
+    get(id: string): Promise<AxiosResponse<any>> {
+      return apiClient.get(`/gloss-data/${id}`)
+    },
+    deleteSense(id: string): Promise<AxiosResponse<any>> {
+      return apiClient.delete(`/gloss-data/senses/${id}`)
+    },
+    deleteDefinition(id: string): Promise<AxiosResponse<any>> {
+      return apiClient.delete(`/gloss-data/definitions/${id}`)
+    },
+    deleteExample(id: string): Promise<AxiosResponse<any>> {
+      return apiClient.delete(`/gloss-data/examples/${id}`)
+    },
+    deleteSignVideo(id: string): Promise<AxiosResponse<any>> {
+      return apiClient.delete(`/gloss-data/sign-videos/${id}`)
+    },
+    deleteVideo(id: string): Promise<AxiosResponse<any>> {
+      return apiClient.delete(`/gloss-data/videos/${id}`)
+    },
+    deleteVideoData(id: string): Promise<AxiosResponse<any>> {
+      return apiClient.delete(`/gloss-data/video-data/${id}`)
+    },
+    deleteSenseTranslation(id: string): Promise<AxiosResponse<any>> {
+      return apiClient.delete(`/gloss-data/sense-translations/${id}`)
+    },
+    deleteDefinitionTranslation(id: string): Promise<AxiosResponse<any>> {
+      return apiClient.delete(`/gloss-data/definition-translations/${id}`)
+    },
+    deleteExampleTranslation(id: string): Promise<AxiosResponse<any>> {
+      return apiClient.delete(`/gloss-data/example-translations/${id}`)
+    },
+    deleteRelatedGloss(id: string): Promise<AxiosResponse<any>> {
+      return apiClient.delete(`/gloss-data/related-glosses/${id}`)
+    },
+    deleteMinimalPair(id: string): Promise<AxiosResponse<any>> {
+      return apiClient.delete(`/gloss-data/minimal-pairs/${id}`)
+    }
+  },
   requests: {
     getAll(): Promise<AxiosResponse<GlossRequest[]>> {
       return apiClient.get('/gloss-requests/my-requests')
