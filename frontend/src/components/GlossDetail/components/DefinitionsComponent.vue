@@ -20,6 +20,7 @@
       >
         <EditableModule
           :allow-edit="allowEdit"
+          :allow-delete="true"
           @save="() => saveDefinition(definition)"
           @cancel="cancelDefinitionEdit"
         >
@@ -33,6 +34,9 @@
               dense
               class="col-12 q-mb-sm"
             />
+            <div v-else class="q-mb-md text-subtitle1">
+              {{ definition.title }}
+            </div>
 
             <!-- Definition Text -->
             <q-input

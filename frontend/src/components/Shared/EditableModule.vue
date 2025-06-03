@@ -1,19 +1,31 @@
 <template>
   <div class="editable-module">
-    <!-- Header with title and edit button -->
+    <!-- Header with title and action buttons -->
     <div class="row items-center justify-between q-mb-sm">
       <slot name="header" />
-      <q-btn
-        v-if="allowEdit && !isEditing"
-        flat
-        round
-        dense
-        icon="edit"
-        color="primary"
-        @click="startEdit"
-      >
-        <q-tooltip>{{ translate('edit') }}</q-tooltip>
-      </q-btn>
+      <div class="row q-gutter-sm" v-if="allowEdit && !isEditing">
+        <q-btn
+          flat
+          round
+          dense
+          icon="edit"
+          color="primary"
+          @click="startEdit"
+        >
+          <q-tooltip>{{ translate('edit') }}</q-tooltip>
+        </q-btn>
+        <q-btn
+          v-if="showDelete"
+          flat
+          round
+          dense
+          icon="delete"
+          color="negative"
+          @click="confirmDelete"
+        >
+          <q-tooltip>{{ translate('delete') }}</q-tooltip>
+        </q-btn>
+      </div>
     </div>
 
     <!-- Content area -->
@@ -44,15 +56,19 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import translate from 'src/utils/translate'
+import { useQuasar } from 'quasar'
 
+const $q = useQuasar()
 const props = defineProps<{
   allowEdit: boolean
   initialEditState?: boolean
+  showDelete?: boolean
 }>()
 
 const emit = defineEmits<{
   (e: 'save'): void
   (e: 'cancel'): void
+  (e: 'delete'): void
 }>()
 
 const isEditing = ref(props.initialEditState || false)
@@ -69,6 +85,26 @@ function saveEdit() {
 function cancelEdit() {
   emit('cancel')
   isEditing.value = false
+}
+
+function confirmDelete() {
+  $q.dialog({
+    title: translate('confirmDelete'),
+    message: translate('confirmDeleteMessage'),
+    persistent: true,
+    ok: {
+      color: 'negative',
+      label: translate('delete'),
+      flat: true
+    },
+    cancel: {
+      color: 'primary',
+      flat: true,
+      label: translate('cancel')
+    }
+  }).onOk(() => {
+    emit('delete')
+  })
 }
 </script>
 
