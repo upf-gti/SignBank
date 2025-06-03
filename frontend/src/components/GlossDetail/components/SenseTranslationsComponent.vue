@@ -1,7 +1,7 @@
 <template>
   <q-card-section>
     <div class="text-h5 q-mb-md row justify-between items-center">
-      {{ translate('senseTranslations') }}
+      {{ translate('glossTranslations') }}
       <q-btn
         v-if="editMode"
         flat
@@ -16,7 +16,9 @@
       <q-item
         v-for="(translation, index) in sense.senseTranslations"
         :key="translation.id || index"
-        class="col-12 col-md-6"
+        class="col-12 col-md-6 q-pa-none"
+        style="min-width: 300px"
+        dense
       >
         <EditableModule        
           :allow-edit="editMode"
@@ -24,20 +26,28 @@
           :show-delete="true"
           :custom-edit-label="translate('editTranslation')"
           :custom-delete-label="translate('deleteTranslation')"
-          class="full-width"
+          class="full-width q-pa-none"
           @save="() => saveTranslation(translation)"
           @cancel="() => cancelTranslation(translation)"
           @delete="() => deleteTranslation(translation)"
         >
           <template #default="{ isEditing }">
-            <q-card bordered flat class=" q-pa-md">
+            <q-card
+              bordered
+              flat
+              class="full-width q-pa-md"
+              style="min-height: 120px"
+            >
               <div class="row justify-between items-center q-mb-sm">
                 <LanguageSelector
                   v-if="isEditing"
                   v-model="translation.language"
                   class="col"
                 />
-                <div v-else class="text-subtitle1">
+                <div
+                  v-else
+                  class="text-subtitle1"
+                >
                   {{ translate(translation.language) }}
                 </div>
               </div>
@@ -50,7 +60,10 @@
                 dense
                 class="col-12"
               />
-              <div v-else class="text-body1">
+              <div
+                v-else
+                class="text-body1"
+              >
                 {{ translation.translation }}
               </div>
             </q-card>

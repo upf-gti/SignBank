@@ -3,9 +3,14 @@
     <div class="row justify-center">
       <div class="col-12 col-md-8 col-lg-6">
         <q-card class="q-pa-lg">
-          <div class="text-h4 q-mb-md">{{ translate('createNewGloss') }}</div>
+          <div class="text-h4 q-mb-md">
+            {{ translate('createNewGloss') }}
+          </div>
           
-          <q-form @submit="onSubmit" class="q-gutter-md">
+          <q-form
+            class="q-gutter-md"
+            @submit="onSubmit"
+          >
             <!-- Gloss Name Input -->
             <q-input
               v-model="form.gloss"
@@ -28,7 +33,9 @@
 
           <!-- Instructions -->
           <div class="text-caption q-mt-lg">
-            <div class="text-weight-bold q-mb-sm">{{ translate('howItWorks') }}:</div>
+            <div class="text-weight-bold q-mb-sm">
+              {{ translate('howItWorks') }}:
+            </div>
             <ol class="q-pl-md">
               <li>{{ translate('step1EnterGlossName') }}</li>
               <li>{{ translate('step2AddDetails') }}</li>

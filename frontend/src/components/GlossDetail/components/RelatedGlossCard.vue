@@ -1,6 +1,10 @@
 <!-- A reusable card component for displaying a related gloss -->
 <template>
-  <q-card bordered flat class="related-gloss-card">
+  <q-card
+    bordered
+    flat
+    class="related-gloss-card"
+  >
     <q-card-section horizontal>
       <q-card-section class="col">
         <div class="row items-center justify-between">

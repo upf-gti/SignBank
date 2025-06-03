@@ -1,5 +1,6 @@
 import { ref, Ref } from 'vue';
-import { RelatedGloss, MinimalPair, SearchResult, RelationType } from 'src/types/gloss';
+import type { RelatedGloss, MinimalPair, SearchResult} from 'src/types/gloss';
+import { RelationType } from 'src/types/gloss';
 import translate from 'src/utils/translate'
 
 export function useGlossRelations(

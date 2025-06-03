@@ -1,6 +1,10 @@
 <!-- A reusable card component for displaying a minimal pair -->
 <template>
-  <q-card bordered flat class="minimal-pair-card">
+  <q-card
+    bordered
+    flat
+    class="minimal-pair-card"
+  >
     <q-card-section horizontal>
       <q-card-section class="col">
         <div class="row items-center justify-between">
@@ -10,7 +14,11 @@
               <q-tooltip>{{ t('clickToView') }}</q-tooltip>
             </div>
             <div class="distinction-section q-mt-sm">
-              <q-icon name="compare_arrows" color="primary" size="sm" />
+              <q-icon
+                name="compare_arrows"
+                color="primary"
+                size="sm"
+              />
               <span class="distinction-text">{{ pair.distinction }}</span>
               <q-tooltip>{{ t('distinctionExplanation') }}</q-tooltip>
             </div>
@@ -62,7 +70,7 @@ async function handleDelete() {
   if (!props.pair.id) return;
   loading.value = true;
   try {
-    await emit('delete', props.pair.id);
+    emit('delete', props.pair.id);
   } finally {
     loading.value = false;
   }

@@ -21,11 +21,11 @@
         <EditableModule
           :allow-edit="allowEdit"
           :show-delete="true"
+          :custom-edit-label="translate('editDefinition')"
+          :custom-delete-label="translate('deleteDefinition')"
           @save="() => saveDefinition(definition)"
           @cancel="cancelDefinitionEdit"
           @delete="() => deleteDefinition(definition)"
-          :custom-edit-label="translate('editDefinition')"
-          :custom-delete-label="translate('deleteDefinition')"
         >
           <template #default="{ isEditing }">
             <!-- Definition Title -->
@@ -38,7 +38,10 @@
               dense
               class="col-12 q-mb-sm"
             />
-            <div v-else class="q-mb-md text-subtitle1">
+            <div
+              v-else
+              class="q-mb-md text-subtitle1"
+            >
               {{ definition.title }}
             </div>
 
@@ -51,21 +54,31 @@
               dense
               class="col-12 q-mb-sm"
             />
-            <div v-else class="q-mb-md">
+            <div
+              v-else
+              class="q-mb-md"
+            >
               {{ definition.definition }}
             </div>
 
             <!-- Definition Translations -->
             <div class="q-mt-md">
-              <div class="text-subtitle2 q-mb-sm">{{ translate('definitionTranslations') }}</div>
-              <div v-for="(translation, tIndex) in definition.definitionTranslations" :key="translation.id || tIndex">
+              <div class="text-subtitle2 q-mb-sm">
+                {{ translate('definitionTranslations') }}
+              </div>
+              <div
+                v-for="(translation, tIndex) in definition.definitionTranslations"
+                :key="translation.id || tIndex"
+              >
                 <EditableModule
                   :allow-edit="allowEdit"
                   @save="() => saveTranslation(definition, translation)"
                   @cancel="cancelTranslationEdit"
                 >
                   <template #header>
-                    <q-chip size="sm">{{ translation.language }}</q-chip>
+                    <q-chip size="sm">
+                      {{ translation.language }}
+                    </q-chip>
                   </template>
                   <template #default="{ isEditing }">
                     <div class="row items-center q-gutter-md">
@@ -82,7 +95,10 @@
                         dense
                         class="col"
                       />
-                      <div v-else class="q-ml-lg">
+                      <div
+                        v-else
+                        class="q-ml-lg"
+                      >
                         {{ translation.translation }}
                       </div>
                     </div>
@@ -132,7 +148,10 @@
               dense
               class="col-12 q-mb-sm"
             />
-            <div v-else class="q-mb-md">
+            <div
+              v-else
+              class="q-mb-md"
+            >
               {{ newDefinition.definition }}
             </div>
           </template>
@@ -141,77 +160,25 @@
     </q-list>
     <!-- Translations of the sense -->
     <div class="column">
-      <div class="text-h5 q-mt-md row justify-between items-center">
-        {{ translate('glossTranslations') }}
-        <q-btn
-          v-if="editMode"
-          flat
-          round
-          icon="add"
-          :label="translate('addGlossTranslation')"
-          @click="addSenseTranslation"
-        />
-      </div>
-      <q-list class="row">
-        <q-item
-          v-for="(translation, index) in senseTranslations"
-          :key="translation.id || index"
-          class="col"
-          style="min-width: 300px"
-        >
-          <q-card
-            bordered
-            flat
-            class="col-12 q-pa-md"
-          >
-            <div class="row justify-between items-center">
-              <LanguageSelector 
-                v-if="editMode"
-                v-model="translation.language"
-                class="col"
-              />
-              <div v-else>
-                {{ translation.language }}
-              </div>
-              <q-btn
-                v-if="editMode"
-                flat
-                round
-                icon="delete"
-                :label="translate('deleteGlossTranslation')"
-                class="q-mx-md"
-                @click="removeSenseTranslation"
-              />
-            </div>
-            <q-input
-              v-if="editMode"
-              v-model="translation.translation"
-              :label="translate('translation')"
-              outlined
-              dense
-              class="col-12 q-mt-sm"
-            />
-            <q-item-label
-              v-else
-              class="text-h6"
-            >
-              {{ translation.translation }}
-            </q-item-label>
-          </q-card>
-        </q-item>
-      </q-list>
+      <SenseTranslationsComponent
+        :sense="sense"
+        :allow-edit="allowEdit"
+        :edit-mode="editMode"
+        @update:gloss-data="emit('update:glossData', $event)"
+      />
     </div>
   </q-card-section>
 </template>
 
 <script setup lang="ts">
-import { Sense, Definition, Translation, SenseTranslation, GlossData } from 'src/types/models';
+import { Sense, Definition, Translation, GlossData } from 'src/types/models';
 import translate from 'src/utils/translate';
 import LanguageSelector from './LanguageSelector.vue'
 import EditableModule from 'src/components/Shared/EditableModule.vue'
 import { ref, computed } from 'vue';
 import { api } from 'src/services/api';
 import { useQuasar } from 'quasar';
+import SenseTranslationsComponent from './SenseTranslationsComponent.vue';
 
 const $q = useQuasar()
 const loading = ref(false)
@@ -238,9 +205,7 @@ const emit = defineEmits<{
   (e: 'update:glossData', glossData: GlossData): void;
 }>();
 
-// Add computed properties for safe access
 const definitions = computed(() => props.sense?.definitions || []);
-const senseTranslations = computed(() => props.sense?.senseTranslations || []);
 
 const addDefinition = () => {
   displayCreateNewDefinition.value = true;
@@ -391,30 +356,6 @@ const saveTranslation = async (definition: Definition, translation: Translation)
     $q.notify({
       type: 'negative',
       message: translate('errors.failedToSaveTranslation')
-    });
-  } finally {
-    loading.value = false;
-  }
-}
-
-const deleteTranslation = async (definition: Definition, translation: Translation) => {
-  try {
-    loading.value = true;
-    const response = await api.glossData.deleteDefinitionTranslation(translation.id || '');
-    
-    if (response.data && isGlossData(response.data)) {
-      emit('update:glossData', response.data);
-      
-      $q.notify({
-        type: 'positive',
-        message: translate('translationDeletedSuccessfully')
-      });
-    }
-  } catch (error) {
-    console.error('Error deleting translation:', error);
-    $q.notify({
-      type: 'negative',
-      message: translate('errors.failedToDeleteTranslation')
     });
   } finally {
     loading.value = false;

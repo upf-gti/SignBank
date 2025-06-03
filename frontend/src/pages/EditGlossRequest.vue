@@ -4,12 +4,23 @@
       class="column full-width justify-center items-center"
       style="height: fit-content"
     >
-      <div v-if="loading" class="column items-center q-pa-md">
-        <q-spinner color="primary" size="3em" />
-        <div class="q-mt-sm">{{ translate('loading') }}</div>
+      <div
+        v-if="loading"
+        class="column items-center q-pa-md"
+      >
+        <q-spinner
+          color="primary"
+          size="3em"
+        />
+        <div class="q-mt-sm">
+          {{ translate('loading') }}
+        </div>
       </div>
 
-      <div v-else-if="error" class="text-negative q-pa-md">
+      <div
+        v-else-if="error"
+        class="text-negative q-pa-md"
+      >
         {{ error }}
       </div>
 

@@ -108,8 +108,7 @@ const saveGloss = async (updatedGlossData: GlossData) => {
 const acceptRequest = async (updatedGlossData: GlossData) => {
   try {
     loading.value = true
-    const requestId = route.params.id as string
-    const response = await api.requests.accept(requestId, updatedGlossData)
+    await api.requests.accept(route.params.id as string, updatedGlossData)
     
     // Show success notification
     $q.notify({
@@ -118,7 +117,9 @@ const acceptRequest = async (updatedGlossData: GlossData) => {
     })
     
     // Redirect to pending requests page
-    router.push('/pending-requests')
+    router.push('/pending-requests').catch((err) => {
+      console.error(err)
+    })
   } catch (err) {
     console.error(err)
     error.value = translate('errors.failedToAcceptRequest')
@@ -146,7 +147,9 @@ const declineRequest = async () => {
     })
     
     // Redirect to pending requests page
-    router.push('/pending-requests')
+    router.push('/pending-requests').catch((err) => {
+      console.error(err)
+    })
   } catch (err) {
     console.error(err)
     error.value = translate('errors.failedToDeclineRequest')

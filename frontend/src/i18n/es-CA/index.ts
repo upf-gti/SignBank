@@ -177,5 +177,12 @@ export default {
   PREPOSITION: 'Preposició',
   CONJUNCTION: 'Conjunció',
   video: 'Vídeo',
+  addSenseTranslation: 'Afegir traducció d\'accepció',
+  editTranslation: 'Editar traducció',
+  deleteTranslation: 'Eliminar traducció',
+  editDefinition: 'Editar definició',
+  editDefinitionTranslation: 'Editar traducció de definició',
+  editExample: 'Editar exemple',
+  editExampleTranslation: 'Editar traducció d\'exemple',
   
 } as TranslateKeys; 

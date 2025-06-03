@@ -33,7 +33,7 @@
       rounded
     >
       {{ error }}
-      <template v-slot:action>
+      <template #action>
         <q-btn
           flat
           color="white"
@@ -172,7 +172,9 @@
     <q-dialog v-model="showRelationTypeDialog">
       <q-card class="relation-type-dialog">
         <q-card-section>
-          <div class="text-h6">{{ t('selectRelationType') }}</div>
+          <div class="text-h6">
+            {{ t('selectRelationType') }}
+          </div>
         </q-card-section>
 
         <q-card-section>
@@ -188,16 +190,15 @@
             :disable="loading"
             option-value="value"
             option-label="label"
-          >            
-          </q-select>
+          />
         </q-card-section>
 
         <q-card-actions align="right">
           <q-btn
+            v-close-popup
             flat
             :label="t('cancel')"
             color="primary"
-            v-close-popup
             :disable="loading"
           />
           <q-btn
@@ -215,7 +216,9 @@
     <q-dialog v-model="showDistinctionDialog">
       <q-card class="distinction-dialog">
         <q-card-section>
-          <div class="text-h6">{{ t('enterDistinction') }}</div>
+          <div class="text-h6">
+            {{ t('enterDistinction') }}
+          </div>
         </q-card-section>
 
         <q-card-section>
@@ -228,7 +231,7 @@
             :disable="loading"
             :rules="[val => !!val || t('distinctionRequired')]"
           >
-            <template v-slot:hint>
+            <template #hint>
               {{ t('distinctionHint') }}
             </template>
           </q-input>
@@ -236,10 +239,10 @@
 
         <q-card-actions align="right">
           <q-btn
+            v-close-popup
             flat
             :label="t('cancel')"
             color="primary"
-            v-close-popup
             :disable="loading"
           />
           <q-btn
@@ -263,7 +266,6 @@ import { useGlossRelations } from 'src/composables/useGlossRelations';
 import GlossSearch from './GlossSearch.vue';
 import RelatedGlossCard from './RelatedGlossCard.vue';
 import MinimalPairCard from './MinimalPairCard.vue';
-import { RelationType } from 'src/types/gloss';
 import type { RelatedGloss, MinimalPair, SearchResult } from 'src/types/gloss';
 
 const t = (key: string) => translate(key);
@@ -310,7 +312,9 @@ const {
 );
 
 function viewGloss(glossId: string) {
-  router.push(`/gloss/${glossId}`);
+  router.push(`/gloss/${glossId}`).catch((err: any) => {
+    console.error(err)
+  })
 }
 
 async function handleRelationSelect(gloss: SearchResult) {

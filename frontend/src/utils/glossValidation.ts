@@ -1,5 +1,4 @@
 import type { GlossData, Sense, Definition, Example, SignVideo} from 'src/types/models';
-import { VideoData } from 'src/types/models';
 import translate from 'src/utils/translate';
 
 export interface ValidationError {

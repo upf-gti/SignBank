@@ -1,5 +1,4 @@
-import { Language, LexicalCategory, Hand, RelationType, RequestStatus } from './models'
-import type { GlossData } from './models'
+import type { GlossData , Language, Hand, RequestStatus } from './models'
 
 export type WordStatus = 'PUBLISHED' | 'DRAFT' | 'PENDING';
 

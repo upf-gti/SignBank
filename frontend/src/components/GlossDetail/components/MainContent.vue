@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { Sense, SignVideo } from 'src/types/models'
+import { Sense } from 'src/types/models'
 import GlossVideoComponent from './GlossVideoComponent.vue'
 const { selectedSense } = defineProps<{
   selectedSense: Sense

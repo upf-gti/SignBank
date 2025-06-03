@@ -1,40 +1,43 @@
 <template>
-  <q-form class="editable-module" @submit="saveEdit">
+  <q-form
+    class="editable-module"
+    @submit="saveEdit"
+  >
     <!-- Header with title and action buttons -->
     <div class="row reverse no-wrap">
+      <div class="row items-start justify-between q-mb-sm q-gutter-sm">
+        <slot name="header" />
+        <div
+          v-if="allowEdit && !isEditing"
+          class="column items-end q-gutter-sm"
+        >
+          <q-btn
+            outline
+            icon="edit"
+            color="primary"
+            :label="customEditLabel || translate('edit')"
+            @click="startEdit"
+          >
+            <q-tooltip>{{ translate('edit') }}</q-tooltip>
+          </q-btn>
+          <q-btn
+            v-if="showDelete"
+            outline
+            icon="delete"
+            color="negative"
+            :label="customDeleteLabel || translate('delete')"
+            @click="confirmDelete"
+          >
+            <q-tooltip>{{ translate('delete') }}</q-tooltip>
+          </q-btn>
+        </div>
+      </div>
 
-    <div class="row items-start justify-between q-mb-sm">
-      <slot name="header" />
-      <div class="column items-end q-gutter-sm" v-if="allowEdit && !isEditing">
-        <q-btn
-          outline
-          icon="edit"
-          color="primary"
-          :label="customEditLabel || translate('edit')"
-          @click="startEdit"
-          class="full-width"
-        >
-          <q-tooltip>{{ translate('edit') }}</q-tooltip>
-        </q-btn>
-        <q-btn
-          v-if="showDelete"
-          outline
-          icon="delete"
-          color="negative"
-          :label="customDeleteLabel || translate('delete')"
-          @click="confirmDelete"
-          class="full-width"
-        >
-          <q-tooltip>{{ translate('delete') }}</q-tooltip>
-        </q-btn>
+      <!-- Content area -->
+      <div class="editable-content col">
+        <slot :is-editing="isEditing" />
       </div>
     </div>
-
-    <!-- Content area -->
-    <div class="editable-content col">
-      <slot :is-editing="isEditing" />
-    </div>
-  </div>
 
     <!-- Action buttons when editing -->
     <div

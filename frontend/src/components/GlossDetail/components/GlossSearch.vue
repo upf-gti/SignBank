@@ -6,21 +6,26 @@
   >
     <q-card class="column no-wrap">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6">{{ title }}</div>
+        <div class="text-h6">
+          {{ title }}
+        </div>
         <q-space />
         <q-btn
+          v-close-popup
           icon="close"
           flat
           round
           dense
-          v-close-popup
         />
       </q-card-section>
 
       <q-card-section class="row q-pa-md">
         <!-- Left Sidebar -->
         <div class="col-12 col-md-3 q-pr-md">
-          <q-card flat bordered>
+          <q-card
+            flat
+            bordered
+          >
             <SearchInput
               :model-value="searchQuery"
               @update:model-value="updateSearchQuery"

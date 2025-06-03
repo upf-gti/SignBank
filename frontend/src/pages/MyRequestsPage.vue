@@ -36,13 +36,32 @@
         class="text-primary q-mb-md"
         align="justify"
       >
-        <q-tab name="not_sent" icon="edit" :label="' ' + translate('notSent') + ' (' + filteredRequests.not_sent.length + ')'"/>
-        <q-tab name="pending" icon="pending" :label="' ' + translate('pending') + ' (' + filteredRequests.pending.length + ')'"/>
-        <q-tab name="accepted" icon="check_circle" :label="' ' + translate('accepted') + ' (' + filteredRequests.accepted.length + ')'"/>
-        <q-tab name="denied" icon="cancel" :label="' ' + translate('denied') + ' (' + filteredRequests.denied.length + ')'"/>
+        <q-tab
+          name="not_sent"
+          icon="edit"
+          :label="' ' + translate('notSent') + ' (' + filteredRequests.not_sent.length + ')'"
+        />
+        <q-tab
+          name="pending"
+          icon="pending"
+          :label="' ' + translate('pending') + ' (' + filteredRequests.pending.length + ')'"
+        />
+        <q-tab
+          name="accepted"
+          icon="check_circle"
+          :label="' ' + translate('accepted') + ' (' + filteredRequests.accepted.length + ')'"
+        />
+        <q-tab
+          name="denied"
+          icon="cancel"
+          :label="' ' + translate('denied') + ' (' + filteredRequests.denied.length + ')'"
+        />
       </q-tabs>
 
-      <q-tab-panels v-model="activeTab" animated>
+      <q-tab-panels
+        v-model="activeTab"
+        animated
+      >
         <q-tab-panel 
           v-for="(statusRequests, status) in filteredRequests"
           :key="status"
@@ -74,7 +93,10 @@
                   <div class="text-caption q-mb-sm">
                     {{ translate('requested') }}: {{ new Date(request.createdAt).toLocaleDateString() }}
                   </div>
-                  <div v-if="request.status === 'DENIED' && request.denyReason" class="text-caption text-negative q-mb-sm">
+                  <div
+                    v-if="request.status === 'DENIED' && request.denyReason"
+                    class="text-caption text-negative q-mb-sm"
+                  >
                     {{ translate('reason') }}: {{ request.denyReason }}
                   </div>
                 </q-card-section>

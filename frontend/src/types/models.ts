@@ -1,5 +1,4 @@
-import { Gloss } from "./api"
-import { RelatedGloss, MinimalPair } from "./gloss"
+import type { RelatedGloss, MinimalPair } from "./gloss"
 
 export type WordStatus = 'PUBLISHED' | 'DRAFT' | 'PENDING';
 

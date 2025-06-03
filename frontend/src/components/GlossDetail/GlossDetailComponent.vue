@@ -30,7 +30,7 @@
       v-model="selectedSense"
       :gloss-data="glossData"
       :edit-mode="editMode"
-      @update:glossData="handleGlossDataUpdate"
+      @update:gloss-data="handleGlossDataUpdate"
     />
   </q-card>
 </template>
@@ -43,7 +43,6 @@ import { ref, computed } from 'vue'
 import SenseSelector from './components/SenseSelector.vue';
 import MainContent from './components/MainContent.vue';
 import MoreContentComponent from './components/MoreContentComponent.vue';
-import { api } from 'src/services/api';
 import { validateGloss } from 'src/utils/glossValidation';
 import { useQuasar } from 'quasar';
 import translate from 'src/utils/translate'
@@ -141,20 +140,5 @@ const handleGlossDataUpdate = (updatedGlossData: GlossData) => {
   Object.assign(glossData, updatedGlossData)
 }
 
-const addRelation = (relatedGloss: RelatedGloss) => {
-  try { 
-    glossData.relationsAsSource.push(relatedGloss);
-  } catch (error) {
-    console.error('Error adding relation:', error);
-  }
-};
-
-const addMinimalPair = (minimalPair: MinimalPair) => {
-  try {
-    glossData.minimalPairsAsSource.push(minimalPair);
-  } catch (error) {
-    console.error('Error adding minimal pair:', error);
-  }
-};
 
 </script>

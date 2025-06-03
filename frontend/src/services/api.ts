@@ -2,13 +2,8 @@ import type { AxiosResponse } from "axios"
 import { apiClient } from "src/boot/axios"
 import type { GlossRequest, GlossData, Definition, Translation } from 'src/types/models'
 import type { SearchParams } from "./search.service"
-import axios from 'axios'
 import type {
   CreateGlossRequestDto,
-  UpdateDefinitionDto,
-  UpdateExampleDto,
-  UpdateVideoDto,
-  UpdateTranslationDto,
   GlossRequestResponse,
   GlossRequestDetailResponse,
   UpdateSenseDto,

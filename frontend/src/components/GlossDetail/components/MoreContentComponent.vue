@@ -8,27 +8,33 @@
       align="justify"
       narrow-indicator
     >
-      <q-tab name="definitions" :label="translate('definitions')" />
-      <q-tab name="translations" :label="translate('translations')" />
-      <q-tab name="videos" :label="translate('videos')" />
-      <q-tab name="examples" :label="translate('examples')" />
-      <q-tab name="related" :label="translate('relatedGlosses')" />
+      <q-tab
+        name="definitions"
+        :label="translate('definitions')"
+      />
+      <q-tab
+        name="videos"
+        :label="translate('videos')"
+      />
+      <q-tab
+        name="examples"
+        :label="translate('examples')"
+      />
+      <q-tab
+        name="related"
+        :label="translate('relatedGlosses')"
+      />
     </q-tabs>
 
-    <q-tab-panels v-model="selectedContent" animated>
+    <q-tab-panels
+      v-model="selectedContent"
+      animated
+    >
       <q-tab-panel name="definitions">
         <DefinitionsComponent
           v-model:sense="sense"
           :edit-mode="editMode"
           :allow-edit="editMode"
-          @update:gloss-data="updateGlossData"
-        />
-      </q-tab-panel>
-
-      <q-tab-panel name="translations">
-        <SenseTranslationsComponent
-          :sense="sense"
-          :edit-mode="editMode"
           @update:gloss-data="updateGlossData"
         />
       </q-tab-panel>
@@ -66,12 +72,10 @@ import translate from 'src/utils/translate';
 import { ref } from 'vue';
 import { Sense } from 'src/types/models';
 import type { GlossData } from 'src/types/models';
-import type { RelatedGloss, MinimalPair } from 'src/types/gloss';
 import ExamplesComponent from './ExamplesComponent.vue';
 import VideosComponent from './VideosComponent.vue';
 import RelatedGlosses from './RelatedGlosses.vue';
 import DefinitionsComponent from './DefinitionsComponent.vue';
-import SenseTranslationsComponent from './SenseTranslationsComponent.vue';
 
 const selectedContent = ref<string>('definitions')
 const sense = defineModel<Sense>({ required: true })

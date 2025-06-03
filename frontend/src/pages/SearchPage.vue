@@ -3,7 +3,6 @@ import { ref, computed, onMounted } from 'vue';
 import { searchService, type SearchParams, type SearchResponse } from 'src/services/search.service';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
-import translate from 'src/utils/translate';
 import SearchFilters from 'src/components/Search/SearchFilters.vue';
 import SearchResults from 'src/components/Search/SearchResults.vue';
 import type { FilterInputs } from 'src/components/Search/types';
@@ -12,7 +11,6 @@ const $q = useQuasar();
 const router = useRouter();
 const pageHeight = ref(0);
 
-const t = (key: string) => translate(key);
 // Search state
 const searchQuery = ref('');
 const searchResults = ref<SearchResponse | null>(null);
@@ -94,7 +92,9 @@ async function performSearch() {
 }
 
 function viewGlossDetails(glossId: string) {
-  router.push(`/gloss/${glossId}`);
+  router.push(`/gloss/${glossId}`).catch((err: any) => {
+    console.error(err)
+  })
 }
 
 // Lifecycle

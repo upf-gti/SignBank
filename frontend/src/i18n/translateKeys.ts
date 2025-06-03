@@ -163,6 +163,13 @@ interface TranslateKeys {
   editSensesDialog: string;
   editSingleSenseDialog: string;
   editSenses: string;  
+  editTranslation: string;
+  deleteTranslation: string;
+  editDefinition: string;
+  editDefinitionTranslation: string;
+  editExample: string;
+  editExampleTranslation: string;
+  addSenseTranslation: string;
 }
 
 export default TranslateKeys;

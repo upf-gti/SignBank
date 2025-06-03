@@ -72,11 +72,17 @@
       <q-dialog v-model="editSensesDialog">
         <q-card style="min-width: 500px">
           <q-card-section>
-            <div class="text-h6">{{ translate('editSenses') }}</div>
+            <div class="text-h6">
+              {{ translate('editSenses') }}
+            </div>
           </q-card-section>
 
           <q-card-section>
-            <div v-for="(sense, index) in localSenses" :key="sense.id || index" class="row items-center q-mb-sm">
+            <div
+              v-for="(sense, index) in localSenses"
+              :key="sense.id || index"
+              class="row items-center q-mb-sm"
+            >
               <div class="col">
                 {{ (sense.senseTitle || glossData.gloss) + ' (' + translate(sense.lexicalCategory) + ')' }}
               </div>
@@ -118,8 +124,16 @@
           </q-card-section>
 
           <q-card-actions align="right">
-            <q-btn flat :label="translate('cancel')" @click="cancelEditSenses" />
-            <q-btn flat :label="translate('save')" @click="saveEditSenses" />
+            <q-btn
+              flat
+              :label="translate('cancel')"
+              @click="cancelEditSenses"
+            />
+            <q-btn
+              flat
+              :label="translate('save')"
+              @click="saveEditSenses"
+            />
           </q-card-actions>
         </q-card>
       </q-dialog>
@@ -128,7 +142,9 @@
       <q-dialog v-model="deleteConfirmDialog">
         <q-card>
           <q-card-section>
-            <div class="text-h6">{{ translate('confirmDelete') }}</div>
+            <div class="text-h6">
+              {{ translate('confirmDelete') }}
+            </div>
           </q-card-section>
 
           <q-card-section>
@@ -136,8 +152,17 @@
           </q-card-section>
 
           <q-card-actions align="right">
-            <q-btn flat :label="translate('cancel')" v-close-popup />
-            <q-btn flat color="negative" :label="translate('delete')" @click="handleDeleteConfirm" />
+            <q-btn
+              v-close-popup
+              flat
+              :label="translate('cancel')"
+            />
+            <q-btn
+              flat
+              color="negative"
+              :label="translate('delete')"
+              @click="handleDeleteConfirm"
+            />
           </q-card-actions>
         </q-card>
       </q-dialog>
@@ -146,7 +171,9 @@
       <q-dialog v-model="editSingleSenseDialog">
         <q-card style="width: 500px">
           <q-card-section>
-            <div class="text-h6">{{ translate('editSense') }}</div>
+            <div class="text-h6">
+              {{ translate('editSense') }}
+            </div>
           </q-card-section>
           <q-form @submit.prevent.stop="saveSingleSense">
             <q-card-section>
