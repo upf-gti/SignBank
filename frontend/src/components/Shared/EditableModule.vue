@@ -1,27 +1,29 @@
 <template>
-  <div class="editable-module">
+  <q-form class="editable-module" @submit="saveEdit">
     <!-- Header with title and action buttons -->
-    <div class="row items-center justify-between q-mb-sm">
+    <div class="row reverse no-wrap">
+
+    <div class="row items-start justify-between q-mb-sm">
       <slot name="header" />
-      <div class="row q-gutter-sm" v-if="allowEdit && !isEditing">
+      <div class="column items-end q-gutter-sm" v-if="allowEdit && !isEditing">
         <q-btn
-          flat
-          round
-          dense
+          outline
           icon="edit"
           color="primary"
+          :label="customEditLabel || translate('edit')"
           @click="startEdit"
+          class="full-width"
         >
           <q-tooltip>{{ translate('edit') }}</q-tooltip>
         </q-btn>
         <q-btn
           v-if="showDelete"
-          flat
-          round
-          dense
+          outline
           icon="delete"
           color="negative"
+          :label="customDeleteLabel || translate('delete')"
           @click="confirmDelete"
+          class="full-width"
         >
           <q-tooltip>{{ translate('delete') }}</q-tooltip>
         </q-btn>
@@ -29,9 +31,10 @@
     </div>
 
     <!-- Content area -->
-    <div class="editable-content">
+    <div class="editable-content col">
       <slot :is-editing="isEditing" />
     </div>
+  </div>
 
     <!-- Action buttons when editing -->
     <div
@@ -47,10 +50,10 @@
       <q-btn
         color="primary"
         :label="translate('save')"
-        @click="saveEdit"
+        type="submit"
       />
     </div>
-  </div>
+  </q-form>
 </template>
 
 <script setup lang="ts">
@@ -63,6 +66,8 @@ const props = defineProps<{
   allowEdit: boolean
   initialEditState?: boolean
   showDelete?: boolean
+  customEditLabel?: string
+  customDeleteLabel?: string
 }>()
 
 const emit = defineEmits<{

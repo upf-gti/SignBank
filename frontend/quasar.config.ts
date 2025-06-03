@@ -103,12 +103,13 @@ export default defineConfig(() => {
     devServer: {
       port: 443,
       host: '0.0.0.0',
+      allowedHosts: [process.env.BASE_URL || 'localhost'],
       /* headers: {
         "Access-Control-Allow-Origin": "*",
       }, */
       hmr: {
         clientPort: 443,
-        host: 'localhost',
+        host: process.env.BASE_URL || 'localhost',
         path: '/ws',
         protocol: 'wss'
       }

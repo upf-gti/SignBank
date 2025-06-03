@@ -12,7 +12,7 @@ export class TypesenseService implements OnModuleInit {
   constructor(private prisma: PrismaService) {
     this.client = new Typesense.Client({
       nodes: [{
-        host: process.env.TYPESENSE_HOST || 'localhost',
+        host: process.env.TYPESENSE_HOST || 'typesense',
         port: parseInt(process.env.TYPESENSE_PORT || '8108'),
         protocol: 'http'
       }],

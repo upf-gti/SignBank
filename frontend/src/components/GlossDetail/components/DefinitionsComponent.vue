@@ -20,12 +20,16 @@
       >
         <EditableModule
           :allow-edit="allowEdit"
-          :allow-delete="true"
+          :show-delete="true"
           @save="() => saveDefinition(definition)"
           @cancel="cancelDefinitionEdit"
+          @delete="() => deleteDefinition(definition)"
+          :custom-edit-label="translate('editDefinition')"
+          :custom-delete-label="translate('deleteDefinition')"
         >
           <template #default="{ isEditing }">
             <!-- Definition Title -->
+
             <q-input
               v-if="isEditing"
               v-model="definition.title"
@@ -305,6 +309,10 @@ const createNewDefinition = async () => {
     });
 
     if (response.data && isGlossData(response.data)) {
+      $q.notify({
+        type: 'positive',
+        message: translate('definitionCreatedSuccessfully')
+      });
       emit('update:glossData', response.data);
 
       displayCreateNewDefinition.value = false;
