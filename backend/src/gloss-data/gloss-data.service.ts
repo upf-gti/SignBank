@@ -296,15 +296,121 @@ export class GlossDataService {
     return this.getGlossData(sense.glossDataId);
   }
 
-  // Example deletion - will cascade delete translations
-  async deleteExample(id: string) {
-    try {
-      return await this.prisma.example.delete({
-        where: { id },
-      });
-    } catch (error) {
-      throw new NotFoundException(`Example with ID ${id} not found or could not be deleted`);
+  async createExample(senseId: string, data: { example: string, exampleVideoURL: string }) {
+    const sense = await this.prisma.sense.findUnique({
+      where: { id: senseId }
+    });
+
+    if (!sense) {
+      throw new NotFoundException('Sense not found');
     }
+
+    await this.prisma.example.create({
+      data: {
+        example: data.example,
+        exampleVideoURL: data.exampleVideoURL,
+        senseId: senseId
+      }
+    });
+
+    return this.getGlossData(sense.glossDataId);
+  }
+
+  async updateExample(id: string, data: { example: string, exampleVideoURL: string }) {
+    const example = await this.prisma.example.findUnique({
+      where: { id },
+      include: { sense: true }
+    });
+
+    if (!example) {
+      throw new NotFoundException('Example not found');
+    }
+
+    await this.prisma.example.update({
+      where: { id },
+      data: {
+        example: data.example,
+        exampleVideoURL: data.exampleVideoURL
+      }
+    });
+
+    return this.getGlossData(example.sense.glossDataId);
+  }
+
+  async deleteExample(id: string) {
+    const example = await this.prisma.example.findUnique({
+      where: { id },
+      include: { sense: true }
+    });
+
+    if (!example) {
+      throw new NotFoundException('Example not found');
+    }
+
+    await this.prisma.example.delete({
+      where: { id }
+    });
+
+    return this.getGlossData(example.sense.glossDataId);
+  }
+
+  async createExampleTranslation(exampleId: string, data: { translation: string, language: Language }) {
+    const example = await this.prisma.example.findUnique({
+      where: { id: exampleId },
+      include: { sense: true }
+    });
+
+    if (!example) {
+      throw new NotFoundException('Example not found');
+    }
+
+    await this.prisma.exampleTranslation.create({
+      data: {
+        translation: data.translation,
+        language: data.language,
+        exampleId: exampleId
+      }
+    });
+
+    return this.getGlossData(example.sense.glossDataId);
+  }
+
+  async updateExampleTranslation(id: string, data: { translation: string, language: Language }) {
+    const translation = await this.prisma.exampleTranslation.findUnique({
+      where: { id },
+      include: { Example: { include: { sense: true } } }
+    });
+
+    if (!translation) {
+      throw new NotFoundException('Translation not found');
+    }
+
+    await this.prisma.exampleTranslation.update({
+      where: { id },
+      data: {
+        translation: data.translation,
+        language: data.language
+      }
+    });
+
+    return this.getGlossData(translation.Example.sense.glossDataId);
+  }
+
+  async deleteExampleTranslation(id: string) {
+    const translation = await this.prisma.exampleTranslation.findUnique({
+      where: { id },
+      include: { Example: { include: { sense: true } } }
+    });
+
+    if (!translation) {
+      throw new NotFoundException('Translation not found');
+    }
+
+    await this.prisma.exampleTranslation.delete({
+      where: { id }
+    });
+
+    return this.getGlossData(translation.Example.sense.glossDataId);
   }
 
   // SignVideo deletion - will cascade delete videos and videoData
@@ -375,17 +481,6 @@ export class GlossDataService {
       });
     } catch (error) {
       throw new NotFoundException(`DefinitionTranslation with ID ${id} not found or could not be deleted`);
-    }
-  }
-
-  // ExampleTranslation deletion
-  async deleteExampleTranslation(id: string) {
-    try {
-      return await this.prisma.exampleTranslation.delete({
-        where: { id },
-      });
-    } catch (error) {
-      throw new NotFoundException(`ExampleTranslation with ID ${id} not found or could not be deleted`);
     }
   }
 

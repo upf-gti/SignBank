@@ -49,7 +49,7 @@
 
       <q-tab-panel name="examples">
         <ExamplesComponent
-          v-model="sense"
+          :sense="sense"
           :edit-mode="editMode"
           @update:gloss-data="updateGlossData"
         />

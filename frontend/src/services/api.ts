@@ -1,6 +1,6 @@
 import type { AxiosResponse } from "axios"
 import { apiClient } from "src/boot/axios"
-import type { GlossRequest, GlossData, Definition, Translation } from 'src/types/models'
+import type { GlossRequest, GlossData, Definition, Translation, Language } from 'src/types/models'
 import type { SearchParams } from "./search.service"
 import type {
   CreateGlossRequestDto,
@@ -35,9 +35,6 @@ export const api = {
     deleteDefinitionTranslation(id: string): Promise<AxiosResponse<any>> {
       return apiClient.delete(`/gloss-data/definition-translations/${id}`)
     },
-    deleteExample(id: string): Promise<AxiosResponse<any>> {
-      return apiClient.delete(`/gloss-data/examples/${id}`)
-    },
     deleteSignVideo(id: string): Promise<AxiosResponse<any>> {
       return apiClient.delete(`/gloss-data/sign-videos/${id}`)
     },
@@ -49,9 +46,6 @@ export const api = {
     },
     deleteSenseTranslation(id: string): Promise<AxiosResponse<any>> {
       return apiClient.delete(`/gloss-data/sense-translations/${id}`)
-    },
-    deleteExampleTranslation(id: string): Promise<AxiosResponse<any>> {
-      return apiClient.delete(`/gloss-data/example-translations/${id}`)
     },
     deleteRelatedGloss(id: string): Promise<AxiosResponse<any>> {
       return apiClient.delete(`/gloss-data/related-glosses/${id}`)
@@ -88,8 +82,25 @@ export const api = {
     updateSenseTranslation: (translationId: string, data: { translation: string, language: string }) =>
       apiClient.patch<GlossData>(`/gloss-data/sense-translations/${translationId}`, data),
 
-    deleteSenseTranslation: (id: string) =>
-      apiClient.delete<GlossData>(`/gloss-data/sense-translations/${id}`),
+    // Examples
+    createExample: (senseId: string, data: { example: string, exampleVideoURL: string }) =>
+      apiClient.post<GlossData>(`/gloss-data/senses/${senseId}/examples`, data),
+
+    updateExample: (exampleId: string, data: { example: string, exampleVideoURL: string }) =>
+      apiClient.patch<GlossData>(`/gloss-data/examples/${exampleId}`, data),
+
+    deleteExample: (id: string) =>
+      apiClient.delete<GlossData>(`/gloss-data/examples/${id}`),
+
+    // Example Translations
+    createExampleTranslation: (exampleId: string, data: { translation: string, language: Language }) =>
+      apiClient.post<GlossData>(`/gloss-data/examples/${exampleId}/translations`, data),
+
+    updateExampleTranslation: (translationId: string, data: { translation: string, language: Language }) =>
+      apiClient.patch<GlossData>(`/gloss-data/example-translations/${translationId}`, data),
+
+    deleteExampleTranslation: (id: string) =>
+      apiClient.delete<GlossData>(`/gloss-data/example-translations/${id}`),
   },
   requests: {
     getAll(): Promise<AxiosResponse<GlossRequest[]>> {
@@ -124,10 +135,14 @@ export const api = {
     return apiClient.post('/auth/refresh', body)
   },
   videos: {
-    upload(file: File): Promise<AxiosResponse<{ url: string }>> {
-      const formData = new FormData()
-      formData.append('video', file)
-      return apiClient.post('/videos/upload', formData)
+    upload: (file: File, type: 'gloss' | 'example' = 'gloss'): Promise<AxiosResponse<{ url: string }>> => {
+      const formData = new FormData();
+      formData.append('video', file);
+      formData.append('type', type);
+      return apiClient.post('/videos/upload', formData);
+    },
+    delete: (videoUrl: string): Promise<AxiosResponse<void>> => {
+      return apiClient.delete(`/videos/${encodeURIComponent(videoUrl)}`);
     },
     search(query: string): Promise<AxiosResponse<any>> {
       return apiClient.get(`/videos/search`, { params: { q: query } })

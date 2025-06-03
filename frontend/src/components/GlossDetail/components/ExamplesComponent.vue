@@ -1,159 +1,336 @@
 <template>
-  <q-card-section class="column">
+  <q-card-section>
     <div class="text-h5 q-mb-md row justify-between items-center">
       {{ translate('examples') }}
+      <q-btn
+        v-if="editMode"
+        flat
+        round
+        icon="add"
+        :label="translate('addExample')"
+        @click="addExample"
+      />
     </div>
-    <q-list
-      class="column"
-      separator
-    >
+
+    <q-list class="row q-col-gutter-md">
       <q-item
-        v-for="(example, index) in sense.examples"
-        :key="example.id"
-        class="column q-mb-lg"
+        v-for="(example, index) in examples"
+        :key="example.id || index"
+        class="col-12 q-pa-none"
+        dense
       >
-        <div class="row justify-between no-wrap items-start full-width no-wrap">
-          <q-input
-            v-if="editMode"
-            v-model="example.example"
-            :label="translate('example')"
-            outlined            
-            dense
-            class="col q-mb-sm"
-          />
-          <q-item-label
-            v-else
-            class="q-pb-md text-h6 text-weight-bold"
-          >
-            {{ example.example }}
-          </q-item-label>
-          <q-btn
-            v-if="editMode"
-            outline
-            icon="delete"
-            :label="translate('deleteExample')"
-            class="q-mx-sm"
-            color="negative"
-            @click="removeExample(index)"
-          />
-        </div>
-        <div class="row justify-between no-wrap items-start full-width">
-          <div class="col">
-            <div
-              v-for="(translation, tIndex) in example.exampleTranslations"
-              :key="translation.id"
-              class="row justify-between no-wrap items-center q-mb-sm"
+        <EditableModule
+          :allow-edit="editMode"
+          :initial-edit-state="example.isNew as boolean"
+          :show-delete="true"
+          :custom-edit-label="translate('editExample')"
+          :custom-delete-label="translate('deleteExample')"
+          class="full-width q-pa-none"
+          @save="() => saveExample(example)"
+          @cancel="() => cancelExample(example)"
+          @delete="() => deleteExample(example)"
+        >
+          <template #default="{ isEditing }">
+            <q-card
+              bordered
+              flat
+              class="full-width q-pa-md"
+              style="min-height: 120px"
             >
-              <div class="col">
-                <LanguageSelector
-                  v-if="editMode"
-                  v-model="translation.language"
-                  class="q-mb-sm"
+              <!-- Example Text -->
+              <q-input
+                v-if="isEditing"
+                v-model="example.example"
+                :label="translate('example')"
+                outlined
+                dense
+                class="col-12 q-mb-sm"
+              />
+              <div
+                v-else
+                class="text-h6 q-mb-md"
+              >
+                {{ example.example }}
+              </div>
+
+              <!-- Example Video -->
+              <div class="q-mb-md">
+                <UploadVideoComponent
+                  v-if="isEditing && example.exampleVideoURL === ''"
+                  v-model:show-dialog="showUploadDialog"
+                  video-type="example"
+                  @upload-complete="(url) => uploadVideo(example, url)"
+                  :custom-label="translate('addExampleVideo')"
                 />
-                <div v-else>
-                  <q-chip size="sm">
-                    {{ translation.language }}
-                  </q-chip>
+                <div v-else class="row justify-end q-gutter-sm">
+                  <q-btn
+                    v-if="example.exampleVideoURL"
+                    outline
+                    :label="translate('seeExampleVideo')"
+                    icon="play_arrow"
+                    :disable="!example.exampleVideoURL"
+                    @click="openVideo(example)"
+                  />
+                  <q-btn v-else-if="isEditing"
+                    outline
+                    :label="translate('deleteExampleVideo')"
+                    icon="delete"
+                    @click="deleteExampleVideo(example)"
+                  />
                 </div>
+              </div>
+
+              <!-- Example Translations -->
+              <div class="text-subtitle1 q-mb-sm">{{ translate('translations') }}</div>
+              <div
+                v-for="(translation, tIndex) in example.exampleTranslations"
+                :key="translation.id || tIndex"
+                class="q-mb-sm"
+              >
+                <div class="row items-center q-gutter-sm">
+                  <LanguageSelector
+                    v-if="isEditing"
+                    v-model="translation.language"
+                    class="col"
+                  />
+                  <div
+                    v-else
+                    class="text-subtitle2"
+                  >
+                    {{ translate(translation.language) }}
+                  </div>
+
+                  <q-btn
+                    v-if="isEditing"
+                    flat
+                    round
+                    dense
+                    icon="delete"
+                    @click="removeTranslation(example, tIndex)"
+                  />
+                </div>
+
                 <q-input
-                  v-if="editMode"
+                  v-if="isEditing"
                   v-model="translation.translation"
                   :label="translate('translation')"
                   outlined
                   dense
+                  class="col-12 q-mt-sm"
                 />
-                <div v-else>
+                <div
+                  v-else
+                  class="text-body1"
+                >
                   {{ translation.translation }}
                 </div>
               </div>
+
+              <!-- Add Translation Button -->
               <q-btn
-                v-if="editMode"
+                v-if="isEditing"
                 flat
-                round
-                icon="delete"
-                :label="translate('deleteExampleTranslation')"
-                class="q-mx-sm"
-                @click="removeTranslation(example, tIndex)"
+                :label="translate('addExampleTranslation')"
+                icon="add"
+                class="q-mt-sm"
+                @click="addTranslation(example)"
               />
-            </div>
-            <q-btn
-              v-if="editMode"
-              flat
-              :label="translate('addExampleTranslation')"
-              icon="add"
-              @click="addTranslation(example)"
-            />
-          </div>
-        </div>
-        <q-item-section>
-          <UploadVideoComponent
-            v-if="editMode"
-            v-model:show-dialog="showUploadDialog"
-            @upload-complete="uploadVideo"
-          />
-          <q-btn
-            v-else
-            outline
-            :label="translate('seeExampleVideo')"
-            icon="play_arrow"
-            :disable="!example.exampleVideoURL"
-            @click="openVideo(example.exampleVideoURL)"
-          />
-        </q-item-section>
+            </q-card>
+          </template>
+        </EditableModule>
       </q-item>
-      <q-btn
-        v-if="editMode"
-        outline
-        color="primary"
-        :label="translate('addExample')"
-        icon="add"
-        @click="addExample"
-      />
     </q-list>
   </q-card-section>
+
+  <VideoPlayerPopup
+    v-model:show-dialog="showVideoDialog"
+    :video-url="selectedVideoUrl"
+    :title="selectedExample?.example || translate('exampleVideo')"
+  />
 </template>
 
 <script setup lang="ts">
-import { Sense, Example, ExampleTranslation } from 'src/types/models';
+import { Sense, Example, ExampleTranslation, GlossData } from 'src/types/models';
 import translate from 'src/utils/translate';
+import { api } from 'src/services/api';
+import { useQuasar } from 'quasar';
 import LanguageSelector from './LanguageSelector.vue';
-import UploadVideoComponent from 'src/components/UploadVideoPopup.vue'
+import EditableModule from 'src/components/Shared/EditableModule.vue';
+import UploadVideoComponent from 'src/components/UploadVideoComponent.vue';
+import VideoPlayerPopup from 'src/components/VideoPlayerPopup.vue';
+import { ref, computed } from 'vue';
 
-const sense = defineModel<Sense>({ required: true })
-const { editMode } = defineProps<{
+const examples = computed(() => props.sense?.examples || []);
+
+const $q = useQuasar();
+const loading = ref(false);
+const showUploadDialog = ref(false);
+const showVideoDialog = ref(false);
+const selectedVideoUrl = ref('');
+const selectedExample = ref<Example | null>(null);
+
+const props = defineProps<{
+  sense: Sense;
   editMode: boolean;
 }>();
 
+const emit = defineEmits<{
+  (e: 'update:glossData', glossData: GlossData): void;
+}>();
+
 const addExample = () => {
-  sense.value.examples.push({
-    id: Date.now().toString(),
+  examples.value.push({
+    id: '',
     example: '',
     exampleVideoURL: '',
-    senseId: sense.value.id || '',
-    exampleTranslations: []
-  })
-}
+    senseId: props.sense.id || '',
+    exampleTranslations: [],
+    isNew: true
+  });
+};
 
-const removeExample = (index: number) => {
-  sense.value.examples.splice(index, 1)
-}
+const saveExample = async (example: Example) => {
+  try {
+    loading.value = true;
+    let response;
+
+    if (example.id) {
+      response = await api.glossData.updateExample(example.id, {
+        example: example.example,
+        exampleVideoURL: example.exampleVideoURL
+      });
+    } else {
+      response = await api.glossData.createExample(props.sense.id || '', {
+        example: example.example,
+        exampleVideoURL: example.exampleVideoURL
+      });
+    }
+
+    if (response.data) {
+      emit('update:glossData', response.data);
+      $q.notify({
+        type: 'positive',
+        message: translate(example.id ? 'exampleUpdatedSuccessfully' : 'exampleCreatedSuccessfully')
+      });
+    }
+  } catch (error) {
+    console.error('Error saving example:', error);
+    $q.notify({
+      type: 'negative',
+      message: translate('errors.failedToSaveExample')
+    });
+  } finally {
+    loading.value = false;
+  }
+};
+
+const deleteExample = async (example: Example) => {
+  if (!example.id) {
+    const index = props.sense.examples.findIndex(e => e === example);
+    if (index !== -1) {
+      props.sense.examples.splice(index, 1);
+    }
+    return;
+  }
+
+  try {
+    loading.value = true;
+    const response = await api.glossData.deleteExample(example.id);
+    
+    if (response.data) {
+      emit('update:glossData', response.data);
+      $q.notify({
+        type: 'positive',
+        message: translate('exampleDeletedSuccessfully')
+      });
+    }
+  } catch (error) {
+    console.error('Error deleting example:', error);
+    $q.notify({
+      type: 'negative',
+      message: translate('errors.failedToDeleteExample')
+    });
+  } finally {
+    loading.value = false;
+  }
+};
+
+const cancelExample = (example: Example) => {
+  if (!example.id) {
+    const index = props.sense.examples.findIndex(e => e === example);
+    if (index !== -1) {
+      props.sense.examples.splice(index, 1);
+    }
+  }
+};
 
 const addTranslation = (example: Example) => {
   example.exampleTranslations.push({
-    id: Date.now().toString(),
-    language: 'CATALAN',
+    id: '',
     translation: '',
+    language: 'CATALAN',
     exampleId: example.id || ''
-  })
-}
+  });
+};
 
-const removeTranslation = (example: Example, index: number) => {
-  example.exampleTranslations.splice(index, 1)
-  sense.value.examples.splice(index, 1)
-}
+const removeTranslation = async (example: Example, index: number) => {
+  const translation = example.exampleTranslations[index];
+  if (!translation?.id) {
+    example.exampleTranslations.splice(index, 1);
+    return;
+  }
 
-const openVideo = (url: string) => {
-  window.open(url, '_blank')
-}
+  try {
+    loading.value = true;
+    const response = await api.glossData.deleteExampleTranslation(translation.id);
+    
+    if (response.data) {
+      emit('update:glossData', response.data);
+      $q.notify({
+        type: 'positive',
+        message: translate('translationDeletedSuccessfully')
+      });
+    }
+  } catch (error) {
+    console.error('Error deleting translation:', error);
+    $q.notify({
+      type: 'negative',
+      message: translate('errors.failedToDeleteTranslation')
+    });
+  } finally {
+    loading.value = false;
+  }
+};
+
+const uploadVideo = async (example: Example, url: string) => {
+  example.exampleVideoURL = url;
+  if (example.id) {
+    await saveExample(example);
+  }
+};
+
+const openVideo = (example: Example) => {
+  selectedExample.value = example;
+  selectedVideoUrl.value = example.exampleVideoURL;
+  showVideoDialog.value = true;
+};
+
+const deleteExampleVideo = async (example: Example) => {
+  try {
+    if (example.exampleVideoURL) {
+      await api.videos.delete(example.exampleVideoURL);
+    }
+    example.exampleVideoURL = '';
+    if (example.id) {
+      await saveExample(example);
+    }
+  } catch (error) {
+    console.error('Error deleting video:', error);
+    $q.notify({
+      type: 'negative',
+      message: translate('errors.failedToDeleteVideo')
+    });
+  }
+};
 </script>
 

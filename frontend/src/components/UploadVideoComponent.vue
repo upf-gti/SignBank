@@ -7,7 +7,7 @@
     >
       <q-file
         v-model="videoFile"
-        label="Choose video file"
+        :label="customLabel || translate('chooseVideoFile')"
         filled
         accept="video/*"
         :loading="isUploading"
@@ -20,7 +20,7 @@
       </q-file>
 
       <div class="text-center q-mt-sm text-grey">
-        or drag and drop your video here
+        {{ translate('orDragAndDropYourVideoHere') }}
       </div>
 
       <div
@@ -51,6 +51,7 @@
 import { ref, watch } from 'vue';
 import axios from 'axios';
 import api from 'src/services/api'
+import translate from 'src/utils/translate';
 
 const videoFile = ref<File | null>(null);
 const isUploading = ref(false);
@@ -63,7 +64,10 @@ const emit = defineEmits<{
 }>();
 
 const showDialog = defineModel<boolean>('showDialog', { required: true })
-
+const { videoType = 'gloss', customLabel } = defineProps<{
+    customLabel?: string
+    videoType?: 'gloss' | 'example'
+}>()
 
 watch(showDialog, (newVal: boolean) => {
     emit('update:modelValue', newVal);
@@ -76,11 +80,12 @@ watch(showDialog, (newVal: boolean) => {
 
 const handleFileSelect = (file: File | null) => {
     if (file && !file.type.includes('video/')) {
-        errorMessage.value = 'Please select a valid video file';
+        errorMessage.value = translate('pleaseSelectAValidVideoFile');
         videoFile.value = null;
         return;
     }
     errorMessage.value = '';
+    uploadVideo();
 };
 
 const handleDrop = (event: DragEvent) => {
@@ -91,9 +96,10 @@ const handleDrop = (event: DragEvent) => {
             videoFile.value = file;
             errorMessage.value = '';
         } else {
-            errorMessage.value = 'Please drop a valid video file';
+            errorMessage.value = translate('pleaseDropAValidVideoFile');
         }
     }
+    uploadVideo();
 };
 
 const uploadVideo = async () => {
@@ -106,13 +112,13 @@ const uploadVideo = async () => {
         isUploading.value = true;
         errorMessage.value = '';
         
-        const response = await api.videos.upload(videoFile.value)
+        const response = await api.videos.upload(videoFile.value, videoType)
         emit('upload-complete', response.data.url);
         showDialog.value = false;
     } catch (error) {
         errorMessage.value = error instanceof Error 
             ? error.message 
-            : 'Failed to upload video';
+            : translate('failedToUploadVideo');
     } finally {
         isUploading.value = false;
     }

@@ -30,6 +30,7 @@ export interface Example {
   exampleVideoURL: string;
   senseId: string;
   exampleTranslations: ExampleTranslation[];
+  isNew?: boolean;
 }
 
 export interface VideoDefinition {

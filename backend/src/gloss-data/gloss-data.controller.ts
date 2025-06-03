@@ -169,4 +169,40 @@ export class GlossDataController {
   ) {
     return this.glossDataService.updateSenseTranslation(id, data);
   }
+
+  @Post('senses/:senseId/examples')
+  @Roles(Role.ADMIN)
+  async createExample(
+    @Param('senseId') senseId: string,
+    @Body() data: { example: string, exampleVideoURL: string }
+  ) {
+    return this.glossDataService.createExample(senseId, data);
+  }
+
+  @Patch('examples/:id')
+  @Roles(Role.ADMIN)
+  async updateExample(
+    @Param('id') id: string,
+    @Body() data: { example: string, exampleVideoURL: string }
+  ) {
+    return this.glossDataService.updateExample(id, data);
+  }
+
+  @Post('examples/:exampleId/translations')
+  @Roles(Role.ADMIN)
+  async createExampleTranslation(
+    @Param('exampleId') exampleId: string,
+    @Body() data: { translation: string, language: Language }
+  ) {
+    return this.glossDataService.createExampleTranslation(exampleId, data);
+  }
+
+  @Patch('example-translations/:id')
+  @Roles(Role.ADMIN)
+  async updateExampleTranslation(
+    @Param('id') id: string,
+    @Body() data: { translation: string, language: Language }
+  ) {
+    return this.glossDataService.updateExampleTranslation(id, data);
+  }
 } 
