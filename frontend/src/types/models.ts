@@ -22,6 +22,7 @@ export interface SenseTranslation {
   translation: string;
   language: string;
   senseId: string;
+  isNew?: boolean;
 }
 
 export interface Example {

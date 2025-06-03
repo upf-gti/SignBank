@@ -85,6 +85,16 @@ export const api = {
 
     deleteDefinition: (senseId: string, definitionId: string) =>
       apiClient.delete<GlossData>(`/gloss-data/senses/${senseId}/definitions/${definitionId}`),
+
+    // Sense Translations
+    createSenseTranslation: (senseId: string, data: { translation: string, language: string }) =>
+      apiClient.post<GlossData>(`/gloss-data/senses/${senseId}/translations`, data),
+
+    updateSenseTranslation: (translationId: string, data: { translation: string, language: string }) =>
+      apiClient.patch<GlossData>(`/gloss-data/sense-translations/${translationId}`, data),
+
+    deleteSenseTranslation: (id: string) =>
+      apiClient.delete<GlossData>(`/gloss-data/sense-translations/${id}`),
   },
   requests: {
     getAll(): Promise<AxiosResponse<GlossRequest[]>> {

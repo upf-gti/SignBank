@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, Patch, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { GlossDataService } from './gloss-data.service';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { RolesGuard } from '../auth/guard/roles.guard';
 import { Roles } from '../auth/decorator/roles.decorator';
-import { Role } from '@prisma/client';
+import { Role, Language } from '@prisma/client';
 import { UpdateSenseDto, ReorderSenseDto } from './dto/update-sense.dto';
 import { UpdateDefinitionDto, UpdateDefinitionTranslationDto } from './dto/update-definition.dto';
 
@@ -150,5 +150,23 @@ export class GlossDataController {
     @Body() data: UpdateDefinitionTranslationDto
   ) {
     return this.glossDataService.updateDefinitionTranslation(definitionId, translationId, data);
+  }
+
+  @Post('senses/:senseId/translations')
+  @Roles(Role.ADMIN)
+  async createSenseTranslation(
+    @Param('senseId') senseId: string,
+    @Body() data: { translation: string, language: Language }
+  ) {
+    return this.glossDataService.createSenseTranslation(senseId, data);
+  }
+
+  @Patch('sense-translations/:id')
+  @Roles(Role.ADMIN)
+  async updateSenseTranslation(
+    @Param('id') id: string,
+    @Body() data: { translation: string, language: Language }
+  ) {
+    return this.glossDataService.updateSenseTranslation(id, data);
   }
 } 

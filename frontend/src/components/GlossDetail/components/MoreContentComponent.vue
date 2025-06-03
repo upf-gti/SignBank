@@ -1,88 +1,77 @@
 <template>
-  <q-card-section class="column justify-start items-start col q-pt-none">
-    <q-btn-toggle
+  <div>
+    <q-tabs
       v-model="selectedContent"
-      unelevated
-      toggle-color="primary"
-      class="q-mb-md"
-      :style="{
-        border: '1px solid #e0e0e0',
-      }"
-      :options="[
-        {
-          label: translate('definitions'),
-          value: 'definitions',
-        },
-        {
-          label: translate('examples'),
-          value: 'examples',
-        },
-        {
-          label: translate('videos'),
-          value: 'videos',
-        },
-        {
-          label: translate('relatedGlosses'),
-          value: 'relatedGlosses',
-        },
-        {
-          label: translate('technicalTerms'),
-          value: 'technicalTerms',
-        },
-      ]"
-    />
-    <q-card
-      class="full-width"
-      flat
-      bordered
-      :style="{
-        maxHeight: '80dvh',
-        overflow: 'auto',
-      }"
+      class="text-primary"
+      active-color="primary"
+      indicator-color="primary"
+      align="justify"
+      narrow-indicator
     >
-      <DefinitionsComponent
-        v-if="selectedContent === 'definitions'"
-        v-model="sense"
-        :edit-mode="editMode"
-        :allow-edit="editMode"
-        :sense="sense"
-        @update:glossData="updateGlossData"
-      />
-      <ExamplesComponent
-        v-if="selectedContent === 'examples'"
-        v-model="sense"
-        :edit-mode="editMode"
-      />
-      <VideosComponent
-        v-if="selectedContent === 'videos'"
-        v-model="sense"
-        :edit-mode="editMode"
-      />
-      <RelatedGlosses
-        v-if="selectedContent === 'relatedGlosses'" 
-        :related-glosses="glossData.relationsAsSource as RelatedGloss[]"
-        :minimal-pairs="glossData.minimalPairsAsSource"
-        :edit-mode="editMode"
-      />
-      <q-card-section v-if="selectedContent === 'technicalTerms'">
-        <div class="text-h6">
-          {{ translate('technicalTerms') }}
-        </div>
-      </q-card-section>
-    </q-card>
-  </q-card-section>
+      <q-tab name="definitions" :label="translate('definitions')" />
+      <q-tab name="translations" :label="translate('translations')" />
+      <q-tab name="videos" :label="translate('videos')" />
+      <q-tab name="examples" :label="translate('examples')" />
+      <q-tab name="related" :label="translate('relatedGlosses')" />
+    </q-tabs>
+
+    <q-tab-panels v-model="selectedContent" animated>
+      <q-tab-panel name="definitions">
+        <DefinitionsComponent
+          v-model:sense="sense"
+          :edit-mode="editMode"
+          :allow-edit="editMode"
+          @update:gloss-data="updateGlossData"
+        />
+      </q-tab-panel>
+
+      <q-tab-panel name="translations">
+        <SenseTranslationsComponent
+          :sense="sense"
+          :edit-mode="editMode"
+          @update:gloss-data="updateGlossData"
+        />
+      </q-tab-panel>
+
+      <q-tab-panel name="videos">
+        <VideosComponent
+          v-model="sense"
+          :edit-mode="editMode"
+          @update:gloss-data="updateGlossData"
+        />
+      </q-tab-panel>
+
+      <q-tab-panel name="examples">
+        <ExamplesComponent
+          v-model="sense"
+          :edit-mode="editMode"
+          @update:gloss-data="updateGlossData"
+        />
+      </q-tab-panel>
+
+      <q-tab-panel name="related">
+        <RelatedGlosses
+          :related-glosses="glossData.relationsAsSource || []"
+          :minimal-pairs="glossData.minimalPairsAsSource || []"
+          :edit-mode="editMode"
+          @update:gloss-data="updateGlossData"
+        />
+      </q-tab-panel>
+    </q-tab-panels>
+  </div>
 </template>
 
 <script setup lang="ts">
-import DefinitionsComponent from './DefinitionsComponent.vue';
 import translate from 'src/utils/translate';
 import { ref } from 'vue';
 import { Sense } from 'src/types/models';
-import type { RelatedGloss, MinimalPair } from 'src/types/gloss';
 import type { GlossData } from 'src/types/models';
+import type { RelatedGloss, MinimalPair } from 'src/types/gloss';
 import ExamplesComponent from './ExamplesComponent.vue';
 import VideosComponent from './VideosComponent.vue';
 import RelatedGlosses from './RelatedGlosses.vue';
+import DefinitionsComponent from './DefinitionsComponent.vue';
+import SenseTranslationsComponent from './SenseTranslationsComponent.vue';
 
 const selectedContent = ref<string>('definitions')
 const sense = defineModel<Sense>({ required: true })

@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateSenseDto, ReorderSenseDto } from './dto/update-sense.dto';
 import { UpdateDefinitionDto, UpdateDefinitionTranslationDto } from './dto/update-definition.dto';
+import { Language } from '@prisma/client';
 
 @Injectable()
 export class GlossDataService {
@@ -350,13 +351,20 @@ export class GlossDataService {
 
   // SenseTranslation deletion
   async deleteSenseTranslation(id: string) {
-    try {
-      return await this.prisma.senseTranslation.delete({
-        where: { id },
-      });
-    } catch (error) {
-      throw new NotFoundException(`SenseTranslation with ID ${id} not found or could not be deleted`);
+    const translation = await this.prisma.senseTranslation.findUnique({
+      where: { id },
+      include: { sense: true }
+    });
+
+    if (!translation) {
+      throw new NotFoundException('Translation not found');
     }
+
+    await this.prisma.senseTranslation.delete({
+      where: { id }
+    });
+
+    return this.getGlossData(translation.sense.glossDataId);
   }
 
   // DefinitionTranslation deletion
@@ -434,5 +442,46 @@ export class GlossDataService {
     });
 
     return this.getGlossData(updatedTranslation.definition.sense.glossDataId);
+  }
+
+  async createSenseTranslation(senseId: string, data: { translation: string, language: Language }) {
+    const sense = await this.prisma.sense.findUnique({
+      where: { id: senseId }
+    });
+
+    if (!sense) {
+      throw new NotFoundException('Sense not found');
+    }
+
+    await this.prisma.senseTranslation.create({
+      data: {
+        translation: data.translation,
+        language: data.language,
+        senseId: senseId
+      }
+    });
+
+    return this.getGlossData(sense.glossDataId);
+  }
+
+  async updateSenseTranslation(id: string, data: { translation: string, language: Language }) {
+    const translation = await this.prisma.senseTranslation.findUnique({
+      where: { id },
+      include: { sense: true }
+    });
+
+    if (!translation) {
+      throw new NotFoundException('Translation not found');
+    }
+
+    await this.prisma.senseTranslation.update({
+      where: { id },
+      data: {
+        translation: data.translation,
+        language: data.language
+      }
+    });
+
+    return this.getGlossData(translation.sense.glossDataId);
   }
 } 
