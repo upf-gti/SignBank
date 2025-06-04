@@ -127,7 +127,7 @@ export default defineConfig(() => {
           'dark-page': '#121212',
 
           positive: '#21BA45',
-          negative: '#C10015',
+          negative: '#8B0000',
           info: '#31CCEC',
           warning: '#F2C037'
         }

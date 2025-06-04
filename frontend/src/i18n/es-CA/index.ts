@@ -184,5 +184,7 @@ export default {
   editDefinitionTranslation: 'Editar traducció de definició',
   editExample: 'Editar exemple',
   editExampleTranslation: 'Editar traducció d\'exemple',
+  noTranslationsYet: 'No hi ha traduccions',
+  translations: 'Traduccions',
   
 } as TranslateKeys; 

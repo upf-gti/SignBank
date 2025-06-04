@@ -170,6 +170,8 @@ interface TranslateKeys {
   editExample: string;
   editExampleTranslation: string;
   addSenseTranslation: string;
+  translations: string;
+  noTranslationsYet: string;
 }
 
 export default TranslateKeys;

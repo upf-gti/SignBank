@@ -12,7 +12,7 @@
       />
     </div>
 
-    <q-list class="row q-col-gutter-md" separator>
+    <q-list class="row q-col-gutter-md " separator>
       <q-item
         v-for="(example, index) in examples.sort((a, b) => a.isNew ? -1 : b.isNew ? 1 : 0)"
         :key="example.id || index"
@@ -20,7 +20,7 @@
       >
         <EditableModule
           :allow-edit="editMode"
-          :initial-edit-state="example.isNew as boolean"
+          :initial-edit-state="example.isNew"
           :show-delete="true"
           :custom-edit-label="translate('editExample')"
           :custom-delete-label="translate('deleteExample')"
@@ -32,8 +32,8 @@
           <template #default="{ isEditing }">
             <q-card
               flat
-              class="full-width q-pa-md"
-              style="min-height: 120px"
+              class="full-width q-px-md"
+              style="background-color: transparent"
             >
               <!-- Example Text -->
               <q-input
@@ -86,7 +86,7 @@
               <div v-if="!example.isNew">
                 <ExampleTranslationsComponent
                   :example="example"
-                  :edit-mode="isEditing"
+                  :allow-edit="editMode"
                   @update:gloss-data="(data) => emit('update:glossData', data)"
                 />
               </div>

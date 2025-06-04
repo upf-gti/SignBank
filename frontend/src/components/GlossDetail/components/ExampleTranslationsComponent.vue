@@ -12,8 +12,8 @@
       class="q-mb-sm"
     >
       <EditableModule
-        :allow-edit="editMode"
-        :initial-edit-state="translation.isNew as boolean"
+        :allow-edit="allowEdit"
+        :initial-edit-state="translation.isNew" 
         :show-delete="true"
         :custom-edit-label="translate('editTranslation')"
         :custom-delete-label="translate('deleteTranslation')"
@@ -22,7 +22,8 @@
         @delete="() => deleteTranslation(translation)"
       >
         <template #default="{ isEditing }">
-          <div class="row items-center q-gutter-sm">
+          <div class="q-mx-md">
+          <div class="row items-center q-gutter-sm ">
             <LanguageSelector
               v-if="isEditing"
               v-model="translation.language"
@@ -48,7 +49,8 @@
             v-else
             class="text-body1"
           >
-            {{ translation.translation }}
+              {{ translation.translation }}
+            </div>
           </div>
         </template>
       </EditableModule>
@@ -56,7 +58,7 @@
 
     <!-- Add Translation Button -->
     <q-btn
-      v-if="editMode"
+      v-if="allowEdit"
       flat
       :label="translate('addExampleTranslation')"
       icon="add"
@@ -77,7 +79,7 @@ import { api } from 'src/services/api';
 
 const props = defineProps<{
   example: Example;
-  editMode: boolean;
+  allowEdit: boolean;
 }>();
 
 const emit = defineEmits<{
