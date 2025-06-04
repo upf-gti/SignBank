@@ -55,7 +55,6 @@
               <div class="q-mb-md">
                 <UploadVideoComponent
                   v-if="isEditing && example.exampleVideoURL === ''"
-                  v-model:show-dialog="showUploadDialog"
                   video-type="example"
                   :custom-label="translate('addExampleVideo')"
                   @upload-complete="(url) => uploadVideo(example, url)"

@@ -24,15 +24,15 @@
       </div>
 
       <div
-        v-if="uploadProgress > 0 && uploadProgress < 100"
+        v-if="isUploading"
         class="q-mt-md"
       >
         <q-linear-progress
-          :value="uploadProgress / 100"
+          :value="1"
           color="primary"
         />
         <div class="text-center q-mt-sm">
-          {{ Math.round(uploadProgress) }}%
+          {{ translate('uploadingVideo') }}
         </div>
       </div>
 
@@ -48,35 +48,23 @@
 
 <script setup lang="ts">
 
-import { ref, watch } from 'vue';
-import axios from 'axios';
-import api from 'src/services/api'
+import { ref } from 'vue';
+import api from 'src/services/api'    
 import translate from 'src/utils/translate';
 
 const videoFile = ref<File | null>(null);
 const isUploading = ref(false);
-const uploadProgress = ref(0);
 const errorMessage = ref('');
 
 const emit = defineEmits<{
     'upload-complete': [url: string],
-    'update:modelValue': [value: boolean]
 }>();
 
-const showDialog = defineModel<boolean>('showDialog', { required: true })
 const { videoType = 'gloss', customLabel } = defineProps<{
     customLabel?: string
     videoType?: 'gloss' | 'example'
 }>()
 
-watch(showDialog, (newVal: boolean) => {
-    emit('update:modelValue', newVal);
-    if (!newVal) {
-        videoFile.value = null;
-        uploadProgress.value = 0;
-        errorMessage.value = '';
-    }
-});
 
 const handleFileSelect = (file: File | null) => {
     if (file && !file.type.includes('video/')) {
@@ -114,7 +102,6 @@ const uploadVideo = async () => {
         
         const response = await api.videos.upload(videoFile.value, videoType)
         emit('upload-complete', response.data.url);
-        showDialog.value = false;
     } catch (error) {
         errorMessage.value = error instanceof Error 
             ? error.message 

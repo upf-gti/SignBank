@@ -15,18 +15,13 @@
       v-else-if="editMode"
       class="col fit row justify-center items-center"
     >
-      <q-btn
-        flat
-        icon="upload"
-        :label="translate('uploadVideo')"
-        @click="showUploadDialog = true"
-      />
       <UploadVideoComponent
-        v-model:show-dialog="showUploadDialog"
-        @upload-complete="uploadVideo"
+        video-type="gloss"
+        :custom-label="translate('addGlossVideo')"
+        @upload-complete="(url) => uploadVideo(url)"
       />
     </div>
-    <div class="column col q-pt-md justify-start items-start">
+    <div class="column col justify-start items-start">
       <div class="row justify-between items-center full-width">
         <span class="text-bold">
           {{ translate('videoAngles') }}
@@ -55,6 +50,7 @@
         class="column justify-center no-wrap items-start full-width q-mt-md"
       >
         <q-btn
+          v-if="signVideo.videos.length > 1"
           flat
           round
           icon="delete"
@@ -77,7 +73,7 @@
 import { ref, computed } from 'vue';
 import { SignVideo } from 'src/types/models';
 import translate from 'src/utils/translate';
-import UploadVideoComponent from 'src/components/UploadVideoPopup.vue';
+import UploadVideoComponent from 'src/components/UploadVideoComponent.vue';
 import { getVideoUrl } from 'src/utils/videoUrl';
 
 const { signVideo, editMode } = defineProps<{
@@ -93,8 +89,6 @@ const selectedVideo = ref<string>(signVideo?.videos[0]?.id || '');
 const selectedVideoData = computed(() => {
   return signVideo?.videos.find((video) => video.id === selectedVideo.value) || signVideo?.videos[0];
 });
-
-const showUploadDialog = ref(false)
 
 const uploadVideo = (url: string) => {
   

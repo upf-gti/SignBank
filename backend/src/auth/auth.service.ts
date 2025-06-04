@@ -75,7 +75,6 @@ export class AuthService {
   }
 
   async refreshTokens(refreshToken: string) {
-    debugger
     // Check if refresh token exists and has valid format
     if (!refreshToken || typeof refreshToken !== 'string' || refreshToken.length !== 80) {
       throw new UnauthorizedException('Invalid refresh token format');

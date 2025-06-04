@@ -1,11 +1,12 @@
 <template>
-  <div>
-    <div class="text-subtitle1 q-mb-sm">
-      {{ translate('translations') }}
-    </div>
-    <div v-if="!translations?.length" class="text-caption text-grey">
-      {{ translate('noTranslationsYet') }}
-    </div>
+  <q-expansion-item 
+    :label="translate('translations')"
+    >
+    <template #header>
+      <div class="text-subtitle1 q-mb-sm">
+        {{ translate('translations') }}
+      </div>
+    </template>
     <div
       v-for="(translation, index) in translations.sort((a, b) => a.isNew ? -1 : b.isNew ? 1 : 0)"
       :key="translation.id || index"
@@ -65,7 +66,7 @@
       class="q-mt-sm"
       @click="addTranslation"
     />
-  </div>
+  </q-expansion-item>
 </template>
 
 <script setup lang="ts">

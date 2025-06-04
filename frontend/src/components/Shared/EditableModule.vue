@@ -1,6 +1,6 @@
 <template>
   <q-form
-    class="editable-module"
+    class="editable-module q-pa-sm"
     @submit="saveEdit"
   >
     <!-- Header with title and action buttons -->
@@ -79,6 +79,7 @@ const props = defineProps<{
   showDelete?: boolean
   customEditLabel?: string
   customDeleteLabel?: string
+  validateBeforeSave?: () => { isValid: boolean; errors: string[] }
 }>()
 
 const emit = defineEmits<{
@@ -87,13 +88,35 @@ const emit = defineEmits<{
   (e: 'delete'): void
 }>()
 
-const isEditing = ref(props.initialEditState || false)
+const isEditing = ref(props.initialEditState ?? false)
 
 function startEdit() {
   isEditing.value = true
 }
 
 function saveEdit() {
+  if (props.validateBeforeSave) {
+    const { isValid, errors } = props.validateBeforeSave()
+    if (!isValid) {
+      $q.dialog({
+        title: translate('validationErrors'),
+        message: `
+          <ul style="list-style-type: disc; margin: 0; padding-left: 20px;">
+            ${errors.map(error => `<li>${error}</li>`).join('')}
+          </ul>
+        `,
+        html: true,
+        style: 'min-width: 300px',
+        ok: {
+          label: translate('ok'),
+          flat: true,
+          color: 'primary'
+        }
+      })
+      return
+    }
+  }
+  
   emit('save')
   isEditing.value = false
 }

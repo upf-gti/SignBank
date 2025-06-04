@@ -9,6 +9,7 @@ import { VideosModule } from './videos/videos.module';
 import { SearchModule } from './search/search.module';
 import { TypesenseModule } from './typesense/typesense.module';
 import { GlossRequestsModule } from './gloss-requests/gloss-requests.module';
+import { SignVideosModule } from './sign-videos/sign-videos.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { GlossRequestsModule } from './gloss-requests/gloss-requests.module';
     VideosModule,
     SearchModule,
     TypesenseModule,
+    SignVideosModule,
   ],
   controllers: [AppController],
   providers: [AppService],

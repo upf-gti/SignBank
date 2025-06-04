@@ -1,91 +1,131 @@
 <template>
-  <q-card-section class="column">
-    <div class="text-h5 q-mb-md row justify-between items-center">
-      {{ translate('videos') }}
-      <q-btn
-        v-if="editMode"
-        flat
-        round
-        icon="add"
-        :label="translate('addVideo')"
-        @click="addVideo"
-      />
-    </div>
+  <div class="videos-component q-pa-sm">
+    <div class="text-h5 q-mb-md">{{ translate('videos') }}</div>
+
     <div class="row q-col-gutter-md no-wrap overflow-auto">
+      <!-- Add video button - visible when editMode is true and not creating a video -->
       <div
-        v-for="(video, index) in sense.signVideos"
-        :key="video.id || index"
+        v-if="editMode && !isCreatingVideo"
         class="col-12 col-sm-6 col-md-4"
       >
         <q-card
           flat
           bordered
+          class="add-video-card cursor-pointer"
+          @click="addVideo"
         >
-          <q-card-section class="row justify-between items-center">
+          <q-card-section class="column items-center justify-center text-grey-7">
+            <q-icon
+              name="add"
+              size="48px"
+            />
+            <div class="text-subtitle1 q-mt-sm">
+              {{ translate('addVideo') }}
+            </div>
+          </q-card-section>
+        </q-card>
+      </div>
+
+      <div
+        v-for="(video, index) in videos.sort((a, b) => a.isNew ? -1 : b.isNew ? 1 : 0)"
+        :key="video.id || index"
+        class="col-12 col-sm-6 col-md-4"
+      >
+        <EditableModule
+          :allow-edit="editMode"
+          :initial-edit-state="video.isNew ?? false"
+          :show-delete="Boolean(video.id)"
+          :validate-before-save="() => validateVideo(video)"
+          @save="() => updateSignVideo(video, index)"
+          @cancel="() => handleVideoCancel(index)"
+          @delete="() => removeVideo(index)"
+        >
+          <template #header>
+            <div class="text-subtitle1 ellipsis">
+              <span>{{ video.title }}</span>
+            </div>
+          </template>
+
+          <template #default="{ isEditing }">
             <q-input
-              v-if="editMode"
+              v-if="isEditing"
               v-model="video.title"
               :label="translate('title')"
               outlined
               dense
-              class="col-12 q-mb-sm"
+              class="q-mb-sm"
             />
-            <q-item-label v-else>
-              {{ video.title }}
-            </q-item-label>
-            <q-btn
-              v-if="editMode"
-              flat
-              round
-              icon="delete"
-              :label="translate('deleteVideo')"
-              @click="removeVideo(index)"
-            />
-          </q-card-section>
-          <q-card-section>
-            <GlossVideoComponent
-              :sign-video="video"
-              :edit-mode="editMode"
-              @update:sign-video="updateSignVideo"
-            />
-          </q-card-section>
-          <q-card-section>
-            <SignFonologyComponent
-              :video-data="video.videoData"
-              :edit-mode="editMode"
-              @update:video-data="updateVideoData(index, $event)"
-            />
-          </q-card-section>
-        </q-card>
+            <div class="video-content">
+              <GlossVideoComponent
+                :sign-video="video"
+                :edit-mode="isEditing"
+                @update:sign-video="(newVideo) => updateLocalVideo(newVideo, index)"
+              />
+              <SignFonologyComponent
+                :video-data="video.videoData"
+                :edit-mode="isEditing"
+                @update:video-data="updateVideoData(index, $event)"
+              />
+            </div>
+          </template>
+        </EditableModule>
       </div>
     </div>
-  </q-card-section>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { Sense, SignVideo, VideoData } from 'src/types/models';
+import { GlossData, Sense, SignVideo, VideoData } from 'src/types/models';
 import translate from 'src/utils/translate';
 import GlossVideoComponent from './GlossVideoComponent.vue';
 import SignFonologyComponent from './SignFonologyComponent.vue';
+import EditableModule from 'src/components/Shared/EditableModule.vue';
+import { ref, watch, computed } from 'vue';
+import { useQuasar } from 'quasar';
+import api from 'src/services/api';
 
-const sense = defineModel<Sense>({ required: true })
+const sense = defineModel<Sense>({ required: true });
+const emit = defineEmits<{
+  (e: 'update:glossData', glossData: GlossData): void
+}>();
 const { editMode } = defineProps<{
   editMode: boolean;
 }>();
 
+const $q = useQuasar();
+
+// Keep a backup of videos for cancellation
+const videosBackup = ref<SignVideo[]>([]);
+const isCreatingVideo = ref(false);
+
+const videos = computed(() => sense.value?.signVideos || []);
+
+watch(() => sense.value.signVideos, (newVideos) => {
+  videosBackup.value = JSON.parse(JSON.stringify(newVideos));
+}, { deep: true });
+
+const updateLocalVideo = (newVideo: SignVideo, index: number) => {
+  sense.value.signVideos[index] = newVideo;
+};
+
 const addVideo = () => {
-  sense.value.signVideos.push({
-    id: Date.now().toString(),
+  // Get the highest priority
+  const maxPriority = Math.max(...sense.value.signVideos.map(v => v.priority || 0), 0);
+  
+  // Create new video with the highest priority
+  const newVideo: SignVideo = {
+    id: '',
     title: '',
     url: '',
-    priority: sense.value.signVideos.length + 1,
+    priority: maxPriority + 1,
     videoDataId: '',
     senseId: sense.value.id || '',
+    isNew: true,
     videos: [{
       id: Date.now().toString(),
       angle: translate('newAngle'),
       url: '',
-      priority: 1,
+      priority: 1
     }],
     minimalPairs: [],
     videoData: {
@@ -104,29 +144,154 @@ const addVideo = () => {
       inicialization: '',
       id: Date.now().toString()
     }
-  })
+  };
+
+  // Add the video at the beginning of the array
+  sense.value.signVideos.unshift(newVideo);
+  isCreatingVideo.value = true;
 }
 
-const removeVideo = (index: number) => {
-  sense.value.signVideos.splice(index, 1)
+const removeVideo = async (index: number) => {
+  const video = sense.value.signVideos[index];
+  if (!video) return;
+  
+  try {
+    if (video.id) {
+        await api.signVideos.delete(video.id);
+    }
+    
+    if (index === 0 && isCreatingVideo.value) {
+      isCreatingVideo.value = false;
+    }
+    sense.value.signVideos.splice(index, 1);
+    
+    $q.notify({
+      type: 'positive',
+      message: translate('videoDeleted')
+    });
+  } catch (error) {
+    console.error('Error deleting video:', error);
+    $q.notify({
+      type: 'negative',
+      message: translate('errorDeletingVideo')
+    });
+  }
 }
 
-const updateSignVideo = (signVideo: SignVideo) => {
-  const index = sense.value.signVideos.findIndex(video => video.id === signVideo.id)
-  if (index > -1) {
-    sense.value.signVideos[index] = signVideo
+const updateSignVideo = async (video: SignVideo, index: number) => {
+  try {
+    const currentVideo = sense.value.signVideos[index];
+    if (!currentVideo) return;
+
+    // Validate if video has a videoUrl and an angle
+    if (!currentVideo.videos?.[0]?.url) {
+      $q.notify({
+        type: 'negative',
+        message: translate('videoUrlRequired')
+      });
+      return;
+    }
+    if (!currentVideo.videos[0].angle) {
+      $q.notify({
+        type: 'negative',
+        message: translate('videoAngleRequired')
+      });
+      return;
+    }
+
+    let response;
+    if (currentVideo.id) {
+      // Update the video
+      response = await api.signVideos.update(currentVideo.id, currentVideo);
+    } else {
+      // Create the video
+      response = await api.signVideos.create(currentVideo);
+
+      emit('update:glossData', response.data);
+    }
+
+    if (index === 0 && currentVideo.isNew) {
+      currentVideo.isNew = false;
+      isCreatingVideo.value = false;
+    }
+
+    $q.notify({
+      type: 'positive',
+      message: currentVideo.id ? translate('videoUpdated') : translate('videoCreated')
+    });
+  } catch (error) {
+    console.error('Error saving video:', error);
+    $q.notify({
+      type: 'negative',
+      message: translate('errorSavingVideo')
+    });
   }
 }
 
 const updateVideoData = (index: number, videoData: VideoData) => {
   if (sense.value.signVideos[index]) {
-    sense.value.signVideos[index].videoData = videoData
+    sense.value.signVideos[index].videoData = videoData;
   }
+}
+
+const handleVideoCancel = (index: number) => {
+  if (index === 0 && isCreatingVideo.value) {
+    // If cancelling a new video creation, remove it
+    removeVideo(index);
+  } else {
+    // Otherwise revert to backup
+    if (videosBackup.value[index]) {
+      sense.value.signVideos[index] = JSON.parse(JSON.stringify(videosBackup.value[index]));
+    }
+  }
+}
+
+function validateVideo(video: SignVideo): { isValid: boolean; errors: string[] } {
+  const errors: string[] = [];
+
+  if (!video.videos?.length) {
+    errors.push(translate('errors.atLeastOneVideoRequired'));
+  } 
+  video.videos.forEach((v, index) => {
+    if (!v.angle?.trim()) {
+      errors.push(translate('errors.angleRequired', { index: index + 1 }));
+    }
+    if (!v.url?.trim()) {
+      errors.push(translate('errors.videoRequired', { index: index + 1 }));
+    }
+  });
+
+  if (!video.videoData?.hands) {
+    errors.push(translate('errors.handsRequired'));
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
 }
 </script>
 
 <style scoped>
+.videos-component {
+  width: 100%;
+}
+
 .overflow-auto {
   scrollbar-position: top;
 }
+
+.video-content {
+  width: 100%;
+}
+
+.add-video-card {
+  height: 200px;
+  transition: all 0.3s ease;
+}
+
+.add-video-card:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
 </style>
+

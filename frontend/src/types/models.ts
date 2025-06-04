@@ -130,13 +130,13 @@ export interface RelatedGlossData {
 export interface SignVideo {
   id?: string;
   title: string;
-  url: string;
   priority: number;
   videoDataId: string;
   senseId: string;
   videos: Video[];
   minimalPairs: MinimalPair[];
   videoData: VideoData;
+  isNew?: boolean;
 }
 
 export interface Sense {

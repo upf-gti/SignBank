@@ -1,6 +1,6 @@
 import type { AxiosResponse } from "axios"
 import { apiClient } from "src/boot/axios"
-import type { GlossRequest, GlossData, Definition, Translation, Language } from 'src/types/models'
+import type { GlossRequest, GlossData, Definition, Translation, Language, SignVideo } from 'src/types/models'
 import type { SearchParams } from "./search.service"
 import type {
   CreateGlossRequestDto,
@@ -101,6 +101,19 @@ export const api = {
 
     deleteExampleTranslation: (id: string) =>
       apiClient.delete<GlossData>(`/gloss-data/example-translations/${id}`),
+  },
+  signVideos: {
+    create: (data: SignVideo): Promise<AxiosResponse<GlossData>> => {
+      return apiClient.post('/sign-videos', data);
+    },
+
+    update: (id: string, data: SignVideo): Promise<AxiosResponse<GlossData>> => {
+      return apiClient.put(`/sign-videos/${id}`, data);
+    },
+
+    delete: (id: string): Promise<AxiosResponse<GlossData>> => {
+      return apiClient.delete(`/sign-videos/${id}`);
+    }
   },
   requests: {
     getAll(): Promise<AxiosResponse<GlossRequest[]>> {
