@@ -9,11 +9,11 @@
       <q-card-section class="row items-start q-pb-none no-wrap">
         <q-space />
         <q-btn
+          v-close-popup
           icon="close"
           flat
           round
           dense
-          v-close-popup
         />
       </q-card-section>
 
@@ -27,7 +27,9 @@
           :src="getVideoUrl(videoUrl)"
           @error="handleVideoError"
         />
-        <div class="text-h6 q-mt-md">{{ title }}</div>
+        <div class="text-h6 q-mt-md">
+          {{ title }}
+        </div>
       </q-card-section>
     </q-card>
   </q-dialog>

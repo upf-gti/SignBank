@@ -14,6 +14,7 @@ export interface ExampleTranslation {
   translation: string;
   language: string;
   exampleId: string;
+  isNew?: boolean;
 }
 
 export interface SenseTranslation {

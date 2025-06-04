@@ -12,12 +12,11 @@
       />
     </div>
 
-    <q-list class="row q-col-gutter-md">
+    <q-list class="row q-col-gutter-md" separator>
       <q-item
-        v-for="(example, index) in examples"
+        v-for="(example, index) in examples.sort((a, b) => a.isNew ? -1 : b.isNew ? 1 : 0)"
         :key="example.id || index"
         class="col-12 q-pa-none"
-        dense
       >
         <EditableModule
           :allow-edit="editMode"
@@ -32,7 +31,6 @@
         >
           <template #default="{ isEditing }">
             <q-card
-              bordered
               flat
               class="full-width q-pa-md"
               style="min-height: 120px"
@@ -59,10 +57,13 @@
                   v-if="isEditing && example.exampleVideoURL === ''"
                   v-model:show-dialog="showUploadDialog"
                   video-type="example"
-                  @upload-complete="(url) => uploadVideo(example, url)"
                   :custom-label="translate('addExampleVideo')"
+                  @upload-complete="(url) => uploadVideo(example, url)"
                 />
-                <div v-else class="row justify-end q-gutter-sm">
+                <div
+                  v-else
+                  class="row justify-end q-gutter-sm"
+                >
                   <q-btn
                     v-if="example.exampleVideoURL"
                     outline
@@ -71,7 +72,8 @@
                     :disable="!example.exampleVideoURL"
                     @click="openVideo(example)"
                   />
-                  <q-btn v-else-if="isEditing"
+                  <q-btn
+                    v-else-if="isEditing"
                     outline
                     :label="translate('deleteExampleVideo')"
                     icon="delete"
@@ -81,60 +83,13 @@
               </div>
 
               <!-- Example Translations -->
-              <div class="text-subtitle1 q-mb-sm">{{ translate('translations') }}</div>
-              <div
-                v-for="(translation, tIndex) in example.exampleTranslations"
-                :key="translation.id || tIndex"
-                class="q-mb-sm"
-              >
-                <div class="row items-center q-gutter-sm">
-                  <LanguageSelector
-                    v-if="isEditing"
-                    v-model="translation.language"
-                    class="col"
-                  />
-                  <div
-                    v-else
-                    class="text-subtitle2"
-                  >
-                    {{ translate(translation.language) }}
-                  </div>
-
-                  <q-btn
-                    v-if="isEditing"
-                    flat
-                    round
-                    dense
-                    icon="delete"
-                    @click="removeTranslation(example, tIndex)"
-                  />
-                </div>
-
-                <q-input
-                  v-if="isEditing"
-                  v-model="translation.translation"
-                  :label="translate('translation')"
-                  outlined
-                  dense
-                  class="col-12 q-mt-sm"
+              <div v-if="!example.isNew">
+                <ExampleTranslationsComponent
+                  :example="example"
+                  :edit-mode="isEditing"
+                  @update:gloss-data="(data) => emit('update:glossData', data)"
                 />
-                <div
-                  v-else
-                  class="text-body1"
-                >
-                  {{ translation.translation }}
-                </div>
               </div>
-
-              <!-- Add Translation Button -->
-              <q-btn
-                v-if="isEditing"
-                flat
-                :label="translate('addExampleTranslation')"
-                icon="add"
-                class="q-mt-sm"
-                @click="addTranslation(example)"
-              />
             </q-card>
           </template>
         </EditableModule>
@@ -150,14 +105,14 @@
 </template>
 
 <script setup lang="ts">
-import { Sense, Example, ExampleTranslation, GlossData } from 'src/types/models';
+import { Sense, Example, GlossData } from 'src/types/models';
 import translate from 'src/utils/translate';
 import { api } from 'src/services/api';
 import { useQuasar } from 'quasar';
-import LanguageSelector from './LanguageSelector.vue';
 import EditableModule from 'src/components/Shared/EditableModule.vue';
 import UploadVideoComponent from 'src/components/UploadVideoComponent.vue';
 import VideoPlayerPopup from 'src/components/VideoPlayerPopup.vue';
+import ExampleTranslationsComponent from './ExampleTranslationsComponent.vue';
 import { ref, computed } from 'vue';
 
 const examples = computed(() => props.sense?.examples || []);
@@ -261,44 +216,6 @@ const cancelExample = (example: Example) => {
     if (index !== -1) {
       props.sense.examples.splice(index, 1);
     }
-  }
-};
-
-const addTranslation = (example: Example) => {
-  example.exampleTranslations.push({
-    id: '',
-    translation: '',
-    language: 'CATALAN',
-    exampleId: example.id || ''
-  });
-};
-
-const removeTranslation = async (example: Example, index: number) => {
-  const translation = example.exampleTranslations[index];
-  if (!translation?.id) {
-    example.exampleTranslations.splice(index, 1);
-    return;
-  }
-
-  try {
-    loading.value = true;
-    const response = await api.glossData.deleteExampleTranslation(translation.id);
-    
-    if (response.data) {
-      emit('update:glossData', response.data);
-      $q.notify({
-        type: 'positive',
-        message: translate('translationDeletedSuccessfully')
-      });
-    }
-  } catch (error) {
-    console.error('Error deleting translation:', error);
-    $q.notify({
-      type: 'negative',
-      message: translate('errors.failedToDeleteTranslation')
-    });
-  } finally {
-    loading.value = false;
   }
 };
 
