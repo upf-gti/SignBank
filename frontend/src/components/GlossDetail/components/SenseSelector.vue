@@ -280,7 +280,7 @@ const lexicalCategories = ref([
 const saveSense = async () => {
   try {
     loading.value = true
-    const response = await api.glossData.createSense(props.glossData.id || '', {
+    const response = await api.senses.create(props.glossData.id || '', {
       senseTitle: newSense.value.senseTitle,
       lexicalCategory: newSense.value.lexicalCategory
     })
@@ -331,12 +331,12 @@ const moveSense = async (index: number, direction: 'up' | 'down') => {
 
       // Update both senses
       const [response1, response2] = await Promise.all([
-        api.glossData.editSense(props.glossData.id || '', senseToMove.id, {
+        api.senses.update(props.glossData.id || '', senseToMove.id, {
           senseTitle: senseToMove.senseTitle,
           lexicalCategory: senseToMove.lexicalCategory,
           priority: senseToMove.priority
         }),
-        api.glossData.editSense(props.glossData.id || '', otherSense.id, {
+        api.senses.update(props.glossData.id || '', otherSense.id, {
           senseTitle: otherSense.senseTitle,
           lexicalCategory: otherSense.lexicalCategory,
           priority: otherSense.priority
@@ -371,7 +371,7 @@ const saveSingleSense = async () => {
     loading.value = true
     if (!editingSense.value.id) return
 
-    const response = await api.glossData.editSense(props.glossData.id || '', editingSense.value.id, {
+    const response = await api.senses.update(props.glossData.id || '', editingSense.value.id, {
       senseTitle: editingSense.value.senseTitle,
       lexicalCategory: editingSense.value.lexicalCategory
     })
@@ -422,7 +422,7 @@ const handleDeleteConfirm = async () => {
   if (senseToDelete.value && senseToDelete.value.id) {
     try {
       loading.value = true
-      const response = await api.glossData.removeSense(props.glossData.id || '', senseToDelete.value.id)
+      const response = await api.senses.delete(props.glossData.id || '', senseToDelete.value.id)
 
       deleteConfirmDialog.value = false
       editSensesDialog.value = false

@@ -171,7 +171,7 @@
 </template>
 
 <script setup lang="ts">
-import { Sense, Definition, Translation, GlossData } from 'src/types/models';
+import { Sense, Definition, Translation, GlossData, Language } from 'src/types/models';
 import translate from 'src/utils/translate';
 import LanguageSelector from './LanguageSelector.vue'
 import EditableModule from 'src/components/Shared/EditableModule.vue'
@@ -237,10 +237,9 @@ const saveDefinition = async (definition: Definition) => {
   try {
     loading.value = true;
     
-    const response = await api.glossData.updateDefinition(props.sense.id, definition.id || '', {
+    const response = await api.definitions.update(props.sense.id, definition.id || '', {
       title: definition.title,
-      definition: definition.definition,
-      videoDefinitionId: definition.videoDefinitionId
+      definition: definition.definition
     });
 
     if (response.data && isGlossData(response.data)) {
@@ -268,7 +267,7 @@ const createNewDefinition = async () => {
   try {
     loading.value = true;
 
-    const response = await api.glossData.createDefinition(props.sense.id, {
+    const response = await api.definitions.create(props.sense.id, {
       title: newDefinition.value.title,
       definition: newDefinition.value.definition
     });
@@ -309,7 +308,7 @@ const deleteDefinition = async (definition: Definition) => {
 
   try {
     loading.value = true;
-    const response = await api.glossData.deleteDefinition(props.sense.id, definition.id || '');
+    const response = await api.definitions.delete(props.sense.id, definition.id || '');
     emit('update:glossData', response.data);
 
     $q.notify({
@@ -338,9 +337,9 @@ const addTranslation = () => {
 const saveTranslation = async (definition: Definition, translation: Translation) => {
   try {
     loading.value = true;
-    const response = await api.glossData.editDefinitionTranslation(definition.id || '', translation.id || '', {
+    const response = await api.definitions.updateTranslation(definition.id || '', translation.id || '', {
       translation: translation.translation,
-      language: translation.language
+      language: translation.language as Language
     });
     
     if (response.data && isGlossData(response.data)) {

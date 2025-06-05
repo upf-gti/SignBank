@@ -105,12 +105,12 @@ const saveTranslation = async (translation: ExampleTranslation) => {
   try {
     let response;
     if (translation.id) {
-      response = await api.glossData.updateExampleTranslation(translation.id, {
+      response = await api.exampleTranslations.updateExampleTranslation(translation.id, {
         translation: translation.translation,
         language: translation.language as Language
       });
     } else {
-      response = await api.glossData.createExampleTranslation(props.example.id || '', {
+      response = await api.exampleTranslations.createExampleTranslation(props.example.id || '', {
         translation: translation.translation,
         language: translation.language as Language
       });
@@ -142,7 +142,7 @@ const deleteTranslation = async (translation: ExampleTranslation) => {
   }
 
   try {
-    const response = await api.glossData.deleteExampleTranslation(translation.id);
+    const response = await api.exampleTranslations.deleteExampleTranslation(translation.id);
     if (response.data) {
       emit('update:glossData', response.data);
       $q.notify({

@@ -172,6 +172,25 @@ interface TranslateKeys {
   addSenseTranslation: string;
   translations: string;
   noTranslationsYet: string;
+  edit: string;
+  delete: string;
+  interjection: string;
+  loading: string;
+  exampleVideo: string;
+  CATALAN: string;
+  SYNONIM: string;
+  INTERJECTION: string;
+  ANTONYM: string;
+  HOMONYM: string;
+  SYNONYM: string;
+  VARIANT: string;
+  ASSOCIATED_CONCEPT: string;
+  newAngle: string;
+  addGlossVideo: string;
+  orDragAndDropYourVideoHere: string;
+  addExampleVideo: string;
+  videoDeleted: string;
+  notSent: string;
 }
 
 export default TranslateKeys;

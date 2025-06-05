@@ -16,7 +16,7 @@ export function useAuthentication() {
     try {
       isLoading.value = true
       error.value = null
-      const { data } = await api.login({ email, password })
+      const { data } = await api.auth.login({ email, password })
       userStore.setUserData(data)
       return data
     } catch (err: any) {
@@ -31,7 +31,7 @@ export function useAuthentication() {
     try {
       isLoading.value = true
       error.value = null
-      const { data } = await api.register({ username, email, password })
+      const { data } = await api.auth.register({ username, email, password })
       return data
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Registration failed'
@@ -56,7 +56,7 @@ export function useAuthentication() {
 
     try {
       isRefreshing.value = true
-      const { data } = await api.refreshToken({ refresh_token: userStore.refresh_token })
+      const { data } = await api.auth.refresh({ refresh_token: userStore.refresh_token })
       userStore.setTokens(data)
       return data
     } catch (err: any) {

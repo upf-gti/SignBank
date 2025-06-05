@@ -98,7 +98,7 @@
   
   const fetchRequests = async () => {
     try {
-      const response = await api.requests.getPending();
+      const response = await api.glossRequests.getPending();
       requests.value = response.data;
     } catch (err) {
       error.value = translate('errors.failedToLoadRequests');

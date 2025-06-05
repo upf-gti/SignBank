@@ -148,7 +148,7 @@ onMounted(async () => {
 
 const fetchRequests = async () => {
   try {
-    const response = await api.requests.getAll();
+    const response = await api.glossRequests.getMine();
     requests.value = response.data;
   } catch (err) {
     error.value = translate('errors.failedToLoadRequests');

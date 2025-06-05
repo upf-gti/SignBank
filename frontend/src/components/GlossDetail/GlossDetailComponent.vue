@@ -9,7 +9,6 @@
       :allow-edit="allowEdit"
       :is-confirm-request-page="isConfirmRequestPage"
       @edit-gloss="editGloss"
-      @save-gloss="saveGloss"
       @cancel-gloss="cancelGloss"
       @accept-request="acceptRequest"
       @decline-request="declineRequest"
@@ -37,7 +36,6 @@
 
 <script setup lang="ts">
 import { GlossData, Sense } from 'src/types/models'
-import type { RelatedGloss, MinimalPair } from 'src/types/gloss'
 import GlossHeader from './components/GlossHeader.vue'
 import { ref, computed } from 'vue'
 import SenseSelector from './components/SenseSelector.vue';
@@ -49,7 +47,6 @@ import translate from 'src/utils/translate'
 
 const emit = defineEmits<{
   (e: 'update:editMode', mode: boolean): void
-  (e: 'saveGloss', glossData: GlossData): void
   (e: 'acceptRequest', glossData: GlossData): void
   (e: 'declineRequest'): void
 }>()
@@ -68,35 +65,6 @@ const $q = useQuasar()
 const editGloss = () => {
   if (!allowEdit) return
   emit('update:editMode', true)
-}
-
-const saveGloss = () => {
-  if (!allowEdit) return
-
-  // Validate the gloss data
-  const validationErrors = validateGloss(glossData)
-  
-  if (validationErrors.length > 0) {
-    // Show validation errors to the user
-    $q.dialog({
-      title: translate('validationErrors'),
-      message: `
-        <ul style="list-style-type: disc; margin: 0; padding-left: 20px;">
-          ${validationErrors.map(error => `<li>${error.message}</li>`).join('')}
-        </ul>
-      `,
-      html: true,
-      style: 'min-width: 300px',
-      ok: {
-        label: translate('ok'),
-        flat: true,
-        color: 'primary'
-      }
-    })
-    return
-  }
-
-  emit('saveGloss', glossData)
 }
 
 const cancelGloss = () => {

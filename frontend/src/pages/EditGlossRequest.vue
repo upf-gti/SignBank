@@ -76,7 +76,7 @@ const glossData = ref<GlossData>({
 const fetchGlossRequest = async () => {
   try {
     const requestId = route.params.id as string;
-    const response = await api.requests.get(requestId);
+    const response = await api.glossRequests.get(requestId);
     glossData.value = response.data.requestedGlossData;
   } catch (err) {
     console.error('Error fetching gloss request:', err);

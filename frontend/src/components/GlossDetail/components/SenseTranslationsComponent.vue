@@ -14,7 +14,7 @@
 
     <q-list class="row q-col-gutter-md">
       <q-item
-        v-for="(translation, index) in sense.senseTranslations"
+        v-for="(translation, index) in senseTranslations"
         :key="translation.id || index"
         class="col-12 col-md-6 q-pa-none"
         style="min-width: 300px"
@@ -75,13 +75,13 @@
 </template>
 
 <script setup lang="ts">
-import { Sense, SenseTranslation, GlossData } from 'src/types/models';
+import { Sense, SenseTranslation, GlossData, Language } from 'src/types/models';
 import translate from 'src/utils/translate';
 import { api } from 'src/services/api';
 import { useQuasar } from 'quasar';
 import LanguageSelector from './LanguageSelector.vue';
 import EditableModule from 'src/components/Shared/EditableModule.vue';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 const $q = useQuasar();
 const loading = ref(false);
@@ -94,6 +94,10 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'update:glossData', glossData: GlossData): void;
 }>();
+
+const senseTranslations = computed(() => {
+  return props.sense.senseTranslations || [];
+});
 
 const addTranslation = () => {
   props.sense.senseTranslations.push({
@@ -111,14 +115,14 @@ const saveTranslation = async (translation: SenseTranslation) => {
     let response;
 
     if (translation.id) {
-      response = await api.glossData.updateSenseTranslation(translation.id, {
+      response = await api.translations.updateSenseTranslation(translation.id, {
         translation: translation.translation,
-        language: translation.language
+        language: translation.language as Language
       });
     } else {
-      response = await api.glossData.createSenseTranslation(props.sense.id || '', {
+      response = await api.translations.createSenseTranslation(props.sense.id || '', {
         translation: translation.translation,
-        language: translation.language
+        language: translation.language as Language
       });
     }
 
@@ -151,7 +155,7 @@ const deleteTranslation = async (translation: SenseTranslation) => {
 
   try {
     loading.value = true;
-    const response = await api.glossData.deleteSenseTranslation(translation.id);
+    const response = await api.translations.deleteSenseTranslation(translation.id);
     
     if (response.data) {
       emit('update:glossData', response.data);

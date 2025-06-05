@@ -43,13 +43,6 @@
           @click="editGloss"
         />
         <q-btn
-          v-else
-          icon="save"
-          :label="translate('saveGloss')"
-          outline
-          @click="saveGloss"
-        />
-        <q-btn
           v-if="editMode"
           icon="cancel"
           @click="cancelGloss"
@@ -65,7 +58,6 @@ import translate from 'src/utils/translate'
 
 const emit = defineEmits<{
   (e: 'editGloss'): void
-  (e: 'saveGloss'): void
   (e: 'cancelGloss'): void
   (e: 'acceptRequest'): void
   (e: 'declineRequest'): void
@@ -80,10 +72,6 @@ const { glossData, allowEdit = true, isConfirmRequestPage = false } = defineProp
 
 const editGloss = () => {
   emit('editGloss')
-}
-
-const saveGloss = () => {
-  emit('saveGloss')
 }
 
 const cancelGloss = () => {

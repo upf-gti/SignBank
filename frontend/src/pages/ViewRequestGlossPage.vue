@@ -31,8 +31,6 @@
         class="col full-width"
         :gloss-data="glossData"
         :allow-edit="false"
-        :is-confirm-request-page="true"
-        @save-gloss="saveGloss"
         @accept-request="acceptRequest"
         @decline-request="declineRequest"
       />
@@ -57,7 +55,7 @@ const $q = useQuasar()
 // State
 const loading = ref(true)
 const error = ref<string | null>(null)
-const editMode = ref(true)
+const editMode = ref(false)
 const glossData = ref<GlossData>()
 
 onMounted(() => {
@@ -66,7 +64,7 @@ onMounted(() => {
 
 function getGlossRequestData() {
   if(route.params.id) {
-    api.requests.get(route.params.id as string)
+    api.glossRequests.get(route.params.id as string)
       .then((response) => {
         glossData.value = response.data.requestedGlossData
       })
@@ -79,36 +77,10 @@ function getGlossRequestData() {
   }
 }
 
-const saveGloss = async (updatedGlossData: GlossData) => {
-  try {
-    loading.value = true
-    const response = await api.glossData.editGloss(updatedGlossData.id || '', updatedGlossData)
-    glossData.value = response.data
-    editMode.value = false
-    
-    // Show success notification
-    $q.notify({
-      type: 'positive',
-      message: translate('glossSavedSuccessfully')
-    })
-  } catch (err) {
-    console.error(err)
-    error.value = translate('errors.failedToSaveGloss')
-    
-    // Show error notification
-    $q.notify({
-      type: 'negative',
-      message: translate('errors.failedToSaveGloss')
-    })
-  } finally {
-    loading.value = false
-  }
-}
-
 const acceptRequest = async (updatedGlossData: GlossData) => {
   try {
     loading.value = true
-    await api.requests.accept(route.params.id as string, updatedGlossData)
+    await api.glossRequests.accept(route.params.id as string)
     
     // Show success notification
     $q.notify({
@@ -138,7 +110,7 @@ const declineRequest = async () => {
   try {
     loading.value = true
     const requestId = route.params.id as string
-    await api.requests.decline({ id: requestId, reason: 'Declined by admin' })
+    await api.glossRequests.decline(requestId, { denyReason: 'Declined by admin' })
     
     // Show success notification
     $q.notify({

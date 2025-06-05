@@ -149,12 +149,12 @@ const saveExample = async (example: Example) => {
     let response;
 
     if (example.id) {
-      response = await api.glossData.updateExample(example.id, {
+      response = await api.examples.update(example.id, {
         example: example.example,
         exampleVideoURL: example.exampleVideoURL
       });
     } else {
-      response = await api.glossData.createExample(props.sense.id || '', {
+      response = await api.examples.create(props.sense.id || '', {
         example: example.example,
         exampleVideoURL: example.exampleVideoURL
       });
@@ -189,7 +189,7 @@ const deleteExample = async (example: Example) => {
 
   try {
     loading.value = true;
-    const response = await api.glossData.deleteExample(example.id);
+    const response = await api.examples.delete(example.id);
     
     if (response.data) {
       emit('update:glossData', response.data);
