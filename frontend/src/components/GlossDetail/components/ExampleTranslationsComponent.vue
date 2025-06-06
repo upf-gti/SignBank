@@ -14,7 +14,7 @@
     >
       <EditableModule
         :allow-edit="allowEdit"
-        :initial-edit-state="translation.isNew" 
+        :initial-edit-state="translation.isNew || false" 
         :show-delete="true"
         :custom-edit-label="translate('editTranslation')"
         :custom-delete-label="translate('deleteTranslation')"

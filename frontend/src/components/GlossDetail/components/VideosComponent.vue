@@ -75,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { GlossData, Sense, SignVideo, VideoData } from 'src/types/models';
+import { GlossData, Sense, SignVideo, PhonologyData } from 'src/types/models';
 import translate from 'src/utils/translate';
 import GlossVideoComponent from './GlossVideoComponent.vue';
 import SignFonologyComponent from './SignFonologyComponent.vue';
@@ -83,6 +83,7 @@ import EditableModule from 'src/components/Shared/EditableModule.vue';
 import { ref, watch, computed } from 'vue';
 import { useQuasar } from 'quasar';
 import api from 'src/services/api';
+import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType } from 'src/types/enums';
 
 const sense = defineModel<Sense>({ required: true });
 const emit = defineEmits<{
@@ -116,7 +117,6 @@ const addVideo = () => {
   const newVideo: SignVideo = {
     id: '',
     title: '',
-    url: '',
     priority: maxPriority + 1,
     videoDataId: '',
     senseId: sense.value.id || '',
@@ -129,16 +129,16 @@ const addVideo = () => {
     }],
     minimalPairs: [],
     videoData: {
-      hands: 'RIGHT',
-      configuration: '',
-      configurationChanges: '',
-      relationBetweenArticulators: '',
-      location: '',
-      movementRelatedOrientation: '',
-      locationRelatedOrientation: '',
-      orientationChange: '',
-      contactType: '',
-      movementType: '',
+      hands: Hand.RIGHT,
+      configuration: HandConfiguration.CONF_1,
+      configurationChanges: ConfigurationChange.BENDING,
+      relationBetweenArticulators: RelationBetweenArticulators.ABOVE,
+      location: Location.NEUTRAL_SPACE,
+      movementRelatedOrientation: MovementRelatedOrientation.FRONT,
+      orientationRelatedToLocation: OrientationRelatedToLocation.AO_FINGERS_CONTRA,
+      orientationChange: OrientationChange.EXTENSION,
+      contactType: ContactType.CONTINUOUS,
+      movementType: MovementType.STRAIGHT,
       vocalization: '',
       nonManualComponent: '',
       inicialization: '',
@@ -228,7 +228,7 @@ const updateSignVideo = async (video: SignVideo, index: number) => {
   }
 }
 
-const updateVideoData = (index: number, videoData: VideoData) => {
+const updateVideoData = (index: number, videoData: PhonologyData) => {
   if (sense.value.signVideos[index]) {
     sense.value.signVideos[index].videoData = videoData;
   }

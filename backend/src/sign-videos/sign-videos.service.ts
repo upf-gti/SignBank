@@ -26,8 +26,20 @@ export class SignVideosService {
     // Create the video data first
     const videoData = await this.prisma.videoData.create({
       data: {
-        ...createSignVideoDto.videoData,
-        hands: createSignVideoDto.videoData.hands as Hand,
+        id: createSignVideoDto.videoData.id,
+        hands: createSignVideoDto.videoData.hands,
+        configuration: createSignVideoDto.videoData.configuration,
+        configurationChanges: createSignVideoDto.videoData.configurationChanges,
+        relationBetweenArticulators: createSignVideoDto.videoData.relationBetweenArticulators,
+        location: createSignVideoDto.videoData.location,
+        movementRelatedOrientation: createSignVideoDto.videoData.movementRelatedOrientation,
+        orientationRelatedToLocation: createSignVideoDto.videoData.orientationRelatedToLocation,
+        orientationChange: createSignVideoDto.videoData.orientationChange,
+        contactType: createSignVideoDto.videoData.contactType,
+        movementType: createSignVideoDto.videoData.movementType,
+        vocalization: createSignVideoDto.videoData.vocalization,
+        nonManualComponent: createSignVideoDto.videoData.nonManualComponent,
+        inicialization: createSignVideoDto.videoData.inicialization
       }
     });
 
@@ -84,8 +96,20 @@ export class SignVideosService {
     await this.prisma.videoData.update({
       where: { id: signVideo.videoData.id },
       data: {
-        ...updateSignVideoDto.videoData,
-        hands: updateSignVideoDto.videoData.hands as Hand,
+        id: updateSignVideoDto.videoData.id,
+        hands: updateSignVideoDto.videoData.hands,
+        configuration: updateSignVideoDto.videoData.configuration,
+        configurationChanges: updateSignVideoDto.videoData.configurationChanges,
+        relationBetweenArticulators: updateSignVideoDto.videoData.relationBetweenArticulators,
+        location: updateSignVideoDto.videoData.location,
+        movementRelatedOrientation: updateSignVideoDto.videoData.movementRelatedOrientation,
+        orientationRelatedToLocation: updateSignVideoDto.videoData.orientationRelatedToLocation,
+        orientationChange: updateSignVideoDto.videoData.orientationChange,
+        contactType: updateSignVideoDto.videoData.contactType,
+        movementType: updateSignVideoDto.videoData.movementType,
+        vocalization: updateSignVideoDto.videoData.vocalization,
+        nonManualComponent: updateSignVideoDto.videoData.nonManualComponent,
+        inicialization: updateSignVideoDto.videoData.inicialization
       }
     });
 
@@ -117,7 +141,6 @@ export class SignVideosService {
   }
 
   async remove(id: string): Promise<GlossData> {
-    debugger
     try {
       const signVideo = await this.prisma.signVideo.findUniqueOrThrow({
         where: { id },

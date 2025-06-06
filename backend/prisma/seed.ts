@@ -1,4 +1,4 @@
-import { PrismaClient, Role, Language, LexicalCategory, RelationType, Hand, GlossStatus } from '@prisma/client';
+import { PrismaClient, Role, Language, LexicalCategory, Hand, GlossStatus, ConfigurationChange, RelationBetweenArticulators, Location, MovementType, MovementRelatedOrientation, OrientationChange, ContactType, OrientationRelatedToLocation, HandConfiguration } from '@prisma/client';
 import * as argon2 from 'argon2';
 
 const prisma = new PrismaClient();
@@ -397,18 +397,18 @@ async function main() {
           videoData: {
             create: {
               hands: Hand.RIGHT,
-              configuration: "default",
-              configurationChanges: "none",
-              relationBetweenArticulators: "none",
-              location: "neutral space",
-              movementRelatedOrientation: "forward",
-              locationRelatedOrientation: "neutral",
-              orientationChange: "none",
-              contactType: "none",
-              movementType: "single",
+              configuration: HandConfiguration.CONF_1,
+              configurationChanges: ConfigurationChange.BENDING,
+              relationBetweenArticulators: RelationBetweenArticulators.ABOVE,
+              location: Location.NEUTRAL_SPACE,
+              movementRelatedOrientation: MovementRelatedOrientation.FRONT,
+              orientationRelatedToLocation: OrientationRelatedToLocation.AO_FINGERS_CONTRA,
+              orientationChange: OrientationChange.EXTENSION,
+              contactType: ContactType.CONTINUOUS,
+              movementType: MovementType.STRAIGHT,
               vocalization: "none",
               nonManualComponent: "none",
-              inicialization: "none"
+              inicialization: "none",
             }
           },
           videos: {

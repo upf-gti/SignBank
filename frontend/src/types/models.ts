@@ -1,4 +1,16 @@
 import type { RelatedGloss, MinimalPair } from "./gloss"
+import { 
+  Hand,
+  HandConfiguration,
+  ConfigurationChange,
+  RelationBetweenArticulators,
+  MovementRelatedOrientation,
+  OrientationRelatedToLocation,
+  OrientationChange,
+  ContactType,
+  MovementType,
+  Location,
+} from './enums';
 
 export type WordStatus = 'PUBLISHED' | 'DRAFT' | 'PENDING';
 
@@ -58,20 +70,20 @@ export interface Video {
   priority: number;
 }
 
-export interface VideoData {
-  hands: string;
-  configuration: string;
-  configurationChanges: string;
-  relationBetweenArticulators: string;
-  location: string;
-  movementRelatedOrientation: string;
-  locationRelatedOrientation: string;
-  orientationChange: string;
-  contactType: string;
-  movementType: string;
-  vocalization: string;
-  nonManualComponent: string;
-  inicialization: string;
+export interface PhonologyData {
+  hands: Hand;
+  configuration: HandConfiguration | '';
+  configurationChanges: ConfigurationChange | '';
+  relationBetweenArticulators: RelationBetweenArticulators | '';
+  location: Location | '';
+  movementRelatedOrientation: MovementRelatedOrientation | '';
+  orientationRelatedToLocation: OrientationRelatedToLocation | '';
+  orientationChange: OrientationChange | '';
+  contactType: ContactType | '';
+  movementType: MovementType | '';
+  vocalization: string | '';
+  nonManualComponent: string | '';
+  inicialization: string | '';
   id?: string;
 }
 
@@ -135,7 +147,7 @@ export interface SignVideo {
   senseId: string;
   videos: Video[];
   minimalPairs: MinimalPair[];
-  videoData: VideoData;
+  videoData: PhonologyData;
   isNew?: boolean;
 }
 
@@ -224,12 +236,6 @@ export enum LexicalCategory {
   CONJUNCTION = 'CONJUNCTION',
   INTERJECTION = 'INTERJECTION',
   OTHER = 'OTHER'
-}
-
-export enum Hand {
-  RIGHT = 'RIGHT',
-  LEFT = 'LEFT',
-  BOTH = 'BOTH'
 }
 
 export enum RelationType {

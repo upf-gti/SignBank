@@ -1,37 +1,37 @@
-import { IsString, IsOptional, ValidateNested, IsEnum, IsNotEmpty, ArrayNotEmpty, IsInt, Min } from 'class-validator';
+import { IsString, IsOptional, ValidateNested, IsEnum, IsNotEmpty, ArrayNotEmpty, IsInt, Min, IsArray } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
-import { Language, LexicalCategory, Hand, RelationType } from '@prisma/client';
+import { Language, LexicalCategory, Hand, RelationType, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType } from '@prisma/client';
 
 export class VideoDataDto {
-  @IsString()
+  @IsEnum(Hand)
   hands: Hand;
 
-  @IsString()
-  configuration: string;
+  @IsEnum(HandConfiguration)
+  configuration: HandConfiguration;
 
-  @IsString()
-  configurationChanges: string;
+  @IsEnum(ConfigurationChange)
+  configurationChanges: ConfigurationChange;
 
-  @IsString()
-  relationBetweenArticulators: string;
+  @IsEnum(RelationBetweenArticulators)
+  relationBetweenArticulators: RelationBetweenArticulators;
 
-  @IsString()
-  location: string;
+  @IsEnum(Location)
+  location: Location;
 
-  @IsString()
-  movementRelatedOrientation: string;
+  @IsEnum(MovementRelatedOrientation)
+  movementRelatedOrientation: MovementRelatedOrientation;
 
-  @IsString()
-  locationRelatedOrientation: string;
+  @IsEnum(OrientationRelatedToLocation)
+  orientationRelatedToLocation: OrientationRelatedToLocation;
 
-  @IsString()
-  orientationChange: string;
+  @IsEnum(OrientationChange)
+  orientationChange: OrientationChange;
 
-  @IsString()
-  contactType: string;
+  @IsEnum(ContactType)
+  contactType: ContactType;
 
-  @IsString()
-  movementType: string;
+  @IsEnum(MovementType)
+  movementType: MovementType;
 
   @IsString()
   vocalization: string;

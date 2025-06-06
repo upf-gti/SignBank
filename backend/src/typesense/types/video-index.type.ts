@@ -1,3 +1,5 @@
+import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType } from '@prisma/client';
+
 export interface VideoIndex {
   id: string;
   // Video data
@@ -7,16 +9,16 @@ export interface VideoIndex {
   signVideoTitle: string;
   
   // Video parameters
-  hands: 'RIGHT' | 'LEFT' | 'BOTH';
-  configuration: string;
-  configurationChanges: string;
-  relationBetweenArticulators: string;
-  location: string;
-  movementRelatedOrientation: string;
-  locationRelatedOrientation: string;
-  orientationChange: string;
-  contactType: string;
-  movementType: string;
+  hands: Hand;
+  configuration: HandConfiguration;
+  configurationChanges: ConfigurationChange;
+  relationBetweenArticulators: RelationBetweenArticulators;
+  location: Location;
+  movementRelatedOrientation: MovementRelatedOrientation;
+  orientationRelatedToLocation: OrientationRelatedToLocation;
+  orientationChange: OrientationChange;
+  contactType: ContactType;
+  movementType: MovementType;
   vocalization: string;
   nonManualComponent: string;
   inicialization: string;

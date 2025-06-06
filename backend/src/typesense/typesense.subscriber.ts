@@ -44,7 +44,7 @@ export class TypesenseSubscriber {
           relationBetweenArticulators: signVideo.videoData.relationBetweenArticulators,
           location: signVideo.videoData.location,
           movementRelatedOrientation: signVideo.videoData.movementRelatedOrientation,
-          locationRelatedOrientation: signVideo.videoData.locationRelatedOrientation,
+          orientationRelatedToLocation: signVideo.videoData.orientationRelatedToLocation,
           orientationChange: signVideo.videoData.orientationChange,
           contactType: signVideo.videoData.contactType,
           movementType: signVideo.videoData.movementType,

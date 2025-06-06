@@ -5,7 +5,8 @@ import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import SearchFilters from 'src/components/Search/SearchFilters.vue';
 import SearchResults from 'src/components/Search/SearchResults.vue';
-import type { FilterInputs } from 'src/components/Search/types';
+import type { PhonologyData } from 'src/types/models';
+import { Hand } from 'src/types/enums';
 
 const $q = useQuasar();
 const router = useRouter();
@@ -22,38 +23,38 @@ const showDetails = ref(false);
 // Filters state
 const selectedLexicalCategory = ref<string>('');
 const selectedHands = ref<string>('');
-const filterInputs = ref<FilterInputs>({
-  hands: '',
+const filterInputs = ref<PhonologyData>({
+  hands: Hand.RIGHT,
   configuration: '',
   configurationChanges: '',
   relationBetweenArticulators: '',
   location: '',
   movementRelatedOrientation: '',
-  locationRelatedOrientation: '',
+  orientationRelatedToLocation: '',
   orientationChange: '',
   contactType: '',
   movementType: '',
   vocalization: '',
   nonManualComponent: '',
-  inicialization: ''
+  inicialization: '' 
 });
 
 // Computed properties
 const filterBy = computed(() => {
   const filters = [];
   
-  if (selectedLexicalCategory.value) {
+  if (selectedLexicalCategory.value !== '') {
     filters.push(`lexicalCategory:='${selectedLexicalCategory.value}'`);
   }
   
-  if (selectedHands.value) {
+  if (selectedHands.value !== '') {
     filters.push(`hands:='${selectedHands.value}'`);
   }
   
   // Add text input filters
   for (const [field, value] of Object.entries(filterInputs.value)) {
-    if (value.trim()) {
-      filters.push(`${field}:='${value.trim()}'`);
+    if (value !== '') {
+      filters.push(`${field}:='${value}'`);
     }
   }
   

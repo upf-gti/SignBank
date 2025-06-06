@@ -20,7 +20,7 @@
       >
         <EditableModule
           :allow-edit="editMode"
-          :initial-edit-state="example.isNew"
+          :initial-edit-state="example.isNew || false"
           :show-delete="true"
           :custom-edit-label="translate('editExample')"
           :custom-delete-label="translate('deleteExample')"

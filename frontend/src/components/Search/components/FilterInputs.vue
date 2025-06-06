@@ -1,32 +1,32 @@
 <template>
   <div>
     <PhonologyFilters
-      :model-value="modelValue"
+      :phonology-data="phonologyData"
       :is-editable="true"
-      @update:model-value="$emit('update:model-value', $event)"
+      @update:phonology-data="$emit('update:phonology-data', $event)"
     />
   </div>
 </template>
 
 <script setup lang="ts">
 import translate from 'src/utils/translate';
-import type { FilterInputs } from '../types';
+import type { PhonologyData } from 'src/types/models';
 import PhonologyFilters from 'src/components/Shared/PhonologyFilters.vue';
 
 const t = (key: string) => translate(key);
 
 const props = defineProps<{
-  modelValue: FilterInputs;
+  phonologyData: PhonologyData;
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:model-value', value: FilterInputs): void;
+  (e: 'update:phonology-data', value: PhonologyData): void;
 }>();
 
-function updateField(field: keyof FilterInputs, value: string | number | null) {
-  emit('update:model-value', {
-    ...props.modelValue,
-    [field]: String(value || '')
+function updateField(field: keyof PhonologyData, value: string | number | null) {
+  emit('update:phonology-data', {
+    ...props.phonologyData,
+    [field]: value !== null ? String(value) : ''
   });
 }
 </script> 

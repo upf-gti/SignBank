@@ -40,8 +40,8 @@
       />
 
       <FilterInputs
-        :model-value="filterInputs"
-        @update:model-value="$emit('update:filterInputs', $event)"
+        :phonology-data="filterInputs"
+        @update:phonology-data="$emit('update:filterInputs', $event)"
       />
     </q-card-section>
   </q-card>
@@ -53,7 +53,8 @@ import translate from 'src/utils/translate';
 import SearchInput from './components/SearchInput.vue';
 import FilterCategories from './components/FilterCategories.vue';
 import FilterInputs from './components/FilterInputs.vue';
-import type { FilterInputs as FilterInputsType } from './types';
+import type { PhonologyData } from 'src/types/models';
+import { Hand } from 'src/types/enums';
 
 const t = (key: string) => translate(key);
 
@@ -61,14 +62,14 @@ const props = defineProps<{
   searchQuery: string;
   selectedCategory: string;
   selectedHands: string;
-  filterInputs: FilterInputsType;
+  filterInputs: PhonologyData;
 }>();
 
 const emit = defineEmits<{
   (e: 'update:searchQuery', value: string): void;
   (e: 'update:selectedCategory', value: string): void;
   (e: 'update:selectedHands', value: string): void;
-  (e: 'update:filterInputs', value: FilterInputsType): void;
+  (e: 'update:filterInputs', value: PhonologyData): void;
   (e: 'search'): void;
   (e: 'clear'): void;
 }>();
@@ -77,16 +78,16 @@ function clearFilters() {
   emit('update:selectedCategory', '');
   emit('update:selectedHands', '');
   emit('update:filterInputs', {
-    hands: '',
-    configuration: '',
-    configurationChanges: '',
-    relationBetweenArticulators: '',
-    location: '',
-    movementRelatedOrientation: '',
-    locationRelatedOrientation: '',
-    orientationChange: '',
-    contactType: '',
-    movementType: '',
+    hands: Hand.RIGHT,
+    configuration: [],
+    configurationChanges: [],
+    relationBetweenArticulators: [],
+    location: [],
+    movementRelatedOrientation: [],
+    orientationRelatedToLocation: [],
+    orientationChange: [],
+    contactType: [],
+    movementType: [],
     vocalization: '',
     nonManualComponent: '',
     inicialization: ''

@@ -9,9 +9,9 @@
       {{ translate('signFonology') }}
     </span>
     <PhonologyFilters
-      :model-value="videoData"
+      :phonology-data="videoData"
       :is-editable="editMode"
-      @update:model-value="$emit('update:video-data', $event)"
+      @update:phonologyData="$emit('update:video-data', $event)"
     />
   </q-card-section>
 </template>

@@ -14,7 +14,7 @@ export const videosSchema: CollectionCreateSchema = {
     { name: 'relationBetweenArticulators', type: 'string', facet: true },
     { name: 'location', type: 'string', facet: true },
     { name: 'movementRelatedOrientation', type: 'string', facet: true },
-    { name: 'locationRelatedOrientation', type: 'string', facet: true },
+    { name: 'orientationRelatedToLocation', type: 'string', facet: true },
     { name: 'orientationChange', type: 'string', facet: true },
     { name: 'contactType', type: 'string', facet: true },
     { name: 'movementType', type: 'string', facet: true },

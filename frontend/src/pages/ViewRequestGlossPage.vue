@@ -30,7 +30,7 @@
         v-model:edit-mode="editMode"
         class="col full-width"
         :gloss-data="glossData"
-        :allow-edit="false"
+        :allow-edit="true"
         @accept-request="acceptRequest"
         @decline-request="declineRequest"
       />

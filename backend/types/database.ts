@@ -3,6 +3,19 @@
  * Generated from schema.prisma
  */
 
+// Import additional enums from Prisma
+import { 
+  HandConfiguration, 
+  ConfigurationChange, 
+  RelationBetweenArticulators, 
+  Location, 
+  MovementRelatedOrientation, 
+  OrientationRelatedToLocation, 
+  OrientationChange, 
+  ContactType, 
+  MovementType 
+} from '@prisma/client';
+
 // Enum types
 export enum Role {
   ADMIN = 'ADMIN',
@@ -123,15 +136,15 @@ export type SignVideo = {
   priority: number;
   videoData: {
     hands: Hand
-    configuration: string
-    configurationChanges: string
-    relationBetweenArticulators: string
-    location: string
-    movementRelatedOrientation: string
-    locationRelatedOrientation: string
-    orientationChange: string
-    contactType: string
-    movementType: string
+    configuration: HandConfiguration
+    configurationChanges: ConfigurationChange
+    relationBetweenArticulators: RelationBetweenArticulators
+    location: Location
+    movementRelatedOrientation: MovementRelatedOrientation
+    orientationRelatedToLocation: OrientationRelatedToLocation
+    orientationChange: OrientationChange
+    contactType: ContactType
+    movementType: MovementType
     vocalization: string
     nonManualComponent: string
     inicialization: string
