@@ -43,17 +43,18 @@ const filterInputs = ref<PhonologyData>({
 const filterBy = computed(() => {
   const filters = [];
   
-  if (selectedLexicalCategory.value !== '') {
+  if (selectedLexicalCategory.value !== '' && selectedLexicalCategory.value !== null) {
     filters.push(`lexicalCategory:='${selectedLexicalCategory.value}'`);
   }
   
-  if (selectedHands.value !== '') {
+  if (selectedHands.value !== '' && selectedHands.value !== null) {
     filters.push(`hands:='${selectedHands.value}'`);
   }
   
-  // Add text input filters
+  // Add text input filters - using contains operator for fuzzy matching
   for (const [field, value] of Object.entries(filterInputs.value)) {
-    if (value !== '') {
+    if (value !== '' && value !== null) {
+      // Use contains operator for phonology fields to enable partial matching
       filters.push(`${field}:='${value}'`);
     }
   }
@@ -73,12 +74,31 @@ const totalResults = computed(() => {
 async function performSearch() {
   try {
     loading.value = true;
+    
+    // Build search query including phonology terms for fuzzy matching
+    let finalSearchQuery = searchQuery.value || '*';
+    
+    // If there are phonology filters selected, add them to the search query for fuzzy matching
+    const phonologyTerms = [];
+    for (const [field, value] of Object.entries(filterInputs.value)) {
+      if (value !== '') {
+        phonologyTerms.push(value);
+      }
+    }
+    
+    // Combine text search with phonology terms
+    if (phonologyTerms.length > 0 && searchQuery.value && searchQuery.value !== '*') {
+      finalSearchQuery = `${searchQuery.value} ${phonologyTerms.join(' ')}`;
+    } else if (phonologyTerms.length > 0) {
+      finalSearchQuery = phonologyTerms.join(' ');
+    }
+    
     const params: SearchParams = {
-      query: searchQuery.value || '*',
+      query: finalSearchQuery || '*',
       page: Number(page.value),
       limit: Number(perPage.value),
       filter_by: filterBy.value || undefined,
-      facet_by: 'lexicalCategory,hands'
+      facet_by: 'lexicalCategory,hands,configuration,configurationChanges,relationBetweenArticulators,location,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType'
     };
     
     searchResults.value = await searchService.search(params);

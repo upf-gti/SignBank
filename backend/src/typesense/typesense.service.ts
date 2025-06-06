@@ -114,7 +114,6 @@ export class TypesenseService implements OnModuleInit {
   }
 
   async syncAllVideos() {
-    debugger
     this.logger.log('Starting video sync...');
     try {
       const dictionaryEntries = await this.prisma.dictionaryEntry.findMany({
@@ -233,20 +232,37 @@ export class TypesenseService implements OnModuleInit {
     per_page?: number;
   }) {
     try {
+      const phonologyFields = [
+        'configuration',
+        'configurationChanges', 
+        'relationBetweenArticulators',
+        'location',
+        'movementRelatedOrientation',
+        'orientationRelatedToLocation',
+        'orientationChange',
+        'contactType',
+        'movementType',
+        'hands'
+      ];
+      
       const defaultParams = {
         q: searchParameters.q || '*',
-        query_by: searchParameters.query_by || 'gloss,senseTitle,configuration,location,hands',
+        query_by: searchParameters.query_by || 'gloss,senseTitle,signVideoTitle,configuration,location,hands,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType',
         filter_by: searchParameters.filter_by || '',
-        facet_by: searchParameters.facet_by || 'configuration,location,hands,lexicalCategory',
+        facet_by: searchParameters.facet_by || 'configuration,location,hands,lexicalCategory,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType',
         max_hits: searchParameters.max_hits || 100,
         page: searchParameters.page || 1,
-        per_page: searchParameters.per_page || 20
+        per_page: searchParameters.per_page || 20,
+        // Add typo tolerance for phonology fields - allows 2 typos for better matching
+        typo_tolerance_threshold: 0,
+        // Allow prefix matching for better partial matches
+        prefix: true,
       };
 
       return await this.client
         .collections(VIDEOS_COLLECTION_NAME)
         .documents()
-        .search(defaultParams);
+        .search(defaultParams as any);
     } catch (error) {
       this.logger.error('Error searching in Typesense:', error.stack);
       throw error;
