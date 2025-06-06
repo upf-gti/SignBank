@@ -563,7 +563,6 @@ model SignVideo {
     id          String    @id @default(uuid())
     title       String
     videos      Video[]
-    url         String
     priority    Int       @default(0)
     videoData   VideoData @relation(fields: [videoDataId], references: [id], onDelete: Cascade)
     videoDataId String

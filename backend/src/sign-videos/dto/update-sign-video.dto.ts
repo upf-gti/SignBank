@@ -75,9 +75,6 @@ export class UpdateSignVideoDto {
   @IsString()
   title: string;
 
-  @IsString()
-  url: string;
-
   @IsNumber()
   priority: number;
 

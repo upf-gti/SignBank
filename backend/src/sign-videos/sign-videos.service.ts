@@ -46,7 +46,6 @@ export class SignVideosService {
     // Create the sign video with the video data
     const signVideoData: Prisma.SignVideoCreateInput = {
       title: createSignVideoDto.title,
-      url: createSignVideoDto.url,
       priority: createSignVideoDto.priority,
       sense: {
         connect: {
@@ -121,7 +120,6 @@ export class SignVideosService {
     // Update the sign video and create new videos
     const signVideoData: Prisma.SignVideoUpdateInput = {
       title: updateSignVideoDto.title,
-      url: updateSignVideoDto.url,
       priority: updateSignVideoDto.priority,
       videos: {
         create: updateSignVideoDto.videos.map(video => ({

@@ -3,6 +3,7 @@ import phonology from './phonology';
 
 const translations: TranslateKeys = {
   ...phonology,
+  createGloss: 'Create Gloss',
   signLanguageDictionary: 'Sign Language Dictionary',
   enterAWord: 'Enter a word',
   search: 'Search',
@@ -142,10 +143,21 @@ const translations: TranslateKeys = {
     failedToSaveDefinition: 'Failed to save definition',
     failedToDeleteDefinition: 'Failed to delete definition',
     failedToSaveTranslation: 'Failed to save translation',
-    failedToDeleteTranslation: 'Failed to delete translation'
+    failedToDeleteTranslation: 'Failed to delete translation',
+    failedToLoadGlossRequest: 'Failed to load gloss request',
+    failedToSaveGloss: 'Failed to save gloss',
+    failedToSubmitRequest: 'Failed to submit request',
+    accessDenied: 'Access denied'
   },
+  sendRequest: 'Send Request',
+  requestSubmittedSuccessfully: 'Request submitted successfully',
+  requestAcceptedSuccessfully: 'Request accepted successfully',
+  requestDeclinedSuccessfully: 'Request declined successfully',
+  NOT_COMPLETED: 'Not Completed',
+  WAITING_FOR_APPROVAL: 'Waiting for Approval',
   ACCEPTED: 'Accepted',
   DENIED: 'Denied',
+  declineReasonRequired: 'Decline reason is required',
   PENDING: 'Pending',
   details: 'Details',
   video: 'Video',
@@ -189,7 +201,13 @@ const translations: TranslateKeys = {
   orDragAndDropYourVideoHere: 'Or drag and drop your video here',
   addExampleVideo: 'Add example video',
   videoDeleted: 'Video deleted',
-  notSent: 'Not sent'
+  notSent: 'Not sent',
+  glossSavedSuccessfully: 'Gloss saved successfully',
+  accept: 'Accept',
+  decline: 'Decline',
+  reviewRequest: 'Review Request',
+  backToRequests: 'Back to Requests',
+  requestedBy: 'Requested by'
 };
 
 export default translations; 

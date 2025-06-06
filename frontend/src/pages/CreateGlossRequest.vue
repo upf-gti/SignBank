@@ -3,7 +3,7 @@
     <div class="row justify-center">
       <div class="col-12 col-md-8 col-lg-6">
         <q-card class="q-pa-lg">
-          <div class="text-h4 q-mb-md">
+          <div class="text-h4 q-mb-xl">
             {{ translate('createNewGloss') }}
           </div>
           
@@ -14,8 +14,8 @@
             <!-- Gloss Name Input -->
             <q-input
               v-model="form.gloss"
-              :label="translate('glossName')"
-              :rules="[val => !!val || translate('glossNameRequired')]"
+              :label="translate('gloss')"
+              :rules="[val => !!val || translate('required')]"
               outlined
               clearable
             />
@@ -31,18 +31,7 @@
             </div>
           </q-form>
 
-          <!-- Instructions -->
-          <div class="text-caption q-mt-lg">
-            <div class="text-weight-bold q-mb-sm">
-              {{ translate('howItWorks') }}:
-            </div>
-            <ol class="q-pl-md">
-              <li>{{ translate('step1EnterGlossName') }}</li>
-              <li>{{ translate('step2AddDetails') }}</li>
-              <li>{{ translate('step3Review') }}</li>
-              <li>{{ translate('step4Submit') }}</li>
-            </ol>
-          </div>
+          
         </q-card>
       </div>
     </div>
@@ -68,12 +57,6 @@ async function onSubmit() {
   try {
     loading.value = true
     const response = await api.glossRequests.create(form.value)
-    
-    // Show success message
-    $q.notify({
-      type: 'positive',
-      message: translate('glossRequestCreated')
-    })
 
     // Navigate to the edit page for this request
     router.push(`/my-requests/edit/${response.data.id}`)

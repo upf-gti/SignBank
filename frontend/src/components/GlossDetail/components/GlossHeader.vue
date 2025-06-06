@@ -13,8 +13,31 @@
         outlined
         :label="translate('gloss')"
       />
+      <!-- Status Info -->
+      <div
+        v-if="requestStatus && requestStatus !== 'NOT_COMPLETED'"
+        class="q-mt-sm"
+      >
+        <q-chip
+          :color="getStatusColor(requestStatus)"
+          text-color="white"
+          :label="translate(requestStatus)"
+          dense
+        />
+      </div>
     </div>
     <div class="row">
+      <!-- Send Request Button - shown when request is not completed -->
+      <q-btn
+        v-if="requestStatus === 'NOT_COMPLETED'"
+        color="primary"
+        icon="send"
+        :label="translate('sendRequest')"
+        @click="submitRequest"
+        :loading="submitting"
+        class="q-mr-sm"
+      />
+      
       <template v-if="isConfirmRequestPage">
         <q-btn
           icon="check"
@@ -33,27 +56,12 @@
           @click="declineRequest"
         />
       </template>
-      <div
-        v-if="allowEdit"
-        class="row"
-      >
-        <q-btn
-          v-if="!editMode"
-          icon="edit"
-          @click="editGloss"
-        />
-        <q-btn
-          v-if="editMode"
-          icon="cancel"
-          @click="cancelGloss"
-        />
-      </div>
     </div>
   </q-card-section>
 </template>
 
 <script setup lang="ts">
-import { GlossData } from 'src/types/models'
+import { GlossData, RequestStatus } from 'src/types/models'
 import translate from 'src/utils/translate'
 
 const emit = defineEmits<{
@@ -61,13 +69,16 @@ const emit = defineEmits<{
   (e: 'cancelGloss'): void
   (e: 'acceptRequest'): void
   (e: 'declineRequest'): void
+  (e: 'submitRequest'): void
 }>()
 
-const { glossData, allowEdit = true, isConfirmRequestPage = false } = defineProps<{
+const { glossData, allowEdit = true, isConfirmRequestPage = false, requestStatus, submitting = false } = defineProps<{
   glossData: GlossData,
   editMode: boolean,
   allowEdit: boolean,
-  isConfirmRequestPage?: boolean
+  isConfirmRequestPage?: boolean,
+  requestStatus?: RequestStatus | undefined,
+  submitting?: boolean | undefined
 }>()
 
 const editGloss = () => {
@@ -85,4 +96,23 @@ const acceptRequest = () => {
 const declineRequest = () => {
   emit('declineRequest')
 }
+
+const submitRequest = () => {
+  emit('submitRequest')
+}
+
+const getStatusColor = (status: RequestStatus | undefined): string => {
+  switch (status) {
+    case 'NOT_COMPLETED':
+      return 'orange';
+    case 'WAITING_FOR_APPROVAL':
+      return 'blue';
+    case 'ACCEPTED':
+      return 'positive';
+    case 'DENIED':
+      return 'negative';
+    default:
+      return 'grey';
+  }
+};
 </script>

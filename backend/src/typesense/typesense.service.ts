@@ -146,53 +146,26 @@ export class TypesenseService implements OnModuleInit {
       const documents: VideoIndex[] = [];
 
       for (const sense of senses) {
-        // If there are no sign videos, create a placeholder document
-        if (sense.signVideos.length === 0) {
-          documents.push({
-            id: `sense-${sense.id}`,
-            url: null,
-            signVideoTitle: null,
-            hands: null,
-            configuration: null,
-            configurationChanges: null,
-            relationBetweenArticulators: null,
-            location: null,
-            movementRelatedOrientation: null,
-            orientationRelatedToLocation: null,
-            orientationChange: null,
-            contactType: null,
-            movementType: null,
-            vocalization: null,
-            nonManualComponent: null,
-            inicialization: null,
-            senseId: sense.id,
-            senseTitle: sense.senseTitle,
-            lexicalCategory: sense.lexicalCategory || 'OTHER',
-            glossId: sense.glossData.id,
-            gloss: sense.glossData.gloss
-          });
-          totalDocuments++;
-        } else {
-          // Take only the highest priority SignVideo (first one due to orderBy)
+        
           const highestPrioritySignVideo = sense.signVideos[0];
           
           const document: VideoIndex = {
             id: highestPrioritySignVideo.id,
             url: highestPrioritySignVideo.videos[0]?.url || null,
             signVideoTitle: highestPrioritySignVideo.title,
-            hands: highestPrioritySignVideo.videoData?.hands || null,
-            configuration: highestPrioritySignVideo.videoData?.configuration || null,
-            configurationChanges: highestPrioritySignVideo.videoData?.configurationChanges || null,
-            relationBetweenArticulators: highestPrioritySignVideo.videoData?.relationBetweenArticulators || null,
-            location: highestPrioritySignVideo.videoData?.location || null,
-            movementRelatedOrientation: highestPrioritySignVideo.videoData?.movementRelatedOrientation || null,
-            orientationRelatedToLocation: highestPrioritySignVideo.videoData?.orientationRelatedToLocation || null,
-            orientationChange: highestPrioritySignVideo.videoData?.orientationChange || null,
-            contactType: highestPrioritySignVideo.videoData?.contactType || null,
-            movementType: highestPrioritySignVideo.videoData?.movementType || null,
-            vocalization: highestPrioritySignVideo.videoData?.vocalization || null,
-            nonManualComponent: highestPrioritySignVideo.videoData?.nonManualComponent || null,
-            inicialization: highestPrioritySignVideo.videoData?.inicialization || null,
+            hands: highestPrioritySignVideo.videoData?.hands || 'RIGHT',
+            configuration: highestPrioritySignVideo.videoData?.configuration || '',
+            configurationChanges: highestPrioritySignVideo.videoData?.configurationChanges || '',
+            relationBetweenArticulators: highestPrioritySignVideo.videoData?.relationBetweenArticulators || '',
+            location: highestPrioritySignVideo.videoData?.location || '',
+            movementRelatedOrientation: highestPrioritySignVideo.videoData?.movementRelatedOrientation || '',
+            orientationRelatedToLocation: highestPrioritySignVideo.videoData?.orientationRelatedToLocation || '',
+            orientationChange: highestPrioritySignVideo.videoData?.orientationChange || '',
+            contactType: highestPrioritySignVideo.videoData?.contactType || '',
+            movementType: highestPrioritySignVideo.videoData?.movementType || '',
+            vocalization: highestPrioritySignVideo.videoData?.vocalization || '',
+            nonManualComponent: highestPrioritySignVideo.videoData?.nonManualComponent || '',
+            inicialization: highestPrioritySignVideo.videoData?.inicialization || '',
             senseId: sense.id,
             senseTitle: sense.senseTitle,
             lexicalCategory: sense.lexicalCategory || 'OTHER',
@@ -202,7 +175,6 @@ export class TypesenseService implements OnModuleInit {
 
           documents.push(document);
           totalDocuments++;
-        }
 
         if (documents.length >= BATCH_SIZE) {
           await this.client.collections(VIDEOS_COLLECTION_NAME).documents().import(documents);

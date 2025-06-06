@@ -374,6 +374,7 @@ export interface PhonologyTranslateKeys {
 }
 
 interface TranslateKeys extends PhonologyTranslateKeys {
+  createGloss: string;
   signLanguageDictionary: string;
   enterAWord: string;
   search: string;
@@ -512,6 +513,10 @@ interface TranslateKeys extends PhonologyTranslateKeys {
     failedToDeleteDefinition: string;
     failedToSaveTranslation: string;
     failedToDeleteTranslation: string;
+    failedToLoadGlossRequest: string;
+    failedToSaveGloss: string;
+    failedToSubmitRequest: string;
+    accessDenied: string;
   };
   ACCEPTED: string;
   DENIED: string;
@@ -559,6 +564,19 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   addExampleVideo: string;
   videoDeleted: string;
   notSent: string;
+  sendRequest: string;
+  requestSubmittedSuccessfully: string;
+  requestAcceptedSuccessfully: string;
+  requestDeclinedSuccessfully: string;
+  NOT_COMPLETED: string;
+  WAITING_FOR_APPROVAL: string;
+  declineReasonRequired: string;
+  glossSavedSuccessfully: string;
+  accept: string;
+  decline: string;
+  reviewRequest: string;
+  backToRequests: string;
+  requestedBy: string;
 }
 
 export default TranslateKeys;

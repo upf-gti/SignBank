@@ -1,10 +1,11 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateGlossRequestDto } from './dto/create-gloss-request.dto';
 import { AcceptGlossRequestDto } from './dto/accept-gloss-request.dto';
 import { DeclineGlossRequestDto } from './dto/decline-gloss-request.dto';
 import { GlossStatus, RequestStatus } from '@prisma/client';
 import { UpdateSenseDto, ReorderSenseDto } from './dto/update-sense.dto';
+import { validateGlossRequest } from '../utils/gloss-validation';
 
 @Injectable()
 export class GlossRequestsService {
@@ -199,7 +200,7 @@ export class GlossRequestsService {
       data: {
         status: RequestStatus.DENIED,
         deniedById: userId,
-        denyReason: declineGlossRequestDto.reason,
+        denyReason: declineGlossRequestDto.denyReason,
       },
       include: {
         creator: {
@@ -222,6 +223,106 @@ export class GlossRequestsService {
                 definitions: true,
                 signVideos: true,
                 examples: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  async submitGlossRequest(
+    id: string,
+    userId: string,
+  ) {
+    // First get the full gloss request with all nested data for validation
+    const glossRequest = await this.prisma.glossRequest.findUnique({
+      where: { id },
+      include: {
+        requestedGlossData: {
+          include: {
+            senses: {
+              include: {
+                definitions: {
+                  include: {
+                    definitionTranslations: true,
+                  },
+                },
+                examples: {
+                  include: {
+                    exampleTranslations: true,
+                  },
+                },
+                signVideos: {
+                  include: {
+                    videos: true,
+                  },
+                },
+                senseTranslations: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!glossRequest) {
+      throw new NotFoundException('Gloss request not found');
+    }
+
+    // Check if the user is the creator of the request
+    if (glossRequest.creatorId !== userId) {
+      throw new ForbiddenException('You can only submit your own requests');
+    }
+
+    // Check if the request is in NOT_COMPLETED status
+    if (glossRequest.status !== RequestStatus.NOT_COMPLETED) {
+      throw new BadRequestException('Request can only be submitted when it is not completed');
+    }
+
+    // Validate the gloss request data
+    const validationErrors = validateGlossRequest(glossRequest);
+    
+    if (validationErrors.length > 0) {
+      throw new BadRequestException({
+        message: 'Gloss request validation failed',
+        errors: validationErrors.map(error => error.message)
+      });
+    }
+
+    return this.prisma.glossRequest.update({
+      where: { id },
+      data: {
+        status: RequestStatus.WAITING_FOR_APPROVAL,
+      },
+      include: {
+        creator: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+          },
+        },
+        requestedGlossData: {
+          include: {
+            senses: {
+              include: {
+                definitions: {
+                  include: {
+                    definitionTranslations: true,
+                  },
+                },
+                examples: {
+                  include: {
+                    exampleTranslations: true,
+                  },
+                },
+                signVideos: {
+                  include: {
+                    videos: true,
+                  },
+                },
+                senseTranslations: true,
               },
             },
           },

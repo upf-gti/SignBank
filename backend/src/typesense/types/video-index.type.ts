@@ -10,15 +10,15 @@ export interface VideoIndex {
   
   // Video parameters
   hands: Hand;
-  configuration: HandConfiguration;
-  configurationChanges: ConfigurationChange;
-  relationBetweenArticulators: RelationBetweenArticulators;
-  location: Location;
-  movementRelatedOrientation: MovementRelatedOrientation;
-  orientationRelatedToLocation: OrientationRelatedToLocation;
-  orientationChange: OrientationChange;
-  contactType: ContactType;
-  movementType: MovementType;
+  configuration: HandConfiguration | '';
+  configurationChanges: ConfigurationChange | '';
+  relationBetweenArticulators: RelationBetweenArticulators | '';
+  location: Location | '';
+  movementRelatedOrientation: MovementRelatedOrientation | '';
+  orientationRelatedToLocation: OrientationRelatedToLocation | '';
+  orientationChange: OrientationChange | '';
+  contactType: ContactType | '';
+  movementType: MovementType | '';
   vocalization: string;
   nonManualComponent: string;
   inicialization: string;

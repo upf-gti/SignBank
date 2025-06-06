@@ -53,23 +53,14 @@
             <div class="text-caption">
               {{ translate('requested') }}: {{ new Date(request.createdAt).toLocaleDateString() }}
             </div>
-            <div class="row">
-              <q-btn
-                v-if="request.glossId"
-                flat
-                dense
-                icon="visibility"
-                :label="translate('viewGloss')"
-                @click="$router.push(`/gloss/${request.glossId}`)"
-              />
-              <q-btn
-                flat
-                dense
-                icon="visibility"
-                :label="translate('viewGloss')"
-                @click="$router.push(`/requests/view/${request.id}`)"
-              />
-            </div>
+            <q-btn
+              flat
+              dense
+              icon="rate_review"
+              :label="translate('reviewRequest')"
+              color="primary"
+              @click="$router.push(`/confirm-requests/review/${request.id}`)"
+            />
           </q-card-section>
         </q-card>
       </div>

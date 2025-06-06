@@ -100,6 +100,11 @@ const senseTranslations = computed(() => {
 });
 
 const addTranslation = () => {
+  // Initialize senseTranslations array if it doesn't exist
+  if (!props.sense.senseTranslations) {
+    props.sense.senseTranslations = [];
+  }
+  
   props.sense.senseTranslations.push({
     id: '',
     translation: '',
@@ -146,6 +151,11 @@ const saveTranslation = async (translation: SenseTranslation) => {
 
 const deleteTranslation = async (translation: SenseTranslation) => {
   if (!translation.id) {
+    // Initialize senseTranslations array if it doesn't exist
+    if (!props.sense.senseTranslations) {
+      props.sense.senseTranslations = [];
+    }
+    
     const index = props.sense.senseTranslations.findIndex(t => t === translation);
     if (index !== -1) {
       props.sense.senseTranslations.splice(index, 1);
@@ -177,6 +187,11 @@ const deleteTranslation = async (translation: SenseTranslation) => {
 
 const cancelTranslation = (translation: SenseTranslation) => {
   if (!translation.id) {
+    // Initialize senseTranslations array if it doesn't exist
+    if (!props.sense.senseTranslations) {
+      props.sense.senseTranslations = [];
+    }
+    
     const index = props.sense.senseTranslations.findIndex(t => t === translation);
     if (index !== -1) {
       props.sense.senseTranslations.splice(index, 1);

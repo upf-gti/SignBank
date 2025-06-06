@@ -120,11 +120,13 @@ const handleLogin = async () => {
 
     // Close dialog
     isOpen.value = false
-
+    
     // Reset form
     email.value = ''
     password.value = ''
     rememberMe.value = false
+
+    window.location.reload()
   } catch {
     Notify.create({
       type: 'negative',

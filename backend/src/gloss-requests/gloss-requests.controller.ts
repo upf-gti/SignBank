@@ -64,4 +64,15 @@ export class GlossRequestsController {
       declineGlossRequestDto,
     );
   }
+
+  @Post(':id/submit')
+  async submitGlossRequest(
+    @Request() req,
+    @Param('id') id: string,
+  ) {
+    return this.glossRequestsService.submitGlossRequest(
+      id,
+      req.user.id,
+    );
+  }
 } 

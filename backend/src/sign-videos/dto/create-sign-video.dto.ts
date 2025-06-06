@@ -72,9 +72,6 @@ export class CreateSignVideoDto {
   @IsOptional()
   title: string;
 
-  @IsString()
-  url: string;
-
   @IsNumber()
   priority: number;
 

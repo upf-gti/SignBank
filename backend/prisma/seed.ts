@@ -387,7 +387,6 @@ async function main() {
       prisma.signVideo.create({
         data: {
           title: `${sense.senseTitle} Sign Video`,
-          url: `videos/LSC_-_Cami.mp4`,
           priority: 1,
           sense: {
             connect: {

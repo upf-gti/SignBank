@@ -8,10 +8,13 @@
       :edit-mode="editMode"
       :allow-edit="allowEdit"
       :is-confirm-request-page="isConfirmRequestPage"
+      :request-status="requestStatus"
+      :submitting="submitting"
       @edit-gloss="editGloss"
       @cancel-gloss="cancelGloss"
       @accept-request="acceptRequest"
       @decline-request="declineRequest"
+      @submit-request="submitRequest"
     />
     <SenseSelector
       v-model="selectedSenseId"
@@ -35,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { GlossData, Sense } from 'src/types/models'
+import { GlossData, Sense, RequestStatus } from 'src/types/models'
 import GlossHeader from './components/GlossHeader.vue'
 import { ref, computed } from 'vue'
 import SenseSelector from './components/SenseSelector.vue';
@@ -49,13 +52,16 @@ const emit = defineEmits<{
   (e: 'update:editMode', mode: boolean): void
   (e: 'acceptRequest', glossData: GlossData): void
   (e: 'declineRequest'): void
+  (e: 'submitRequest'): void
 }>()
 
-const { glossData, editMode, allowEdit = true, isConfirmRequestPage = false } = defineProps<{
+const { glossData, editMode, allowEdit = true, isConfirmRequestPage = false, requestStatus, submitting = false } = defineProps<{
   glossData: GlossData,
   editMode: boolean,
   allowEdit: boolean,
-  isConfirmRequestPage?: boolean
+  isConfirmRequestPage?: boolean | undefined,
+  requestStatus?: RequestStatus | undefined,
+  submitting?: boolean | undefined
 }>()
 
 const selectedSenseId = ref<string>(glossData.senses[0]?.id as string)
@@ -103,9 +109,14 @@ const declineRequest = () => {
   emit('declineRequest')
 }
 
+const submitRequest = () => {
+  emit('submitRequest')
+}
+
 const handleGlossDataUpdate = (updatedGlossData: GlossData) => {
   // Update the local glossData with the new data
   Object.assign(glossData, updatedGlossData)
+  selectedSenseId.value = glossData.senses[0]?.id as string
 }
 
 
