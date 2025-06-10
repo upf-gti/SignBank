@@ -60,6 +60,7 @@
           :related-glosses="glossData.relationsAsSource || []"
           :minimal-pairs="glossData.minimalPairsAsSource || []"
           :edit-mode="editMode"
+          :gloss-id="glossData.id || ''"
           @update:gloss-data="updateGlossData"
         />
       </q-tab-panel>

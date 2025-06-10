@@ -404,6 +404,7 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   confirmRequests: string;
   logout: string;
   login: string;
+  reason: string;
   glossTranslations: string;
   seeExampleVideo: string;
   spanish: string;
@@ -577,6 +578,13 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   reviewRequest: string;
   backToRequests: string;
   requestedBy: string;
+  addRelation: string;
+  addMinimalPair: string;
+  editRelation: string;
+  editMinimalPair: string;
+  removeRelation: string;
+  removeMinimalPair: string;
+  relationCreatedSuccessfully: string;
 }
 
 export default TranslateKeys;

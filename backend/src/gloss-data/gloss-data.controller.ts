@@ -100,18 +100,56 @@ export class GlossDataController {
     return this.glossDataService.deleteExampleTranslation(id);
   }
 
-  // Related Gloss deletion
-  @Delete('related-glosses/:id')
+  // Related Glosses Management
+  @Post(':id/relations')
   @Roles(Role.ADMIN)
-  async deleteRelatedGloss(@Param('id') id: string) {
-    return this.glossDataService.deleteRelatedGloss(id);
+  async createRelation(
+    @Param('id') glossId: string,
+    @Body() data: { targetGlossId: string, relationType: string }
+  ) {
+    return this.glossDataService.createRelation(glossId, data.targetGlossId, data.relationType);
+  }
+
+  @Patch('relations/:relationId')
+  @Roles(Role.ADMIN)
+  async updateRelation(
+    @Param('relationId') relationId: string,
+    @Body() data: { relationType: string }
+  ) {
+    return this.glossDataService.updateRelation(relationId, data.relationType);
+  }
+
+  // Related Gloss deletion
+  @Delete('relations/:relationId')
+  @Roles(Role.ADMIN)
+  async deleteRelatedGloss(@Param('relationId') relationId: string) {
+    return this.glossDataService.deleteRelatedGloss(relationId);
+  }
+
+  // Minimal Pairs Management
+  @Post(':id/minimal-pairs')
+  @Roles(Role.ADMIN)
+  async createMinimalPair(
+    @Param('id') glossId: string,
+    @Body() data: { targetGlossId: string, distinction: string }
+  ) {
+    return this.glossDataService.createMinimalPair(glossId, data.targetGlossId, data.distinction);
+  }
+
+  @Patch('minimal-pairs/:pairId')
+  @Roles(Role.ADMIN)
+  async updateMinimalPair(
+    @Param('pairId') pairId: string,
+    @Body() data: { distinction: string }
+  ) {
+    return this.glossDataService.updateMinimalPair(pairId, data.distinction);
   }
 
   // Minimal Pair deletion
-  @Delete('minimal-pairs/:id')
+  @Delete('minimal-pairs/:pairId')
   @Roles(Role.ADMIN)
-  async deleteMinimalPair(@Param('id') id: string) {
-    return this.glossDataService.deleteMinimalPair(id);
+  async deleteMinimalPair(@Param('pairId') pairId: string) {
+    return this.glossDataService.deleteMinimalPair(pairId);
   }
 
   @Post('senses/:senseId/definitions')
@@ -205,4 +243,5 @@ export class GlossDataController {
   ) {
     return this.glossDataService.updateExampleTranslation(id, data);
   }
+
 } 

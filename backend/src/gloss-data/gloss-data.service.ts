@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateSenseDto, ReorderSenseDto } from './dto/update-sense.dto';
 import { UpdateDefinitionDto, UpdateDefinitionTranslationDto } from './dto/update-definition.dto';
@@ -486,24 +486,158 @@ export class GlossDataService {
 
   // Related Gloss deletion
   async deleteRelatedGloss(id: string) {
-    try {
-      return await this.prisma.relatedGloss.delete({
-        where: { id },
-      });
-    } catch (error) {
+    const relation = await this.prisma.relatedGloss.findUnique({
+      where: { id },
+      include: { sourceGloss: true }
+    });
+
+    if (!relation) {
       throw new NotFoundException(`RelatedGloss with ID ${id} not found or could not be deleted`);
     }
+
+    await this.prisma.relatedGloss.delete({
+      where: { id },
+    });
+
+    return this.getGlossData(relation.sourceGlossId);
+  }
+
+  // Related Gloss creation
+  async createRelation(sourceGlossId: string, targetGlossId: string, relationType: string) {
+    // Check if both glosses exist
+    const sourceGloss = await this.prisma.glossData.findUnique({
+      where: { id: sourceGlossId }
+    });
+    const targetGloss = await this.prisma.glossData.findUnique({
+      where: { id: targetGlossId }
+    });
+
+    if (!sourceGloss) {
+      throw new NotFoundException('Source gloss not found');
+    }
+    if (!targetGloss) {
+      throw new NotFoundException('Target gloss not found');
+    }
+
+    // Check if relation already exists
+    const existingRelation = await this.prisma.relatedGloss.findFirst({
+      where: {
+        sourceGlossId,
+        targetGlossId
+      }
+    });
+
+    if (existingRelation) {
+      throw new ConflictException('Relation already exists between these glosses');
+    }
+
+    await this.prisma.relatedGloss.create({
+      data: {
+        sourceGlossId,
+        targetGlossId,
+        relationType: relationType as any
+      }
+    });
+
+    return this.getGlossData(sourceGlossId);
+  }
+
+  // Related Gloss update
+  async updateRelation(relationId: string, relationType: string) {
+    const relation = await this.prisma.relatedGloss.findUnique({
+      where: { id: relationId }
+    });
+
+    if (!relation) {
+      throw new NotFoundException('Relation not found');
+    }
+
+    await this.prisma.relatedGloss.update({
+      where: { id: relationId },
+      data: {
+        relationType: relationType as any
+      }
+    });
+
+    return this.getGlossData(relation.sourceGlossId);
   }
 
   // Minimal Pair deletion
   async deleteMinimalPair(id: string) {
-    try {
-      return await this.prisma.minimalPair.delete({
-        where: { id },
-      });
-    } catch (error) {
+    const pair = await this.prisma.minimalPair.findUnique({
+      where: { id },
+      include: { sourceGloss: true }
+    });
+
+    if (!pair) {
       throw new NotFoundException(`MinimalPair with ID ${id} not found or could not be deleted`);
     }
+
+    await this.prisma.minimalPair.delete({
+      where: { id },
+    });
+
+    return this.getGlossData(pair.sourceGlossId);
+  }
+
+  // Minimal Pair creation
+  async createMinimalPair(sourceGlossId: string, targetGlossId: string, distinction: string) {
+    // Check if both glosses exist
+    const sourceGloss = await this.prisma.glossData.findUnique({
+      where: { id: sourceGlossId }
+    });
+    const targetGloss = await this.prisma.glossData.findUnique({
+      where: { id: targetGlossId }
+    });
+
+    if (!sourceGloss) {
+      throw new NotFoundException('Source gloss not found');
+    }
+    if (!targetGloss) {
+      throw new NotFoundException('Target gloss not found');
+    }
+
+    // Check if minimal pair already exists
+    const existingPair = await this.prisma.minimalPair.findFirst({
+      where: {
+        sourceGlossId,
+        targetGlossId
+      }
+    });
+
+    if (existingPair) {
+      throw new ConflictException('Minimal pair already exists between these glosses');
+    }
+
+    await this.prisma.minimalPair.create({
+      data: {
+        sourceGlossId,
+        targetGlossId,
+        distinction
+      }
+    });
+
+    return this.getGlossData(sourceGlossId);
+  }
+
+  // Minimal Pair update
+  async updateMinimalPair(pairId: string, distinction: string) {
+    const pair = await this.prisma.minimalPair.findUnique({
+      where: { id: pairId }
+    });
+
+    if (!pair) {
+      throw new NotFoundException('Minimal pair not found');
+    }
+
+    await this.prisma.minimalPair.update({
+      where: { id: pairId },
+      data: {
+        distinction
+      }
+    });
+
+    return this.getGlossData(pair.sourceGlossId);
   }
 
   async updateDefinitionTranslation(definitionId: string, translationId: string, data: UpdateDefinitionTranslationDto) {

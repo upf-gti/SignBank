@@ -159,7 +159,29 @@ export const api = {
 
     updateTranslation: (definitionId: string, translationId: string, data: { translation: string, language: Language }) =>
       apiClient.put<GlossData>(`/definitions/${definitionId}/translations/${translationId}`, data),
-    }
+  },
+  // Relations endpoints
+  relations: {
+    create: (glossId: string, data: { targetGlossId: string, relationType: string }) =>
+      apiClient.post<GlossData>(`/gloss-data/${glossId}/relations`, data),
+
+    update: (relationId: string, data: { relationType: string }) =>
+      apiClient.patch<GlossData>(`/gloss-data/relations/${relationId}`, data),
+
+    delete: (relationId: string) =>
+      apiClient.delete<GlossData>(`/gloss-data/relations/${relationId}`),
+  },
+  // Minimal pairs endpoints
+  minimalPairs: {
+    create: (glossId: string, data: { targetGlossId: string, distinction: string }) =>
+      apiClient.post<GlossData>(`/gloss-data/${glossId}/minimal-pairs`, data),
+
+    update: (pairId: string, data: { distinction: string }) =>
+      apiClient.patch<GlossData>(`/gloss-data/minimal-pairs/${pairId}`, data),
+
+    delete: (pairId: string) =>
+      apiClient.delete<GlossData>(`/gloss-data/minimal-pairs/${pairId}`),
+  },
 }
 
 export default api

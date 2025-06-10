@@ -32,6 +32,17 @@
             />
             <q-btn
               v-if="editMode"
+              color="secondary"
+              unelevated
+              icon="edit"
+              :label="t('edit')"
+              :loading="loading"
+              @click="$emit('edit', pair)"
+            >
+              <q-tooltip>{{ t('editDistinction') }}</q-tooltip>
+            </q-btn>
+            <q-btn
+              v-if="editMode"
               color="negative"
               flat
               icon="delete"
@@ -62,6 +73,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'view', id: string): void;
   (e: 'delete', id: string): void;
+  (e: 'edit', pair: MinimalPair): void;
 }>();
 
 const loading = ref(false);

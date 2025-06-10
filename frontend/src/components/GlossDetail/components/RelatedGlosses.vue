@@ -94,6 +94,7 @@
               :gloss="relation"
               :edit-mode="editMode"
               @view="viewGloss"
+              @edit="handleEditRelation"
               @delete="removeRelation"
             />
           </div>
@@ -146,6 +147,7 @@
               :pair="pair"
               :edit-mode="editMode"
               @view="viewGloss"
+              @edit="handleEditMinimalPair"
               @delete="removeMinimalPair"
             />
           </div>
@@ -255,6 +257,94 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <!-- Edit Relation Dialog -->
+    <q-dialog v-model="showEditRelationDialog">
+      <q-card class="relation-type-dialog">
+        <q-card-section>
+          <div class="text-h6">
+            {{ t('editRelationType') }}
+          </div>
+        </q-card-section>
+
+        <q-card-section>
+          <q-select
+            v-model="selectedRelationType"
+            :options="relationTypes"
+            :label="t('relationType')"
+            outlined
+            emit-value
+            map-options
+            :options-dense="true"
+            :loading="loading"
+            :disable="loading"
+            option-value="value"
+            option-label="label"
+          />
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn
+            v-close-popup
+            flat
+            :label="t('cancel')"
+            color="primary"
+            :disable="loading"
+          />
+          <q-btn
+            flat
+            :label="t('update')"
+            color="primary"
+            :disable="!selectedRelationType || loading"
+            @click="handleUpdateRelation"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <!-- Edit Minimal Pair Dialog -->
+    <q-dialog v-model="showEditMinimalPairDialog">
+      <q-card class="distinction-dialog">
+        <q-card-section>
+          <div class="text-h6">
+            {{ t('editDistinction') }}
+          </div>
+        </q-card-section>
+
+        <q-card-section>
+          <q-input
+            v-model="distinction"
+            :label="t('distinction')"
+            outlined
+            dense
+            autofocus
+            :disable="loading"
+            :rules="[val => !!val || t('distinctionRequired')]"
+          >
+            <template #hint>
+              {{ t('distinctionHint') }}
+            </template>
+          </q-input>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn
+            v-close-popup
+            flat
+            :label="t('cancel')"
+            color="primary"
+            :disable="loading"
+          />
+          <q-btn
+            flat
+            :label="t('update')"
+            color="primary"
+            :disable="!distinction || loading"
+            @click="handleUpdateMinimalPair"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-card-section>
 </template>
 
@@ -267,6 +357,7 @@ import GlossSearch from './GlossSearch.vue';
 import RelatedGlossCard from './RelatedGlossCard.vue';
 import MinimalPairCard from './MinimalPairCard.vue';
 import type { RelatedGloss, MinimalPair, SearchResult } from 'src/types/gloss';
+import type { GlossData } from 'src/types/models';
 
 const t = (key: string) => translate(key);
 const router = useRouter();
@@ -275,13 +366,11 @@ const props = defineProps<{
   relatedGlosses: RelatedGloss[];
   minimalPairs: MinimalPair[];
   editMode: boolean;
+  glossId: string;
 }>();
 
 const emit = defineEmits<{
-  (e: 'add-relation', relatedGloss: RelatedGloss): void;
-  (e: 'remove-relation', id: string): void;
-  (e: 'add-minimal-pair', minimalPair: MinimalPair): void;
-  (e: 'remove-pair', id: string): void;
+  (e: 'update:gloss-data', glossData: GlossData): void;
 }>();
 
 // UI state
@@ -290,6 +379,10 @@ const showRelationDialog = ref(false);
 const showMinimalPairDialog = ref(false);
 const showRelationTypeDialog = ref(false);
 const showDistinctionDialog = ref(false);
+const showEditRelationDialog = ref(false);
+const showEditMinimalPairDialog = ref(false);
+const editingRelation = ref<RelatedGloss | null>(null);
+const editingMinimalPair = ref<MinimalPair | null>(null);
 
 const {
   selectedGloss,
@@ -301,14 +394,12 @@ const {
   addRelation,
   addMinimalPair,
   removeRelation,
-  removeMinimalPair
+  removeMinimalPair,
+  updateRelation,
+  updateMinimalPair
 } = useGlossRelations(
-  props.relatedGlosses,
-  props.minimalPairs,
-  (gloss) => emit('add-relation', gloss),
-  (id) => emit('remove-relation', id),
-  (pair) => emit('add-minimal-pair', pair),
-  (id) => emit('remove-pair', id)
+  props.glossId,
+  (glossData) => emit('update:gloss-data', glossData)
 );
 
 function viewGloss(glossId: string) {
@@ -340,6 +431,40 @@ async function handleAddMinimalPair() {
   const success = await addMinimalPair();
   if (success) {
     showDistinctionDialog.value = false;
+  }
+}
+
+function handleEditRelation(relation: RelatedGloss) {
+  editingRelation.value = relation;
+  selectedRelationType.value = relation.relationType;
+  showEditRelationDialog.value = true;
+}
+
+function handleEditMinimalPair(pair: MinimalPair) {
+  editingMinimalPair.value = pair;
+  distinction.value = pair.distinction;
+  showEditMinimalPairDialog.value = true;
+}
+
+async function handleUpdateRelation() {
+  if (!editingRelation.value?.id || !selectedRelationType.value) return;
+  
+  const success = await updateRelation(editingRelation.value.id, selectedRelationType.value);
+  if (success) {
+    showEditRelationDialog.value = false;
+    editingRelation.value = null;
+    selectedRelationType.value = '';
+  }
+}
+
+async function handleUpdateMinimalPair() {
+  if (!editingMinimalPair.value?.id || !distinction.value) return;
+  
+  const success = await updateMinimalPair(editingMinimalPair.value.id, distinction.value);
+  if (success) {
+    showEditMinimalPairDialog.value = false;
+    editingMinimalPair.value = null;
+    distinction.value = '';
   }
 }
 </script>

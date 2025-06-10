@@ -1,16 +1,16 @@
-import { ref, Ref } from 'vue';
-import type { RelatedGloss, MinimalPair, SearchResult} from 'src/types/gloss';
+import { ref } from 'vue';
+import type { SearchResult } from 'src/types/gloss';
 import { RelationType } from 'src/types/gloss';
-import translate from 'src/utils/translate'
+import type { GlossData } from 'src/types/models';
+import translate from 'src/utils/translate';
+import { api } from 'src/services/api';
+import { useQuasar } from 'quasar';
 
 export function useGlossRelations(
-  initialRelatedGlosses: RelatedGloss[],
-  initialMinimalPairs: MinimalPair[],
-  onAddRelation: (gloss: RelatedGloss) => void,
-  onRemoveRelation: (id: string) => void,
-  onAddMinimalPair: (pair: MinimalPair) => void,
-  onRemovePair: (id: string) => void
+  glossId: string,
+  onGlossDataUpdate: (glossData: GlossData) => void
 ) {
+  const $q = useQuasar();
   const selectedGloss = ref<SearchResult | null>(null);
   const selectedRelationType = ref<RelationType | ''>('');
   const distinction = ref('');
@@ -29,20 +29,47 @@ export function useGlossRelations(
       loading.value = true;
       error.value = null;
       
-      await onAddRelation({
+      const response = await api.relations.create(glossId, {
         targetGlossId: selectedGloss.value.glossId,
-        relationType: selectedRelationType.value,
-        targetGloss: {
-          gloss: selectedGloss.value.gloss
-        }
-      } as RelatedGloss);
+        relationType: selectedRelationType.value
+      });
+
+      onGlossDataUpdate(response.data);
+
+      // Show success notification
+      $q.notify({
+        type: 'positive',
+        message: translate('relationCreatedSuccessfully'),
+        icon: 'link',
+        position: 'bottom'
+      });
 
       // Reset state
       selectedGloss.value = null;
       selectedRelationType.value = '';
       return true;
-    } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Failed to add relation';
+    } catch (e: any) {
+      let errorMessage = 'Failed to add relation';
+      
+      // Handle specific error cases
+      if (e.response?.status === 409) {
+        errorMessage = translate('relationAlreadyExists');
+      } else if (e.response?.data?.message) {
+        errorMessage = e.response.data.message;
+      } else if (e instanceof Error) {
+        errorMessage = e.message;
+      }
+
+      error.value = errorMessage;
+      
+      // Show error notification
+      $q.notify({
+        type: 'negative',
+        message: errorMessage,
+        icon: 'error',
+        position: 'bottom'
+      });
+      
       return false;
     } finally {
       loading.value = false;
@@ -56,49 +83,184 @@ export function useGlossRelations(
       loading.value = true;
       error.value = null;
 
-      await onAddMinimalPair({
+      const response = await api.minimalPairs.create(glossId, {
         targetGlossId: selectedGloss.value.glossId,
-        distinction: distinction.value,
-        targetGloss: {
-          gloss: selectedGloss.value.gloss
-        }
-      } as MinimalPair);
+        distinction: distinction.value
+      });
+
+      onGlossDataUpdate(response.data);
+
+      // Show success notification
+      $q.notify({
+        type: 'positive',
+        message: translate('minimalPairCreatedSuccessfully'),
+        icon: 'compare',
+        position: 'bottom'
+      });
 
       // Reset state
       selectedGloss.value = null;
       distinction.value = '';
       return true;
-    } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Failed to add minimal pair';
+    } catch (e: any) {
+      let errorMessage = 'Failed to add minimal pair';
+      
+      // Handle specific error cases
+      if (e.response?.status === 409) {
+        errorMessage = translate('minimalPairAlreadyExists');
+      } else if (e.response?.data?.message) {
+        errorMessage = e.response.data.message;
+      } else if (e instanceof Error) {
+        errorMessage = e.message;
+      }
+
+      error.value = errorMessage;
+      
+      // Show error notification
+      $q.notify({
+        type: 'negative',
+        message: errorMessage,
+        icon: 'error',
+        position: 'bottom'
+      });
+      
       return false;
     } finally {
       loading.value = false;
     }
   };
 
-  const removeRelation = async (id: string) => {
-    if (!id) return;
+  const removeRelation = async (relationId: string) => {
+    if (!relationId) return;
     
     try {
       loading.value = true;
       error.value = null;
-      await onRemoveRelation(id);
-    } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Failed to remove relation';
+      
+      const response = await api.relations.delete(relationId);
+      onGlossDataUpdate(response.data);
+
+      // Show success notification
+      $q.notify({
+        type: 'positive',
+        message: translate('relationRemovedSuccessfully'),
+        icon: 'link_off',
+        position: 'bottom'
+      });
+    } catch (e: any) {
+      const errorMessage = e.response?.data?.message || e.message || 'Failed to remove relation';
+      error.value = errorMessage;
+      
+      // Show error notification
+      $q.notify({
+        type: 'negative',
+        message: errorMessage,
+        icon: 'error',
+        position: 'top'
+      });
     } finally {
       loading.value = false;
     }
   };
 
-  const removeMinimalPair = async (id: string) => {
-    if (!id) return;
+  const removeMinimalPair = async (pairId: string) => {
+    if (!pairId) return;
     
     try {
       loading.value = true;
       error.value = null;
-      await onRemovePair(id);
-    } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Failed to remove minimal pair';
+      
+      const response = await api.minimalPairs.delete(pairId);
+      onGlossDataUpdate(response.data);
+
+      // Show success notification
+      $q.notify({
+        type: 'positive',
+        message: translate('minimalPairRemovedSuccessfully'),
+        icon: 'compare',
+        position: 'top'
+      });
+    } catch (e: any) {
+      const errorMessage = e.response?.data?.message || e.message || 'Failed to remove minimal pair';
+      error.value = errorMessage;
+      
+      // Show error notification
+      $q.notify({
+        type: 'negative',
+        message: errorMessage,
+        icon: 'error',
+        position: 'bottom'
+      });
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const updateRelation = async (relationId: string, relationType: RelationType) => {
+    try {
+      loading.value = true;
+      error.value = null;
+      
+      const response = await api.relations.update(relationId, { relationType });
+      onGlossDataUpdate(response.data);
+
+      // Show success notification
+      $q.notify({
+        type: 'positive',
+        message: translate('relationUpdatedSuccessfully'),
+        icon: 'edit',
+        position: 'bottom'
+      });
+      
+      return true;
+    } catch (e: any) {
+      const errorMessage = e.response?.data?.message || e.message || 'Failed to update relation';
+      error.value = errorMessage;
+      
+      // Show error notification
+      $q.notify({
+        type: 'negative',
+        message: errorMessage,
+        icon: 'error',
+        position: 'bottom'
+      });
+      
+      return false;
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const updateMinimalPair = async (pairId: string, distinction: string) => {
+    try {
+      loading.value = true;
+      error.value = null;
+      
+      const response = await api.minimalPairs.update(pairId, { distinction });
+      onGlossDataUpdate(response.data);
+
+      // Show success notification
+      $q.notify({
+        type: 'positive',
+        message: translate('minimalPairUpdatedSuccessfully'),
+        icon: 'edit',
+        position: 'bottom'
+      });
+      
+      return true;
+    } catch (e: any) {
+      const errorMessage = e.response?.data?.message || e.message || 'Failed to update minimal pair';
+      error.value = errorMessage;
+      
+      // Show error notification
+      $q.notify({
+        type: 'negative',
+        message: errorMessage,
+        icon: 'error',
+          position: 'bottom'
+      });
+      
+      return false;
     } finally {
       loading.value = false;
     }
@@ -117,6 +279,8 @@ export function useGlossRelations(
     addRelation,
     addMinimalPair,
     removeRelation,
-    removeMinimalPair
+    removeMinimalPair,
+    updateRelation,
+    updateMinimalPair
   };
 } 
