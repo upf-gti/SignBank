@@ -39,11 +39,33 @@
         <q-btn-toggle
           v-model="selectedVideo"
           dense
-          :options="signVideo?.videos.map((video) => ({
+          :options="sortedVideos.map((video) => ({
             label: video.angle,
             value: video.id,
           })) || []"
         />
+      </div>
+      <div v-if="editMode && selectedVideoData && sortedVideos.length > 1" class="row justify-center q-pt-sm">
+        <q-btn
+          flat
+          dense
+          icon="keyboard_arrow_left"
+          size="sm"
+          :disable="getVideoIndex(selectedVideo) === 0"
+          @click="moveVideoLeft"
+        >
+          <q-tooltip>{{ translate('moveLeft') }}</q-tooltip>
+        </q-btn>
+        <q-btn
+          flat
+          dense
+          icon="keyboard_arrow_right"
+          size="sm"
+          :disable="getVideoIndex(selectedVideo) === sortedVideos.length - 1"
+          @click="moveVideoRight"
+        >
+          <q-tooltip>{{ translate('moveRight') }}</q-tooltip>
+        </q-btn>
       </div>
       <div
         v-if="editMode && selectedVideoData"
@@ -75,6 +97,8 @@ import { SignVideo } from 'src/types/models';
 import translate from 'src/utils/translate';
 import UploadVideoComponent from 'src/components/UploadVideoComponent.vue';
 import { getVideoUrl } from 'src/utils/videoUrl';
+import { api } from 'src/services/api';
+import { useQuasar } from 'quasar';
 
 const { signVideo, editMode } = defineProps<{
   signVideo: SignVideo;
@@ -85,10 +109,21 @@ const emit = defineEmits<{
   (e: 'update:signVideo', value: SignVideo): void
 }>();
 
+const $q = useQuasar();
+
 const selectedVideo = ref<string>(signVideo?.videos[0]?.id || '');
-const selectedVideoData = computed(() => {
-  return signVideo?.videos.find((video) => video.id === selectedVideo.value) || signVideo?.videos[0];
+
+const sortedVideos = computed(() => {
+  return [...(signVideo?.videos || [])].sort((a, b) => (a.priority || 0) - (b.priority || 0));
 });
+
+const selectedVideoData = computed(() => {
+  return sortedVideos.value.find((video) => video.id === selectedVideo.value) || sortedVideos.value[0];
+});
+
+const getVideoIndex = (videoId: string) => {
+  return sortedVideos.value.findIndex(video => video.id === videoId);
+};
 
 const uploadVideo = (url: string) => {
   
@@ -120,6 +155,78 @@ const removeAngle = () => {
   if (index > -1) {
     signVideo.videos.splice(index, 1)
     selectedVideo.value = signVideo.videos[0]?.id || ''
+  }
+}
+
+const moveVideoLeft = async () => {
+  const currentIndex = getVideoIndex(selectedVideo.value);
+  if (currentIndex <= 0) return;
+  
+  const currentVideo = sortedVideos.value[currentIndex];
+  const previousVideo = sortedVideos.value[currentIndex - 1];
+  
+  if (!currentVideo?.id || !previousVideo?.id) return;
+  
+  try {
+    // Swap priorities
+    const tempPriority = currentVideo.priority || 0;
+    currentVideo.priority = previousVideo.priority || 0;
+    previousVideo.priority = tempPriority;
+    
+    // Update in backend
+    await Promise.all([
+      api.videoPriority.update(currentVideo.id, { priority: currentVideo.priority }),
+      api.videoPriority.update(previousVideo.id, { priority: previousVideo.priority })
+    ]);
+    
+    $q.notify({
+      type: 'positive',
+      message: translate('videoOrderUpdated'),
+      position: 'bottom'
+    });
+  } catch (error) {
+    console.error('Error updating video order:', error);
+    $q.notify({
+      type: 'negative',
+      message: translate('errorUpdatingVideoOrder'),
+      position: 'bottom'
+    });
+  }
+}
+
+const moveVideoRight = async () => {
+  const currentIndex = getVideoIndex(selectedVideo.value);
+  if (currentIndex >= sortedVideos.value.length - 1) return;
+  
+  const currentVideo = sortedVideos.value[currentIndex];
+  const nextVideo = sortedVideos.value[currentIndex + 1];
+  
+  if (!currentVideo?.id || !nextVideo?.id) return;
+  
+  try {
+    // Swap priorities
+    const tempPriority = currentVideo.priority || 0;
+    currentVideo.priority = nextVideo.priority || 0;
+    nextVideo.priority = tempPriority;
+    
+    // Update in backend
+    await Promise.all([
+      api.videoPriority.update(currentVideo.id, { priority: currentVideo.priority }),
+      api.videoPriority.update(nextVideo.id, { priority: nextVideo.priority })
+    ]);
+    
+    $q.notify({
+      type: 'positive',
+      message: translate('videoOrderUpdated'),
+      position: 'bottom'
+    });
+  } catch (error) {
+    console.error('Error updating video order:', error);
+    $q.notify({
+      type: 'negative',
+      message: translate('errorUpdatingVideoOrder'),
+      position: 'bottom'
+    });
   }
 }
 </script>

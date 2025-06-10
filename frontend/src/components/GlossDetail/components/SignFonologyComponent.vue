@@ -17,16 +17,16 @@
 </template>
 
 <script setup lang="ts">
-import { VideoData } from 'src/types/models';
+import { PhonologyData } from 'src/types/models';
 import translate from 'src/utils/translate';
 import PhonologyFilters from 'src/components/Shared/PhonologyFilters.vue';
 
 const { videoData, editMode } = defineProps<{
-  videoData: VideoData;
+  videoData: PhonologyData;
   editMode: boolean;
 }>();
 
 defineEmits<{
-  (e: 'update:video-data', value: VideoData): void;
+  (e: 'update:video-data', value: PhonologyData): void;
 }>();
 </script>

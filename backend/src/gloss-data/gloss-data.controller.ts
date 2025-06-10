@@ -244,4 +244,42 @@ export class GlossDataController {
     return this.glossDataService.updateExampleTranslation(id, data);
   }
 
+  // SignVideo priority management
+  @Patch('sign-videos/:signVideoId/priority')
+  @Roles(Role.ADMIN)
+  async updateSignVideoPriority(
+    @Param('signVideoId') signVideoId: string,
+    @Body() data: { priority: number }
+  ) {
+    return this.glossDataService.updateSignVideoPriority(signVideoId, data.priority);
+  }
+
+  @Post('senses/:senseId/sign-videos/reorder')
+  @Roles(Role.ADMIN)
+  async reorderSignVideos(
+    @Param('senseId') senseId: string,
+    @Body() data: { signVideoIds: string[] }
+  ) {
+    return this.glossDataService.reorderSignVideos(senseId, data.signVideoIds);
+  }
+
+  // Video priority management
+  @Patch('videos/:videoId/priority')
+  @Roles(Role.ADMIN)
+  async updateVideoPriority(
+    @Param('videoId') videoId: string,
+    @Body() data: { priority: number }
+  ) {
+    return this.glossDataService.updateVideoPriority(videoId, data.priority);
+  }
+
+  @Post('sign-videos/:signVideoId/videos/reorder')
+  @Roles(Role.ADMIN)
+  async reorderVideos(
+    @Param('signVideoId') signVideoId: string,
+    @Body() data: { videoIds: string[] }
+  ) {
+    return this.glossDataService.reorderVideos(signVideoId, data.videoIds);
+  }
+
 } 

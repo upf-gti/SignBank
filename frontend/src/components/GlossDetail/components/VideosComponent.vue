@@ -27,7 +27,7 @@
       </div>
 
       <div
-        v-for="(video, index) in videos.sort((a, b) => a.isNew ? -1 : b.isNew ? 1 : 0)"
+        v-for="(video, index) in sortedVideos"
         :key="video.id || index"
         class="col-12 col-sm-6 col-md-4"
       >
@@ -41,8 +41,34 @@
           @delete="() => removeVideo(index)"
         >
           <template #header>
-            <div class="text-subtitle1 ellipsis">
-              <span>{{ video.title }}</span>
+            <div class="row items-center justify-between full-width">
+              <div class="text-subtitle1 ellipsis">
+                {{ video.title }}
+              </div>
+              <div v-if="editMode && !video.isNew" class="row">
+                <q-btn
+                  flat
+                  round
+                  dense
+                  icon="keyboard_arrow_left"
+                  size="sm"
+                  :disable="index === 0"
+                  @click="moveVideoLeft(index)"
+                >
+                  <q-tooltip>{{ translate('moveLeft') }}</q-tooltip>
+                </q-btn>
+                <q-btn
+                  flat
+                  round
+                  dense
+                  icon="keyboard_arrow_right"
+                  size="sm"
+                  :disable="index === sortedVideos.length - 1"
+                  @click="moveVideoRight(index)"
+                >
+                  <q-tooltip>{{ translate('moveRight') }}</q-tooltip>
+                </q-btn>
+              </div>
             </div>
           </template>
 
@@ -100,6 +126,16 @@ const videosBackup = ref<SignVideo[]>([]);
 const isCreatingVideo = ref(false);
 
 const videos = computed(() => sense.value?.signVideos || []);
+
+const sortedVideos = computed(() => {
+  const videoList = [...videos.value];
+  // Sort by priority (lower number = higher priority), but put new videos first
+  return videoList.sort((a, b) => {
+    if (a.isNew && !b.isNew) return -1;
+    if (!a.isNew && b.isNew) return 1;
+    return (a.priority || 0) - (b.priority || 0);
+  });
+});
 
 watch(() => sense.value.signVideos, (newVideos) => {
   videosBackup.value = JSON.parse(JSON.stringify(newVideos));
@@ -243,6 +279,78 @@ const handleVideoCancel = (index: number) => {
     if (videosBackup.value[index]) {
       sense.value.signVideos[index] = JSON.parse(JSON.stringify(videosBackup.value[index]));
     }
+  }
+}
+
+const moveVideoLeft = async (index: number) => {
+  if (index === 0) return;
+  
+  const sortedVideoList = sortedVideos.value;
+  const currentVideo = sortedVideoList[index];
+  const previousVideo = sortedVideoList[index - 1];
+  
+  if (!currentVideo?.id || !previousVideo?.id) return;
+  
+  try {
+    // Swap priorities
+    const tempPriority = currentVideo.priority || 0;
+    currentVideo.priority = previousVideo.priority || 0;
+    previousVideo.priority = tempPriority;
+    
+    // Update in backend
+    await Promise.all([
+      api.signVideoPriority.update(currentVideo.id, { priority: currentVideo.priority }),
+      api.signVideoPriority.update(previousVideo.id, { priority: previousVideo.priority })
+    ]);
+    
+    $q.notify({
+      type: 'positive',
+      message: translate('videoOrderUpdated'),
+      position: 'bottom'
+    });
+  } catch (error) {
+    console.error('Error updating video order:', error);
+    $q.notify({
+      type: 'negative',
+      message: translate('errorUpdatingVideoOrder'),
+      position: 'bottom'
+    });
+  }
+}
+
+const moveVideoRight = async (index: number) => {
+  const sortedVideoList = sortedVideos.value;
+  if (index === sortedVideoList.length - 1) return;
+  
+  const currentVideo = sortedVideoList[index];
+  const nextVideo = sortedVideoList[index + 1];
+  
+  if (!currentVideo?.id || !nextVideo?.id) return;
+  
+  try {
+    // Swap priorities
+    const tempPriority = currentVideo.priority || 0;
+    currentVideo.priority = nextVideo.priority || 0;
+    nextVideo.priority = tempPriority;
+    
+    // Update in backend
+    await Promise.all([
+      api.signVideoPriority.update(currentVideo.id, { priority: currentVideo.priority }),
+      api.signVideoPriority.update(nextVideo.id, { priority: nextVideo.priority })
+    ]);
+    
+    $q.notify({
+      type: 'positive',
+      message: translate('videoOrderUpdated'),
+      position: 'bottom'
+    });
+  } catch (error) {
+    console.error('Error updating video order:', error);
+    $q.notify({
+      type: 'negative',
+      message: translate('errorUpdatingVideoOrder'),
+      position: 'bottom'
+    });
   }
 }
 

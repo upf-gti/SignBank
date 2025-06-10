@@ -713,4 +713,95 @@ export class GlossDataService {
 
     return this.getGlossData(translation.sense.glossDataId);
   }
+
+  // SignVideo priority management
+  async updateSignVideoPriority(signVideoId: string, priority: number) {
+    const signVideo = await this.prisma.signVideo.findUnique({
+      where: { id: signVideoId },
+      include: { sense: true }
+    });
+
+    if (!signVideo) {
+      throw new NotFoundException('SignVideo not found');
+    }
+
+    await this.prisma.signVideo.update({
+      where: { id: signVideoId },
+      data: { priority }
+    });
+
+    return this.getGlossData(signVideo.sense.glossDataId);
+  }
+
+  async reorderSignVideos(senseId: string, signVideoIds: string[]) {
+    const sense = await this.prisma.sense.findUnique({
+      where: { id: senseId },
+      include: { signVideos: true }
+    });
+
+    if (!sense) {
+      throw new NotFoundException('Sense not found');
+    }
+
+    // Update priorities based on the order in the array
+    const updatePromises = signVideoIds.map((signVideoId, index) => {
+      return this.prisma.signVideo.update({
+        where: { id: signVideoId },
+        data: { priority: index + 1 }
+      });
+    });
+
+    await Promise.all(updatePromises);
+
+    return this.getGlossData(sense.glossDataId);
+  }
+
+  // Video priority management
+  async updateVideoPriority(videoId: string, priority: number) {
+    const video = await this.prisma.video.findUnique({
+      where: { id: videoId },
+      include: { 
+        signVideo: { 
+          include: { sense: true } 
+        } 
+      }
+    });
+
+    if (!video) {
+      throw new NotFoundException('Video not found');
+    }
+
+    await this.prisma.video.update({
+      where: { id: videoId },
+      data: { priority }
+    });
+
+    return this.getGlossData(video.signVideo.sense.glossDataId);
+  }
+
+  async reorderVideos(signVideoId: string, videoIds: string[]) {
+    const signVideo = await this.prisma.signVideo.findUnique({
+      where: { id: signVideoId },
+      include: { 
+        videos: true,
+        sense: true 
+      }
+    });
+
+    if (!signVideo) {
+      throw new NotFoundException('SignVideo not found');
+    }
+
+    // Update priorities based on the order in the array
+    const updatePromises = videoIds.map((videoId, index) => {
+      return this.prisma.video.update({
+        where: { id: videoId },
+        data: { priority: index + 1 }
+      });
+    });
+
+    await Promise.all(updatePromises);
+
+    return this.getGlossData(signVideo.sense.glossDataId);
+  }
 } 

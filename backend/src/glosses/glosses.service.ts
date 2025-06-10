@@ -46,25 +46,9 @@ export class GlossesService {
             id: true,
           },
         },
-        relationsAsTarget: {
-          include: {
-            sourceGloss: {
-              include: {
-                senses: {
-                  include: {
-                    signVideos: true,
-                  },
-                },
-              },
-            },
-          },
-          omit: {
-            id: true,
-          },
-        },
         minimalPairsAsSource: {
           include: {
-            sourceGloss: {
+            targetGloss: {
               include: {
                 senses: {
                   include: {

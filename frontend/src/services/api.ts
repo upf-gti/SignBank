@@ -182,6 +182,22 @@ export const api = {
     delete: (pairId: string) =>
       apiClient.delete<GlossData>(`/gloss-data/minimal-pairs/${pairId}`),
   },
+  // SignVideo priority endpoints
+  signVideoPriority: {
+    update: (signVideoId: string, data: { priority: number }) =>
+      apiClient.patch<GlossData>(`/gloss-data/sign-videos/${signVideoId}/priority`, data),
+
+    reorder: (senseId: string, data: { signVideoIds: string[] }) =>
+      apiClient.post<GlossData>(`/gloss-data/senses/${senseId}/sign-videos/reorder`, data),
+  },
+  // Video priority endpoints  
+  videoPriority: {
+    update: (videoId: string, data: { priority: number }) =>
+      apiClient.patch<GlossData>(`/gloss-data/videos/${videoId}/priority`, data),
+
+    reorder: (signVideoId: string, data: { videoIds: string[] }) =>
+      apiClient.post<GlossData>(`/gloss-data/sign-videos/${signVideoId}/videos/reorder`, data),
+  },
 }
 
 export default api
