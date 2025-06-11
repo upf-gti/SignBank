@@ -10,7 +10,7 @@
           outline
           color="primary"
         >
-          {{ selectedSense?.lexicalCategory }}
+          {{ translate(selectedSense?.lexicalCategory) }}
         </q-chip>
         <span class="text-h6">
           {{ selectedSense?.senseTitle }}
@@ -39,6 +39,8 @@
 <script setup lang="ts">
 import { Sense } from 'src/types/models'
 import GlossVideoComponent from './GlossVideoComponent.vue'
+import translate from 'src/utils/translate';
+
 const { selectedSense } = defineProps<{
   selectedSense: Sense
 }>()
