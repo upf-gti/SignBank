@@ -627,6 +627,36 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   ITALIAN: string;
   PORTUGUESE: string;
   RUSSIAN: string;
+  accepted: string;
+  denied: string;
+  VERB_AND_ADJECTIVE: string;
+  ADJECTIVE_AND_VERB: string;
+  ADJECTIVE_AND_ADVERB: string;
+  ADVERB_AND_ADJECTIVE: string;
+  ADVERB_AND_VERB: string;
+  VERB_AND_ADVERB: string;
+  NOUN_OR_VERB: string;
+  NOUN_OR_ADJECTIVE: string;
+  NOUN_ADJECTIVE_OR_VERB: string;
+  VERB_OR_ADJECTIVE: string;
+  PARTICLE: string;
+  NOUN_ADJECTIVE_OR_ADVERB: string;
+  PARTICLE_NOUN_OR_VERB: string;
+  NOUN_OR_ADVERB: string;
+  VERB_ADJECTIVE_OR_ADVERB: string;
+  VERB_OR_INTERJECTION: string;
+  ADJECTIVE_OR_ADVERB: string;
+  VERB_ADJECTIVE_OR_PARTICLE: string;
+  PARTICLE_OR_ADJECTIVE: string;
+  NOUN_ADJECTIVE_OR_PARTICLE: string;
+  VERB_OR_ADVERB: string;
+  PARTICLE_OR_ADVERB: string;
+  NOUN_VERB_OR_ADVERB: string;
+  NOUN_OR_INTERJECTION: string;
+  ADVERB_OR_INTERJECTION: string;
+  VERB_OR_PARTICLE: string;
+  NOUN_OR_PREPOSITION: string;
+  
 }
 
 export default TranslateKeys;
