@@ -1,4 +1,4 @@
-import { defineBoot } from '#q-app/wrappers';
+import { boot } from 'quasar/wrappers';
 import axios, { type AxiosInstance, type AxiosError } from 'axios';
 import useUser from 'src/stores/user.store'
 import { useAuthentication } from 'src/hooks/useAuthentication'
@@ -10,8 +10,12 @@ declare module 'vue' {
   }
 }
 
-console.log(process.env)
-const api = axios.create({ baseURL: ('https://' + process.env.BASE_URL + '/api') });
+// Get BASE_URL from environment or use default for development
+const BASE_URL = import.meta.env.VITE_BASE_URL || window.location.hostname;
+const api = axios.create({ 
+  baseURL: `${window.location.protocol}//${BASE_URL}/api`,
+  withCredentials: true
+});
 
 // Add request interceptor
 api.interceptors.request.use(config => {
@@ -71,7 +75,7 @@ api.interceptors.response.use(
   }
 );
 
-export default defineBoot(({ app }) => {
+export default boot(({ app }) => {
   app.config.globalProperties.$axios = axios;
   app.config.globalProperties.$api = api;
 });

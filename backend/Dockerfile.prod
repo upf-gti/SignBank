@@ -19,29 +19,70 @@ ENV ADMIN_PASSWORD=${ADMIN_PASSWORD}
 # Install dependencies first
 RUN npm install
 
+# Create wait-for-it script
+RUN echo '#!/bin/sh\n\
+timeout=60\n\
+host="postgres-prod"\n\
+port="5432"\n\
+\n\
+echo "Waiting for PostgreSQL to be ready..."\n\
+while [ $timeout -gt 0 ]; do\n\
+    if nc -z $host $port; then\n\
+        echo "PostgreSQL is ready!"\n\
+        # Run Prisma migrations\n\
+        echo "Running database migrations..."\n\
+        npx prisma migrate deploy\n\
+        npx prisma generate\n\
+        \n\
+        # Start the application\n\
+        echo "Starting the application..."\n\
+        exec npm run start:prod\n\
+        exit 0\n\
+    fi\n\
+    timeout=$((timeout - 1))\n\
+    echo "Waiting for PostgreSQL... ($timeout seconds remaining)"\n\
+    sleep 1\n\
+done\n\
+\n\
+echo "Timeout waiting for PostgreSQL"\n\
+exit 1' > /app/wait-for-it.sh && chmod +x /app/wait-for-it.sh
 
 # Build the application
 RUN npm run build
 
 # Production stage
-FROM node:20-alpine
+FROM node:20
 
 WORKDIR /app
+
+# Install netcat for network checks
+RUN apt-get update && apt-get install -y netcat-openbsd && rm -rf /var/lib/apt/lists/*
+
+# Create uploads directory with correct permissions
+RUN mkdir -p /app/uploads && chown -R node:node /app
 
 # Copy built assets from builder
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
-
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/wait-for-it.sh ./wait-for-it.sh
 
 # Environment variables should be provided through docker-compose
 ENV NODE_ENV=production
-ENV PORT=80
+ENV PORT=443
 
 # Create a non-root user
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN groupadd -r appgroup && useradd -r -g appgroup -m appuser
+
+# Change ownership of the app directory
+RUN chown -R appuser:appgroup /app
+
+# Expose ports
+EXPOSE 443
+EXPOSE 9229
 
 USER appuser
 
-# Start the application
-CMD ["npm", "run", "start:prod"]
+# Start with wait script
+CMD ["./wait-for-it.sh"]

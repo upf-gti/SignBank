@@ -76,11 +76,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import loginComponent from '../components/loginComponent.vue';
 import useUser from 'src/stores/user.store'
 import translate from 'src/utils/translate'
+import { apiClient } from 'src/boot/axios'
 
 const userStore = useUser()
 const route = useRoute()
@@ -114,6 +115,10 @@ const onSubmit = async () => {
     }
   }
 };
+
+onMounted(() => {
+  console.log(apiClient.defaults)
+})
 </script>
 
 <style scoped>

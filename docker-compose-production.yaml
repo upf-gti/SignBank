@@ -9,32 +9,59 @@ services:
       context: ./backend
       dockerfile: Dockerfile.prod
       args:
-        DATABASE_URL: ${DATABASE_URL_DOCKER}
+        DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-prod:5432/${POSTGRES_DB:-signbank_prod}?schema=public
         ADMIN_EMAIL: ${ADMIN_EMAIL}
         ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     container_name: backend-prod
     environment:
-      - PORT=80
-      - DATABASE_URL=${DATABASE_URL_DOCKER}
+      - PORT=443
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-prod:5432/${POSTGRES_DB:-signbank_prod}?schema=public
       - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}
+      - BASE_URL=${BASE_URL:-localhost}
+      - DUFS_URL=${DUFS_URL}
+      - TYPESENSE_HOST=${TYPESENSE_HOST}
+      - TYPESENSE_PORT=${TYPESENSE_PORT}
       - ADMIN_EMAIL=${ADMIN_EMAIL}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
-      # Add other production environment variables
+      - PRISMA_CLI_BINARY_TARGETS=linux-musl,linux-musl-openssl-3.0.x
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB:-signbank_prod}
+      - NODE_ENV=production
+    volumes:
+      - uploads_data:/app/uploads
+      - ./nginx/certs:/app/certs:ro
+    ports:
+      - 9229:9229
+    cap_add:
+      - NET_BIND_SERVICE
     networks:
       - signbank
-    restart: always  # Add restart policy
-    depends_on:
-      - mongoDB
-      - typesense
+    restart: always
+    command: >
+      sh -c "
+        mkdir -p /app/uploads/gloss-videos &&
+        mkdir -p /app/uploads/avatars &&
+        mkdir -p /app/uploads/temp &&
+        chown -R appuser:appgroup /app/uploads &&
+        chmod -R 755 /app/uploads &&
+        node dist/main
+      "
+
     
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile.prod  # Change to production Dockerfile
+      dockerfile: Dockerfile.prod
+      args:
+        VITE_BASE_URL: ${BASE_URL:-localhost}
     container_name: frontend-prod
+    environment:
+      - VITE_BASE_URL=${BASE_URL:-localhost}
     networks:
       - signbank    
-    restart: always  # Add restart policy
+    restart: always
+ 
 
   postgres:
     image: postgres:16
@@ -50,19 +77,31 @@ services:
     ports:
       - "5432:5432"
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB:-signbank_prod}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   typesense:
     image: typesense/typesense:27.1
     restart: always
     container_name: typesense-prod
     environment:
-      - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}  # Use environment variable
+      - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}
       - TYPESENSE_DATA_DIR=/data
     networks:
       - signbank
     volumes:
-      - typesense_data:/data  # Use named volume
+      - typesense_prod_data:/data
     command: '--data-dir /data --api-key=${TYPESENSE_API_KEY} --enable-cors'
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8108/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   dufs:
     image: sigoden/dufs
@@ -75,7 +114,7 @@ services:
       - signbank
 
   nginx:
-    image: nginx:latest
+    image: nginx:1.23.1-alpine
     container_name: nginx-prod
     ports:
       - "80:80"
@@ -85,11 +124,14 @@ services:
       - ./nginx/certs:/etc/ssl/certs/
     networks:
       - signbank
-    depends_on:
-      - backend
-      - frontend
     restart: always
 
 volumes:
   postgres_prod_data:
-  typesense_data:
+  typesense_prod_data:
+  uploads_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/uploads
