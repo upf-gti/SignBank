@@ -17,11 +17,6 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/RegisterPage.vue') }],
   },
   {
-    path: '/results',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/ResultsPage.vue') }],
-  },
-  {
     path: '/gloss/:gloss',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/GlossPage.vue') }],

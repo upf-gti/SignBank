@@ -116,9 +116,6 @@ const onSubmit = async () => {
   }
 };
 
-onMounted(() => {
-  console.log(apiClient.defaults)
-})
 </script>
 
 <style scoped>
