@@ -15,6 +15,8 @@ import { ExamplesModule } from './examples/examples.module';
 import { TranslationsModule } from './translations/translations.module';
 import { DefinitionsModule } from './definitions/definitions.module';
 import { ExampleTranslationsModule } from './example-translations/example-translations.module';
+import { RelationsModule } from './relations/relations.module';
+import { MinimalPairsModule } from './minimal-pairs/minimal-pairs.module';
 
 @Module({
   imports: [
@@ -32,6 +34,8 @@ import { ExampleTranslationsModule } from './example-translations/example-transl
     TranslationsModule,
     DefinitionsModule,
     ExampleTranslationsModule,
+    RelationsModule,
+    MinimalPairsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

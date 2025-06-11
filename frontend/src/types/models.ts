@@ -1,5 +1,5 @@
 import type { RelatedGloss, MinimalPair } from "./gloss"
-import { 
+import type { 
   Hand,
   HandConfiguration,
   ConfigurationChange,
@@ -83,7 +83,7 @@ export interface PhonologyData {
   movementType: MovementType | '';
   vocalization: string | '';
   nonManualComponent: string | '';
-  inicialization: string | '';
+  initialization: string | '';
   id?: string;
 }
 

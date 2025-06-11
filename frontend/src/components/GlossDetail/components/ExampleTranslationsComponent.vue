@@ -1,7 +1,7 @@
 <template>
   <q-expansion-item 
     :label="translate('translations')"
-    >
+  >
     <template #header>
       <div class="text-subtitle1 q-mb-sm">
         {{ translate('translations') }}
@@ -24,32 +24,32 @@
       >
         <template #default="{ isEditing }">
           <div class="q-mx-md">
-          <div class="row items-center q-gutter-sm ">
-            <LanguageSelector
+            <div class="row items-center q-gutter-sm ">
+              <LanguageSelector
+                v-if="isEditing"
+                v-model="translation.language"
+                class="col"
+              />
+              <div
+                v-else
+                class="text-subtitle2"
+              >
+                {{ translate(translation.language) }}
+              </div>
+            </div>
+
+            <q-input
               v-if="isEditing"
-              v-model="translation.language"
-              class="col"
+              v-model="translation.translation"
+              :label="translate('translation')"
+              outlined
+              dense
+              class="col-12 q-mt-sm"
             />
             <div
               v-else
-              class="text-subtitle2"
+              class="text-body1"
             >
-              {{ translate(translation.language) }}
-            </div>
-          </div>
-
-          <q-input
-            v-if="isEditing"
-            v-model="translation.translation"
-            :label="translate('translation')"
-            outlined
-            dense
-            class="col-12 q-mt-sm"
-          />
-          <div
-            v-else
-            class="text-body1"
-          >
               {{ translation.translation }}
             </div>
           </div>

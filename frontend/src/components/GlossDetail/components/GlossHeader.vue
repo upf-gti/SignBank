@@ -33,9 +33,9 @@
         color="primary"
         icon="send"
         :label="translate('sendRequest')"
-        @click="submitRequest"
         :loading="submitting"
         class="q-mr-sm"
+        @click="submitRequest"
       />
       
       <template v-if="isConfirmRequestPage">

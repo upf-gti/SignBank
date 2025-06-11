@@ -1,6 +1,6 @@
 import type { AxiosResponse } from "axios"
 import { apiClient } from "src/boot/axios"
-import type { GlossRequest, GlossData, Definition, Translation, Language, SignVideo } from 'src/types/models'
+import type { GlossRequest, GlossData, Language, SignVideo } from 'src/types/models'
 import type { SearchParams } from "./search.service"
 import type {
   CreateGlossRequestDto,
@@ -163,24 +163,24 @@ export const api = {
   // Relations endpoints
   relations: {
     create: (glossId: string, data: { targetGlossId: string, relationType: string }) =>
-      apiClient.post<GlossData>(`/gloss-data/${glossId}/relations`, data),
+      apiClient.post<GlossData>(`/relations/gloss/${glossId}`, data),
 
     update: (relationId: string, data: { relationType: string }) =>
-      apiClient.patch<GlossData>(`/gloss-data/relations/${relationId}`, data),
+      apiClient.patch<GlossData>(`/relations/${relationId}`, data),
 
     delete: (relationId: string) =>
-      apiClient.delete<GlossData>(`/gloss-data/relations/${relationId}`),
+      apiClient.delete<GlossData>(`/relations/${relationId}`),
   },
   // Minimal pairs endpoints
   minimalPairs: {
     create: (glossId: string, data: { targetGlossId: string, distinction: string }) =>
-      apiClient.post<GlossData>(`/gloss-data/${glossId}/minimal-pairs`, data),
+      apiClient.post<GlossData>(`/minimal-pairs/gloss/${glossId}`, data),
 
     update: (pairId: string, data: { distinction: string }) =>
-      apiClient.patch<GlossData>(`/gloss-data/minimal-pairs/${pairId}`, data),
+      apiClient.patch<GlossData>(`/minimal-pairs/${pairId}`, data),
 
     delete: (pairId: string) =>
-      apiClient.delete<GlossData>(`/gloss-data/minimal-pairs/${pairId}`),
+      apiClient.delete<GlossData>(`/minimal-pairs/${pairId}`),
   },
   // SignVideo priority endpoints
   signVideoPriority: {

@@ -12,7 +12,10 @@
       />
     </div>
 
-    <q-list class="row q-col-gutter-md " separator>
+    <q-list
+      class="row q-col-gutter-md "
+      separator
+    >
       <q-item
         v-for="(example, index) in examples.sort((a, b) => a.isNew ? -1 : b.isNew ? 1 : 0)"
         :key="example.id || index"

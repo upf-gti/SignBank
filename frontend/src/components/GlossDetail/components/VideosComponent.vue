@@ -1,6 +1,8 @@
 <template>
   <div class="videos-component q-pa-sm">
-    <div class="text-h5 q-mb-md">{{ translate('videos') }}</div>
+    <div class="text-h5 q-mb-md">
+      {{ translate('videos') }}
+    </div>
 
     <div class="row q-col-gutter-md no-wrap overflow-auto">
       <!-- Add video button - visible when editMode is true and not creating a video -->
@@ -45,7 +47,10 @@
               <div class="text-subtitle1 ellipsis">
                 {{ video.title }}
               </div>
-              <div v-if="editMode && !video.isNew" class="row">
+              <div
+                v-if="editMode && !video.isNew"
+                class="row"
+              >
                 <q-btn
                   flat
                   round
