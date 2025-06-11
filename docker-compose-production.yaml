@@ -29,7 +29,6 @@ services:
       - POSTGRES_DB=${POSTGRES_DB:-signbank_prod}
       - NODE_ENV=production
     volumes:
-      - uploads_data:/app/uploads
       - ./nginx/certs:/app/certs:ro
     ports:
       - 9229:9229
@@ -38,15 +37,6 @@ services:
     networks:
       - signbank
     restart: always
-    command: >
-      sh -c "
-        mkdir -p /app/uploads/gloss-videos &&
-        mkdir -p /app/uploads/avatars &&
-        mkdir -p /app/uploads/temp &&
-        chown -R appuser:appgroup /app/uploads &&
-        chmod -R 755 /app/uploads &&
-        node dist/main
-      "
 
     
   frontend:
