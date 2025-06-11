@@ -10,7 +10,7 @@ async function bootstrap() {
   
   // Enable CORS
   app.enableCors({
-    origin: ['https://localhost/'], // Allow all origins
+    origin: [process.env.BASE_URL], // Allow all origins
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
@@ -18,9 +18,9 @@ async function bootstrap() {
   // Apply ValidationPipe globally to enforce DTO validation
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true, // Strip properties that don't have decorators
-      forbidNonWhitelisted: true, // Throw error if non-whitelisted properties are present
-      transform: true, // Automatically transform payloads to be objects typed according to their DTO classes
+      whitelist: true,
+      forbidNonWhitelisted: false,
+      transform: true,
     }),
   );
   

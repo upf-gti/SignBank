@@ -2,35 +2,23 @@
 import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
-import { MongoDBService } from '../mongodb/mongodb.service';
-import { User, Role } from '../../types/database';
+import { randomBytes } from 'crypto';
+import { UserRepository } from '../repositories/user.repository';
+import { User, Role } from '@prisma/client'; // Use Prisma's generated types
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly mongodb: MongoDBService,
+    private readonly users: UserRepository,
     private readonly jwtService: JwtService
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
-    // Find user by email
-    const user = await this.mongodb.users.findOne({ email });
-    
-    if (!user) {
-      return null;
-    }
-    
-    // Check password
+    const user = await this.users.findByEmail(email);
+    if (!user) return null;
     const isPasswordValid = await argon2.verify(user.password, password);
-    
-    if (!isPasswordValid) {
-      return null;
-    }
-    
-    // Format the document and remove password
-    const formattedUser = this.mongodb.formatDocument<User>(user);
-    const { password: _, ...result } = formattedUser;
-    
+    if (!isPasswordValid) return null;
+    const { password: _, ...result } = user;
     return result;
   }
 
@@ -40,9 +28,17 @@ export class AuthService {
       sub: user.id,
       role: user.role
     };
-    
+    const refreshToken = randomBytes(40).toString('hex');
+    const accessToken = this.jwtService.sign(payload);
+
+    await this.users.update(user.id, {
+      accessToken,
+      refreshToken
+    });
+
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: accessToken,
+      refresh_token: refreshToken,
       user: {
         id: user.id,
         username: user.username,
@@ -53,61 +49,76 @@ export class AuthService {
   }
 
   async register(userData: { username: string; email: string; password: string; role?: Role }) {
-    // Check if username already exists
-    const existingUsername = await this.mongodb.users.findOne({ username: userData.username });
-    if (existingUsername) {
+    if (await this.users.findByUsername(userData.username)) {
       throw new ConflictException('Username already exists');
     }
-    
-    // Check if email already exists
-    const existingEmail = await this.mongodb.users.findOne({ email: userData.email });
-    if (existingEmail) {
+    if (await this.users.findByEmail(userData.email)) {
       throw new ConflictException('Email already exists');
     }
-    
-    // Hash the password
     const hashedPassword = await argon2.hash(userData.password);
-    
-    // Create the user document
-    const userDoc = {
+    const user = await this.users.create({
       username: userData.username,
       email: userData.email,
       password: hashedPassword,
       role: userData.role || Role.USER,
       createdAt: new Date()
-    };
-    
-    // Insert into database
-    const result = await this.mongodb.users.insertOne(
-      this.mongodb.prepareDocumentForDB(userDoc)
-    );
-    
-    // Return the created user (without password)
-    const createdUser = this.mongodb.formatDocument<User>({
-      ...userDoc,
-      _id: result.insertedId
     });
-    
-    const { password: _, ...userWithoutPassword } = createdUser;
-    
+    const { password: _, ...userWithoutPassword } = user;
     return userWithoutPassword;
   }
 
   async getProfile(userId: string) {
-    // Convert string ID to ObjectId
-    const objectId = this.mongodb.toObjectId(userId);
-    
-    // Find the user
-    const user = await this.mongodb.users.findOne({ _id: objectId });
-    
-    if (!user) {
-      throw new UnauthorizedException('User not found');
-    }
-    
-    // Format the document and remove the password
-    const formattedUser = this.mongodb.formatDocument<User>(user);
-    const { password: _, ...userWithoutPassword } = formattedUser;
-    
+    const user = await this.users.findById(userId);
+    if (!user) throw new UnauthorizedException('User not found');
+    const { password: _, ...userWithoutPassword } = user;
     return userWithoutPassword;
+  }
+
+  async refreshTokens(refreshToken: string) {
+    // Check if refresh token exists and has valid format
+    if (!refreshToken || typeof refreshToken !== 'string' || refreshToken.length !== 80) {
+      throw new UnauthorizedException('Invalid refresh token format');
+    }
+
+    // Find user with the provided refresh token
+    const user = await this.users.findByRefreshToken(refreshToken);
+    if (!user) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+
+    // Invalidate old tokens immediately for security
+    await this.users.update(user.id, {
+      accessToken: null,
+      refreshToken: null,
+    });
+
+    // Generate new tokens
+    const payload = {
+      email: user.email,
+      sub: user.id,
+      role: user.role
+    };
+    
+    const newAccessToken = this.jwtService.sign(payload);
+    const newRefreshToken = randomBytes(40).toString('hex');
+    
+    // Update user with new tokens
+    await this.users.update(user.id, {
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    });
+
+    return {
+      access_token: newAccessToken,
+      refresh_token: newRefreshToken
+    };
+  }
+
+  async logout(userId: string) {
+    await this.users.update(userId, {
+      accessToken: null,
+      refreshToken: null,
+    });
+    return { message: 'Logged out successfully' };
   }
 }

@@ -88,8 +88,13 @@ const onSubmit = async () => {
       color: 'positive',
       message: 'Registration successful! Please login.'
     })
-    router.push('/')
-  } catch (error) {
+    router.push('/').catch(() => {
+      $q.notify({
+        color: 'negative',
+        message: 'Registration successful! Please login.'
+      })
+    })
+  } catch {
     $q.notify({
       color: 'negative',
       message: 'Registration failed. Please try again.'

@@ -40,23 +40,19 @@ services:
       - signbank    
     restart: always
 
-  mongoDB:
-    build:
-      context: ./mongoDB
-      dockerfile: Dockerfile
-    image: signbank-mongodb:latest
-    container_name: mongoDB
-    hostname: mongoDB
+  postgres:
+    image: postgres:16
+    container_name: postgres-test
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-      DATABASE_URL: ${DATABASE_URL}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-signbank_test}
     networks:
       - signbank
     volumes:
-      - ./mongoDB/data:/data/db
+      - postgres_test_data:/var/lib/postgresql/data
     ports:
-      - 27017:27017
+      - "5432:5432"
     restart: always
 
   typesense:
@@ -100,5 +96,5 @@ services:
     restart: always
 
 volumes:
-  database:
+  postgres_test_data:
   typesense_data:

@@ -48,7 +48,7 @@
           v-if="userStore.isLoggedIn" 
           flat
           :label="translate('requestWord')"
-          @click="$router.push('/requests')"
+          @click="$router.push('/my-requests')"
         />
         <q-btn
           v-if="userStore.isAdmin && userStore.isLoggedIn"

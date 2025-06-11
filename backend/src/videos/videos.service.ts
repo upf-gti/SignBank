@@ -1,80 +1,65 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { MongoDBService } from '../mongodb/mongodb.service';
-import { Video } from '../../types/database';
-import { CreateVideoDto } from './dto/create-video.dto';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { createReadStream } from 'fs';
+import { stat, unlink } from 'fs/promises';
+import axios from 'axios';
+import { basename, join } from 'path';
 
 @Injectable()
 export class VideosService {
-  constructor(private readonly mongodb: MongoDBService) {}
+  private readonly dufsUrl = process.env.DUFS_URL || 'http://localhost:5000';
 
-  async create(createVideoDto: CreateVideoDto): Promise<Video> {
-    const now = new Date();
-    const videoDoc = {
-      ...createVideoDto,
-      createdAt: now,
-      updatedAt: now
-    };
+  async uploadVideo(file: Express.Multer.File, type: 'gloss' | 'example' = 'gloss'): Promise<{ url: string }> {
+    try {
+      const fileStream = createReadStream(file.path);
+      const stats = await stat(file.path);
+      
+      // Use the filename that Multer generated (the basename of the full path)
+      const uniqueFilename = basename(file.path);
+      const baseDir = type === 'example' ? 'example-videos' : 'gloss-videos';
+      const uploadUrl = `${this.dufsUrl}/${baseDir}/${uniqueFilename}`;
+      
+      await axios.put(uploadUrl, fileStream, {
+        headers: {
+          'Content-Type': file.mimetype,
+          'Content-Length': stats.size,
+        },
+        maxBodyLength: Infinity,
+        maxContentLength: Infinity,
+      });
 
-    const result = await this.mongodb.videos.insertOne(
-      this.mongodb.prepareDocumentForDB(videoDoc)
-    );
+      // Clean up the temporary file
+      await unlink(file.path);
 
-    return this.mongodb.formatDocument<Video>({
-      ...videoDoc,
-      _id: result.insertedId
-    });
-  }
-
-  async findAll(): Promise<Video[]> {
-    const videos = await this.mongodb.videos.find().toArray();
-    return videos.map(video => this.mongodb.formatDocument<Video>(video));
-  }
-
-  async findOne(id: string): Promise<Video> {
-    const objectId = this.mongodb.toObjectId(id);
-    const video = await this.mongodb.videos.findOne({ _id: objectId });
-
-    if (!video) {
-      throw new NotFoundException(`Video with ID ${id} not found`);
+      // Return relative path instead of full URL
+      return {
+        url: `${baseDir}/${uniqueFilename}`,
+      };
+    } catch (error) {
+      // Clean up the temporary file in case of error
+      try {
+        await unlink(file.path);
+      } catch {
+        // Ignore cleanup errors
+      }
+      
+      throw new HttpException(
+        'Failed to upload video',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
-
-    return this.mongodb.formatDocument<Video>(video);
   }
 
-  async findByIds(ids: string[]): Promise<Video[]> {
-    const objectIds = ids.map(id => this.mongodb.toObjectId(id));
-    const videos = await this.mongodb.videos.find({ _id: { $in: objectIds } }).toArray();
-    return videos.map(video => this.mongodb.formatDocument<Video>(video));
-  }
-
-  async update(id: string, updateVideoDto: Partial<CreateVideoDto>): Promise<Video> {
-    const objectId = this.mongodb.toObjectId(id);
-    const updateDoc = {
-      ...updateVideoDto,
-      updatedAt: new Date()
-    };
-
-    const result = await this.mongodb.videos.findOneAndUpdate(
-      { _id: objectId },
-      { $set: this.mongodb.prepareDocumentForDB(updateDoc) },
-      { returnDocument: 'after' }
-    );
-
-    if (!result.value) {
-      throw new NotFoundException(`Video with ID ${id} not found`);
+  async deleteVideo(videoUrl: string): Promise<void> {
+    try {
+      // The videoUrl is already in the format "baseDir/filename"
+      const deleteUrl = `${this.dufsUrl}/${videoUrl}`;
+      
+      await axios.delete(deleteUrl);
+    } catch (error) {
+      throw new HttpException(
+        'Failed to delete video',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
-
-    return this.mongodb.formatDocument<Video>(result.value);
-  }
-
-  async remove(id: string): Promise<Video> {
-    const objectId = this.mongodb.toObjectId(id);
-    const result = await this.mongodb.videos.findOneAndDelete({ _id: objectId });
-
-    if (!result.value) {
-      throw new NotFoundException(`Video with ID ${id} not found`);
-    }
-
-    return this.mongodb.formatDocument<Video>(result.value);
   }
 } 

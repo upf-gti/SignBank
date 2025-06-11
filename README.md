@@ -1,4 +1,16 @@
 
+TODOS
+- Edit Glosses
+- Minimal Pairs relations to videos and not to entire gloss
+- Delete Relations
+- Edit Senses and delete
+
+## How to change the app host
+
+In the .env file, change the BASEURL to the domain you want to use for your app.
+In the nginx.conf file, change the server_name directive to match the domain you want to use.
+
+
 
 ### Environment Configuration
 

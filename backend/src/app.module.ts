@@ -2,24 +2,38 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { TypesenseSyncService } from './typesense/sync';
-import { WordsModule } from './words/words.module';
-import { WordRequestsModule } from './word-requests/word-requests.module'
-import { MongoDBModule } from './mongodb/mongodb.module';
+import { PrismaModule } from './prisma/prisma.module';
+import { GlossesModule } from './glosses/glosses.module';
+import { GlossDataModule } from './gloss-data/gloss-data.module';
 import { VideosModule } from './videos/videos.module';
-// import { WordEditsModule } from './word-edits/word-edits.module';
+import { SearchModule } from './search/search.module';
+import { TypesenseModule } from './typesense/typesense.module';
+import { GlossRequestsModule } from './gloss-requests/gloss-requests.module';
+import { SignVideosModule } from './sign-videos/sign-videos.module';
+import { SensesModule } from './senses/senses.module';
+import { ExamplesModule } from './examples/examples.module';
+import { TranslationsModule } from './translations/translations.module';
+import { DefinitionsModule } from './definitions/definitions.module';
+import { ExampleTranslationsModule } from './example-translations/example-translations.module';
 
 @Module({
   imports: [
-    MongoDBModule,
-    AuthModule, 
-    WordsModule, 
-    // PrismaModule, 
-    WordRequestsModule,
+    PrismaModule,
+    AuthModule,
+    GlossRequestsModule,
+    GlossesModule,
+    GlossDataModule,
     VideosModule,
-    // WordEditsModule
+    SearchModule,
+    TypesenseModule,
+    SignVideosModule,
+    SensesModule,
+    ExamplesModule,
+    TranslationsModule,
+    DefinitionsModule,
+    ExampleTranslationsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, TypesenseSyncService],
+  providers: [AppService],
 })
 export class AppModule {}

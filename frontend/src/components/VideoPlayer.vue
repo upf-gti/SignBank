@@ -10,7 +10,7 @@
           class="video-container"
         >
           <video 
-            :src="currentVideo!.url"
+            :src="getVideoUrl(currentVideo!.url)"
             class="q-mb-md"
             style="height: 250px; width: 250px; object-fit: cover"
             loop
@@ -62,7 +62,7 @@
     <!-- Sign information below the video -->
     <SignInfo 
       :video="currentVideo" 
-      :is-edit-mode="editMode !== 'none'"
+      :is-edit-mode="editMode"
       @update:video="updateVideo"
     />
   </div>
@@ -70,19 +70,20 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { Video, Hand } from 'src/types/database'
+import { Video } from 'src/types/models'
 import translate from 'src/utils/translate'
 import SignInfo from './SignInfo.vue'
+import { getVideoUrl } from 'src/utils/videoUrl'
 
 interface Props {
   videos: Video[]
-  editMode: 'none' | 'strict' | 'full'
+  editMode: boolean
 }
 
 const emit = defineEmits<{
   (e: 'update:videos', videos: Video[]): void
 }>()
-const { videos, editMode = 'none' } = defineProps<Props>()
+const { videos, editMode = false } = defineProps<Props>()
 
 const currentIndex = ref(0)
 
@@ -93,7 +94,12 @@ watch(() => videos, () => {
 
 const currentVideo = computed(() => {
   if (videos.length === 0) {
-    return { url: '', angle: '', dominantHand: Hand.RIGHT, facialExpression: '', hasContact: true, phonologicalTranscription: '', movementType: '', nonManualComponents: '' } as Video
+    return {
+      url: '',
+      angle: '',
+      priority: 0,
+      id: '',
+    } as Video
   }
   return videos[currentIndex.value] as Video
 })
