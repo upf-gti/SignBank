@@ -55,5 +55,5 @@ RUN chown -R appuser:appgroup /var/cache/nginx \
 # Switch to non-root user
 USER appuser
 
-EXPOSE 80
+EXPOSE 443
 
