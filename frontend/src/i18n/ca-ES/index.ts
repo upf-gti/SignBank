@@ -285,6 +285,9 @@ const translations: TranslateKeys = {
   VERB_OR_ADVERB: 'Verb o Adverbi',
   VERB_OR_INTERJECTION: 'Verb o Interjecció',
   VERB_OR_PARTICLE: 'Verb o Partícula',
+  distinction: 'Distinció',
+  distinctionHint: 'Distinció entre el signe i el seu oposat',
+  view: 'Veure'  
 };
 
 export default translations; 

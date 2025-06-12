@@ -656,7 +656,9 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   ADVERB_OR_INTERJECTION: string;
   VERB_OR_PARTICLE: string;
   NOUN_OR_PREPOSITION: string;
-  
+  distinction: string;
+  distinctionHint: string;
+  view: string;
 }
 
 export default TranslateKeys;
