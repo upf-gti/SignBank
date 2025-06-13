@@ -34,6 +34,8 @@ export class GlossRequestsService {
             id: true,
             username: true,
             email: true,
+            name: true,
+            lastName: true,
           },
         },
         acceptedBy: {

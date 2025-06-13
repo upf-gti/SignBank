@@ -38,7 +38,6 @@
       <div class="row justify-center items-center q-pt-md">
         <q-btn-toggle
           v-model="selectedVideo"
-          dense
           :options="sortedVideos.map((video) => ({
             label: video.angle,
             value: video.id,

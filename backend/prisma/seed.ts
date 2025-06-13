@@ -32,6 +32,8 @@ async function main() {
         username: `admin${i}`,
         password: password,
         role: Role.ADMIN,
+        name: `Admin`,
+        lastName: `${i}`,
       },
     });
     adminUsers.push(admin);

@@ -4,7 +4,7 @@
       <q-btn-toggle
         v-model="selectedSenseId"
         :options="senses.map((sense) => ({
-          label: (sense.senseTitle || glossData.gloss) + ' (' + translate(sense.lexicalCategory) + ')',
+          label: (sense.senseTitle || glossData.gloss) + ( sense.senseTitle ? '' : ' (' + translate(sense.lexicalCategory) + ')' ),
           value: sense.id,
         }))"
       />
@@ -84,7 +84,7 @@
               class="row items-center q-mb-sm"
             >
               <div class="col">
-                {{ (sense.senseTitle || glossData.gloss) + ' (' + translate(sense.lexicalCategory) + ')' }}
+                {{ (sense.senseTitle || glossData.gloss) + ( sense.senseTitle ? '' : ' (' + translate(sense.lexicalCategory) + ')') }}
               </div>
               <div class="col-auto">
                 <q-btn
@@ -219,6 +219,7 @@
 <script setup lang="ts">
 import type { Sense, GlossData, Definition, SignVideo, Example, SenseTranslation } from 'src/types/models'
 import translate from 'src/utils/translate'
+import { LEXICAL_CATEGORIES } from 'src/utils/lexicalCategories'
 import { ref, computed, watch } from 'vue'
 import { api } from 'src/services/api'
 import { useQuasar } from 'quasar'
@@ -267,35 +268,7 @@ const newSense = ref({
   lexicalCategory: ''
 })
 
-const lexicalCategories = ref([
-  { label: translate('adjective'), value: 'ADJECTIVE' },
-  { label: translate('interjection'), value: 'INTERJECTION' },
-  { label: translate('noun'), value: 'NOUN' },
-  { label: translate('nounOrVerb'), value: 'NOUN_OR_VERB' },
-  { label: translate('nounOrAdjective'), value: 'NOUN_OR_ADJECTIVE' },
-  { label: translate('nounAdjectiveOrVerb'), value: 'NOUN_ADJECTIVE_OR_VERB' },
-  { label: translate('verbOrAdjective'), value: 'VERB_OR_ADJECTIVE' },
-  { label: translate('particle'), value: 'PARTICLE' },
-  { label: translate('verb'), value: 'VERB' },
-  { label: translate('adverb'), value: 'ADVERB' },
-  { label: translate('pronoun'), value: 'PRONOUN' },
-  { label: translate('nounAdjectiveOrAdverb'), value: 'NOUN_ADJECTIVE_OR_ADVERB' },
-  { label: translate('particleNounOrVerb'), value: 'PARTICLE_NOUN_OR_VERB' },
-  { label: translate('nounOrAdverb'), value: 'NOUN_OR_ADVERB' },
-  { label: translate('verbAdjectiveOrAdverb'), value: 'VERB_ADJECTIVE_OR_ADVERB' },
-  { label: translate('verbOrInterjection'), value: 'VERB_OR_INTERJECTION' },
-  { label: translate('adjectiveOrAdverb'), value: 'ADJECTIVE_OR_ADVERB' },
-  { label: translate('verbAdjectiveOrParticle'), value: 'VERB_ADJECTIVE_OR_PARTICLE' },
-  { label: translate('particleOrAdjective'), value: 'PARTICLE_OR_ADJECTIVE' },
-  { label: translate('nounAdjectiveOrParticle'), value: 'NOUN_ADJECTIVE_OR_PARTICLE' },
-  { label: translate('verbOrAdverb'), value: 'VERB_OR_ADVERB' },
-  { label: translate('particleOrAdverb'), value: 'PARTICLE_OR_ADVERB' },
-  { label: translate('nounVerbOrAdverb'), value: 'NOUN_VERB_OR_ADVERB' },
-  { label: translate('nounOrInterjection'), value: 'NOUN_OR_INTERJECTION' },
-  { label: translate('adverbOrInterjection'), value: 'ADVERB_OR_INTERJECTION' },
-  { label: translate('verbOrParticle'), value: 'VERB_OR_PARTICLE' },
-  { label: translate('nounOrPreposition'), value: 'NOUN_OR_PREPOSITION' }
-])
+const lexicalCategories = ref(LEXICAL_CATEGORIES)
 
 const saveSense = async () => {
   try {

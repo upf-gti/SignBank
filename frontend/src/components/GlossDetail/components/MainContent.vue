@@ -3,7 +3,6 @@
     <q-card
       class="col-12 col-md-8"
       flat
-      bordered
     >
       <q-card-section class="row justify-start items-center">
         <q-chip
@@ -27,10 +26,53 @@
     <q-card
       class="col-12 col-md-4 full-height"
       flat
-      bordered
     >
       <div class="full-height">
-        quick info
+        <q-card-section>
+          <div class="text-h6 q-mb-md">Quick Info</div>
+          
+          <div class="q-mb-md">
+            <div class="text-weight-bold">Category: Animal</div>
+          </div>
+
+          <div class="q-mb-md">
+            <div class="text-weight-bold">Related Glosses:</div>
+            <div class="q-gutter-sm">
+              <div
+                v-for="gloss in ['gat', 'gos']"
+                :key="gloss"
+                class="row justify-between items-center q-pl-md"
+              >
+                <div class="q-gutter-sm">
+                  {{ gloss }}
+                </div>
+                <q-btn
+                unelevated
+                  :label="translate('view')"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="q-mb-md">
+            <div class="text-weight-bold">Minimal Pairs:</div>
+            <div class="q-gutter-sm">
+              <div
+                v-for="pair in ['parell1', 'parell2']"
+                :key="pair"
+                class="row justify-between items-center q-pl-md"
+              >
+                <div class="q-gutter-sm">
+                  {{ pair }}
+                </div>
+                <q-btn
+                  unelevated
+                  :label="translate('view')"
+                />
+              </div>
+            </div>
+          </div>
+        </q-card-section>
       </div>
     </q-card>
   </q-card-section>
@@ -40,8 +82,21 @@
 import { Sense } from 'src/types/models'
 import GlossVideoComponent from './GlossVideoComponent.vue'
 import translate from 'src/utils/translate';
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const { selectedSense } = defineProps<{
   selectedSense: Sense
 }>()
+
+const navigateToGloss = (gloss: string) => {
+  router.push(`/gloss/${gloss}`)
+}
 </script>
+
+<style scoped>
+.full-height {
+  height: 100%;
+}
+</style>

@@ -78,16 +78,16 @@ function clearFilters() {
   emit('update:selectedCategory', '');
   emit('update:selectedHands', '');
   emit('update:filterInputs', {
-    hands: Hand.RIGHT,
-    configuration: [],
-    configurationChanges: [],
-    relationBetweenArticulators: [],
-    location: [],
-    movementRelatedOrientation: [],
-    orientationRelatedToLocation: [],
-    orientationChange: [],
-    contactType: [],
-    movementType: [],
+    hands: null,
+    configuration: '',
+    configurationChanges: '',
+    relationBetweenArticulators: '',
+    location: '',
+    movementRelatedOrientation: '',
+    orientationRelatedToLocation: '',
+    orientationChange: '',
+    contactType: '',
+    movementType: '',
     vocalization: '',
     nonManualComponent: '',
     inicialization: ''

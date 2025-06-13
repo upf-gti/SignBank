@@ -24,7 +24,7 @@ const showDetails = ref(false);
 const selectedLexicalCategory = ref<string>('');
 const selectedHands = ref<string>('');
 const filterInputs = ref<PhonologyData>({
-  hands: Hand.RIGHT,
+  hands: null,
   configuration: '',
   configurationChanges: '',
   relationBetweenArticulators: '',

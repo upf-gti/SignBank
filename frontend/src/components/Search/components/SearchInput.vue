@@ -5,7 +5,6 @@
     </div>
     <q-input
       :model-value="modelValue"
-      :placeholder="t('searchPlaceholder')"
       outlined
       dense
       clearable

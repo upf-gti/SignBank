@@ -3,7 +3,8 @@ import phonology from './phonology';
 
 const translations: TranslateKeys = {
   ...phonology,
-  signLanguageDictionary: 'Diccionari de llengua de signes',
+  startSearching: 'Començar a cercar',
+  signLanguageDictionary: 'Diccionari SignBank de la Llengua de Signes Catalana',
   enterAWord: 'Introduïu una paraula',
   search: 'Cercar',
   sendRequest: 'Enviar sol·licitud',
@@ -287,7 +288,8 @@ const translations: TranslateKeys = {
   VERB_OR_PARTICLE: 'Verb o Partícula',
   distinction: 'Distinció',
   distinctionHint: 'Distinció entre el signe i el seu oposat',
-  view: 'Veure'  
+  view: 'Veure'  ,
+  searchGloss: 'Cercar glossa'
 };
 
 export default translations; 

@@ -30,7 +30,7 @@
               text-color="white"
               class="q-mt-sm"
             >
-              {{ document.lexicalCategory }}
+              {{ translate(document.lexicalCategory) }}
             </q-chip>
           </div>
           <q-btn

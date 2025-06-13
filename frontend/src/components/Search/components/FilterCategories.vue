@@ -6,7 +6,7 @@
     </div>
     <q-select
       :model-value="selectedCategory"
-      :options="lexicalCategories"
+      :options="LEXICAL_CATEGORIES"
       outlined
       dense
       emit-value
@@ -23,6 +23,7 @@
 import { computed } from 'vue';
 import translate from 'src/utils/translate';
 import { LexicalCategory, Hand } from 'src/types/enums';
+import { LEXICAL_CATEGORIES } from 'src/utils/lexicalCategories'
 
 const t = (key: string) => translate(key);
 

@@ -61,10 +61,9 @@
                 :selected-category="selectedCategory"
                 @update:selected-category="updateCategory"
               />
-
               <FilterInputs
-                :model-value="filterInputs"
-                @update:model-value="updateFilterInputs"
+                :phonology-data="filterInputs"
+                @update:phonology-data="updateFilterInputs"
               />
             </q-card-section>
           </q-card>

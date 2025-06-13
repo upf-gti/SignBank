@@ -93,6 +93,9 @@
                   <div class="text-caption q-mb-sm">
                     {{ translate('requested') }}: {{ new Date(request.createdAt).toLocaleDateString() }}
                   </div>
+                  <div class="text-caption q-mb-sm">
+                    {{ translate('requestedBy') }}: {{ request.creator.name }} {{ request.creator.lastName }}
+                  </div>
                   <div
                     v-if="request.status === 'DENIED' && request.denyReason"
                     class="text-caption text-negative q-mb-sm"
@@ -116,7 +119,7 @@
                     dense
                     icon="info"
                     :label="translate('details')"
-                    @click="$router.push(`/my-requests/view/${request.id}`)"
+                    @click="request.status === 'NOT_COMPLETED' ? $router.push(`/my-requests/edit/${request.id}`) : $router.push(`/my-requests/view/${request.id}`)"
                   />
                 </q-card-actions>
               </q-card>

@@ -26,6 +26,7 @@
           text-color="grey-8"
           class="full-width"
           @update:model-value="updateField('hands', $event)"
+          :clearable="route.path === '/search'"
         />
       </div>
 
@@ -331,6 +332,9 @@ import { computed, ref, watch } from 'vue';
 import translate from 'src/utils/translate';
 import { usePhonologyOptions } from '../../utils/phonologyOptions';
 import type { PhonologyData } from 'src/types/models';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
 
 interface SelectOption {
   value: string;

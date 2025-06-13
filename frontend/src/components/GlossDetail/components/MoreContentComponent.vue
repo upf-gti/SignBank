@@ -7,6 +7,7 @@
       indicator-color="primary"
       align="justify"
       narrow-indicator
+      @update:model-value="handleTabChange"
     >
       <q-tab
         name="definitions"
@@ -91,5 +92,14 @@ const { glossData, editMode } = defineProps<{
 
 const updateGlossData = (glossData: GlossData) => {
   emit('update:glossData', glossData);
+}
+
+const handleTabChange = () => {
+  setTimeout(() => {
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: 'smooth'
+    });
+  }, 100);
 }
 </script>

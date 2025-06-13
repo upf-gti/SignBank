@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import translate from 'src/utils/translate'
 import LoadingComponent from 'src/components/LoadingComponent.vue'
 import GlossDetailComponent from 'src/components/GlossDetail/GlossDetailComponent.vue'
@@ -56,6 +56,12 @@ const editMode = ref(false)
 const glossData = ref<GlossData | null>(null)
 
 onMounted(() => {
+  getGlossData()
+})
+
+watch(() => route.fullPath, () => {
+  loading.value = true
+  glossData.value = null
   getGlossData()
 })
 

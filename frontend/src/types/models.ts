@@ -71,7 +71,7 @@ export interface Video {
 }
 
 export interface PhonologyData {
-  hands: Hand;
+  hands: Hand | null;
   configuration: HandConfiguration | '';
   configurationChanges: ConfigurationChange | '';
   relationBetweenArticulators: RelationBetweenArticulators | '';
@@ -198,6 +198,8 @@ export interface User {
   id: string;
   username: string;
   email: string;
+  name: string;
+  lastName: string;
 }
 
 export interface GlossRequest {

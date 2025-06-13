@@ -374,6 +374,7 @@ export interface PhonologyTranslateKeys {
 }
 
 interface TranslateKeys extends PhonologyTranslateKeys {
+  startSearching: string;
   createGloss: string;
   signLanguageDictionary: string;
   enterAWord: string;
@@ -659,6 +660,7 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   distinction: string;
   distinctionHint: string;
   view: string;
+  searchGloss: string;
 }
 
 export default TranslateKeys;
