@@ -1,5 +1,5 @@
 import { Language } from '@prisma/client'
-import { IsString, IsOptional, IsEnum } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsEnum } from 'class-validator';
 
 export class CreateDefinitionDto {
   @IsString()
@@ -7,6 +7,7 @@ export class CreateDefinitionDto {
   title?: string;
 
   @IsString()
+  @IsNotEmpty()
   definition: string;
 }
 
@@ -20,8 +21,18 @@ export class UpdateDefinitionDto {
   definition?: string;
 }
 
+export class CreateDefinitionTranslationDto {
+  @IsString()
+  @IsNotEmpty()
+  translation: string;
+
+  @IsEnum(Language)
+  language: Language;
+}
+
 export class UpdateDefinitionTranslationDto {
   @IsString()
+  @IsNotEmpty()
   translation: string;
 
   @IsEnum(Language)

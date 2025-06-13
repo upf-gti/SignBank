@@ -21,6 +21,13 @@ export interface Translation {
   definitionId: string;
 }
 
+export interface DefinitionTranslation {
+  id?: string;
+  translation: string;
+  language: string;
+  definitionId: string;
+}
+
 export interface ExampleTranslation {
   id?: string;
   translation: string;
@@ -57,7 +64,7 @@ export interface Definition {
   definition: string;
   videoDefinitionId: string;
   senseId: string;
-  definitionTranslations: Translation[];
+  definitionTranslations: DefinitionTranslation[];
   videoDefinition: VideoDefinition;
   isNew?: boolean;
   isEditing?: boolean;

@@ -157,8 +157,14 @@ export const api = {
     delete: (senseId: string, definitionId: string) =>
       apiClient.delete<GlossData>(`/definitions/sense/${senseId}/${definitionId}`),
 
+    createTranslation: (definitionId: string, data: { translation: string, language: Language }) =>
+      apiClient.post<GlossData>(`/definitions/${definitionId}/translations`, data),
+
     updateTranslation: (definitionId: string, translationId: string, data: { translation: string, language: Language }) =>
       apiClient.put<GlossData>(`/definitions/${definitionId}/translations/${translationId}`, data),
+
+    deleteTranslation: (definitionId: string, translationId: string) =>
+      apiClient.delete<GlossData>(`/definitions/${definitionId}/translations/${translationId}`),
   },
   // Relations endpoints
   relations: {

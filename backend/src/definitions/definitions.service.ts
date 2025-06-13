@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { GlossDataService } from '../gloss-data/gloss-data.service';
-import { CreateDefinitionDto, UpdateDefinitionDto, UpdateDefinitionTranslationDto } from './dto/definition.dto';
+import { CreateDefinitionDto, UpdateDefinitionDto, UpdateDefinitionTranslationDto, CreateDefinitionTranslationDto } from './dto/definition.dto';
 
 @Injectable()
 export class DefinitionsService {
@@ -84,6 +84,34 @@ export class DefinitionsService {
     return this.glossDataService.getGlossData(sense.glossDataId);
   }
 
+  async createDefinitionTranslation(definitionId: string, data: CreateDefinitionTranslationDto) {
+    const definition = await this.prisma.definition.findUnique({
+      where: { id: definitionId },
+      include: { definitionTranslations: true }
+    });
+
+    if (!definition) {
+      throw new NotFoundException('Definition not found');
+    }
+
+    const createdTranslation = await this.prisma.definitionTranslation.create({
+      data: {
+        translation: data.translation,
+        language: data.language,
+        definitionId: definitionId
+      },
+      include: {
+        definition: {
+          include: {
+            sense: true
+          }
+        }
+      }
+    });
+
+    return this.glossDataService.getGlossData(createdTranslation.definition.sense.glossDataId);
+  }
+
   async updateDefinitionTranslation(definitionId: string, translationId: string, data: UpdateDefinitionTranslationDto) {
     const definition = await this.prisma.definition.findUnique({
       where: { id: definitionId },
@@ -115,5 +143,34 @@ export class DefinitionsService {
     });
 
     return this.glossDataService.getGlossData(updatedTranslation.definition.sense.glossDataId);
+  }
+
+  async deleteDefinitionTranslation(definitionId: string, translationId: string) {
+    const definition = await this.prisma.definition.findUnique({
+      where: { id: definitionId },
+      include: { definitionTranslations: true }
+    });
+
+    if (!definition) {
+      throw new NotFoundException('Definition not found');
+    }
+
+    const translation = definition.definitionTranslations.find(t => t.id === translationId);
+    if (!translation) {
+      throw new NotFoundException('Translation not found');
+    }
+
+    const deletedTranslation = await this.prisma.definitionTranslation.delete({
+      where: { id: translationId },
+      include: {
+        definition: {
+          include: {
+            sense: true
+          }
+        }
+      }
+    });
+
+    return this.glossDataService.getGlossData(deletedTranslation.definition.sense.glossDataId);
   }
 } 

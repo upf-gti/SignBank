@@ -62,58 +62,12 @@
             </div>
 
             <!-- Definition Translations -->
-            <div class="q-mt-md">
-              <div class="text-subtitle2 q-mb-sm">
-                {{ translate('definitionTranslations') }}
-              </div>
-              <div
-                v-for="(translation, tIndex) in definition.definitionTranslations"
-                :key="translation.id || tIndex"
-              >
-                <EditableModule
-                  :allow-edit="allowEdit"
-                  @save="() => saveTranslation(definition, translation)"
-                  @cancel="cancelTranslationEdit"
-                >
-                  <template #header>
-                    <q-chip size="sm">
-                      {{ translation.language }}
-                    </q-chip>
-                  </template>
-                  <template #default="{ isEditing }">
-                    <div class="row items-center q-gutter-md">
-                      <LanguageSelector 
-                        v-if="isEditing"
-                        v-model="translation.language"
-                        class="col"
-                      />
-                      <q-input
-                        v-if="isEditing"
-                        v-model="translation.translation"
-                        :label="translate('translation')"
-                        outlined
-                        dense
-                        class="col"
-                      />
-                      <div
-                        v-else
-                        class="q-ml-lg"
-                      >
-                        {{ translation.translation }}
-                      </div>
-                    </div>
-                  </template>
-                </EditableModule>
-              </div>
-              <q-btn
-                v-if="allowEdit"
-                flat
-                class="q-mt-sm"
-                icon="add"
-                :label="translate('addDefinitionTranslation')"
-                @click="addTranslation"
-              />
-            </div>
+            <DefinitionTranslationsComponent
+              :allow-edit="allowEdit"
+              :definition-id="definition.id || ''"
+              :translations="definition.definitionTranslations"
+              @update:translations="(translations) => definition.definitionTranslations = translations"
+            />
           </template>
         </EditableModule>
       </q-item>
@@ -179,6 +133,7 @@ import { ref, computed } from 'vue';
 import { api } from 'src/services/api';
 import { useQuasar } from 'quasar';
 import SenseTranslationsComponent from './SenseTranslationsComponent.vue';
+import DefinitionTranslationsComponent from './DefinitionTranslationsComponent.vue';
 
 const $q = useQuasar()
 const loading = ref(false)
@@ -229,6 +184,16 @@ const isGlossData = (data: any): data is GlossData => {
     'createdAt' in data &&
     'updatedAt' in data &&
     'senses' in data;
+}
+
+const addDefinitionTranslation = () => {
+  if (!props.sense?.id) return;
+  newDefinition.value.definitionTranslations.push({
+    id: '',
+    translation: '',
+    language: 'CATALAN',
+    definitionId: props.sense.id
+  });
 }
 
 const saveDefinition = async (definition: Definition) => {
@@ -327,49 +292,6 @@ const deleteDefinition = async (definition: Definition) => {
 }
 
 const cancelDefinitionEdit = () => {
-  displayCreateNewDefinition.value = false;
-}
-
-const addTranslation = () => {
-  displayCreateNewDefinition.value = false;
-}
-
-const saveTranslation = async (definition: Definition, translation: Translation) => {
-  try {
-    loading.value = true;
-    const response = await api.definitions.updateTranslation(definition.id || '', translation.id || '', {
-      translation: translation.translation,
-      language: translation.language as Language
-    });
-    
-    if (response.data && isGlossData(response.data)) {
-      emit('update:glossData', response.data);
-      
-      $q.notify({
-        type: 'positive',
-        message: translate('translationSavedSuccessfully')
-      });
-    }
-  } catch (error) {
-    console.error('Error saving translation:', error);
-    $q.notify({
-      type: 'negative',
-      message: translate('errors.failedToSaveTranslation')
-    });
-  } finally {
-    loading.value = false;
-  }
-}
-
-const cancelTranslationEdit = () => {
-  displayCreateNewDefinition.value = false;
-}
-
-const addSenseTranslation = () => {
-  displayCreateNewDefinition.value = false;
-}
-
-const removeSenseTranslation = () => {
   displayCreateNewDefinition.value = false;
 }
 </script>

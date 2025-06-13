@@ -1,6 +1,6 @@
 import { Controller, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { DefinitionsService } from './definitions.service';
-import { CreateDefinitionDto, UpdateDefinitionDto, UpdateDefinitionTranslationDto } from './dto/definition.dto';
+import { CreateDefinitionDto, UpdateDefinitionDto, UpdateDefinitionTranslationDto, CreateDefinitionTranslationDto } from './dto/definition.dto';
 
 @Controller('definitions')
 export class DefinitionsController {
@@ -31,6 +31,14 @@ export class DefinitionsController {
     return this.definitionsService.deleteDefinition(senseId, definitionId);
   }
 
+  @Post(':definitionId/translations')
+  async createDefinitionTranslation(
+    @Param('definitionId') definitionId: string,
+    @Body() data: CreateDefinitionTranslationDto
+  ) {
+    return this.definitionsService.createDefinitionTranslation(definitionId, data);
+  }
+
   @Put(':definitionId/translations/:translationId')
   async updateDefinitionTranslation(
     @Param('definitionId') definitionId: string,
@@ -38,5 +46,13 @@ export class DefinitionsController {
     @Body() data: UpdateDefinitionTranslationDto
   ) {
     return this.definitionsService.updateDefinitionTranslation(definitionId, translationId, data);
+  }
+
+  @Delete(':definitionId/translations/:translationId')
+  async deleteDefinitionTranslation(
+    @Param('definitionId') definitionId: string,
+    @Param('translationId') translationId: string
+  ) {
+    return this.definitionsService.deleteDefinitionTranslation(definitionId, translationId);
   }
 } 
