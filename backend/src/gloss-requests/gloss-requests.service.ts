@@ -42,12 +42,16 @@ export class GlossRequestsService {
           select: {
             id: true,
             username: true,
+            name: true,
+            lastName: true,
           },
         },
         deniedBy: {
           select: {
             id: true,
             username: true,
+            name: true,
+            lastName: true,
           },
         },
         requestedGlossData: {

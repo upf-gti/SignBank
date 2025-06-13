@@ -19,6 +19,8 @@ const translations: TranslateKeys = {
   reviewRequest: 'Revisar sol·licitud',
   backToRequests: 'Tornar a sol·licituds',
   requestedBy: 'Sol·licitat per',
+  acceptedBy: 'Acceptat per',
+  deniedBy: 'Rebutjat per',
   addRelation: 'Afegir relació',
   addMinimalPair: 'Afegir parell mínim',
   editRelation: 'Editar relació',

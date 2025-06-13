@@ -598,6 +598,8 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   backToRequests: string;
   requestedBy: string;
   addRelation: string;
+  acceptedBy: string;
+  deniedBy: string;
   addMinimalPair: string;
   editRelation: string;
   editMinimalPair: string;

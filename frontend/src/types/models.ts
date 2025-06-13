@@ -26,6 +26,7 @@ export interface DefinitionTranslation {
   translation: string;
   language: string;
   definitionId: string;
+  isNew?: boolean;
 }
 
 export interface ExampleTranslation {

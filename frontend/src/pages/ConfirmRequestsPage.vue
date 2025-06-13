@@ -50,9 +50,15 @@
           </q-card-section>
   
           <q-card-section class="row justify-between items-center">
-            <div class="text-caption">
-              {{ translate('requested') }}: {{ new Date(request.createdAt).toLocaleDateString() }}
+            <div class="column items-start">
+              <div class="text-caption">
+                {{ translate('requested') }}: {{ new Date(request.createdAt).toLocaleDateString() }}
+              </div>
+              <div class="text-caption">
+                {{ translate('requestedBy') }}: {{ request.creator.name }} {{ request.creator.lastName }}
+              </div>
             </div>
+            
             <q-btn
               flat
               dense

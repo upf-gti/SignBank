@@ -9,6 +9,7 @@
     >
       <EditableModule
         :allow-edit="allowEdit"
+        :initial-edit-state="definitionTranslation.isNew || false"
         :show-delete="true"
         :custom-delete-label="translate('deleteDefinitionTranslation')"
         @save="() => saveDefinitionTranslation(definitionTranslation)"
@@ -30,7 +31,7 @@
             <q-input
               v-if="isEditing"
               v-model="definitionTranslation.translation"
-              :label="translate('translation')"
+              :label="translate('definitionTranslation')"
               outlined
               dense
               class="col"
@@ -85,7 +86,8 @@ const addTranslation = () => {
       id: '',
       translation: '',
       language: 'CATALAN',
-      definitionId: props.definitionId
+      definitionId: props.definitionId,
+      isNew: true
     }
   ]);
 }

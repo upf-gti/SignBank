@@ -93,8 +93,17 @@
                   <div class="text-caption q-mb-sm">
                     {{ translate('requested') }}: {{ new Date(request.createdAt).toLocaleDateString() }}
                   </div>
-                  <div class="text-caption q-mb-sm">
-                    {{ translate('requestedBy') }}: {{ request.creator.name }} {{ request.creator.lastName }}
+                  <div
+                    v-if="request.status === 'ACCEPTED'"
+                    class="text-caption q-mb-sm"
+                  >
+                    {{ translate('acceptedBy') }}: {{ request.acceptedBy?.name }} {{ request.acceptedBy?.lastName }}
+                  </div>
+                  <div
+                    v-if="request.status === 'DENIED'"
+                    class="text-caption q-mb-sm"
+                  >
+                    {{ translate('deniedBy') }}: {{ request.deniedBy?.name }} {{ request.deniedBy?.lastName }}
                   </div>
                   <div
                     v-if="request.status === 'DENIED' && request.denyReason"

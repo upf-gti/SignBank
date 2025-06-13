@@ -14,7 +14,7 @@
           class="add-video-card cursor-pointer"
           @click="addVideo"
         >
-          <q-card-section class="column items-center justify-center text-grey-7">
+          <q-card-section class="column items-center justify-center text-grey-7 fit">
             <q-icon
               name="add"
               size="48px"
