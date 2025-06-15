@@ -133,7 +133,7 @@ onMounted(() => {
     class="row q-pa-md"
   >
     <!-- Left Sidebar -->
-    <div class="col-12 col-md-3 q-pr-md">
+    <div class="col-12 col-md-3 q-pr-md full-height">
       <SearchFilters
         v-model:search-query="searchQuery"
         v-model:selected-category="selectedLexicalCategory"
@@ -163,5 +163,23 @@ onMounted(() => {
 <style scoped>
 .q-expansion-item :deep(.q-item) {
   padding: 4px 0;
+}
+
+/* Add a subtle scrollbar style */
+.filters-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.filters-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.filters-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.filters-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 </style> 

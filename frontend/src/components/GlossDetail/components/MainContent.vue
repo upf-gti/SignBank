@@ -29,14 +29,20 @@
     >
       <div class="full-height">
         <q-card-section>
-          <div class="text-h6 q-mb-md">Quick Info</div>
+          <div class="text-h6 q-mb-md">
+            Quick Info
+          </div>
           
           <div class="q-mb-md">
-            <div class="text-weight-bold">Category: Animal</div>
+            <div class="text-weight-bold">
+              Category: Animal
+            </div>
           </div>
 
           <div class="q-mb-md">
-            <div class="text-weight-bold">Related Glosses:</div>
+            <div class="text-weight-bold">
+              Related Glosses:
+            </div>
             <div class="q-gutter-sm">
               <div
                 v-for="gloss in ['gat', 'gos']"
@@ -47,7 +53,7 @@
                   {{ gloss }}
                 </div>
                 <q-btn
-                unelevated
+                  unelevated
                   :label="translate('view')"
                 />
               </div>
@@ -55,7 +61,9 @@
           </div>
 
           <div class="q-mb-md">
-            <div class="text-weight-bold">Minimal Pairs:</div>
+            <div class="text-weight-bold">
+              Minimal Pairs:
+            </div>
             <div class="q-gutter-sm">
               <div
                 v-for="pair in ['parell1', 'parell2']"

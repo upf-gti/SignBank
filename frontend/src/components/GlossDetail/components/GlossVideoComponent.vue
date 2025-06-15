@@ -44,7 +44,10 @@
           })) || []"
         />
       </div>
-      <div v-if="editMode && selectedVideoData && sortedVideos.length > 1" class="row justify-center q-pt-sm">
+      <div
+        v-if="editMode && selectedVideoData && sortedVideos.length > 1"
+        class="row justify-center q-pt-sm"
+      >
         <q-btn
           flat
           dense

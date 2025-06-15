@@ -1,5 +1,6 @@
 <template>
   <q-card
+    class="fit column no-wrap"
     flat
     bordered
   >
@@ -8,10 +9,7 @@
       @update:model-value="$emit('update:searchQuery', $event)"
       @search="$emit('search')"
     />
-
-    <q-separator />
-
-    <q-card-section>
+    <q-card-section class="fit column col no-wrap">
       <div class="row items-center justify-between q-mb-sm">
         <div class="text-subtitle2">
           {{ t('filters') }}
@@ -28,21 +26,25 @@
           <q-btn
             color="primary"
             dense
-            :label="t('applyFilters')"
+            :label="t('apply')"
             @click="$emit('search')"
           />
         </div>
       </div>
-
-      <FilterCategories
-        :selected-category="selectedCategory"
-        @update:selected-category="$emit('update:selectedCategory', $event)"
-      />
-
-      <FilterInputs
-        :phonology-data="filterInputs"
-        @update:phonology-data="$emit('update:filterInputs', $event)"
-      />
+      <div
+        class="fit column col no-wrap custom-scrollbar q-pr-sm"
+        :style="{overflowY: 'auto'}"
+      >
+        <FilterCategories        
+          :selected-category="selectedCategory"
+          @update:selected-category="$emit('update:selectedCategory', $event)"
+        />
+        <FilterInputs
+          class="col"
+          :phonology-data="filterInputs"
+          @update:phonology-data="$emit('update:filterInputs', $event)"
+        />
+      </div>
     </q-card-section>
   </q-card>
 </template>
@@ -95,3 +97,21 @@ function clearFilters() {
   emit('clear');
 }
 </script> 
+<style scoped>
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+</style>

@@ -1,11 +1,9 @@
 <template>
-  <div>
-    <PhonologyFilters
-      :phonology-data="phonologyData"
-      :is-editable="true"
-      @update:phonology-data="$emit('update:phonology-data', $event)"
-    />
-  </div>
+  <PhonologyFilters
+    :phonology-data="phonologyData"
+    :is-editable="true"
+    @update:phonology-data="$emit('update:phonology-data', $event)"
+  />
 </template>
 
 <script setup lang="ts">

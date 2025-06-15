@@ -1,14 +1,11 @@
 <template>
   <q-card-section>
-    <div class="text-h6">
-      {{ t('search') }}
-    </div>
     <q-input
       :model-value="modelValue"
       outlined
       dense
       clearable
-      class="q-pa-md"
+      :placeholder="t('search')"
       @update:model-value="(val) => $emit('update:model-value', String(val || ''))"
       @keyup.enter="$emit('search')"
     >

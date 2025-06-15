@@ -30,8 +30,6 @@
               />
             </div>
           </q-form>
-
-          
         </q-card>
       </div>
     </div>

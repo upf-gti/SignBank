@@ -17,9 +17,9 @@
             size="sm"
             icon="edit"
             color="primary"
-            @click="startEdit"
             :label="customEditLabel || translate('edit')"
             class="edit-button"
+            @click="startEdit"
           >
             <q-tooltip>{{ customEditLabel || translate('edit') }}</q-tooltip>
           </q-btn>
@@ -30,9 +30,9 @@
             size="sm"
             icon="delete"
             color="negative"
-            @click="confirmDelete"
             :label="customDeleteLabel || translate('delete')"
             class="delete-button"
+            @click="confirmDelete"
           >
             <q-tooltip>{{ customDeleteLabel || translate('delete') }}</q-tooltip>
           </q-btn>

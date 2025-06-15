@@ -4,6 +4,7 @@ import phonology from './phonology';
 const translations: TranslateKeys = {
   ...phonology,
   startSearching: 'Començar a cercar',
+  apply: 'Aplicar',
   signLanguageDictionary: 'Diccionari SignBank de la Llengua de Signes Catalana',
   enterAWord: 'Introduïu una paraula',
   search: 'Cercar',

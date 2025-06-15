@@ -51,7 +51,7 @@
                   <q-btn
                     color="primary"
                     dense
-                    :label="t('applyFilters')"
+                    :label="t('apply')"
                     @click="performSearch"
                   />
                 </div>

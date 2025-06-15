@@ -1,5 +1,5 @@
 import type { RelatedGloss, MinimalPair } from "./gloss"
-import { 
+import type { 
   Hand,
   HandConfiguration,
   ConfigurationChange,

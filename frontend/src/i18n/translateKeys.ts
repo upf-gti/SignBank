@@ -601,6 +601,7 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   acceptedBy: string;
   deniedBy: string;
   addMinimalPair: string;
+  apply: string;
   editRelation: string;
   editMinimalPair: string;
   removeRelation: string;
