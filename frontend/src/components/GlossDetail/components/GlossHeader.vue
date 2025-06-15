@@ -7,12 +7,6 @@
       >
         {{ localGlossData.gloss }}
       </div>
-      <q-input
-        v-else
-        v-model="localGlossData.gloss"
-        outlined
-        :label="translate('gloss')"
-      />
       <!-- Status Info -->
       <div
         v-if="requestStatus && requestStatus !== 'NOT_COMPLETED'"
@@ -27,6 +21,20 @@
       </div>
     </div>
     <div class="row">
+      <q-btn
+        v-if="allowEdit && !editMode"
+        color="primary"
+        icon="edit"
+        :label="translate('edit')"
+        @click="emit('editGloss')"  
+      />
+      <q-btn
+        v-if="allowEdit && editMode"
+        color="negative"
+        icon="cancel"
+        :label="translate('exitEditMode')"
+        @click="emit('cancelGloss')"
+      />
       <!-- Send Request Button - shown when request is not completed -->
       <q-btn
         v-if="requestStatus === 'NOT_COMPLETED'"
@@ -68,6 +76,7 @@ import { ref, watch } from 'vue'
 const emit = defineEmits<{
   (e: 'editGloss'): void
   (e: 'cancelGloss'): void
+  (e: 'saveGloss'): void
   (e: 'acceptRequest'): void
   (e: 'declineRequest'): void
   (e: 'submitRequest'): void
@@ -79,7 +88,8 @@ const props = defineProps<{
   editMode: boolean,
   isConfirmRequestPage?: boolean,
   requestStatus?: RequestStatus | undefined,
-  submitting?: boolean | undefined
+  submitting?: boolean | undefined,
+  allowEdit: boolean
 }>()
 
 // Create a local copy of the glossData
