@@ -1,17 +1,5 @@
 <template>
   <div>
-    <div class="row items-center justify-between q-mb-md">
-      <div class="text-subtitle1">
-        {{ totalResults }} {{ t('resultsFound') }}
-      </div>
-      <q-toggle
-        :model-value="showDetails"
-        :label="t('showConfigurationDetails')"
-        color="primary"
-        @update:model-value="$emit('update:showDetails', $event)"
-      />
-    </div>
-
     <q-inner-loading :showing="loading">
       <q-spinner-dots
         size="50px"

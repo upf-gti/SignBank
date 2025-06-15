@@ -7,7 +7,7 @@ export class TypesenseScheduler {
   constructor(private readonly typesenseService: TypesenseService) {}
 
   // Run every day at 3 AM
-  @Cron(CronExpression.EVERY_DAY_AT_3AM)
+  @Cron(CronExpression.EVERY_5_MINUTES)
   async handleDailySync() {
     console.log('Starting daily Typesense sync...');
     try {
