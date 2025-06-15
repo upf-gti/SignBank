@@ -115,13 +115,10 @@ import EditableModule from 'src/components/Shared/EditableModule.vue';
 import UploadVideoComponent from 'src/components/UploadVideoComponent.vue';
 import VideoPlayerPopup from 'src/components/VideoPlayerPopup.vue';
 import ExampleTranslationsComponent from './ExampleTranslationsComponent.vue';
-import { ref, computed } from 'vue';
-
-const examples = computed(() => props.sense?.examples || []);
+import { ref, computed, watch } from 'vue';
 
 const $q = useQuasar();
 const loading = ref(false);
-const showUploadDialog = ref(false);
 const showVideoDialog = ref(false);
 const selectedVideoUrl = ref('');
 const selectedExample = ref<Example | null>(null);
@@ -135,12 +132,25 @@ const emit = defineEmits<{
   (e: 'update:glossData', glossData: GlossData): void;
 }>();
 
+// Create a local copy of the sense data
+const localSense = ref<Sense>({ ...props.sense });
+
+// Watch for changes in the prop and update local copy
+watch(() => props.sense, (newSense) => {
+  localSense.value = { ...newSense };
+}, { deep: true });
+
+const examples = computed(() => localSense.value?.examples || []);
+
 const addExample = () => {
-  examples.value.push({
+  if (!localSense.value.examples) {
+    localSense.value.examples = [];
+  }
+  localSense.value.examples.push({
     id: '',
     example: '',
     exampleVideoURL: '',
-    senseId: props.sense.id || '',
+    senseId: localSense.value.id || '',
     exampleTranslations: [],
     isNew: true
   });
@@ -157,7 +167,7 @@ const saveExample = async (example: Example) => {
         exampleVideoURL: example.exampleVideoURL
       });
     } else {
-      response = await api.examples.create(props.sense.id || '', {
+      response = await api.examples.create(localSense.value.id || '', {
         example: example.example,
         exampleVideoURL: example.exampleVideoURL
       });
@@ -183,9 +193,9 @@ const saveExample = async (example: Example) => {
 
 const deleteExample = async (example: Example) => {
   if (!example.id) {
-    const index = props.sense.examples.findIndex(e => e === example);
+    const index = localSense.value.examples.findIndex(e => e === example);
     if (index !== -1) {
-      props.sense.examples.splice(index, 1);
+      localSense.value.examples.splice(index, 1);
     }
     return;
   }
@@ -214,9 +224,9 @@ const deleteExample = async (example: Example) => {
 
 const cancelExample = (example: Example) => {
   if (!example.id) {
-    const index = props.sense.examples.findIndex(e => e === example);
+    const index = localSense.value.examples.findIndex(e => e === example);
     if (index !== -1) {
-      props.sense.examples.splice(index, 1);
+      localSense.value.examples.splice(index, 1);
     }
   }
 };

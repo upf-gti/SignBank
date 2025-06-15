@@ -73,7 +73,9 @@ const handleFileSelect = (file: File | null) => {
         return;
     }
     errorMessage.value = '';
-    uploadVideo();
+    uploadVideo().catch((err) => {
+        console.error(err)
+    })
 };
 
 const handleDrop = (event: DragEvent) => {
@@ -87,7 +89,9 @@ const handleDrop = (event: DragEvent) => {
             errorMessage.value = translate('pleaseDropAValidVideoFile');
         }
     }
-    uploadVideo();
+    uploadVideo().catch((err) => {
+        console.error(err)
+    })
 };
 
 const uploadVideo = async () => {

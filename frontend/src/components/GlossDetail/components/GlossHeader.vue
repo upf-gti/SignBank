@@ -5,11 +5,11 @@
         v-if="!editMode"
         class="text-h4"
       >
-        {{ glossData.gloss }}
+        {{ localGlossData.gloss }}
       </div>
       <q-input
         v-else
-        v-model="glossData.gloss"
+        v-model="localGlossData.gloss"
         outlined
         :label="translate('gloss')"
       />
@@ -63,6 +63,7 @@
 <script setup lang="ts">
 import { GlossData, RequestStatus } from 'src/types/models'
 import translate from 'src/utils/translate'
+import { ref, watch } from 'vue'
 
 const emit = defineEmits<{
   (e: 'editGloss'): void
@@ -70,24 +71,29 @@ const emit = defineEmits<{
   (e: 'acceptRequest'): void
   (e: 'declineRequest'): void
   (e: 'submitRequest'): void
+  (e: 'update:glossData', value: GlossData): void
 }>()
 
-const { glossData, allowEdit = true, isConfirmRequestPage = false, requestStatus, submitting = false } = defineProps<{
+const props = defineProps<{
   glossData: GlossData,
   editMode: boolean,
-  allowEdit: boolean,
   isConfirmRequestPage?: boolean,
   requestStatus?: RequestStatus | undefined,
   submitting?: boolean | undefined
 }>()
 
-const editGloss = () => {
-  emit('editGloss')
-}
+// Create a local copy of the glossData
+const localGlossData = ref<GlossData>({ ...props.glossData });
 
-const cancelGloss = () => {
-  emit('cancelGloss')
-}
+// Watch for changes in the prop and update local copy
+watch(() => props.glossData, (newGlossData) => {
+  localGlossData.value = { ...newGlossData };
+}, { deep: true });
+
+// Watch for changes in local copy and emit updates
+watch(() => localGlossData.value.gloss, (newGloss) => {
+  emit('update:glossData', { ...localGlossData.value, gloss: newGloss });
+}, { deep: true });
 
 const acceptRequest = () => {
   emit('acceptRequest')
@@ -103,13 +109,13 @@ const submitRequest = () => {
 
 const getStatusColor = (status: RequestStatus | undefined): string => {
   switch (status) {
-    case 'NOT_COMPLETED':
+    case RequestStatus.NOT_COMPLETED:
       return 'orange';
-    case 'WAITING_FOR_APPROVAL':
+    case RequestStatus.WAITING_FOR_APPROVAL:
       return 'blue';
-    case 'ACCEPTED':
+    case RequestStatus.ACCEPTED:
       return 'positive';
-    case 'DENIED':
+    case RequestStatus.DENIED:
       return 'negative';
     default:
       return 'grey';

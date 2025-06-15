@@ -408,26 +408,26 @@ function viewGloss(glossId: string) {
   })
 }
 
-async function handleRelationSelect(gloss: SearchResult) {
+ function handleRelationSelect(gloss: SearchResult) {
   selectedGloss.value = gloss;
   showRelationDialog.value = false;
   showRelationTypeDialog.value = true;
 }
 
-async function handleMinimalPairSelect(gloss: SearchResult) {
+ function handleMinimalPairSelect(gloss: SearchResult) {
   selectedGloss.value = gloss;
   showMinimalPairDialog.value = false;
   showDistinctionDialog.value = true;
 }
 
-async function handleAddRelation() {
+ async function handleAddRelation() {
   const success = await addRelation();
   if (success) {
     showRelationTypeDialog.value = false;
   }
 }
 
-async function handleAddMinimalPair() {
+ async function handleAddMinimalPair() {
   const success = await addMinimalPair();
   if (success) {
     showDistinctionDialog.value = false;

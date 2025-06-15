@@ -94,7 +94,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { SignVideo } from 'src/types/models';
 import translate from 'src/utils/translate';
 import UploadVideoComponent from 'src/components/UploadVideoComponent.vue';
@@ -102,7 +102,7 @@ import { getVideoUrl } from 'src/utils/videoUrl';
 import { api } from 'src/services/api';
 import { useQuasar } from 'quasar';
 
-const { signVideo, editMode } = defineProps<{
+const props = defineProps<{
   signVideo: SignVideo;
   editMode: boolean;
 }>();
@@ -113,10 +113,18 @@ const emit = defineEmits<{
 
 const $q = useQuasar();
 
-const selectedVideo = ref<string>(signVideo?.videos[0]?.id || '');
+// Create a local copy of the signVideo data
+const localSignVideo = ref<SignVideo>({ ...props.signVideo });
+
+// Watch for changes in the prop and update local copy
+watch(() => props.signVideo, (newSignVideo) => {
+  localSignVideo.value = { ...newSignVideo };
+}, { deep: true });
+
+const selectedVideo = ref<string>(localSignVideo.value?.videos[0]?.id || '');
 
 const sortedVideos = computed(() => {
-  return [...(signVideo?.videos || [])].sort((a, b) => (a.priority || 0) - (b.priority || 0));
+  return [...(localSignVideo.value?.videos || [])].sort((a, b) => (a.priority || 0) - (b.priority || 0));
 });
 
 const selectedVideoData = computed(() => {
@@ -128,9 +136,8 @@ const getVideoIndex = (videoId: string) => {
 };
 
 const uploadVideo = (url: string) => {
-  
   const newSignVideo = {
-    ...signVideo,
+    ...localSignVideo.value,
   }
   const videoToUpdate = newSignVideo.videos.find(video => video.id === selectedVideo.value)
   if (videoToUpdate) {
@@ -140,23 +147,25 @@ const uploadVideo = (url: string) => {
 }
 
 const addAngle = () => {
-  if (!signVideo?.videos) return;
+  if (!localSignVideo.value?.videos) return;
   const newVideo = {
     id: Date.now().toString(),
     angle: translate('newAngle'),
     url: '',
-    priority: signVideo.videos.length + 1,
+    priority: localSignVideo.value.videos.length + 1,
   }
-  signVideo.videos.push(newVideo)
+  localSignVideo.value.videos.push(newVideo)
   selectedVideo.value = newVideo.id
+  emit('update:signVideo', localSignVideo.value)
 }
 
 const removeAngle = () => {
-  if (!signVideo?.videos) return;
-  const index = signVideo.videos.findIndex(video => video.id === selectedVideo.value)
+  if (!localSignVideo.value?.videos) return;
+  const index = localSignVideo.value.videos.findIndex(video => video.id === selectedVideo.value)
   if (index > -1) {
-    signVideo.videos.splice(index, 1)
-    selectedVideo.value = signVideo.videos[0]?.id || ''
+    localSignVideo.value.videos.splice(index, 1)
+    selectedVideo.value = localSignVideo.value.videos[0]?.id || ''
+    emit('update:signVideo', localSignVideo.value)
   }
 }
 
@@ -180,6 +189,8 @@ const moveVideoLeft = async () => {
       api.videoPriority.update(currentVideo.id, { priority: currentVideo.priority }),
       api.videoPriority.update(previousVideo.id, { priority: previousVideo.priority })
     ]);
+    
+    emit('update:signVideo', localSignVideo.value)
     
     $q.notify({
       type: 'positive',
@@ -216,6 +227,8 @@ const moveVideoRight = async () => {
       api.videoPriority.update(currentVideo.id, { priority: currentVideo.priority }),
       api.videoPriority.update(nextVideo.id, { priority: nextVideo.priority })
     ]);
+    
+    emit('update:signVideo', localSignVideo.value)
     
     $q.notify({
       type: 'positive',

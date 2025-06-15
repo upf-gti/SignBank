@@ -50,17 +50,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
 import translate from 'src/utils/translate';
 import SearchInput from './components/SearchInput.vue';
 import FilterCategories from './components/FilterCategories.vue';
 import FilterInputs from './components/FilterInputs.vue';
 import type { PhonologyData } from 'src/types/models';
-import { Hand } from 'src/types/enums';
 
 const t = (key: string) => translate(key);
 
-const props = defineProps<{
+ defineProps<{
   searchQuery: string;
   selectedCategory: string;
   selectedHands: string;

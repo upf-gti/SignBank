@@ -91,11 +91,11 @@ function getRelationDescription(type: string): string {
   return descriptions[type] || type;
 }
 
-async function handleDelete() {
+ function handleDelete() {
   if (!props.gloss.id) return;
   loading.value = true;
   try {
-    await emit('delete', props.gloss.id);
+    emit('delete', props.gloss.id);
   } finally {
     loading.value = false;
   }

@@ -81,7 +81,7 @@ import { api } from 'src/services/api';
 import { useQuasar } from 'quasar';
 import LanguageSelector from './LanguageSelector.vue';
 import EditableModule from 'src/components/Shared/EditableModule.vue';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 
 const $q = useQuasar();
 const loading = ref(false);
@@ -95,21 +95,29 @@ const emit = defineEmits<{
   (e: 'update:glossData', glossData: GlossData): void;
 }>();
 
+// Create a local copy of the sense data
+const localSense = ref<Sense>({ ...props.sense });
+
+// Watch for changes in the prop and update local copy
+watch(() => props.sense, (newSense) => {
+  localSense.value = { ...newSense };
+}, { deep: true });
+
 const senseTranslations = computed(() => {
-  return props.sense.senseTranslations || [];
+  return localSense.value.senseTranslations || [];
 });
 
 const addTranslation = () => {
   // Initialize senseTranslations array if it doesn't exist
-  if (!props.sense.senseTranslations) {
-    props.sense.senseTranslations = [];
+  if (!localSense.value.senseTranslations) {
+    localSense.value.senseTranslations = [];
   }
   
-  props.sense.senseTranslations.push({
+  localSense.value.senseTranslations.push({
     id: '',
     translation: '',
     language: 'CATALAN',
-    senseId: props.sense.id || '',
+    senseId: localSense.value.id || '',
     isNew: true
   });
 };
@@ -125,7 +133,7 @@ const saveTranslation = async (translation: SenseTranslation) => {
         language: translation.language as Language
       });
     } else {
-      response = await api.translations.createSenseTranslation(props.sense.id || '', {
+      response = await api.translations.createSenseTranslation(localSense.value.id || '', {
         translation: translation.translation,
         language: translation.language as Language
       });
@@ -152,13 +160,13 @@ const saveTranslation = async (translation: SenseTranslation) => {
 const deleteTranslation = async (translation: SenseTranslation) => {
   if (!translation.id) {
     // Initialize senseTranslations array if it doesn't exist
-    if (!props.sense.senseTranslations) {
-      props.sense.senseTranslations = [];
+    if (!localSense.value.senseTranslations) {
+      localSense.value.senseTranslations = [];
     }
     
-    const index = props.sense.senseTranslations.findIndex(t => t === translation);
+    const index = localSense.value.senseTranslations.findIndex(t => t === translation);
     if (index !== -1) {
-      props.sense.senseTranslations.splice(index, 1);
+      localSense.value.senseTranslations.splice(index, 1);
     }
     return;
   }
@@ -188,13 +196,13 @@ const deleteTranslation = async (translation: SenseTranslation) => {
 const cancelTranslation = (translation: SenseTranslation) => {
   if (!translation.id) {
     // Initialize senseTranslations array if it doesn't exist
-    if (!props.sense.senseTranslations) {
-      props.sense.senseTranslations = [];
+    if (!localSense.value.senseTranslations) {
+      localSense.value.senseTranslations = [];
     }
     
-    const index = props.sense.senseTranslations.findIndex(t => t === translation);
+    const index = localSense.value.senseTranslations.findIndex(t => t === translation);
     if (index !== -1) {
-      props.sense.senseTranslations.splice(index, 1);
+      localSense.value.senseTranslations.splice(index, 1);
     }
   }
 };

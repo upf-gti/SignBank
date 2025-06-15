@@ -87,7 +87,7 @@ const fetchGlossRequest = async () => {
     glossData.value = response.data.requestedGlossData;
     
     // Set edit mode based on request status - only editable if NOT_COMPLETED
-    editMode.value = response.data.status === 'NOT_COMPLETED';
+    editMode.value = response.data.status === RequestStatus.NOT_COMPLETED;
   } catch (err) {
     console.error('Error fetching gloss request:', err);
     error.value = translate('errors.failedToLoadGlossRequest');
@@ -172,7 +172,9 @@ const submitRequest = async () => {
 
 onMounted(async () => {
   if (!userStore.isLoggedIn) {
-    router.push('/');
+    router.push('/').catch((err) => {
+      console.error(err)
+    })
     return;
   }
   await fetchGlossRequest();

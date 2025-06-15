@@ -217,10 +217,10 @@
 </template>
 
 <script setup lang="ts">
-import type { Sense, GlossData, Definition, SignVideo, Example, SenseTranslation } from 'src/types/models'
+import type { Sense, GlossData } from 'src/types/models'
 import translate from 'src/utils/translate'
 import { LEXICAL_CATEGORIES } from 'src/utils/lexicalCategories'
-import { ref, computed, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { api } from 'src/services/api'
 import { useQuasar } from 'quasar'
 
@@ -323,7 +323,7 @@ const moveSense = async (index: number, direction: 'up' | 'down') => {
       otherSense.priority = tempPriority
 
       // Update both senses
-      const [response1, response2] = await Promise.all([
+      const [, response] = await Promise.all([
         api.senses.update(props.glossData.id || '', senseToMove.id, {
           senseTitle: senseToMove.senseTitle,
           lexicalCategory: senseToMove.lexicalCategory,
@@ -337,7 +337,7 @@ const moveSense = async (index: number, direction: 'up' | 'down') => {
       ])
 
       // Update the parent with the latest data
-      emit('update:glossData', response2.data)
+      emit('update:glossData', response.data)
 
       // Sort the local senses by priority
       localSenses.value.sort((a, b) => a.priority - b.priority)
@@ -441,12 +441,7 @@ const handleDeleteConfirm = async () => {
   }
 }
 
-const deleteSense = (sense: Sense) => {
-  if (props.senses.length <= 1) {
-    return // Don't allow deleting the last sense
-  }
-  confirmDelete(sense)
-}
+
 
 const openEditSenses = () => {
   editSensesDialog.value = true

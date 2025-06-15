@@ -145,7 +145,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { api } from 'src/services/api';
 import translate from 'src/utils/translate';
-import type { GlossRequest, RequestStatus } from 'src/types/models';
+import { GlossRequest, RequestStatus } from 'src/types/models';
 
 const $router = useRouter();
 
@@ -172,20 +172,20 @@ const fetchRequests = async () => {
 
 const filteredRequests = computed(() => {
   return {
-    not_sent: requests.value?.filter(r => r.status === 'NOT_COMPLETED') || [],
-    pending: requests.value?.filter(r => r.status === 'WAITING_FOR_APPROVAL') || [],
-    accepted: requests.value?.filter(r => r.status === 'ACCEPTED') || [],
-    denied: requests.value?.filter(r => r.status === 'DENIED') || []
+    not_sent: requests.value?.filter(r => r.status === RequestStatus.NOT_COMPLETED) || [],
+    pending: requests.value?.filter(r => r.status === RequestStatus.WAITING_FOR_APPROVAL) || [],
+    accepted: requests.value?.filter(r => r.status === RequestStatus.ACCEPTED) || [],
+    denied: requests.value?.filter(r => r.status === RequestStatus.DENIED) || []
   };
 });
 
 const getStatusColor = (status: RequestStatus): string => {
   switch (status) {
-    case 'ACCEPTED':
+    case RequestStatus.ACCEPTED:
       return 'positive';
-    case 'DENIED':
+    case RequestStatus.DENIED:
       return 'negative';
-    case 'NOT_COMPLETED':
+    case RequestStatus.NOT_COMPLETED:
       return 'grey';
     default:
       return 'warning';

@@ -6,7 +6,6 @@ import { useRouter } from 'vue-router';
 import SearchFilters from 'src/components/Search/SearchFilters.vue';
 import SearchResults from 'src/components/Search/SearchResults.vue';
 import type { PhonologyData } from 'src/types/models';
-import { Hand } from 'src/types/enums';
 
 const $q = useQuasar();
 const router = useRouter();
@@ -62,14 +61,6 @@ const filterBy = computed(() => {
   return filters.join(' && ');
 });
 
-const hasResults = computed(() => {
-  return searchResults.value?.hits && searchResults.value.hits.length > 0;
-});
-
-const totalResults = computed(() => {
-  return searchResults.value?.found || 0;
-});
-
 // Methods
 async function performSearch() {
   try {
@@ -80,7 +71,7 @@ async function performSearch() {
     
     // If there are phonology filters selected, add them to the search query for fuzzy matching
     const phonologyTerms = [];
-    for (const [field, value] of Object.entries(filterInputs.value)) {
+    for (const [, value] of Object.entries(filterInputs.value)) {
       if (value !== '') {
         phonologyTerms.push(value);
       }
@@ -119,8 +110,8 @@ function viewGlossDetails(glossId: string) {
 }
 
 // Lifecycle
-onMounted(() => {
-  performSearch();
+onMounted(async () => {
+  await performSearch();
 });
 </script>
 

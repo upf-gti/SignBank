@@ -79,15 +79,14 @@
   import { useRouter } from 'vue-router';
   import { api } from 'src/services/api';
   import translate from 'src/utils/translate';
-  import type {GlossRequest, RequestStatus } from 'src/types/models';
+  import type { GlossRequest } from 'src/types/models';
+  import { RequestStatus } from 'src/types/models';
   
   const $router = useRouter();
   
   const requests = ref<GlossRequest[]>();
   const loading = ref(true);
   const error = ref<string | null>(null);
-  
-  const showNewRequestDialog = ref(false);
   
   onMounted(async () => {
     await fetchRequests();
@@ -107,9 +106,9 @@
   
   const getStatusColor = (status: RequestStatus): string => {
     switch (status) {
-      case 'ACCEPTED':
+      case RequestStatus.ACCEPTED:
         return 'positive';
-      case 'DENIED':
+      case RequestStatus.DENIED:
         return 'negative';
       default:
         return 'warning';

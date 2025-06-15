@@ -1,6 +1,6 @@
 import type { AxiosResponse } from "axios"
 import { apiClient } from "src/boot/axios"
-import type { GlossRequest, GlossData, Definition, Translation, Language, SignVideo } from 'src/types/models'
+import type { GlossRequest, GlossData, Language, SignVideo } from 'src/types/models'
 import type { SearchParams } from "./search.service"
 import type {
   CreateGlossRequestDto,

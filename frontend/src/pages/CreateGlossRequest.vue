@@ -57,7 +57,9 @@ async function onSubmit() {
     const response = await api.glossRequests.create(form.value)
 
     // Navigate to the edit page for this request
-    router.push(`/my-requests/edit/${response.data.id}`)
+    router.push(`/my-requests/edit/${response.data.id}`).catch((err) => {
+      console.error(err)
+    })
   } catch (error) {
     console.error('Error creating gloss request:', error)
     $q.notify({

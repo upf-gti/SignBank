@@ -90,17 +90,11 @@
 import { Sense } from 'src/types/models'
 import GlossVideoComponent from './GlossVideoComponent.vue'
 import translate from 'src/utils/translate';
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
 
 const { selectedSense } = defineProps<{
   selectedSense: Sense
 }>()
 
-const navigateToGloss = (gloss: string) => {
-  router.push(`/gloss/${gloss}`)
-}
 </script>
 
 <style scoped>

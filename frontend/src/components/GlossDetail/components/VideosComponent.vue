@@ -278,7 +278,9 @@ const updateVideoData = (index: number, videoData: PhonologyData) => {
 const handleVideoCancel = (index: number) => {
   if (index === 0 && isCreatingVideo.value) {
     // If cancelling a new video creation, remove it
-    removeVideo(index);
+    removeVideo(index).catch((err) => {
+      console.error(err)
+    })
   } else {
     // Otherwise revert to backup
     if (videosBackup.value[index]) {

@@ -125,9 +125,8 @@
 </template>
 
 <script setup lang="ts">
-import { Sense, Definition, Translation, GlossData, Language } from 'src/types/models';
+import { Sense, Definition, GlossData } from 'src/types/models';
 import translate from 'src/utils/translate';
-import LanguageSelector from './LanguageSelector.vue'
 import EditableModule from 'src/components/Shared/EditableModule.vue'
 import { ref, computed } from 'vue';
 import { api } from 'src/services/api';
@@ -186,15 +185,7 @@ const isGlossData = (data: any): data is GlossData => {
     'senses' in data;
 }
 
-const addDefinitionTranslation = () => {
-  if (!props.sense?.id) return;
-  newDefinition.value.definitionTranslations.push({
-    id: '',
-    translation: '',
-    language: 'CATALAN',
-    definitionId: props.sense.id
-  });
-}
+
 
 const saveDefinition = async (definition: Definition) => {
   if (!props.sense?.id) return;

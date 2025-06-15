@@ -89,9 +89,9 @@ export interface PhonologyData {
   orientationChange: OrientationChange | '';
   contactType: ContactType | '';
   movementType: MovementType | '';
-  vocalization: string | '';
-  nonManualComponent: string | '';
-  inicialization: string | '';
+  vocalization: string;
+  nonManualComponent: string;
+  inicialization: string;
   id?: string;
 }
 

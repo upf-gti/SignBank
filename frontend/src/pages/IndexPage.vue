@@ -14,7 +14,9 @@
           color="primary"
           size="lg"
           class="q-px-xl"
-          @click="$router.push('/search')"
+          @click="$router.push('/search').catch((err) => {
+            console.error(err)
+          })"
         />
       </div>
     </div>
@@ -22,9 +24,17 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
+import { onBeforeMount } from 'vue';
 import translate from 'src/utils/translate';
+import { useRouter } from 'vue-router';
+
 const router = useRouter();
+
+onBeforeMount(() => {
+  router.push('/search').catch((err) => {
+            console.error(err)
+          })
+})
 </script>
 
 <style scoped>

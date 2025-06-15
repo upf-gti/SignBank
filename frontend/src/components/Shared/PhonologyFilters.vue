@@ -450,7 +450,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import translate from 'src/utils/translate';
 import { usePhonologyOptions } from '../../utils/phonologyOptions';
 import type { PhonologyData } from 'src/types/models';

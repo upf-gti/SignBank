@@ -20,14 +20,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import translate from 'src/utils/translate';
-import { LexicalCategory, Hand } from 'src/types/enums';
 import { LEXICAL_CATEGORIES } from 'src/utils/lexicalCategories'
 
 const t = (key: string) => translate(key);
 
-const props = defineProps<{
+defineProps<{
   selectedCategory: string;
 }>();
 
@@ -35,7 +33,5 @@ defineEmits<{
   (e: 'update:selectedCategory', value: string): void;
 }>();
 
-// Lexical categories for select
-const lexicalCategories = Object.values(LexicalCategory);
 
 </script> 
