@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="fit column">
     <q-inner-loading :showing="loading">
       <q-spinner-dots
         size="50px"
@@ -18,7 +18,8 @@
 
     <div
       v-else-if="hasResults"
-      class="row q-col-gutter-md"
+      class="row col" 
+      :style="{ overflowY: 'auto'}"
     >
       <div
         v-for="hit in results?.hits"
@@ -33,9 +34,10 @@
       </div>
     </div>
 
-    <div class="flex flex-center q-mt-lg">
+    <div class="flex flex-center" 
+      v-if="totalResults > perPage"
+      >
       <q-pagination
-        v-if="totalResults > perPage"
         :model-value="page"
         :max="Math.ceil(totalResults / perPage)"
         :max-pages="6"

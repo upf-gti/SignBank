@@ -136,7 +136,7 @@ onMounted(async () => {
     </div>
 
     <!-- Main Content -->
-    <div class="col-12 col-md-9">
+    <div class="col-12 col-md-9 full-height">
       <SearchResults
         :results="searchResults"
         :loading="loading"
