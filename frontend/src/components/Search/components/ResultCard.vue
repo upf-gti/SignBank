@@ -6,10 +6,18 @@
           <video
             class="full-width"
             :src="getVideoUrl(document.url)"
-            preload="none"            
+            preload="metadata"
             loop
-            autoplay
-          />
+            :autoplay="true"
+            @error="handleVideoError"
+            @loadeddata="handleVideoLoaded"
+          >
+            <source :src="getVideoUrl(document.url)" type="video/mp4">
+            {{ t('videoNotSupported') }}
+          </video>
+          <div v-if="isLoading" class="absolute-center">
+            <q-spinner color="primary" size="2em" />
+          </div>
         </q-card-section>
       </template>
       
@@ -76,8 +84,19 @@
 import translate from 'src/utils/translate';
 import { getVideoUrl } from 'src/utils/videoUrl';
 import type { SearchResult } from 'src/services/search.service';
+import { ref } from 'vue';
 
 const t = (key: string) => translate(key);
+const isLoading = ref(true);
+
+const handleVideoError = (error: Event) => {
+  console.error('Video loading error:', error);
+  isLoading.value = false;
+};
+
+const handleVideoLoaded = () => {
+  isLoading.value = false;
+};
 
 defineProps<{
   document: SearchResult;
