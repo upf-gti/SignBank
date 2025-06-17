@@ -9,6 +9,7 @@
             preload="metadata"
             loop
             :autoplay="true"
+            muted
             @error="handleVideoError"
             @loadeddata="handleVideoLoaded"
           >

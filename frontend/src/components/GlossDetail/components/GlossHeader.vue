@@ -2,7 +2,6 @@
   <q-card-section class="row justify-between items-center">
     <div class="column">
       <div
-        v-if="!editMode"
         class="text-h4"
       >
         {{ localGlossData.gloss }}

@@ -1,9 +1,19 @@
 
 TODOS
-- Edit Glosses
-- Minimal Pairs relations to videos and not to entire gloss
-- Delete Relations
-- Edit Senses and delete
+- Remove quick info. 
+- Si no hi ha trad de descripcio, amagar.
+- Traduccions de SPANISH ENGLISH a traduccions
+- Afegir video a la definicio
+- Treure sortir de edicio quan estas editant una request
+- Cambiar configuracio a configCat
+- Config Lexica double titol al editar, arreglar
+- Lexica pot estar buida
+- Direccio Moviment FALTA
+- Moviment repetit,  boolean
+- Mute videos
+- Al mes o i, canviar les lletres per el signe
+- Traduccions de relacions
+- Allow empty in configuration
 
 ## How to change the app host
 

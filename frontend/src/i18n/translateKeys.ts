@@ -383,7 +383,11 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   definitions: string;
   definitionTitle: string;
   definition: string;
+  videoUpdated: string;
+  orientationChange: string;
   definitionTranslations: string;
+  confirmDeleteMessage: string;
+  confirmDelete: string;
   senseTranslations: string;
   examples: string;
   exampleTranslations: string;
@@ -599,6 +603,14 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   requestedBy: string;
   addRelation: string;
   acceptedBy: string;
+  definitionSavedSuccessfully: string;
+  definitionDeletedSuccessfully: string;
+  definitionTranslationSavedSuccessfully: string;
+  definitionTranslationDeletedSuccessfully: string;
+  exampleSavedSuccessfully: string;
+  exampleDeletedSuccessfully: string;
+  exampleTranslationSavedSuccessfully: string;
+  exampleTranslationDeletedSuccessfully: string;
   deniedBy: string;
   addMinimalPair: string;
   apply: string;

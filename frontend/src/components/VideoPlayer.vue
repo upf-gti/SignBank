@@ -15,6 +15,7 @@
             style="height: 250px; width: 250px; object-fit: cover"
             loop
             autoplay
+            muted
           />
           
           <div class="text-caption q-mb-md">

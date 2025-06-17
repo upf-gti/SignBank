@@ -103,6 +103,7 @@
     v-model:show-dialog="showVideoDialog"
     :video-url="selectedVideoUrl"
     :title="selectedExample?.example || translate('exampleVideo')"
+    muted
   />
 </template>
 

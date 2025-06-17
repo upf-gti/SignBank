@@ -5,6 +5,7 @@
       class="col fit"
       loop
       autoplay
+      muted
       :src="getVideoUrl(selectedVideoData.url)"
       :style="{
         objectFit: 'contain',

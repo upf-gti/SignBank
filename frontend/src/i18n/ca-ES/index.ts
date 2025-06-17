@@ -216,7 +216,8 @@ const translations: TranslateKeys = {
   videoDeleted: 'Vídeo eliminat',
   notSent: 'No enviat',
   contactType: 'Tipus de contacte',
-  movementType: 'Tipus de moviment',
+  movementType: 'Forma de moviment',
+  videoUpdated: 'Vídeo actualitzat',
   relationBetweenArticulators: 'Relació entre articuladors',
   location: 'Ubicació',
   movementRelatedOrientation: 'Orientació relacionada amb el moviment',
@@ -293,7 +294,18 @@ const translations: TranslateKeys = {
   distinction: 'Distinció',
   distinctionHint: 'Distinció entre el signe i el seu oposat',
   view: 'Veure'  ,
-  searchGloss: 'Cercar glossa'
+  searchGloss: 'Cercar glossa',
+  definitionSavedSuccessfully: 'Definició desada correctament',
+  definitionDeletedSuccessfully: 'Definició eliminada correctament',
+  definitionTranslationSavedSuccessfully: 'Traducció de definició desada correctament',
+  definitionTranslationDeletedSuccessfully: 'Traducció de definició eliminada correctament',
+  exampleSavedSuccessfully: 'Exemple desat correctament',
+  confirmDelete: 'Confirmar eliminació',
+  confirmDeleteMessage: 'Esteu segur que voleu eliminar aquesta definició?',
+  exampleDeletedSuccessfully: 'Exemple eliminat correctament',
+  exampleTranslationDeletedSuccessfully: 'Traducció d\'exemple eliminada correctament',
+  exampleTranslationSavedSuccessfully: 'Traducció d\'exemple desada correctament',
+  orientationChange: 'Canvi d\'orientació'
 };
 
 export default translations; 
