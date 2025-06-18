@@ -18,6 +18,7 @@ export const videosSchema: CollectionCreateSchema = {
     { name: 'orientationChange', type: 'string', facet: true },
     { name: 'contactType', type: 'string', facet: true },
     { name: 'movementType', type: 'string', facet: true },
+    { name: 'movementDirection', type: 'string', facet: true },
     { name: 'vocalization', type: 'string', facet: true },
     { name: 'nonManualComponent', type: 'string', facet: true },
     { name: 'inicialization', type: 'string', facet: true },

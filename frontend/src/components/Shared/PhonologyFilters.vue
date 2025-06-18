@@ -3,7 +3,7 @@
     <div class="column q-col-gutter-md">
       <!-- Hands -->
       <div class="col">
-        <q-item-label caption>
+        <q-item-label caption v-if="!isEditable">
           {{ translate('hands') }}
         </q-item-label>
         <div
@@ -41,7 +41,7 @@
 
       <!-- Configuration -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label caption v-if="!isEditable">
           {{ translate('configuration') }}
         </q-item-label>
         <div
@@ -75,7 +75,7 @@
 
       <!-- Configuration Changes -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label caption v-if="!isEditable">
           {{ translate('configurationChanges') }}
         </q-item-label>
         <div
@@ -123,7 +123,7 @@
 
       <!-- Relation Between Articulators -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label caption v-if="!isEditable">
           {{ translate('relationBetweenArticulators') }}
         </q-item-label>
         <div
@@ -157,7 +157,7 @@
 
       <!-- Location -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label caption v-if="!isEditable">
           {{ translate('location') }}
         </q-item-label>
         <div
@@ -191,7 +191,7 @@
 
       <!-- Movement Related Orientation -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label caption v-if="!isEditable">
           {{ translate('movementRelatedOrientation') }}
         </q-item-label>
         <div
@@ -225,7 +225,7 @@
 
       <!-- Orientation Related To Location -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label caption v-if="!isEditable">
           {{ translate('orientationRelatedToLocation') }}
         </q-item-label>
         <div
@@ -259,7 +259,7 @@
 
       <!-- Orientation Change -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label caption v-if="!isEditable">
           {{ translate('orientationChange') }}
         </q-item-label>
         <div
@@ -293,7 +293,7 @@
 
       <!-- Contact Type -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label caption v-if="!isEditable">
           {{ translate('contactType') }}
         </q-item-label>
         <div
@@ -327,7 +327,7 @@
 
       <!-- Movement Type -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label caption v-if="!isEditable">
           {{ translate('movementType') }}
         </q-item-label>
         <div
@@ -361,7 +361,7 @@
 
       <!-- Movement Direction -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label caption v-if="!isEditable">
           {{ translate('movementDirection') }}
         </q-item-label>
         <div
@@ -395,7 +395,7 @@
 
       <!-- Vocalization -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label caption v-if="!isEditable">
           {{ translate('vocalization') }}
         </q-item-label>
         <div
@@ -424,7 +424,7 @@
 
       <!-- Non Manual Component -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label caption v-if="!isEditable">
           {{ translate('nonManualComponent') }}
         </q-item-label>
         <div
@@ -453,7 +453,7 @@
 
       <!-- Inicialization -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label caption v-if="!isEditable">
           {{ translate('inicialization') }}
         </q-item-label>
         <div

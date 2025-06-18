@@ -1,6 +1,6 @@
 import { IsString, IsNotEmpty, IsArray, ValidateNested, IsOptional, IsNumber, IsEnum } from 'class-validator';
 import { Type } from 'class-transformer';
-import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType } from '@prisma/client';
+import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType, MovementDirection } from '@prisma/client';
 
 class VideoDto {
   @IsString()
@@ -53,6 +53,9 @@ class VideoDataDto {
 
   @IsEnum(MovementType)
   movementType: MovementType;
+
+  @IsEnum(MovementDirection)
+  movementDirection: MovementDirection;
 
   @IsString()
   @IsOptional()

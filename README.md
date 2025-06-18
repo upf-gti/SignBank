@@ -2,12 +2,7 @@
 TODOS
 - Afegir video a la definicio
 - Cambiar configuracio a configCat
-- Config Lexica double titol al editar, arreglar
-- Lexica pot estar buida
-- Direccio Moviment FALTA
-- Moviment repetit,  boolean
-- Traduccions de relacions
-- Allow empty in configuration
+- Moviment repetit, boolean
 - Creacio usuaris
 
 ## How to change the app host

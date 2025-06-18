@@ -603,6 +603,7 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   declineRequest: string;
   enterDeclineReason: string;
   requestAccepted: string;
+  movementDirection: string;
   requestDeclined: string;
   errors: {
     failedToAcceptRequest: string;

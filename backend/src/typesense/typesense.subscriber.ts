@@ -48,6 +48,7 @@ export class TypesenseSubscriber {
           orientationChange: signVideo.videoData.orientationChange,
           contactType: signVideo.videoData.contactType,
           movementType: signVideo.videoData.movementType,
+          movementDirection: signVideo.videoData.movementDirection,
           vocalization: signVideo.videoData.vocalization,
           nonManualComponent: signVideo.videoData.nonManualComponent,
           inicialization: signVideo.videoData.inicialization,

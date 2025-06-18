@@ -1,4 +1,4 @@
-import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType } from '@prisma/client';
+import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType, MovementDirection } from '@prisma/client';
 
 export interface VideoIndex {
   id: string;
@@ -19,6 +19,7 @@ export interface VideoIndex {
   orientationChange: OrientationChange | '';
   contactType: ContactType | '';
   movementType: MovementType | '';
+  movementDirection: MovementDirection | '';
   vocalization: string;
   nonManualComponent: string;
   inicialization: string;

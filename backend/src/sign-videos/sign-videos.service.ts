@@ -37,6 +37,7 @@ export class SignVideosService {
         orientationChange: createSignVideoDto.videoData.orientationChange,
         contactType: createSignVideoDto.videoData.contactType,
         movementType: createSignVideoDto.videoData.movementType,
+        movementDirection: createSignVideoDto.videoData.movementDirection,
         vocalization: createSignVideoDto.videoData.vocalization,
         nonManualComponent: createSignVideoDto.videoData.nonManualComponent,
         inicialization: createSignVideoDto.videoData.inicialization
@@ -106,6 +107,7 @@ export class SignVideosService {
         orientationChange: updateSignVideoDto.videoData.orientationChange,
         contactType: updateSignVideoDto.videoData.contactType,
         movementType: updateSignVideoDto.videoData.movementType,
+        movementDirection: updateSignVideoDto.videoData.movementDirection,
         vocalization: updateSignVideoDto.videoData.vocalization,
         nonManualComponent: updateSignVideoDto.videoData.nonManualComponent,
         inicialization: updateSignVideoDto.videoData.inicialization

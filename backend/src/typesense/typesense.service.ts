@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import * as Typesense from 'typesense';
 import { VIDEOS_COLLECTION_NAME, videosSchema } from './typesense.config';
 import { VideoIndex } from './types/video-index.type';
-import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType } from '@prisma/client';
+import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType, MovementDirection } from '@prisma/client';
 
 @Injectable()
 export class TypesenseService implements OnModuleInit {
@@ -158,6 +158,7 @@ export class TypesenseService implements OnModuleInit {
         orientationChange: OrientationChange;
         contactType: ContactType;
         movementType: MovementType;
+        movementDirection: MovementDirection;
         vocalization: string;
         nonManualComponent: string;
         inicialization: string;
@@ -187,6 +188,7 @@ export class TypesenseService implements OnModuleInit {
       orientationChange: signVideo.videoData?.orientationChange || '',
       contactType: signVideo.videoData?.contactType || '',
       movementType: signVideo.videoData?.movementType || '',
+      movementDirection: signVideo.videoData?.movementDirection || '',
       vocalization: signVideo.videoData?.vocalization || '',
       nonManualComponent: signVideo.videoData?.nonManualComponent || '',
       inicialization: signVideo.videoData?.inicialization || '',
@@ -346,14 +348,15 @@ export class TypesenseService implements OnModuleInit {
         'orientationChange',
         'contactType',
         'movementType',
+        'movementDirection',
         'hands'
       ];
       
       const defaultParams = {
         q: searchParameters.q || '*',
-        query_by: searchParameters.query_by || 'gloss,senseTitle,signVideoTitle,configuration,location,hands,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType',
+        query_by: searchParameters.query_by || 'gloss,senseTitle,signVideoTitle,configuration,location,hands,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection',
         filter_by: searchParameters.filter_by || '',
-        facet_by: searchParameters.facet_by || 'configuration,location,hands,lexicalCategory,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType',
+        facet_by: searchParameters.facet_by || 'configuration,location,hands,lexicalCategory,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection',
         max_hits: searchParameters.max_hits || 100,
         page: searchParameters.page || 1,
         per_page: searchParameters.per_page || 20,
