@@ -371,7 +371,7 @@
           <span
             v-if="localData.movementDirection"
             class="text-body2"
-          >{{ localData.movementDirection }}</span>
+          >{{ getMovementDirectionLabel(localData.movementDirection) }}</span>
           <span
             v-else
             class="text-grey-5"
@@ -617,6 +617,11 @@ const getContactTypeLabel = (contactType: string) => {
 
 const getMovementTypeLabel = (movementType: string) => {
   const option = phonologyOptions.movementTypeOptions.find(o => o.value === movementType);
+  return option ? option.label : '';
+};
+
+const getMovementDirectionLabel = (movementDirection: string) => {
+  const option = phonologyOptions.movementDirectionOptions.find(o => o.value === movementDirection);
   return option ? option.label : '';
 };
 </script>

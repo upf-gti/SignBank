@@ -89,5 +89,6 @@ export function usePhonologyOptions() {
     orientationChangeOptions,
     contactTypeOptions,
     movementTypeOptions,
+    movementDirectionOptions,
   };
 } 
