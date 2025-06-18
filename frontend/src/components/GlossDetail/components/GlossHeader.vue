@@ -21,7 +21,7 @@
     </div>
     <div class="row">
       <q-btn
-        v-if="allowEdit && !editMode"
+        v-if="allowEdit && !editMode && userStore.isAdmin"
         color="primary"
         icon="edit"
         :label="translate('edit')"
@@ -71,6 +71,9 @@
 import { GlossData, RequestStatus } from 'src/types/models'
 import translate from 'src/utils/translate'
 import { ref, watch } from 'vue'
+import useUserStore from 'src/stores/user.store'
+
+const userStore = useUserStore()
 
 const emit = defineEmits<{
   (e: 'editGloss'): void
