@@ -305,7 +305,12 @@ const translations: TranslateKeys = {
   exampleDeletedSuccessfully: 'Exemple eliminat correctament',
   exampleTranslationDeletedSuccessfully: 'Traducció d\'exemple eliminada correctament',
   exampleTranslationSavedSuccessfully: 'Traducció d\'exemple desada correctament',
-  orientationChange: 'Canvi d\'orientació'
+  orientationChange: 'Canvi d\'orientació',
+  definitionTranslation: 'Traducció de definició',
+  OTHER: 'Altres',
+  other: 'Altres',
+  videoCreated: 'Vídeo creat',
+  videoOrderUpdated: 'Ordre de vídeo actualitzat'
 };
 
 export default translations; 

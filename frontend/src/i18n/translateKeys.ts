@@ -677,6 +677,11 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   distinctionHint: string;
   view: string;
   searchGloss: string;
+  other: string;
+  OTHER: string;
+  definitionTranslation: string;
+  videoCreated: string;
+  videoOrderUpdated: string;
 }
 
 export default TranslateKeys;

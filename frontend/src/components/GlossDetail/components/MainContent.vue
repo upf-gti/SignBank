@@ -4,7 +4,7 @@
       class="col"
       flat
     >
-      <q-card-section class="row justify-center items-center">
+      <q-card-section class="row justify-start items-center">
         <q-chip
           outline
           color="primary"

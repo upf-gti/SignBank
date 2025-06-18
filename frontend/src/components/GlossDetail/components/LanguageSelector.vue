@@ -5,18 +5,23 @@
     :label="translate('language')"
     outlined
     dense
+    emit-value
+    map-options
     @update:model-value="$emit('update:modelValue', $event)"
   />    
 </template>
 
 <script setup lang="ts">
 import translate from 'src/utils/translate';
+import { Language } from 'src/types/models';
 
-const languageOptions = [
-  'CATALAN',
-  'SPANISH',
-  'ENGLISH'
-] as const
+const languageOptions = Object.values(Language).map(lang => {
+  debugger
+  return {
+    value: lang,
+    label: translate(lang)
+  }
+});
 
 const modelValue = defineModel<string>('modelValue')
 
