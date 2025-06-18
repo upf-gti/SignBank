@@ -61,6 +61,8 @@ enum RelationType {
     REGIONAL_VARIANT
     ASSOCIATED_CONCEPT
     ANTONYM
+    HOMONYM
+    VARIANT
     HYPERNYM
     HYPONYM
 }

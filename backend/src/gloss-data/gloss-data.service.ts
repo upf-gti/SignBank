@@ -71,6 +71,19 @@ export class GlossDataService {
             },
           },
         },
+        relationsAsTarget: {
+          include: {
+            sourceGloss: {
+              include: {
+                senses: {
+                  include: {
+                    signVideos: true,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
   }

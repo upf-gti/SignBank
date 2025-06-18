@@ -682,6 +682,8 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   definitionTranslation: string;
   videoCreated: string;
   videoOrderUpdated: string;
+  relationType: string;
+  selectRelationType: string;
 }
 
 export default TranslateKeys;
