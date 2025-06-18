@@ -9,6 +9,7 @@ import {
   OrientationChange,
   ContactType,
   MovementType,
+  MovementDirection,
 } from '../types/enums';
 import translate from './translate'
 
@@ -70,6 +71,11 @@ export function usePhonologyOptions() {
   const movementTypeOptions: SelectOption[] = Object.values(MovementType).map(value => ({
     value,
     label: t(`phonology.movementType.${value}`),
+  }));
+
+  const movementDirectionOptions: SelectOption[] = Object.values(MovementDirection).map(value => ({
+    value,
+    label: t(`phonology.movementDirection.${value}`),
   }));
 
   return {

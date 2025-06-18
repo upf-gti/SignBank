@@ -359,6 +359,40 @@
         />
       </div>
 
+      <!-- Movement Direction -->
+      <div class="col-12 col-sm-6 col-md-4">
+        <q-item-label caption>
+          {{ translate('movementDirection') }}
+        </q-item-label>
+        <div
+          v-if="!isEditable"
+          class="q-py-sm"
+        >
+          <span
+            v-if="localData.movementDirection"
+            class="text-body2"
+          >{{ localData.movementDirection }}</span>
+          <span
+            v-else
+            class="text-grey-5"
+          >{{ translate('notSet') }}</span>
+        </div>
+        <q-select
+          v-else
+          v-model="localData.movementDirection"
+          :options="filteredOptions.movementDirection"
+          :label="translate('movementDirection')"
+          clearable
+          emit-value
+          map-options
+          options-dense
+          use-input
+          input-debounce="300"
+          @filter="(val, update) => filterFn(val, update, phonologyOptions.movementDirectionOptions, 'movementDirection')"
+          @update:model-value="updateField('movementDirection', $event)"
+        />
+      </div>
+
       <!-- Vocalization -->
       <div class="col-12 col-sm-6 col-md-4">
         <q-item-label caption>
@@ -488,6 +522,7 @@ const filteredOptions = ref({
   orientationChange: phonologyOptions.orientationChangeOptions,
   contactType: phonologyOptions.contactTypeOptions,
   movementType: phonologyOptions.movementTypeOptions,
+  movementDirection: phonologyOptions.movementDirectionOptions,
 });
 
 // Keep local data in sync with prop changes

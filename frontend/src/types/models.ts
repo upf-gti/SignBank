@@ -10,6 +10,7 @@ import type {
   ContactType,
   MovementType,
   Location,
+  MovementDirection,
 } from './enums';
 
 export type WordStatus = 'PUBLISHED' | 'DRAFT' | 'PENDING';
@@ -79,16 +80,17 @@ export interface Video {
 }
 
 export interface PhonologyData {
-  hands: Hand | null;
-  configuration: HandConfiguration | '';
-  configurationChanges: ConfigurationChange | '';
-  relationBetweenArticulators: RelationBetweenArticulators | '';
-  location: Location | '';
-  movementRelatedOrientation: MovementRelatedOrientation | '';
-  orientationRelatedToLocation: OrientationRelatedToLocation | '';
-  orientationChange: OrientationChange | '';
-  contactType: ContactType | '';
-  movementType: MovementType | '';
+  hands: Hand;
+  configuration: HandConfiguration;
+  configurationChanges: ConfigurationChange;
+  relationBetweenArticulators: RelationBetweenArticulators;
+  location: Location;
+  movementRelatedOrientation: MovementRelatedOrientation;
+  orientationRelatedToLocation: OrientationRelatedToLocation;
+  orientationChange: OrientationChange;
+  contactType: ContactType;
+  movementType: MovementType;
+  movementDirection: MovementDirection;
   vocalization: string;
   nonManualComponent: string;
   inicialization: string;

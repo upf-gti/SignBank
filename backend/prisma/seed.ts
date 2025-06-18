@@ -1,4 +1,4 @@
-import { PrismaClient, Role, Language, LexicalCategory, Hand, GlossStatus, ConfigurationChange, RelationBetweenArticulators, Location, MovementType, MovementRelatedOrientation, OrientationChange, ContactType, OrientationRelatedToLocation, HandConfiguration, RelationType } from '@prisma/client';
+import { PrismaClient, Role, Language, LexicalCategory, Hand, GlossStatus, ConfigurationChange, RelationBetweenArticulators, Location, MovementType, MovementRelatedOrientation, OrientationChange, ContactType, OrientationRelatedToLocation, HandConfiguration, RelationType, MovementDirection } from '@prisma/client';
 import * as argon2 from 'argon2';
 
 const prisma = new PrismaClient();
@@ -283,6 +283,7 @@ async function main() {
               orientationChange: OrientationChange.EXTENSION,
               contactType: ContactType.CONTINUOUS,
               movementType: MovementType.STRAIGHT,
+              movementDirection: MovementDirection.BACKWARDS,
               vocalization: "none",
               nonManualComponent: "none",
               inicialization: "none",
@@ -517,6 +518,7 @@ async function main() {
           orientationChange: OrientationChange.FLEXION,
           contactType: ContactType.BRUSH,
           movementType: MovementType.SPIRAL,
+          movementDirection: MovementDirection.BACKWARDS,
           vocalization: "none",
           nonManualComponent: "smile",
           inicialization: "none",
@@ -561,6 +563,7 @@ async function main() {
           orientationChange: OrientationChange.EXTENSION_AND_PRONATION,
           contactType: ContactType.DOUBLE,
           movementType: MovementType.CIRCLE,
+          movementDirection: MovementDirection.BACKWARDS,
           vocalization: "none",
           nonManualComponent: "smile with cheek puff",
           inicialization: "none",
@@ -1214,9 +1217,10 @@ async function main() {
             orientationChange: OrientationChange.PRONATION,
             contactType: ContactType.CONTINUOUS_TO_FINAL,
             movementType: MovementType.MOTIVATED_SHAPE,
-            vocalization: "none",
-            nonManualComponent: "cheeks in",
-            inicialization: "none",
+            movementDirection: MovementDirection.BACKWARDS,
+            vocalization: 'none',
+            nonManualComponent: 'cheeks in',
+            inicialization: 'none',
           }
         },
         videos: {
@@ -1257,6 +1261,7 @@ async function main() {
             orientationChange: OrientationChange.SUPINATION,
             contactType: ContactType.INITIAL,
             movementType: MovementType.ZIGZAG,
+            movementDirection: MovementDirection.BACKWARDS,
             vocalization: "none",
             nonManualComponent: "cheeks out",
             inicialization: "none",
@@ -1300,6 +1305,7 @@ async function main() {
             orientationChange: OrientationChange.RADIAL_AND_ULNAR_FLEXION,
             contactType: ContactType.CONTINUOUS,
             movementType: MovementType.CROSS,
+            movementDirection: MovementDirection.BACKWARDS,
             vocalization: "none",
             nonManualComponent: "none",
             inicialization: "none",
@@ -1342,6 +1348,7 @@ async function main() {
             orientationChange: OrientationChange.ROTATION,
             contactType: ContactType.CONTINUOUS,
             movementType: MovementType.STRAIGHT_TO_CIRCLE,
+            movementDirection: MovementDirection.BACKWARDS,
             vocalization: "none",
             nonManualComponent: "none",
             inicialization: "none",
@@ -1385,6 +1392,7 @@ async function main() {
             orientationChange: OrientationChange.ULNAR_FLEXION,
             contactType: ContactType.NONE_TO_INITIAL,
             movementType: MovementType.ARC,
+            movementDirection: MovementDirection.BACKWARDS,
             vocalization: "none",
             nonManualComponent: "none",
             inicialization: "none",
@@ -1428,6 +1436,7 @@ async function main() {
             orientationChange: OrientationChange.PRONATION_TO_FLEXION,
             contactType: ContactType.FINAL_TO_CONTINUOUS,
             movementType: MovementType.STRAIGHT,
+            movementDirection: MovementDirection.BACKWARDS,
             vocalization: "none",
             nonManualComponent: "none",
             inicialization: "none",
@@ -1471,9 +1480,10 @@ async function main() {
             orientationChange: OrientationChange.SUPINATION_TO_PRONATION,
             contactType: ContactType.CONTINUOUS_TO_NONE,
             movementType: MovementType.MOTIVATED_SHAPE,
-            vocalization: "none",
-            nonManualComponent: "none",
-            inicialization: "none",
+            movementDirection: MovementDirection.BACKWARDS,
+            vocalization: 'none',
+            nonManualComponent: 'none',
+            inicialization: 'none',
           }
         },
         videos: {

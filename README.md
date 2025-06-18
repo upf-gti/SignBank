@@ -1,19 +1,14 @@
 
 TODOS
-- Remove quick info. 
-- Si no hi ha trad de descripcio, amagar.
-- Traduccions de SPANISH ENGLISH a traduccions
 - Afegir video a la definicio
-- Treure sortir de edicio quan estas editant una request
 - Cambiar configuracio a configCat
 - Config Lexica double titol al editar, arreglar
 - Lexica pot estar buida
 - Direccio Moviment FALTA
 - Moviment repetit,  boolean
-- Mute videos
-- Al mes o i, canviar les lletres per el signe
 - Traduccions de relacions
 - Allow empty in configuration
+- Creacio usuaris
 
 ## How to change the app host
 
