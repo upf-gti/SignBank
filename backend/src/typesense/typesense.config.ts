@@ -26,6 +26,7 @@ export const videosSchema: CollectionCreateSchema = {
     { name: 'senseTitle', type: 'string', facet: true },
     { name: 'lexicalCategory', type: 'string', facet: true },
     { name: 'glossId', type: 'string' },
-    { name: 'gloss', type: 'string', facet: true }
+    { name: 'gloss', type: 'string', facet: true },
+    { name: 'repeatedMovement', type: 'bool' }
   ]
 }; 

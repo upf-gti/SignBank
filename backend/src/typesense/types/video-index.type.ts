@@ -20,6 +20,7 @@ export interface VideoIndex {
   contactType: ContactType | '';
   movementType: MovementType | '';
   movementDirection: MovementDirection | '';
+  repeatedMovement: boolean;
   vocalization: string;
   nonManualComponent: string;
   inicialization: string;

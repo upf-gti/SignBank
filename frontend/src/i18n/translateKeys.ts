@@ -449,7 +449,10 @@ export interface PhonologyTranslateKeys {
 }
 
 interface TranslateKeys extends PhonologyTranslateKeys {
-  startSearching: string;
+  startSearching: string;  
+  repeatedMovement: string;
+  yes: string;
+  no: string;
   createGloss: string;
   signLanguageDictionary: string;
   enterAWord: string;

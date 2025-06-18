@@ -93,6 +93,7 @@ export interface PhonologyData {
   movementDirection: MovementDirection;
   vocalization: string;
   nonManualComponent: string;
+  repeatedMovement: boolean;
   inicialization: string;
   id?: string;
 }

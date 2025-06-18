@@ -162,6 +162,7 @@ export class TypesenseService implements OnModuleInit {
         vocalization: string;
         nonManualComponent: string;
         inicialization: string;
+        repeatedMovement: boolean;
       };
     },
     sense: {
@@ -192,6 +193,7 @@ export class TypesenseService implements OnModuleInit {
       vocalization: signVideo.videoData?.vocalization || '',
       nonManualComponent: signVideo.videoData?.nonManualComponent || '',
       inicialization: signVideo.videoData?.inicialization || '',
+      repeatedMovement: signVideo.videoData?.repeatedMovement || false,
       senseId: sense.id,
       senseTitle: sense.senseTitle || '',
       lexicalCategory: sense.lexicalCategory || 'OTHER',
@@ -349,14 +351,15 @@ export class TypesenseService implements OnModuleInit {
         'contactType',
         'movementType',
         'movementDirection',
-        'hands'
+        'hands',
+        'repeatedMovement'
       ];
       
       const defaultParams = {
         q: searchParameters.q || '*',
-        query_by: searchParameters.query_by || 'gloss,senseTitle,signVideoTitle,configuration,location,hands,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection',
+        query_by: searchParameters.query_by || 'gloss,senseTitle,signVideoTitle,configuration,location,hands,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection,repeatedMovement',
         filter_by: searchParameters.filter_by || '',
-        facet_by: searchParameters.facet_by || 'configuration,location,hands,lexicalCategory,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection',
+        facet_by: searchParameters.facet_by || 'configuration,location,hands,lexicalCategory,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection,repeatedMovement',
         max_hits: searchParameters.max_hits || 100,
         page: searchParameters.page || 1,
         per_page: searchParameters.per_page || 20,

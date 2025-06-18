@@ -52,6 +52,7 @@ export class TypesenseSubscriber {
           vocalization: signVideo.videoData.vocalization,
           nonManualComponent: signVideo.videoData.nonManualComponent,
           inicialization: signVideo.videoData.inicialization,
+          repeatedMovement: signVideo.videoData.repeatedMovement,
           senseId: signVideo.sense.id,
           senseTitle: signVideo.sense.senseTitle,
           lexicalCategory: signVideo.sense.lexicalCategory || 'OTHER',

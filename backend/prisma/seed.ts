@@ -287,6 +287,7 @@ async function main() {
               vocalization: "none",
               nonManualComponent: "none",
               inicialization: "none",
+              repeatedMovement: false,
             }
           },
           videos: {
@@ -522,6 +523,7 @@ async function main() {
           vocalization: "none",
           nonManualComponent: "smile",
           inicialization: "none",
+          repeatedMovement: false,
         }
       },
       videos: {
@@ -567,6 +569,7 @@ async function main() {
           vocalization: "none",
           nonManualComponent: "smile with cheek puff",
           inicialization: "none",
+          repeatedMovement: false,
         }
       },
       videos: {

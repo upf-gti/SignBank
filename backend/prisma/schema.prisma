@@ -665,6 +665,7 @@ model VideoData {
     vocalization                 String
     nonManualComponent           String
     inicialization               String
+    repeatedMovement             Boolean                      @default(false)
     signVideo                    SignVideo[]
     id                           String                       @id @default(uuid())
 }

@@ -310,7 +310,13 @@ const translations: TranslateKeys = {
   OTHER: 'Altres',
   other: 'Altres',
   videoCreated: 'Vídeo creat',
-  videoOrderUpdated: 'Ordre de vídeo actualitzat'
+  videoOrderUpdated: 'Ordre de vídeo actualitzat',
+  movementDirection: 'Direcció de moviment',
+  no: 'No',
+  yes: 'Sí',
+  repeatedMovement: 'Moviment repetit',
+  relationType: 'Tipus de relació',
+  selectRelationType: 'Seleccionar tipus de relació'
 };
 
 export default translations; 

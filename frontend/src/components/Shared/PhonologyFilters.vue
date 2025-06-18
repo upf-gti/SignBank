@@ -479,6 +479,32 @@
           @update:model-value="updateField('inicialization', $event)"
         />
       </div>
+
+      <!-- Repeated Movement -->
+      <div class="col-12 col-sm-6 col-md-4">
+        <q-item-label caption v-if="!isEditable">
+          {{ translate('repeatedMovement') }}
+        </q-item-label>
+        <div
+          v-if="!isEditable"
+          class="q-py-sm"
+        >
+          <span
+            v-if="localData.repeatedMovement"
+            class="text-body2"
+          >{{ translate('yes') }}</span>
+          <span
+            v-else
+            class="text-grey-5"
+          >{{ translate('no') }}</span>
+        </div>
+        <q-checkbox
+          v-else
+          v-model="localData.repeatedMovement"
+          :label="translate('repeatedMovement')"
+          @update:model-value="updateBooleanField('repeatedMovement', $event)"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -554,7 +580,7 @@ function filterFn(
   });
 }
 
-const updateField = (field: keyof PhonologyData, value: string | string[] | number | null) => {
+const updateField = (field: keyof PhonologyData, value: string | string[] | number | null | boolean) => {
   localData.value = {
     ...localData.value,
     [field]: value !== null ? String(value) : ''
@@ -623,6 +649,14 @@ const getMovementTypeLabel = (movementType: string) => {
 const getMovementDirectionLabel = (movementDirection: string) => {
   const option = phonologyOptions.movementDirectionOptions.find(o => o.value === movementDirection);
   return option ? option.label : '';
+};
+
+const updateBooleanField = (field: keyof PhonologyData, value: boolean) => {
+  localData.value = {
+    ...localData.value,
+    [field]: value
+  };
+  emit('update:phonologyData', localData.value);
 };
 </script>
 

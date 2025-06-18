@@ -1,8 +1,6 @@
 
 TODOS
 - Afegir video a la definicio
-- Cambiar configuracio a configCat
-- Moviment repetit, boolean
 - Creacio usuaris
 
 ## How to change the app host
