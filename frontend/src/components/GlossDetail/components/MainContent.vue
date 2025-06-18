@@ -1,10 +1,10 @@
 <template>
   <q-card-section class="row justify-between items-center">
     <q-card
-      class="col-12 col-md-8"
+      class="col"
       flat
     >
-      <q-card-section class="row justify-start items-center">
+      <q-card-section class="row justify-center items-center">
         <q-chip
           outline
           color="primary"
@@ -22,66 +22,6 @@
           :edit-mode="false"
         />
       </q-card-section>
-    </q-card>
-    <q-card
-      class="col-12 col-md-4 full-height"
-      flat
-    >
-      <div class="full-height">
-        <q-card-section>
-          <div class="text-h6 q-mb-md">
-            Quick Info
-          </div>
-          
-          <div class="q-mb-md">
-            <div class="text-weight-bold">
-              Category: Animal
-            </div>
-          </div>
-
-          <div class="q-mb-md">
-            <div class="text-weight-bold">
-              Related Glosses:
-            </div>
-            <div class="q-gutter-sm">
-              <div
-                v-for="gloss in ['gat', 'gos']"
-                :key="gloss"
-                class="row justify-between items-center q-pl-md"
-              >
-                <div class="q-gutter-sm">
-                  {{ gloss }}
-                </div>
-                <q-btn
-                  unelevated
-                  :label="translate('view')"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div class="q-mb-md">
-            <div class="text-weight-bold">
-              Minimal Pairs:
-            </div>
-            <div class="q-gutter-sm">
-              <div
-                v-for="pair in ['parell1', 'parell2']"
-                :key="pair"
-                class="row justify-between items-center q-pl-md"
-              >
-                <div class="q-gutter-sm">
-                  {{ pair }}
-                </div>
-                <q-btn
-                  unelevated
-                  :label="translate('view')"
-                />
-              </div>
-            </div>
-          </div>
-        </q-card-section>
-      </div>
     </q-card>
   </q-card-section>
 </template>

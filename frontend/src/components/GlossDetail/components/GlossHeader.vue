@@ -1,67 +1,28 @@
 <template>
   <q-card-section class="row justify-between items-center">
     <div class="column">
-      <div
-        class="text-h4"
-      >
+      <div class="text-h4">
         {{ localGlossData.gloss }}
       </div>
       <!-- Status Info -->
-      <div
-        v-if="requestStatus && requestStatus !== 'NOT_COMPLETED'"
-        class="q-mt-sm"
-      >
-        <q-chip
-          :color="getStatusColor(requestStatus)"
-          text-color="white"
-          :label="translate(requestStatus)"
-          dense
-        />
+      <div v-if="requestStatus && requestStatus !== 'NOT_COMPLETED'" class="q-mt-sm">
+        <q-chip :color="getStatusColor(requestStatus)" text-color="white" :label="translate(requestStatus)" dense />
       </div>
     </div>
     <div class="row">
-      <q-btn
-        v-if="allowEdit && !editMode && userStore.isAdmin"
-        color="primary"
-        icon="edit"
-        :label="translate('edit')"
-        @click="emit('editGloss')"  
-      />
-      <q-btn
-        v-if="allowEdit && editMode"
-        color="negative"
-        icon="cancel"
-        :label="translate('exitEditMode')"
-        @click="emit('cancelGloss')"
-      />
+      <q-btn v-if="allowEdit && !editMode && userStore.isAdmin" color="primary" icon="edit" :label="translate('edit')"
+        @click="emit('editGloss')" />
+      <q-btn v-if="allowEdit && editMode && router.currentRoute.value.path.includes('/gloss')" color="negative"
+        icon="cancel" :label="translate('exitEditMode')" @click="emit('cancelGloss')" />
       <!-- Send Request Button - shown when request is not completed -->
-      <q-btn
-        v-if="requestStatus === 'NOT_COMPLETED'"
-        color="primary"
-        icon="send"
-        :label="translate('sendRequest')"
-        :loading="submitting"
-        class="q-mr-sm"
-        @click="submitRequest"
-      />
-      
+      <q-btn v-if="requestStatus === 'NOT_COMPLETED'" color="primary" icon="send" :label="translate('sendRequest')"
+        :loading="submitting" class="q-mr-sm" @click="submitRequest" />
+
       <template v-if="isConfirmRequestPage">
-        <q-btn
-          icon="check"
-          color="positive"
-          :label="translate('accept')"
-          outline
-          class="q-mr-sm"
-          @click="acceptRequest"
-        />
-        <q-btn
-          icon="close"
-          color="negative"
-          :label="translate('decline')"
-          outline
-          class="q-mr-sm"
-          @click="declineRequest"
-        />
+        <q-btn icon="check" color="positive" :label="translate('accept')" outline class="q-mr-sm"
+          @click="acceptRequest" />
+        <q-btn icon="close" color="negative" :label="translate('decline')" outline class="q-mr-sm"
+          @click="declineRequest" />
       </template>
     </div>
   </q-card-section>
@@ -72,8 +33,10 @@ import { GlossData, RequestStatus } from 'src/types/models'
 import translate from 'src/utils/translate'
 import { ref, watch } from 'vue'
 import useUserStore from 'src/stores/user.store'
+import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
+const router = useRouter()
 
 const emit = defineEmits<{
   (e: 'editGloss'): void
@@ -95,17 +58,17 @@ const props = defineProps<{
 }>()
 
 // Create a local copy of the glossData
-const localGlossData = ref<GlossData>({ ...props.glossData });
+const localGlossData = ref<GlossData>({ ...props.glossData })
 
 // Watch for changes in the prop and update local copy
 watch(() => props.glossData, (newGlossData) => {
-  localGlossData.value = { ...newGlossData };
-}, { deep: true });
+  localGlossData.value = { ...newGlossData }
+}, { deep: true })
 
 // Watch for changes in local copy and emit updates
 watch(() => localGlossData.value.gloss, (newGloss) => {
-  emit('update:glossData', { ...localGlossData.value, gloss: newGloss });
-}, { deep: true });
+  emit('update:glossData', { ...localGlossData.value, gloss: newGloss })
+}, { deep: true })
 
 const acceptRequest = () => {
   emit('acceptRequest')
@@ -122,15 +85,15 @@ const submitRequest = () => {
 const getStatusColor = (status: RequestStatus | undefined): string => {
   switch (status) {
     case RequestStatus.NOT_COMPLETED:
-      return 'orange';
+      return 'orange'
     case RequestStatus.WAITING_FOR_APPROVAL:
-      return 'blue';
+      return 'blue'
     case RequestStatus.ACCEPTED:
-      return 'positive';
+      return 'positive'
     case RequestStatus.DENIED:
-      return 'negative';
+      return 'negative'
     default:
-      return 'grey';
+      return 'grey'
   }
-};
+}
 </script>

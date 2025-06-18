@@ -1,5 +1,5 @@
 <template>
-  <div class="q-mt-md">
+  <div class="q-mt-md" v-if="translations.length > 0 || allowEdit">
     <div class="text-subtitle2 q-mb-sm">
       {{ translate('definitionTranslations') }}
     </div>
