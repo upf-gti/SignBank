@@ -1,5 +1,6 @@
 <template>
   <q-expansion-item 
+    v-if="translations.length > 0 || allowEdit"
     :label="translate('translations')"
   >
     <template #header>

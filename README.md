@@ -1,7 +1,7 @@
 
 TODOS
-- Afegir video a la definicio
 - Creacio usuaris
+- Add priority in examples and definitions
 
 ## How to change the app host
 
