@@ -47,4 +47,10 @@ export class AuthController {
   getProfile(@GetUser('id') userId: string) {
     return this.authService.getProfile(userId);
   }
+
+  @UseGuards(JwtGuard)
+  @Get('verify')
+  async verifyToken(@GetUser() user: any) {
+    return { valid: true, user: { id: user.id, email: user.email, role: user.role } };
+  }
 }

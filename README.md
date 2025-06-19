@@ -2,6 +2,8 @@
 TODOS
 - Creacio usuaris
 - Add priority in examples and definitions
+- If gloss dont exist, go back to search
+- If validation runs, and fails, and user is in admin route, send him to search
 
 ## How to change the app host
 

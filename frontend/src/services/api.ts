@@ -116,6 +116,7 @@ export const api = {
     logout: () => apiClient.post('/auth/logout'),
     refresh: (data: { refresh_token: string }) =>
       apiClient.post('/auth/refresh', data),
+    verify: () => apiClient.get('/auth/verify'),
   },
   // Gloss requests endpoints
   glossRequests: {

@@ -14,7 +14,8 @@ export default defineConfig(() => {
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
     boot: [
       'i18n',
-      'axios'
+      'axios',
+      'auth'
     ],
 
 
