@@ -300,7 +300,9 @@ function clearFilters() {
     movementType: '',
     vocalization: '',
     nonManualComponent: '',
-    inicialization: ''
+    inicialization: '',
+    repeatedMovement: false,
+    movementDirection: ''
   };
   performSearch().catch((err) => {
     console.error(err)

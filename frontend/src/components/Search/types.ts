@@ -12,4 +12,6 @@ export interface FilterInputs {
   vocalization: string;
   nonManualComponent: string;
   inicialization: string;
+  repeatedMovement: boolean;
+  movementDirection: string;
 } 

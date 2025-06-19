@@ -35,7 +35,9 @@ const filterInputs = ref<PhonologyData>({
   movementType: '',
   vocalization: '',
   nonManualComponent: '',
-  inicialization: '' 
+  inicialization: '',
+  repeatedMovement: false,
+  movementDirection: ''
 });
 
 // Computed properties

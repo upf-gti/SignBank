@@ -108,6 +108,8 @@ export interface UpdateVideoDto {
     vocalization: string;
     nonManualComponent: string;
     inicialization: string;
+    repeatedMovement: boolean;
+    movementDirection: string;
   };
 }
 
@@ -190,6 +192,8 @@ export interface GlossRequestDetailResponse extends GlossRequestResponse {
       vocalization: string;
       nonManualComponent: string;
       inicialization: string;
+      repeatedMovement: boolean;
+      movementDirection: string;
     };
   }>;
   translations: Array<{

@@ -88,6 +88,8 @@ function clearFilters() {
     orientationChange: '',
     contactType: '',
     movementType: '',
+    movementDirection: '',
+    repeatedMovement: false,
     vocalization: '',
     nonManualComponent: '',
     inicialization: ''

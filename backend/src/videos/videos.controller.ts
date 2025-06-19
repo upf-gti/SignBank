@@ -66,7 +66,7 @@ export class VideosController {
     }),
   )
   async uploadVideo(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() file: any,
     @Body('type') type: 'gloss' | 'example' = 'gloss'
   ) {
     return this.videosService.uploadVideo(file, type);

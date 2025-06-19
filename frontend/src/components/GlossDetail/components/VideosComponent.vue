@@ -114,7 +114,7 @@ import EditableModule from 'src/components/Shared/EditableModule.vue';
 import { ref, watch, computed } from 'vue';
 import { useQuasar } from 'quasar';
 import api from 'src/services/api';
-import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType } from 'src/types/enums';
+import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType, MovementDirection } from 'src/types/enums';
 
 const sense = defineModel<Sense>({ required: true });
 const emit = defineEmits<{
@@ -180,6 +180,8 @@ const addVideo = () => {
       orientationChange: OrientationChange.EXTENSION,
       contactType: ContactType.CONTINUOUS,
       movementType: MovementType.STRAIGHT,
+      movementDirection: MovementDirection.FORWARDS,
+      repeatedMovement: false,
       vocalization: '',
       nonManualComponent: '',
       inicialization: '',
