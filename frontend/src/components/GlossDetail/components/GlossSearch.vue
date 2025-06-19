@@ -301,7 +301,7 @@ function clearFilters() {
     vocalization: '',
     nonManualComponent: '',
     inicialization: '',
-    repeatedMovement: false,
+    repeatedMovement: null,
     movementDirection: ''
   };
   performSearch().catch((err) => {

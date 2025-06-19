@@ -525,7 +525,6 @@
       <!-- Repeated Movement -->
       <div class="col-12 col-sm-6 col-md-4">
         <q-item-label
-          v-if="!isEditable"
           caption
         >
           {{ translate('repeatedMovement') }}
@@ -543,10 +542,21 @@
             class="text-grey-5"
           >{{ translate('no') }}</span>
         </div>
-        <q-checkbox
+        <q-btn-toggle
           v-else
           v-model="localData.repeatedMovement"
-          :label="translate('repeatedMovement')"
+          :options="[
+            { label: translate('yes'), value: true },
+            { label: translate('no'), value: false }
+          ]"
+          spread
+          no-caps
+          unelevated
+          toggle-color="primary"
+          color="grey-3"
+          text-color="grey-8"
+          class="full-width"
+          :clearable="route.path === '/search'"
           @update:model-value="updateBooleanField('repeatedMovement', $event)"
         />
       </div>

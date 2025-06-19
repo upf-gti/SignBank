@@ -181,7 +181,7 @@ const addVideo = () => {
       contactType: ContactType.CONTINUOUS,
       movementType: MovementType.STRAIGHT,
       movementDirection: MovementDirection.FORWARDS,
-      repeatedMovement: false,
+      repeatedMovement: null,
       vocalization: '',
       nonManualComponent: '',
       inicialization: '',

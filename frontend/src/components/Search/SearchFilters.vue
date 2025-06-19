@@ -89,7 +89,7 @@ function clearFilters() {
     contactType: '',
     movementType: '',
     movementDirection: '',
-    repeatedMovement: false,
+    repeatedMovement: null,
     vocalization: '',
     nonManualComponent: '',
     inicialization: ''

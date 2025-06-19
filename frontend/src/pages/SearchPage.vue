@@ -36,7 +36,7 @@ const filterInputs = ref<PhonologyData>({
   vocalization: '',
   nonManualComponent: '',
   inicialization: '',
-  repeatedMovement: false,
+  repeatedMovement: null,
   movementDirection: ''
 });
 
@@ -55,8 +55,13 @@ const filterBy = computed(() => {
   // Add text input filters - using contains operator for fuzzy matching
   for (const [field, value] of Object.entries(filterInputs.value)) {
     if (value !== '' && value !== null) {
-      // Use contains operator for phonology fields to enable partial matching
-      filters.push(`${field}:='${value}'`);
+      // Handle boolean values differently
+      if (typeof value === 'boolean') {
+        filters.push(`${field}:=${value}`);
+      } else {
+        // Use contains operator for phonology fields to enable partial matching
+        filters.push(`${field}:='${value}'`);
+      }
     }
   }
   
