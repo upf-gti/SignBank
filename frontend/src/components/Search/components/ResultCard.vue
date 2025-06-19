@@ -22,7 +22,7 @@
         </q-card-section>
       </template>
       
-      <q-card-section class="col">
+      <q-card-section class="col no-wrap">
         <div class="row items-center justify-between">
           <div>
             <div class="text-h6">

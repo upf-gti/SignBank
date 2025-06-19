@@ -10,7 +10,7 @@
         <div class="row items-center justify-between">
           <div>
             <div class="text-h6 gloss-title">
-              {{ gloss.targetGloss.gloss }}
+              {{ gloss.targetGloss?.gloss }}
               <q-tooltip>{{ t('clickToView') }}</q-tooltip>
             </div>
             <div class="relation-type">

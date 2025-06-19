@@ -9,6 +9,10 @@ export class CreateDefinitionDto {
   @IsString()
   @IsNotEmpty()
   definition: string;
+
+  @IsString()
+  @IsOptional()
+  videoDefinitionUrl?: string;
 }
 
 export class UpdateDefinitionDto {
@@ -19,6 +23,10 @@ export class UpdateDefinitionDto {
   @IsString()
   @IsOptional()
   definition?: string;
+
+  @IsString()
+  @IsOptional()
+  videoDefinitionUrl?: string;
 }
 
 export class CreateDefinitionTranslationDto {

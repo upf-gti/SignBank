@@ -164,6 +164,7 @@ const translations: TranslateKeys = {
     failedToLoadGlossRequest: 'Error al cargar la solicitud de glosa',
     failedToSaveGloss: 'Error al guardar la glosa',
     failedToSubmitRequest: 'Error al enviar la solicitud',
+    failedToDeleteVideo: 'Error al eliminar el vídeo',
   },
   ACCEPTED: 'Aceptado',
   DENIED: 'Denegado',
@@ -208,6 +209,10 @@ const translations: TranslateKeys = {
   addGlossVideo: 'Añadir vídeo de glosa',
   orDragAndDropYourVideoHere: 'O arrastra y suelta tu vídeo aquí',
   addExampleVideo: 'Añadir vídeo de ejemplo',
+  addDefinitionVideo: 'Añadir vídeo de definición',
+  seeDefinitionVideo: 'Ver vídeo de definición',
+  deleteDefinitionVideo: 'Eliminar vídeo de definición',
+  definitionVideo: 'Vídeo de definición',
   videoDeleted: 'Vídeo eliminado',
   notSent: 'No enviado',
   notSet: 'No establecido',
@@ -256,6 +261,9 @@ const translations: TranslateKeys = {
   requestedBy: 'Solicitado por',
   sendRequest: 'Enviar solicitud',
   SPANISH: 'Español',
+  definitionSavedSuccessfully: 'Definición guardada correctamente',
+  definitionCreatedSuccessfully: 'Definición creada correctamente',
+  definitionDeletedSuccessfully: 'Definición eliminada correctamente',
 };
 
 export default translations; 

@@ -62,7 +62,7 @@ const emit = defineEmits<{
 
 const { videoType = 'gloss', customLabel } = defineProps<{
     customLabel?: string
-    videoType?: 'gloss' | 'example'
+    videoType?: 'gloss' | 'example' | 'definition'
 }>()
 
 

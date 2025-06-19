@@ -175,6 +175,7 @@ const translations: TranslateKeys = {
     failedToLoadGlossRequest: 'Failed to load gloss request',
     failedToSaveGloss: 'Failed to save gloss',
     failedToSubmitRequest: 'Failed to submit request',
+    failedToDeleteVideo: 'Failed to delete video',
     accessDenied: 'Access denied'
   },
   sendRequest: 'Send Request',
@@ -226,6 +227,10 @@ const translations: TranslateKeys = {
   addGlossVideo: 'Add gloss video',
   orDragAndDropYourVideoHere: 'Or drag and drop your video here',
   addExampleVideo: 'Add example video',
+  addDefinitionVideo: 'Add definition video',
+  seeDefinitionVideo: 'See definition video',
+  deleteDefinitionVideo: 'Delete definition video',
+  definitionVideo: 'Definition video',
   videoDeleted: 'Video deleted',
   notSent: 'Not sent',
   glossSavedSuccessfully: 'Gloss saved successfully',
@@ -262,6 +267,9 @@ const translations: TranslateKeys = {
   INTERJECTION: 'Interjection',
   moveDown: 'Move down',
   moveUp: 'Move up',
+  definitionSavedSuccessfully: 'Definition saved successfully',
+  definitionCreatedSuccessfully: 'Definition created successfully',
+  definitionDeletedSuccessfully: 'Definition deleted successfully',
 };
 
 export default translations; 

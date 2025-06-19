@@ -86,7 +86,7 @@ export const api = {
     }
   },
   videos: {
-    upload: (file: File, type: 'gloss' | 'example' = 'gloss'): Promise<AxiosResponse<{ url: string }>> => {
+    upload: (file: File, type: 'gloss' | 'example' | 'definition' = 'gloss'): Promise<AxiosResponse<{ url: string }>> => {
       const formData = new FormData();
       formData.append('video', file);
       formData.append('type', type);
@@ -148,10 +148,10 @@ export const api = {
   },
   // Definitions endpoints
   definitions: {
-    create: (senseId: string, data: { title?: string, definition: string }) =>
+    create: (senseId: string, data: { title?: string, definition: string, videoDefinitionUrl?: string }) =>
       apiClient.post<GlossData>(`/definitions/sense/${senseId}`, data),
 
-    update: (senseId: string, definitionId: string, data: { title?: string, definition?: string }) =>
+    update: (senseId: string, definitionId: string, data: { title?: string, definition?: string, videoDefinitionUrl?: string }) =>
       apiClient.put<GlossData>(`/definitions/sense/${senseId}/${definitionId}`, data),
 
     delete: (senseId: string, definitionId: string) =>

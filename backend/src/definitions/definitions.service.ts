@@ -23,6 +23,7 @@ export class DefinitionsService {
       data: {
         title: data.title || '',
         definition: data.definition,
+        videoDefinitionUrl: data.videoDefinitionUrl,
         senseId: senseId
       },
       include: {
@@ -53,6 +54,7 @@ export class DefinitionsService {
       data: {
         title: data.title,
         definition: data.definition,
+        videoDefinitionUrl: data.videoDefinitionUrl,
       },
       include: {
         definitionTranslations: true,

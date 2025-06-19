@@ -29,7 +29,6 @@
         >
           <template #default="{ isEditing }">
             <!-- Definition Title -->
-
             <q-input
               v-if="isEditing"
               v-model="definition.title"
@@ -59,6 +58,36 @@
               class="q-mb-md"
             >
               {{ definition.definition }}
+            </div>
+
+            <!-- Definition Video -->
+            <div class="q-mb-md">
+              <UploadVideoComponent
+                v-if="isEditing && !definition.videoDefinitionUrl"
+                video-type="definition"
+                :custom-label="translate('addDefinitionVideo')"
+                @upload-complete="(url) => uploadVideo(definition, url)"
+              />
+              <div
+                v-else
+                class="row justify-end q-gutter-sm"
+              >
+                <q-btn
+                  v-if="definition.videoDefinitionUrl"
+                  outline
+                  :label="translate('seeDefinitionVideo')"
+                  icon="play_arrow"
+                  :disable="!definition.videoDefinitionUrl"
+                  @click="openVideo(definition)"
+                />
+                <q-btn
+                  v-else-if="isEditing"
+                  outline
+                  :label="translate('deleteDefinitionVideo')"
+                  icon="delete"
+                  @click="deleteDefinitionVideo(definition)"
+                />
+              </div>
             </div>
 
             <!-- Definition Translations -->
@@ -108,6 +137,16 @@
             >
               {{ newDefinition.definition }}
             </div>
+
+            <!-- Definition Video for new definition -->
+            <div class="q-mb-md">
+              <UploadVideoComponent
+                v-if="isEditing && !newDefinition.videoDefinitionUrl"
+                video-type="definition"
+                :custom-label="translate('addDefinitionVideo')"
+                @upload-complete="(url) => uploadVideo(newDefinition, url)"
+              />
+            </div>
           </template>
         </EditableModule>
       </q-item>
@@ -122,12 +161,21 @@
       />
     </div>
   </q-card-section>
+
+  <VideoPlayerPopup
+    v-model:show-dialog="showVideoDialog"
+    :video-url="selectedVideoUrl"
+    :title="selectedDefinition?.title || translate('definitionVideo')"
+    muted
+  />
 </template>
 
 <script setup lang="ts">
 import { Sense, Definition, GlossData } from 'src/types/models';
 import translate from 'src/utils/translate';
 import EditableModule from 'src/components/Shared/EditableModule.vue'
+import UploadVideoComponent from 'src/components/UploadVideoComponent.vue';
+import VideoPlayerPopup from 'src/components/VideoPlayerPopup.vue';
 import { ref, computed } from 'vue';
 import { api } from 'src/services/api';
 import { useQuasar } from 'quasar';
@@ -137,16 +185,19 @@ import DefinitionTranslationsComponent from './DefinitionTranslationsComponent.v
 const $q = useQuasar()
 const loading = ref(false)
 const displayCreateNewDefinition = ref(false)
+const showVideoDialog = ref(false)
+const selectedVideoUrl = ref('')
+const selectedDefinition = ref<Definition | null>(null)
+
 const newDefinition = ref<Definition>({
   id: '',
   title: '',
   definition: '',
-  videoDefinitionId: '',
+  videoDefinitionUrl: '',
   senseId: '',
   definitionTranslations: [],
   isEditing: true,
   isNew: true,
-  videoDefinition: { id: '', url: '' }
 })
 
 const props = defineProps<{
@@ -167,12 +218,11 @@ const addDefinition = () => {
     id: '',
     title: '',
     definition: '',
-    videoDefinitionId: '',
+    videoDefinitionUrl: '',
     senseId: props.sense?.id || '',
     definitionTranslations: [],
     isEditing: true,
     isNew: true,
-    videoDefinition: { id: '', url: '' }
   };
 }
 
@@ -185,18 +235,22 @@ const isGlossData = (data: any): data is GlossData => {
     'senses' in data;
 }
 
-
-
 const saveDefinition = async (definition: Definition) => {
   if (!props.sense?.id) return;
 
   try {
     loading.value = true;
     
-    const response = await api.definitions.update(props.sense.id, definition.id || '', {
+    const updateData: { title?: string, definition?: string, videoDefinitionUrl?: string } = {
       title: definition.title,
-      definition: definition.definition
-    });
+      definition: definition.definition,
+    };
+    
+    if (definition.videoDefinitionUrl) {
+      updateData.videoDefinitionUrl = definition.videoDefinitionUrl;
+    }
+    
+    const response = await api.definitions.update(props.sense.id, definition.id || '', updateData);
 
     if (response.data && isGlossData(response.data)) {
       emit('update:glossData', response.data);
@@ -223,10 +277,16 @@ const createNewDefinition = async () => {
   try {
     loading.value = true;
 
-    const response = await api.definitions.create(props.sense.id, {
+    const createData: { title?: string, definition: string, videoDefinitionUrl?: string } = {
       title: newDefinition.value.title,
-      definition: newDefinition.value.definition
-    });
+      definition: newDefinition.value.definition,
+    };
+    
+    if (newDefinition.value.videoDefinitionUrl) {
+      createData.videoDefinitionUrl = newDefinition.value.videoDefinitionUrl;
+    }
+
+    const response = await api.definitions.create(props.sense.id, createData);
 
     if (response.data && isGlossData(response.data)) {
       $q.notify({
@@ -240,12 +300,11 @@ const createNewDefinition = async () => {
         id: '',
         title: '',
         definition: '',
-        videoDefinitionId: '',
+        videoDefinitionUrl: '',
         senseId: props.sense.id,
         definitionTranslations: [],
         isEditing: true,
         isNew: true,
-        videoDefinition: { id: '', url: '' }
       }
     }
   } catch (error) {
@@ -285,6 +344,37 @@ const deleteDefinition = async (definition: Definition) => {
 const cancelDefinitionEdit = () => {
   displayCreateNewDefinition.value = false;
 }
+
+const uploadVideo = async (definition: Definition, url: string) => {
+  definition.videoDefinitionUrl = url;
+  if (definition.id) {
+    await saveDefinition(definition);
+  }
+};
+
+const openVideo = (definition: Definition) => {
+  selectedDefinition.value = definition;
+  selectedVideoUrl.value = definition.videoDefinitionUrl || '';
+  showVideoDialog.value = true;
+};
+
+const deleteDefinitionVideo = async (definition: Definition) => {
+  try {
+    if (definition.videoDefinitionUrl) {
+      await api.videos.delete(definition.videoDefinitionUrl);
+    }
+    definition.videoDefinitionUrl = '';
+    if (definition.id) {
+      await saveDefinition(definition);
+    }
+  } catch (error) {
+    console.error('Error deleting video:', error);
+    $q.notify({
+      type: 'negative',
+      message: translate('errors.failedToDeleteVideo')
+    });
+  }
+};
 </script>
 
 <style scoped>

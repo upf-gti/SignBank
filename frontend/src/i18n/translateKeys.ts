@@ -620,6 +620,7 @@ interface TranslateKeys extends PhonologyTranslateKeys {
     failedToLoadGlossRequest: string;
     failedToSaveGloss: string;
     failedToSubmitRequest: string;
+    failedToDeleteVideo: string;
     accessDenied: string;
   };
   ACCEPTED: string;
@@ -665,6 +666,10 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   addGlossVideo: string;
   orDragAndDropYourVideoHere: string;
   addExampleVideo: string;
+  addDefinitionVideo: string;
+  seeDefinitionVideo: string;
+  deleteDefinitionVideo: string;
+  definitionVideo: string;
   videoDeleted: string;
   notSent: string;
   sendRequest: string;
@@ -683,6 +688,7 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   addRelation: string;
   acceptedBy: string;
   definitionSavedSuccessfully: string;
+  definitionCreatedSuccessfully: string;
   definitionDeletedSuccessfully: string;
   definitionTranslationSavedSuccessfully: string;
   definitionTranslationDeletedSuccessfully: string;

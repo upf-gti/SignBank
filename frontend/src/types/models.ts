@@ -64,10 +64,9 @@ export interface Definition {
   id?: string;
   title: string;
   definition: string;
-  videoDefinitionId: string;
+  videoDefinitionUrl?: string;
   senseId: string;
   definitionTranslations: DefinitionTranslation[];
-  videoDefinition: VideoDefinition;
   isNew?: boolean;
   isEditing?: boolean;
 }
