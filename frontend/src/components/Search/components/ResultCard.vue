@@ -13,11 +13,20 @@
             @error="handleVideoError"
             @loadeddata="handleVideoLoaded"
           >
-            <source :src="getVideoUrl(document.url)" type="video/mp4">
+            <source
+              :src="getVideoUrl(document.url)"
+              type="video/mp4"
+            >
             {{ t('videoNotSupported') }}
           </video>
-          <div v-if="isLoading" class="absolute-center">
-            <q-spinner color="primary" size="2em" />
+          <div
+            v-if="isLoading"
+            class="absolute-center"
+          >
+            <q-spinner
+              color="primary"
+              size="2em"
+            />
           </div>
         </q-card-section>
       </template>

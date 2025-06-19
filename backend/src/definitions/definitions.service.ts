@@ -1,13 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { GlossDataService } from '../gloss-data/gloss-data.service';
+import { VideosService } from '../videos/videos.service';
 import { CreateDefinitionDto, UpdateDefinitionDto, UpdateDefinitionTranslationDto, CreateDefinitionTranslationDto } from './dto/definition.dto';
 
 @Injectable()
 export class DefinitionsService {
   constructor(
     private prisma: PrismaService,
-    private glossDataService: GlossDataService
+    private glossDataService: GlossDataService,
+    private videosService: VideosService
   ) {}
 
   async createDefinition(senseId: string, data: CreateDefinitionDto) {
@@ -79,8 +81,53 @@ export class DefinitionsService {
       throw new NotFoundException('Definition not found');
     }
 
+    // Delete the associated video file if it exists
+    if (definition.videoDefinitionUrl) {
+      try {
+        await this.videosService.deleteVideo(definition.videoDefinitionUrl);
+      } catch (error) {
+        // Log the error but don't fail the deletion if video deletion fails
+        console.error('Failed to delete video file:', error);
+      }
+    }
+
     await this.prisma.definition.delete({
       where: { id: definitionId }
+    });
+
+    return this.glossDataService.getGlossData(sense.glossDataId);
+  }
+
+  async deleteDefinitionVideo(senseId: string, definitionId: string) {
+    const sense = await this.prisma.sense.findUnique({
+      where: { id: senseId },
+      include: { definitions: true }
+    });
+
+    if (!sense) {
+      throw new NotFoundException('Sense not found');
+    }
+
+    const definition = sense.definitions.find(d => d.id === definitionId);
+    if (!definition) {
+      throw new NotFoundException('Definition not found');
+    }
+
+    // Delete the video file if it exists
+    if (definition.videoDefinitionUrl) {
+      try {
+        await this.videosService.deleteVideo(definition.videoDefinitionUrl);
+      } catch (error) {
+        throw new NotFoundException('Failed to delete video file');
+      }
+    }
+
+    // Update the definition to remove the video URL
+    await this.prisma.definition.update({
+      where: { id: definitionId },
+      data: {
+        videoDefinitionUrl: ''
+      }
     });
 
     return this.glossDataService.getGlossData(sense.glossDataId);

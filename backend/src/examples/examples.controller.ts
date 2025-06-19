@@ -26,4 +26,9 @@ export class ExamplesController {
   async deleteExample(@Param('id') id: string) {
     return this.examplesService.deleteExample(id);
   }
+
+  @Delete(':id/video')
+  async deleteExampleVideo(@Param('id') id: string) {
+    return this.examplesService.deleteExampleVideo(id);
+  }
 } 

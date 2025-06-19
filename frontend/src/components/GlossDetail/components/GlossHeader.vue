@@ -5,24 +5,61 @@
         {{ localGlossData.gloss }}
       </div>
       <!-- Status Info -->
-      <div v-if="requestStatus && requestStatus !== 'NOT_COMPLETED'" class="q-mt-sm">
-        <q-chip :color="getStatusColor(requestStatus)" text-color="white" :label="translate(requestStatus)" dense />
+      <div
+        v-if="requestStatus && requestStatus !== 'NOT_COMPLETED'"
+        class="q-mt-sm"
+      >
+        <q-chip
+          :color="getStatusColor(requestStatus)"
+          text-color="white"
+          :label="translate(requestStatus)"
+          dense
+        />
       </div>
     </div>
     <div class="row">
-      <q-btn v-if="allowEdit && !editMode && userStore.isAdmin" color="primary" icon="edit" :label="translate('edit')"
-        @click="emit('editGloss')" />
-      <q-btn v-if="allowEdit && editMode && router.currentRoute.value.path.includes('/gloss')" color="negative"
-        icon="cancel" :label="translate('exitEditMode')" @click="emit('cancelGloss')" />
+      <q-btn
+        v-if="allowEdit && !editMode && userStore.isAdmin"
+        color="primary"
+        icon="edit"
+        :label="translate('edit')"
+        @click="emit('editGloss')"
+      />
+      <q-btn
+        v-if="allowEdit && editMode && router.currentRoute.value.path.includes('/gloss')"
+        color="negative"
+        icon="cancel"
+        :label="translate('exitEditMode')"
+        @click="emit('cancelGloss')"
+      />
       <!-- Send Request Button - shown when request is not completed -->
-      <q-btn v-if="requestStatus === 'NOT_COMPLETED'" color="primary" icon="send" :label="translate('sendRequest')"
-        :loading="submitting" class="q-mr-sm" @click="submitRequest" />
+      <q-btn
+        v-if="requestStatus === 'NOT_COMPLETED'"
+        color="primary"
+        icon="send"
+        :label="translate('sendRequest')"
+        :loading="submitting"
+        class="q-mr-sm"
+        @click="submitRequest"
+      />
 
       <template v-if="isConfirmRequestPage">
-        <q-btn icon="check" color="positive" :label="translate('accept')" outline class="q-mr-sm"
-          @click="acceptRequest" />
-        <q-btn icon="close" color="negative" :label="translate('decline')" outline class="q-mr-sm"
-          @click="declineRequest" />
+        <q-btn
+          icon="check"
+          color="positive"
+          :label="translate('accept')"
+          outline
+          class="q-mr-sm"
+          @click="acceptRequest"
+        />
+        <q-btn
+          icon="close"
+          color="negative"
+          :label="translate('decline')"
+          outline
+          class="q-mr-sm"
+          @click="declineRequest"
+        />
       </template>
     </div>
   </q-card-section>

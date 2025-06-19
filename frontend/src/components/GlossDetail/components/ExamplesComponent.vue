@@ -75,7 +75,7 @@
                     @click="openVideo(example)"
                   />
                   <q-btn
-                    v-else-if="isEditing"
+                    v-if="isEditing && example.exampleVideoURL"
                     outline
                     :label="translate('deleteExampleVideo')"
                     icon="delete"
@@ -233,9 +233,21 @@ const cancelExample = (example: Example) => {
 };
 
 const uploadVideo = async (example: Example, url: string) => {
-  example.exampleVideoURL = url;
-  if (example.id) {
-    await saveExample(example);
+  try {
+    // Delete the old video if it exists and is different from the new one
+    if (example.exampleVideoURL && example.exampleVideoURL !== url) {
+      await api.videos.delete(example.exampleVideoURL);
+    }
+    example.exampleVideoURL = url;
+    if (example.id) {
+      await saveExample(example);
+    }
+  } catch (error) {
+    console.error('Error uploading video:', error);
+    $q.notify({
+      type: 'negative',
+      message: translate('errors.failedToUploadVideo')
+    });
   }
 };
 
@@ -247,12 +259,19 @@ const openVideo = (example: Example) => {
 
 const deleteExampleVideo = async (example: Example) => {
   try {
-    if (example.exampleVideoURL) {
-      await api.videos.delete(example.exampleVideoURL);
-    }
-    example.exampleVideoURL = '';
     if (example.id) {
-      await saveExample(example);
+      // Use the dedicated endpoint to delete only the video
+      const response = await api.examples.deleteVideo(example.id);
+      if (response.data) {
+        emit('update:glossData', response.data);
+        $q.notify({
+          type: 'positive',
+          message: translate('videoDeleted')
+        });
+      }
+    } else {
+      // For new examples that haven't been saved yet, just clear the URL
+      example.exampleVideoURL = '';
     }
   } catch (error) {
     console.error('Error deleting video:', error);

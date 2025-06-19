@@ -62,6 +62,7 @@ export class VideosService {
   }
 
   async deleteVideo(videoUrl: string): Promise<void> {
+    console.log('Deleting video', videoUrl);
     try {
       // The videoUrl is already in the format "baseDir/filename"
       const deleteUrl = `${this.dufsUrl}/${videoUrl}`;

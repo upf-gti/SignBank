@@ -31,6 +31,14 @@ export class DefinitionsController {
     return this.definitionsService.deleteDefinition(senseId, definitionId);
   }
 
+  @Delete('sense/:senseId/:definitionId/video')
+  async deleteDefinitionVideo(
+    @Param('senseId') senseId: string,
+    @Param('definitionId') definitionId: string
+  ) {
+    return this.definitionsService.deleteDefinitionVideo(senseId, definitionId);
+  }
+
   @Post(':definitionId/translations')
   async createDefinitionTranslation(
     @Param('definitionId') definitionId: string,

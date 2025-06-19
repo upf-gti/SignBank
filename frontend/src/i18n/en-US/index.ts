@@ -176,6 +176,7 @@ const translations: TranslateKeys = {
     failedToSaveGloss: 'Failed to save gloss',
     failedToSubmitRequest: 'Failed to submit request',
     failedToDeleteVideo: 'Failed to delete video',
+    failedToUploadVideo: 'Failed to upload video',
     accessDenied: 'Access denied'
   },
   sendRequest: 'Send Request',

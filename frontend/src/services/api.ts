@@ -47,6 +47,9 @@ export const api = {
 
     delete: (id: string) =>
       apiClient.delete<GlossData>(`/examples/${id}`),
+
+    deleteVideo: (id: string) =>
+      apiClient.delete<GlossData>(`/examples/${id}/video`),
   },
   // Translations endpoints
   translations: {
@@ -156,6 +159,9 @@ export const api = {
 
     delete: (senseId: string, definitionId: string) =>
       apiClient.delete<GlossData>(`/definitions/sense/${senseId}/${definitionId}`),
+
+    deleteVideo: (senseId: string, definitionId: string) =>
+      apiClient.delete<GlossData>(`/definitions/sense/${senseId}/${definitionId}/video`),
 
     createTranslation: (definitionId: string, data: { translation: string, language: Language }) =>
       apiClient.post<GlossData>(`/definitions/${definitionId}/translations`, data),

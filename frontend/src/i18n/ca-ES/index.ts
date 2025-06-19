@@ -169,6 +169,7 @@ const translations: TranslateKeys = {
     failedToSaveGloss: 'No s\'ha pogut desar la glossa',
     failedToSubmitRequest: 'No s\'ha pogut enviar la sol·licitud de glossa',
     failedToDeleteVideo: 'No s\'ha pogut eliminar el vídeo',
+    failedToUploadVideo: 'No s\'ha pogut pujar el vídeo',
     accessDenied: 'Accés denegat'
   },
   ACCEPTED: 'Acceptat',

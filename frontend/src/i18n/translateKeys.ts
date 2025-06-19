@@ -621,6 +621,7 @@ interface TranslateKeys extends PhonologyTranslateKeys {
     failedToSaveGloss: string;
     failedToSubmitRequest: string;
     failedToDeleteVideo: string;
+    failedToUploadVideo: string;
     accessDenied: string;
   };
   ACCEPTED: string;

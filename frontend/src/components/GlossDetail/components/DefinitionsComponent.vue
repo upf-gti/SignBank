@@ -81,7 +81,7 @@
                   @click="openVideo(definition)"
                 />
                 <q-btn
-                  v-else-if="isEditing"
+                  v-if="isEditing && definition.videoDefinitionUrl"
                   outline
                   :label="translate('deleteDefinitionVideo')"
                   icon="delete"
@@ -346,9 +346,21 @@ const cancelDefinitionEdit = () => {
 }
 
 const uploadVideo = async (definition: Definition, url: string) => {
-  definition.videoDefinitionUrl = url;
-  if (definition.id) {
-    await saveDefinition(definition);
+  try {
+    // Delete the old video if it exists and is different from the new one
+    if (definition.videoDefinitionUrl && definition.videoDefinitionUrl !== url) {
+      await api.videos.delete(definition.videoDefinitionUrl);
+    }
+    definition.videoDefinitionUrl = url;
+    if (definition.id) {
+      await saveDefinition(definition);
+    }
+  } catch (error) {
+    console.error('Error uploading video:', error);
+    $q.notify({
+      type: 'negative',
+      message: translate('errors.failedToUploadVideo')
+    });
   }
 };
 
@@ -360,12 +372,19 @@ const openVideo = (definition: Definition) => {
 
 const deleteDefinitionVideo = async (definition: Definition) => {
   try {
-    if (definition.videoDefinitionUrl) {
-      await api.videos.delete(definition.videoDefinitionUrl);
-    }
-    definition.videoDefinitionUrl = '';
-    if (definition.id) {
-      await saveDefinition(definition);
+    if (definition.id && props.sense?.id) {
+      // Use the dedicated endpoint to delete only the video
+      const response = await api.definitions.deleteVideo(props.sense.id, definition.id);
+      if (response.data) {
+        emit('update:glossData', response.data);
+        $q.notify({
+          type: 'positive',
+          message: translate('videoDeleted')
+        });
+      }
+    } else {
+      // For new definitions that haven't been saved yet, just clear the URL
+      definition.videoDefinitionUrl = '';
     }
   } catch (error) {
     console.error('Error deleting video:', error);

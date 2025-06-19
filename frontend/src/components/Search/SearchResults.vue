@@ -34,9 +34,10 @@
       </div>
     </div>
 
-    <div class="flex flex-center" 
-      v-if="totalResults > perPage"
-      >
+    <div
+      v-if="totalResults > perPage" 
+      class="flex flex-center"
+    >
       <q-pagination
         :model-value="page"
         :max="Math.ceil(totalResults / perPage)"

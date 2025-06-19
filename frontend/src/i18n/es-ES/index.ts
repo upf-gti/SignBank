@@ -165,6 +165,7 @@ const translations: TranslateKeys = {
     failedToSaveGloss: 'Error al guardar la glosa',
     failedToSubmitRequest: 'Error al enviar la solicitud',
     failedToDeleteVideo: 'Error al eliminar el vídeo',
+    failedToUploadVideo: 'Error al subir el vídeo',
   },
   ACCEPTED: 'Aceptado',
   DENIED: 'Denegado',
