@@ -1,8 +1,20 @@
 <template>
   <q-card-section class="row justify-between items-center">
     <div class="column">
-      <div class="text-h4">
-        {{ localGlossData.gloss }}
+      <div class="row justify-between items-center">
+        <div class="text-h4" v-if="!editMode">
+          {{ localGlossData.gloss }}
+        </div>
+      
+        <q-input
+          v-else
+          v-model="localGlossData.gloss"
+          :label="translate('gloss')"
+          outlined
+          debounce="500"
+          @update:model-value="saveGloss"
+        />
+       
       </div>
       <!-- Status Info -->
       <div
@@ -71,9 +83,13 @@ import translate from 'src/utils/translate'
 import { ref, watch } from 'vue'
 import useUserStore from 'src/stores/user.store'
 import { useRouter } from 'vue-router'
+import api from 'src/services/api'
+import { useQuasar } from 'quasar'
 
+const $q = useQuasar()
 const userStore = useUserStore()
 const router = useRouter()
+const editGloss = ref(false)
 
 const emit = defineEmits<{
   (e: 'editGloss'): void
@@ -117,6 +133,22 @@ const declineRequest = () => {
 
 const submitRequest = () => {
   emit('submitRequest')
+}
+
+const saveGloss = () => {
+  api.glossData.updateGloss(localGlossData.value.id || '', {gloss: localGlossData.value.gloss}).then((response) => {
+    emit('update:glossData', response.data)
+    $q.notify({
+      type: 'positive',
+      message: translate('glossUpdatedSuccessfully')
+    })
+  }).catch((error) => {
+    $q.notify({
+      type: 'negative',
+      message: translate('glossUpdatedFailed')
+    })
+    console.error(error)
+  })
 }
 
 const getStatusColor = (status: RequestStatus | undefined): string => {

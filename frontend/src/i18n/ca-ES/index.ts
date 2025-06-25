@@ -323,7 +323,10 @@ const translations: TranslateKeys = {
   yes: 'Sí',
   repeatedMovement: 'Moviment repetit',
   relationType: 'Tipus de relació',
-  selectRelationType: 'Seleccionar tipus de relació'
+  selectRelationType: 'Seleccionar tipus de relació',
+  deleteExampleVideo: 'Eliminar vídeo d\'exemple',
+  glossUpdatedFailed: 'No s\'ha pogut actualitzar la glossa',
+  glossUpdatedSuccessfully: 'Glossa actualitzada correctament',
 };
 
 export default translations; 

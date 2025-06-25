@@ -452,6 +452,8 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   startSearching: string;  
   repeatedMovement: string;
   deleteExampleVideo: string;
+  glossUpdatedSuccessfully: string;
+  glossUpdatedFailed: string;
   yes: string;
   no: string;
   createGloss: string;

@@ -17,6 +17,15 @@ export class GlossDataController {
     return this.glossDataService.getGlossData(id);
   }
 
+  @Patch(':id/gloss')
+  @Roles(Role.ADMIN)
+  async updateGloss(
+    @Param('id') id: string,
+    @Body() data: { gloss: string }
+  ) {
+    return this.glossDataService.updateGloss(id, data.gloss);
+  }
+
   // Sense management
   @Post(':id/senses')
   async addSense(

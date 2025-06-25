@@ -22,6 +22,8 @@ export const api = {
     },
     editGloss: (glossDataId: string, data: GlossData) =>
       apiClient.patch<GlossData>(`/gloss-data/${glossDataId}`, data),
+    updateGloss: (glossDataId: string, data: { gloss: string }) =>
+      apiClient.patch<GlossData>(`/gloss-data/${glossDataId}/gloss`, data),
   },
   // Senses endpoints
   senses: {

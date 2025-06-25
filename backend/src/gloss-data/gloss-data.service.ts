@@ -114,6 +114,19 @@ export class GlossDataService {
     return this.getGlossData(glossDataId);
   }
 
+  async updateGloss(id: string, gloss: string) {
+    await this.prisma.glossData.update({
+      where: { id },
+      data: {
+        gloss: gloss.trim(),
+        currentVersion: {
+          increment: 1
+        }
+      }
+    });
+    return this.getGlossData(id);
+  }
+
   async updateSense(glossDataId: string, senseId: string, data: UpdateSenseDto) {
     const glossData = await this.prisma.glossData.findUnique({
       where: { id: glossDataId },
