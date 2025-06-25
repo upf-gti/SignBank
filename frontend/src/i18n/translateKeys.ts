@@ -451,6 +451,7 @@ export interface PhonologyTranslateKeys {
 interface TranslateKeys extends PhonologyTranslateKeys {
   startSearching: string;  
   repeatedMovement: string;
+  deleteExampleVideo: string;
   yes: string;
   no: string;
   createGloss: string;

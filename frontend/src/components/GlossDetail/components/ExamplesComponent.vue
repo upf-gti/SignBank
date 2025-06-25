@@ -49,10 +49,23 @@
               />
               <div
                 v-else
-                class="text-h6 q-mb-md"
+                class="text-h6 q-mb-md row justify-between items-center no-wrap"
               >
-                {{ example.example }}
-              </div>
+                <div class="col-7">
+                  {{ example.example }}
+                </div>
+                <div class="col-5">                  
+                  <video
+                    ref="videoPlayer"
+                    controls
+                    autoplay
+                    class="video-player"
+                    :src="getVideoUrl(example.exampleVideoURL)"
+                    muted
+                    @error="handleVideoError"
+                  />
+                  </div>
+                </div>
 
               <!-- Example Video -->
               <div class="q-mb-md">
@@ -66,14 +79,6 @@
                   v-else
                   class="row justify-end q-gutter-sm"
                 >
-                  <q-btn
-                    v-if="example.exampleVideoURL"
-                    outline
-                    :label="translate('seeExampleVideo')"
-                    icon="play_arrow"
-                    :disable="!example.exampleVideoURL"
-                    @click="openVideo(example)"
-                  />
                   <q-btn
                     v-if="isEditing && example.exampleVideoURL"
                     outline
@@ -117,6 +122,7 @@ import UploadVideoComponent from 'src/components/UploadVideoComponent.vue';
 import VideoPlayerPopup from 'src/components/VideoPlayerPopup.vue';
 import ExampleTranslationsComponent from './ExampleTranslationsComponent.vue';
 import { ref, computed, watch } from 'vue';
+import { getVideoUrl } from 'src/utils/videoUrl';
 
 const $q = useQuasar();
 const loading = ref(false);
@@ -281,5 +287,24 @@ const deleteExampleVideo = async (example: Example) => {
     });
   }
 };
+
+
+const handleVideoError = (error: Error) => {
+  console.error('Error playing video:', error);
+  $q.notify({
+    type: 'negative',
+    message: translate('errors.failedToPlayVideo')
+  });
+};
+
 </script>
+
+<style scoped>
+.video-player{
+  max-width: 100%;
+  max-height: calc(100vh - 150px);
+  width: auto;
+  height: auto;
+}
+</style>
 

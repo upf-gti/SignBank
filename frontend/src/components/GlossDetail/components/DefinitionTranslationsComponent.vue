@@ -21,7 +21,7 @@
       >
         <template #header>
           <q-chip size="sm">
-            {{ definitionTranslation.language }}
+            {{ translate(definitionTranslation.language) }}
           </q-chip>
         </template>
         <template #default="{ isEditing }">

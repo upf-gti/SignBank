@@ -44,12 +44,9 @@
                   v-model="translation.language"
                   class="col"
                 />
-                <div
-                  v-else
-                  class="text-subtitle1"
-                >
+                <q-chip>
                   {{ translate(translation.language) }}
-                </div>
+                </q-chip>
               </div>
 
               <q-input
