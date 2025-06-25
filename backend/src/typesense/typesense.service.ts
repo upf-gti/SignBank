@@ -243,9 +243,8 @@ export class TypesenseService implements OnModuleInit {
       const documents: VideoIndex[] = [];
 
       for (const entry of updatedEntries) {
-        const senses = entry.glossData.senses;
+        const sense = entry.glossData.senses[0];
         
-        for (const sense of senses) {
           if (sense.signVideos.length > 0) {
             const highestPrioritySignVideo = sense.signVideos[0];
             const document = this.createVideoDocument(highestPrioritySignVideo, sense);
@@ -257,7 +256,6 @@ export class TypesenseService implements OnModuleInit {
               documents.length = 0;
             }
           }
-        }
       }
 
       if (documents.length > 0) {
@@ -297,14 +295,15 @@ export class TypesenseService implements OnModuleInit {
           }
         }
       });
-      
-      const senses = dictionaryEntries.flatMap(entry => entry.glossData.senses);
+      // const senses = dictionaryEntries.flatMap(entry => entry.glossData.senses);
 
       let totalDocuments = 0;
       const BATCH_SIZE = 100;
       const documents: VideoIndex[] = [];
 
-      for (const sense of senses) {
+      // for (const sense of senses) {
+      for (const entry of dictionaryEntries) {
+        const sense = entry.glossData.senses[0];
         if (sense.signVideos.length > 0) {
           const highestPrioritySignVideo = sense.signVideos[0];
           const document = this.createVideoDocument(highestPrioritySignVideo, sense);

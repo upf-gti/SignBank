@@ -327,6 +327,7 @@ const translations: TranslateKeys = {
   deleteExampleVideo: 'Eliminar vídeo d\'exemple',
   glossUpdatedFailed: 'No s\'ha pogut actualitzar la glossa',
   glossUpdatedSuccessfully: 'Glossa actualitzada correctament',
+  errorSavingVideo: 'No s\'ha pogut desar el vídeo'
 };
 
 export default translations; 
