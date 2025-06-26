@@ -32,6 +32,7 @@
         :gloss-data="glossData"
         :allow-edit="true"
         @save-gloss="saveGloss"
+        @update:gloss-data="updateGlossData"
       />
     </div>
   </q-page>
@@ -92,5 +93,9 @@ const saveGloss = async (updatedGlossData: GlossData) => {
   } finally {
     loading.value = false
   }
+}
+
+const updateGlossData = (updatedGlossData: GlossData) => {
+  glossData.value = updatedGlossData
 }
 </script>

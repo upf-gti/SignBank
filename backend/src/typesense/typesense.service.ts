@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import * as Typesense from 'typesense';
 import { VIDEOS_COLLECTION_NAME, videosSchema } from './typesense.config';
 import { VideoIndex } from './types/video-index.type';
-import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType, MovementDirection } from '@prisma/client';
+import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType, MovementDirection, GlossStatus } from '@prisma/client';
 
 @Injectable()
 export class TypesenseService implements OnModuleInit {
@@ -43,6 +43,28 @@ export class TypesenseService implements OnModuleInit {
       await this.client.collections(VIDEOS_COLLECTION_NAME).documents(documentId).delete();
     } catch (error) {
       this.logger.error(`Failed to delete document ${documentId}:`, error.stack);
+      throw error;
+    }
+  }
+
+  async deleteDocumentsByGlossId(glossId: string) {
+    try {
+      // Search for all documents with the specific glossId
+      const searchResults = await this.client.collections(VIDEOS_COLLECTION_NAME).documents().search({
+        q: '*',
+        filter_by: `glossId:=${glossId}`,
+        per_page: 250 // Maximum documents per page
+      });
+
+      // Delete each document found
+      const deletePromises = searchResults.hits.map(hit => 
+        this.deleteDocument((hit.document as any).id)
+      );
+
+      await Promise.all(deletePromises);
+      this.logger.log(`Deleted ${searchResults.hits.length} documents for gloss ${glossId}`);
+    } catch (error) {
+      this.logger.error(`Failed to delete documents for gloss ${glossId}:`, error.stack);
       throw error;
     }
   }
@@ -142,7 +164,7 @@ export class TypesenseService implements OnModuleInit {
     }
   }
 
-  private createVideoDocument(
+  createVideoDocument(
     signVideo: {
       id: string;
       title: string;
@@ -274,6 +296,9 @@ export class TypesenseService implements OnModuleInit {
     this.logger.log('Starting video sync...');
     try {
       const dictionaryEntries = await this.prisma.dictionaryEntry.findMany({
+        where: {
+          status: GlossStatus.PUBLISHED
+        },
         include: {
           glossData: {
             include: {

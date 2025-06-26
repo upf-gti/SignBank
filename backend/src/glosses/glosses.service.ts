@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { GlossStatus } from '@prisma/client'
 
 @Injectable()
 export class GlossesService {
@@ -42,6 +43,13 @@ export class GlossesService {
               },
             },
           },
+          where: {
+            targetGloss: {
+              dictionaryEntry: {
+                status: GlossStatus.PUBLISHED
+              }
+            },
+          },
           omit: {
             id: true,
           },
@@ -72,6 +80,13 @@ export class GlossesService {
                   },
                 },
               },
+            },
+          },
+          where: {
+            targetGloss: {
+              dictionaryEntry: {
+                status: GlossStatus.PUBLISHED
+              }
             },
           },
           omit: {

@@ -177,6 +177,8 @@ const translations: TranslateKeys = {
     failedToSubmitRequest: 'Failed to submit request',
     failedToDeleteVideo: 'Failed to delete video',
     failedToUploadVideo: 'Failed to upload video',
+    failedToArchiveGloss: 'Failed to archive gloss',
+    failedToUnarchiveGloss: 'Failed to unarchive gloss',
     accessDenied: 'Access denied'
   },
   sendRequest: 'Send Request',
@@ -271,6 +273,17 @@ const translations: TranslateKeys = {
   definitionSavedSuccessfully: 'Definition saved successfully',
   definitionCreatedSuccessfully: 'Definition created successfully',
   definitionDeletedSuccessfully: 'Definition deleted successfully',
+  glossUpdatedSuccessfully: 'Gloss updated successfully',
+  glossUpdatedFailed: 'Failed to update gloss',
+  archive: 'Archive',
+  confirmArchive: 'Confirm Archive',
+  archiveGlossConfirmation: 'Are you sure you want to archive this gloss? This action cannot be undone.',
+  glossArchivedSuccessfully: 'Gloss archived successfully',
+  archived: 'Archived',
+  unarchive: 'Unarchive',
+  confirmUnarchive: 'Confirm Unarchive',
+  unarchiveGlossConfirmation: 'Are you sure you want to unarchive this gloss? It will be available for search again.',
+  glossUnarchivedSuccessfully: 'Gloss unarchived successfully',
 };
 
 export default translations; 

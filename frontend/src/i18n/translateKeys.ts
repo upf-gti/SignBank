@@ -455,6 +455,16 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   glossUpdatedSuccessfully: string;
   glossUpdatedFailed: string;
   errorSavingVideo: string;
+  archive: string;
+  confirmArchive: string;
+  archiveGlossConfirmation: string;
+  glossArchivedSuccessfully: string;
+  archived: string;
+  unarchive: string;
+  confirmUnarchive: string;
+  unarchiveGlossConfirmation: string;
+  
+  glossUnarchivedSuccessfully: string;
   yes: string;
   no: string;
   createGloss: string;
@@ -626,6 +636,8 @@ interface TranslateKeys extends PhonologyTranslateKeys {
     failedToSubmitRequest: string;
     failedToDeleteVideo: string;
     failedToUploadVideo: string;
+    failedToArchiveGloss: string;
+    failedToUnarchiveGloss: string;
     accessDenied: string;
   };
   ACCEPTED: string;

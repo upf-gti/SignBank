@@ -170,6 +170,8 @@ const translations: TranslateKeys = {
     failedToSubmitRequest: 'No s\'ha pogut enviar la sol·licitud de glossa',
     failedToDeleteVideo: 'No s\'ha pogut eliminar el vídeo',
     failedToUploadVideo: 'No s\'ha pogut pujar el vídeo',
+    failedToArchiveGloss: 'No s\'ha pogut arxivar la glossa',
+    failedToUnarchiveGloss: 'No s\'ha pogut desarxivar la glossa',
     accessDenied: 'Accés denegat'
   },
   ACCEPTED: 'Acceptat',
@@ -190,6 +192,12 @@ const translations: TranslateKeys = {
   editSensesDialog: 'Diàleg d\'edició de accepcions',
   editSingleSenseDialog: 'Diàleg d\'edició de accepció únic',
   editSenses: 'Editar accepcions',
+  archive: 'Arxivar',
+  unarchive: 'Desarxivar',
+  confirmUnarchive: 'Confirmar Desarxivar',
+  unarchiveGlossConfirmation: 'Estàs segur que vols desarxivar aquesta glossa? Estarà disponible per a cerca novament.',
+  glossUnarchivedSuccessfully: 'Glossa desarxivada correctament',
+  archived: 'Arxivat',
   editTranslation: 'Editar traducció',
   deleteTranslation: 'Eliminar traducció',
   editDefinition: 'Editar definició',
@@ -299,7 +307,7 @@ const translations: TranslateKeys = {
   VERB_OR_PARTICLE: 'Verb o Partícula',
   distinction: 'Distinció',
   distinctionHint: 'Distinció entre el signe i el seu oposat',
-  view: 'Veure'  ,
+  view: 'Veure',
   searchGloss: 'Cercar glossa',
   definitionSavedSuccessfully: 'Definició desada correctament',
   definitionCreatedSuccessfully: 'Definició creada correctament',
@@ -325,9 +333,12 @@ const translations: TranslateKeys = {
   relationType: 'Tipus de relació',
   selectRelationType: 'Seleccionar tipus de relació',
   deleteExampleVideo: 'Eliminar vídeo d\'exemple',
-  glossUpdatedFailed: 'No s\'ha pogut actualitzar la glossa',
+  glossUpdatedFailed: 'Error en actualitzar la glossa',
   glossUpdatedSuccessfully: 'Glossa actualitzada correctament',
-  errorSavingVideo: 'No s\'ha pogut desar el vídeo'
+  errorSavingVideo: 'No s\'ha pogut desar el vídeo',
+  confirmArchive: 'Confirmar Arxiu',
+  archiveGlossConfirmation: 'Estàs segur que vols arxivar aquesta glossa? Aquesta acció no es pot desfer.',
+  glossArchivedSuccessfully: 'Glossa arxivada correctament',
 };
 
 export default translations; 

@@ -28,6 +28,18 @@
           dense
         />
       </div>
+      <!-- Archive Status -->
+      <div
+        v-if="isArchived"
+        class="q-mt-sm"
+      >
+        <q-chip
+          color="grey"
+          text-color="white"
+          :label="translate('archived')"
+          dense
+        />
+      </div>
     </div>
     <div class="row">
       <q-btn
@@ -36,6 +48,24 @@
         icon="edit"
         :label="translate('edit')"
         @click="emit('editGloss')"
+      />
+      <q-btn
+        v-if="allowEdit && !editMode && userStore.isAdmin && isPublished"
+        color="negative"
+        icon="archive"
+        :label="translate('archive')"
+        outline
+        class="q-mr-sm"
+        @click="confirmArchive"
+      />
+      <q-btn
+        v-if="allowEdit && !editMode && userStore.isAdmin && isArchived"
+        color="positive"
+        icon="unarchive"
+        :label="translate('unarchive')"
+        outline
+        class="q-mr-sm"
+        @click="confirmUnarchive"
       />
       <q-btn
         v-if="allowEdit && editMode && router.currentRoute.value.path.includes('/gloss')"
@@ -80,7 +110,7 @@
 <script setup lang="ts">
 import { GlossData, RequestStatus } from 'src/types/models'
 import translate from 'src/utils/translate'
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import useUserStore from 'src/stores/user.store'
 import { useRouter } from 'vue-router'
 import api from 'src/services/api'
@@ -118,10 +148,15 @@ watch(() => props.glossData, (newGlossData) => {
   localGlossData.value = { ...newGlossData }
 }, { deep: true })
 
-// Watch for changes in local copy and emit updates
-watch(() => localGlossData.value.gloss, (newGloss) => {
-  emit('update:glossData', { ...localGlossData.value, gloss: newGloss })
-}, { deep: true })
+// Check if the gloss is published
+const isPublished = computed(() => {
+  return localGlossData.value.dictionaryEntry?.status === 'PUBLISHED'
+})
+
+// Check if the gloss is archived
+const isArchived = computed(() => {
+  return localGlossData.value.dictionaryEntry?.status === 'ARCHIVED'
+})
 
 const acceptRequest = () => {
   emit('acceptRequest')
@@ -137,6 +172,9 @@ const submitRequest = () => {
 
 const saveGloss = () => {
   api.glossData.updateGloss(localGlossData.value.id || '', {gloss: localGlossData.value.gloss}).then((response) => {
+    // Update local data with the response
+    localGlossData.value = response.data
+    // Emit the updated data to parent
     emit('update:glossData', response.data)
     $q.notify({
       type: 'positive',
@@ -146,6 +184,60 @@ const saveGloss = () => {
     $q.notify({
       type: 'negative',
       message: translate('glossUpdatedFailed')
+    })
+    console.error(error)
+  })
+}
+
+const confirmArchive = () => {
+  $q.dialog({
+    title: translate('confirmArchive'),
+    message: translate('archiveGlossConfirmation'),
+    cancel: true,
+    persistent: true
+  }).onOk(() => {
+    archiveGloss()
+  })
+}
+
+const archiveGloss = () => {
+  api.glossData.archiveGloss(localGlossData.value.id || '').then((response) => {
+    emit('update:glossData', response.data)
+    $q.notify({
+      type: 'positive',
+      message: translate('glossArchivedSuccessfully')
+    })
+  }).catch((error) => {
+    $q.notify({
+      type: 'negative',
+      message: translate('errors.failedToArchiveGloss')
+    })
+    console.error(error)
+  })
+}
+
+const confirmUnarchive = () => {
+  $q.dialog({
+    title: translate('confirmUnarchive'),
+    message: translate('unarchiveGlossConfirmation'),
+    cancel: true,
+    persistent: true
+  }).onOk(() => {
+    unarchiveGloss()
+  })
+}
+
+const unarchiveGloss = () => {
+  api.glossData.unarchiveGloss(localGlossData.value.id || '').then((response) => {
+    emit('update:glossData', response.data)
+    $q.notify({
+      type: 'positive',
+      message: translate('glossUnarchivedSuccessfully')
+    })
+  }).catch((error) => {
+    $q.notify({
+      type: 'negative',
+      message: translate('errors.failedToUnarchiveGloss')
     })
     console.error(error)
   })

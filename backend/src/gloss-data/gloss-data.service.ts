@@ -1,17 +1,22 @@
 import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { TypesenseService } from '../typesense/typesense.service';
 import { UpdateSenseDto, ReorderSenseDto } from './dto/update-sense.dto';
 import { UpdateDefinitionDto, UpdateDefinitionTranslationDto } from './dto/update-definition.dto';
-import { Language } from '@prisma/client';
+import { GlossStatus, Language } from '@prisma/client';
 
 @Injectable()
 export class GlossDataService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private typesenseService: TypesenseService
+  ) {}
 
   async getGlossData(id: string) {
     return this.prisma.glossData.findUnique({
       where: { id },
       include: {
+        dictionaryEntry: true,
         senses: {
           orderBy: {
             priority: 'asc',
@@ -45,6 +50,7 @@ export class GlossDataService {
                     signVideos: true,
                   },
                 },
+                dictionaryEntry: true,
               },
             },
             targetGloss: {
@@ -54,9 +60,17 @@ export class GlossDataService {
                     signVideos: true,
                   },
                 },
+                dictionaryEntry: true,
               },
             },
           },
+          where: {
+            targetGloss: {
+              dictionaryEntry: {
+                status: GlossStatus.PUBLISHED
+              }
+            },
+          }
         },
         relationsAsSource: {
           include: {
@@ -67,9 +81,17 @@ export class GlossDataService {
                     signVideos: true,
                   },
                 },
+                dictionaryEntry: true,
               },
-            },
+            },           
           },
+          where: {
+            targetGloss: {
+              dictionaryEntry: {
+                status: GlossStatus.PUBLISHED
+              }
+            },
+          }
         },
         relationsAsTarget: {
           include: {
@@ -124,6 +146,64 @@ export class GlossDataService {
         }
       }
     });
+    return this.getGlossData(id);
+  }
+
+  async archiveGloss(id: string) {
+    // Find the DictionaryEntry associated with this GlossData
+    const dictionaryEntry = await this.prisma.dictionaryEntry.findUnique({
+      where: { glossDataId: id }
+    });
+
+    if (!dictionaryEntry) {
+      throw new NotFoundException('Dictionary entry not found for this gloss');
+    }
+
+    // Update the status to ARCHIVED
+    await this.prisma.dictionaryEntry.update({
+      where: { id: dictionaryEntry.id },
+      data: {
+        status: 'ARCHIVED'
+      }
+    });
+
+    // Remove from Typesense search index
+    try {
+      await this.typesenseService.deleteDocumentsByGlossId(id);
+    } catch (error) {
+      // Log the error but don't fail the archive operation
+      console.error(`Failed to remove gloss ${id} from Typesense index:`, error);
+    }
+
+    return this.getGlossData(id);
+  }
+
+  async unarchiveGloss(id: string) {
+    // Find the DictionaryEntry associated with this GlossData
+    const dictionaryEntry = await this.prisma.dictionaryEntry.findUnique({
+      where: { glossDataId: id }
+    });
+
+    if (!dictionaryEntry) {
+      throw new NotFoundException('Dictionary entry not found for this gloss');
+    }
+
+    // Update the status to PUBLISHED
+    await this.prisma.dictionaryEntry.update({
+      where: { id: dictionaryEntry.id },
+      data: {
+        status: 'PUBLISHED'
+      }
+    });
+
+    // Re-add to Typesense search index by syncing the gloss
+    try {
+      await this.syncGlossToTypesense(id);
+    } catch (error) {
+      // Log the error but don't fail the unarchive operation
+      console.error(`Failed to add gloss ${id} back to Typesense index:`, error);
+    }
+
     return this.getGlossData(id);
   }
 
@@ -182,29 +262,6 @@ export class GlossDataService {
     const end = Math.max(oldIndex, newIndex);
     const movingUp = oldIndex > newIndex;
 
-    await this.prisma.$transaction(
-      senses.slice(start, end + 1).map((sense, i) => {
-        const actualIndex = start + i;
-        let newPriority = actualIndex;
-
-        if (movingUp && actualIndex === start) {
-          newPriority = start; // The moved item
-        } else if (movingUp) {
-          newPriority = actualIndex + 1; // Shift others down
-        } else if (!movingUp && actualIndex === end) {
-          newPriority = end; // The moved item
-        } else {
-          newPriority = actualIndex - 1; // Shift others up
-        }
-
-        return this.prisma.sense.update({
-          where: { id: sense.id },
-          data: { priority: newPriority }
-        });
-      })
-    );
-
-    return this.getGlossData(glossDataId);
   }
 
   async deleteSense(glossDataId: string, senseId: string) {
@@ -829,5 +886,44 @@ export class GlossDataService {
     await Promise.all(updatePromises);
 
     return this.getGlossData(signVideo.sense.glossDataId);
+  }
+
+  private async syncGlossToTypesense(glossId: string) {
+    // Get the gloss data with all its sign videos
+    const glossData = await this.prisma.glossData.findUnique({
+      where: { id: glossId },
+      include: {
+        senses: {
+          include: {
+            signVideos: {
+              include: {
+                videos: true,
+                videoData: true
+              }
+            }
+          }
+        }
+      }
+    });
+
+    if (!glossData) {
+      throw new NotFoundException('Gloss data not found');
+    }
+
+    // Create documents for each sign video
+    for (const sense of glossData.senses) {
+      for (const signVideo of sense.signVideos) {
+        const document = this.typesenseService.createVideoDocument(signVideo, {
+          id: sense.id,
+          senseTitle: sense.senseTitle,
+          lexicalCategory: sense.lexicalCategory,
+          glossData: {
+            id: glossData.id,
+            gloss: glossData.gloss
+          }
+        });
+        await this.typesenseService.upsertDocument(document);
+      }
+    }
   }
 } 

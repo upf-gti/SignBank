@@ -188,6 +188,10 @@ export interface GlossData {
   minimalPairsAsSource: MinimalPair[];
   minimalPairsAsTarget: MinimalPair[];
   glossRequest: string | null;
+  dictionaryEntry?: {
+    id?: string;
+    status: 'PUBLISHED' | 'ARCHIVED';
+  };
 }
 
 export interface dictionaryEntry {
