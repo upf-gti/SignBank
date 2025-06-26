@@ -22,7 +22,7 @@
         @upload-complete="(url) => uploadVideo(url)"
       />
     </div>
-    <div class="column col justify-start items-start">
+    <div class="column col justify-start items-start" v-if="editMode || sortedVideos.length > 1">
       <div class="row justify-between items-center full-width">
         <span class="text-bold">
           {{ translate('videoAngles') }}
