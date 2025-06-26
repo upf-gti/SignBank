@@ -175,9 +175,11 @@ const translations: TranslateKeys = {
     accessDenied: 'Accés denegat',
     videoFileTooLarge: 'El vídeo és massa gran. La mida màxima és de {maxSize}MB. La mida actual és de {currentSize}MB.',
     invalidVideoFile: 'Si us plau, seleccioneu un vídeo vàlid.',
-    videoSizeExceeded: 'El vídeo és massa gran. La mida màxima és de {maxSize}MB.'
+    videoSizeExceeded: 'El vídeo és massa gran. La mida màxima és de {maxSize}MB.',
+    unsupportedVideoFormat: 'Si us plau, utilitzeu format MP4, WebM o OGG.'
   },
   ACCEPTED: 'Acceptat',
+  exampleUpdatedSuccessfully: 'Exemple actualitzat correctament',
   DENIED: 'Denegat',
   PENDING: 'Pendent',
   details: 'Detalls',

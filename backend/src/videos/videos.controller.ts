@@ -58,6 +58,13 @@ export class VideosController {
         if (!file.mimetype.includes('video')) {
           return cb(new Error('Only video files are allowed!'), false);
         }
+        
+        // Only allow specific video formats
+        const allowedFormats = ['video/mp4', 'video/webm', 'video/ogg'];
+        if (!allowedFormats.includes(file.mimetype)) {
+          return cb(new Error('Only MP4, WebM, and OGG video formats are supported.'), false);
+        }
+        
         cb(null, true);
       },
       limits: {

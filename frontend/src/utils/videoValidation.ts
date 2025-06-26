@@ -2,6 +2,13 @@
 export const MAX_VIDEO_SIZE = 20 * 1024 * 1024; // 20MB in bytes
 export const MAX_VIDEO_SIZE_MB = 20; // 20MB for display
 
+// Only allow these well-supported web video formats
+export const ALLOWED_VIDEO_FORMATS = [
+  'video/mp4',
+  'video/webm', 
+  'video/ogg'
+];
+
 import translate from "./translate";
 
 export interface VideoValidationResult {
@@ -15,6 +22,14 @@ export const validateVideoFile = (file: File): VideoValidationResult => {
     return {
       isValid: false,
       error: translate('errors.invalidVideoFile')
+    };
+  }
+
+  // Only allow specific video formats
+  if (!ALLOWED_VIDEO_FORMATS.includes(file.type)) {
+    return {
+      isValid: false,
+      error: translate('errors.unsupportedVideoFormat') || 'Only MP4, WebM, and OGG video formats are supported.'
     };
   }
 

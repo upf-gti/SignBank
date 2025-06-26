@@ -601,6 +601,7 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   uploadVideo: string;
   deleteVideo: string;
   maxFileSize: string;
+  exampleUpdatedSuccessfully: string;
   addAngle: string;
   deleteAngle: string;
   angle: string;
