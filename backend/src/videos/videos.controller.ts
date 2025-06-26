@@ -61,7 +61,7 @@ export class VideosController {
         cb(null, true);
       },
       limits: {
-        fileSize: 1024 * 1024 * 100, // 100MB limit
+        fileSize: 1024 * 1024 * 20, // 20MB limit
       },
     }),
   )

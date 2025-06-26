@@ -172,7 +172,10 @@ const translations: TranslateKeys = {
     failedToUploadVideo: 'No s\'ha pogut pujar el vídeo',
     failedToArchiveGloss: 'No s\'ha pogut arxivar la glossa',
     failedToUnarchiveGloss: 'No s\'ha pogut desarxivar la glossa',
-    accessDenied: 'Accés denegat'
+    accessDenied: 'Accés denegat',
+    videoFileTooLarge: 'El vídeo és massa gran. La mida màxima és de {maxSize}MB. La mida actual és de {currentSize}MB.',
+    invalidVideoFile: 'Si us plau, seleccioneu un vídeo vàlid.',
+    videoSizeExceeded: 'El vídeo és massa gran. La mida màxima és de {maxSize}MB.'
   },
   ACCEPTED: 'Acceptat',
   DENIED: 'Denegat',
@@ -339,6 +342,7 @@ const translations: TranslateKeys = {
   confirmArchive: 'Confirmar Arxiu',
   archiveGlossConfirmation: 'Estàs segur que vols arxivar aquesta glossa? Aquesta acció no es pot desfer.',
   glossArchivedSuccessfully: 'Glossa arxivada correctament',
+  maxFileSize: 'Mida màxima del vídeo',
 };
 
 export default translations; 

@@ -23,6 +23,10 @@
         {{ translate('orDragAndDropYourVideoHere') }}
       </div>
 
+      <div class="text-center q-mt-xs text-caption text-grey-6">
+        {{ translate('maxFileSize') }}: 20MB
+      </div>
+
       <div
         v-if="isUploading"
         class="q-mt-md"
@@ -51,6 +55,7 @@
 import { ref } from 'vue';
 import api from 'src/services/api'    
 import translate from 'src/utils/translate';
+import { validateVideoFile, formatFileSize } from 'src/utils/videoValidation';
 
 const videoFile = ref<File | null>(null);
 const isUploading = ref(false);
@@ -67,11 +72,19 @@ const { videoType = 'gloss', customLabel } = defineProps<{
 
 
 const handleFileSelect = (file: File | null) => {
-    if (file && !file.type.includes('video/')) {
-        errorMessage.value = translate('pleaseSelectAValidVideoFile');
+    if (!file) {
+        errorMessage.value = '';
+        return;
+    }
+
+    const validation = validateVideoFile(file, translate);
+    if (!validation.isValid) {
+        errorMessage.value = validation.error || translate('pleaseSelectAValidVideoFile');
         videoFile.value = null;
         return;
     }
+
+    videoFile.value = file;
     errorMessage.value = '';
     uploadVideo().catch((err) => {
         console.error(err)
@@ -82,16 +95,22 @@ const handleDrop = (event: DragEvent) => {
     const droppedFiles = event.dataTransfer?.files;
     if (droppedFiles?.[0]) {
         const file = droppedFiles[0];
-        if (file.type.includes('video/')) {
+        const validation = validateVideoFile(file, translate);
+        
+        if (validation.isValid) {
             videoFile.value = file;
             errorMessage.value = '';
         } else {
-            errorMessage.value = translate('pleaseDropAValidVideoFile');
+            errorMessage.value = validation.error || translate('pleaseDropAValidVideoFile');
+            videoFile.value = null;
         }
     }
-    uploadVideo().catch((err) => {
-        console.error(err)
-    })
+    
+    if (videoFile.value) {
+        uploadVideo().catch((err) => {
+            console.error(err)
+        })
+    }
 };
 
 const uploadVideo = async () => {

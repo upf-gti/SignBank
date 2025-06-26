@@ -600,6 +600,7 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   title: string;
   uploadVideo: string;
   deleteVideo: string;
+  maxFileSize: string;
   addAngle: string;
   deleteAngle: string;
   angle: string;
@@ -639,6 +640,9 @@ interface TranslateKeys extends PhonologyTranslateKeys {
     failedToArchiveGloss: string;
     failedToUnarchiveGloss: string;
     accessDenied: string;
+    videoFileTooLarge: string;
+    invalidVideoFile: string;
+    videoSizeExceeded: string;
   };
   ACCEPTED: string;
   DENIED: string;
