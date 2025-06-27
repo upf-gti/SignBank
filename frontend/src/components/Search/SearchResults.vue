@@ -24,7 +24,7 @@
       <div
         v-for="hit in results?.hits"
         :key="hit.document.id"
-        class="col-12 col-md-6"
+        class="col-12 col-lg-6"
       >
         <ResultCard
           :document="hit.document"

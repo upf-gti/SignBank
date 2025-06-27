@@ -1,5 +1,5 @@
 <template>
-  <q-card class="filters-sidebar" flat bordered>
+  <q-card class="filters-sidebar" flat bordered style="overflow-y: auto;">
     <q-card-section>
       <div class="row items-center justify-between q-mb-sm">
         <div class="text-subtitle2">
@@ -90,7 +90,6 @@ function clearFilters() {
 }
 
 .filters-content {
-  max-height: calc(100vh - 300px);
   overflow-y: auto;
   padding-right: 8px;
 }
@@ -112,10 +111,4 @@ function clearFilters() {
   background: #555;
 }
 
-/* Mobile responsive adjustments */
-@media (max-width: 768px) {
-  .filters-content {
-    max-height: 60vh;
-  }
-}
 </style>

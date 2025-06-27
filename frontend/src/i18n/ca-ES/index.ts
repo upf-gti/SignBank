@@ -349,6 +349,7 @@ const translations: TranslateKeys = {
   maxFileSize: 'Mida màxima del vídeo',
   hideFilters: 'Amagar filtres',
   showFilters: 'Mostrar filtres',
+  videoNotSupported: 'El vídeo no és compatible amb el navegador.',
 };
 
 export default translations; 

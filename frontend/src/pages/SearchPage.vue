@@ -157,7 +157,7 @@ onMounted(async () => {
     class="column q-pa-md no-wrap"
   >
     <!-- Top Row: Search Input and Buttons -->
-    <div class="row q-mb-md q-col-gutter-md">
+    <div class="row q-mb-md q-col-gutter-md justify-center items-center">
       <div class="col-12 col-md-2">
         <q-btn
           :icon="showFilters ? 'expand_less' : 'expand_more'"
@@ -178,7 +178,7 @@ onMounted(async () => {
     </div>
 
     <!-- Main Content: Filters and Results -->
-    <div class="row q-col-gutter-md full-height">
+    <div v-if="$q.screen.gt.md" class="row q-col-gutter-md col q-mt-md" :style="{ overflowY: 'auto' }">
       <!-- Filters Sidebar -->
       <div 
         v-show="showFilters" 
@@ -197,6 +197,39 @@ onMounted(async () => {
 
       <!-- Search Results -->
       <div class="col">
+        <SearchResults
+          :results="searchResults"
+          :loading="loading"
+          :page="page"
+          :per-page="perPage"
+          :show-details="showDetails"
+          @update:page="(newPage) => { page = newPage; performSearch(); }"
+          @update:show-details="showDetails = $event"
+          @view-details="viewGlossDetails"
+        />
+      </div>
+    </div>
+    <div v-else class="column q-col-gutter-md col q-mt-md no-wrap" :style="{ overflowY: 'auto' }">
+      <!-- Filters Sidebar -->
+      <div 
+        v-show="showFilters" 
+        class="col-12 col-md-3"
+      >
+        <SearchFilters
+          v-model:search-query="searchQuery"
+          v-model:selected-category="selectedLexicalCategory"
+          v-model:selected-hands="selectedHands"
+          v-model:filter-inputs="filterInputs"
+          @search="performSearch"
+          @clear="performSearch"
+        />
+      </div>
+
+      <!-- Search Results -->
+      <div class="col" 
+      v-show="!showFilters"
+      :style="{ overflowY: 'auto' }"
+      >
         <SearchResults
           :results="searchResults"
           :loading="loading"
