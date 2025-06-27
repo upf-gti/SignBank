@@ -9,7 +9,7 @@
         v-model="videoFile"
         :label="customLabel || translate('chooseVideoFile')"
         filled
-        accept="video/*"
+        accept="video/mp4, video/ogg, video/webm"
         :loading="isUploading"
         :disable="isUploading"
         @update:model-value="handleFileSelect"
@@ -25,6 +25,9 @@
 
       <div class="text-center q-mt-xs text-caption text-grey-6">
         {{ translate('maxFileSize') }}: 20MB
+      </div>
+      <div class="text-center q-mt-xs text-caption text-grey-6">
+        {{ translate('allowedFileTypes') }}: .mp4, .ogg, .webm
       </div>
 
       <div

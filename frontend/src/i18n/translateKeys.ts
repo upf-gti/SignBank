@@ -606,6 +606,7 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   deleteAngle: string;
   angle: string;
   signFonology: string;
+  allowedFileTypes: string;
   myGlossRequests: string;
   createNewGloss: string;
   firstSense: string;

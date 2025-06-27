@@ -186,6 +186,7 @@ const translations: TranslateKeys = {
   video: 'Vídeo',
   NOUN: 'Nom',
   VERB: 'Verb',
+  allowedFileTypes: 'Formats de vídeo suportats: ',
   ADJECTIVE: 'Adjectiu',
   ADVERB: 'Adverbi',
   PRONOUN: 'Pronom',
