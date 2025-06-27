@@ -268,7 +268,7 @@ export class TypesenseService implements OnModuleInit {
         const sense = entry.glossData.senses[0];
         
           if (sense.signVideos.length > 0) {
-            const highestPrioritySignVideo = sense.signVideos[0];
+            const highestPrioritySignVideo = sense.signVideos.sort((a, b) => a.priority - b.priority)[0];
             const document = this.createVideoDocument(highestPrioritySignVideo, sense);
             documents.push(document);
             totalDocuments++;
@@ -330,7 +330,7 @@ export class TypesenseService implements OnModuleInit {
       for (const entry of dictionaryEntries) {
         const sense = entry.glossData.senses[0];
         if (sense.signVideos.length > 0) {
-          const highestPrioritySignVideo = sense.signVideos[0];
+          const highestPrioritySignVideo = sense.signVideos.sort((a, b) => a.priority - b.priority)[0];
           const document = this.createVideoDocument(highestPrioritySignVideo, sense);
           documents.push(document);
           totalDocuments++;
