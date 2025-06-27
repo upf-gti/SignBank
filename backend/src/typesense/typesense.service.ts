@@ -362,6 +362,7 @@ export class TypesenseService implements OnModuleInit {
     max_hits?: number;
     page?: number;
     per_page?: number;
+    sort_by?: string;
   }) {
     try {
       const phonologyFields = [
@@ -387,6 +388,7 @@ export class TypesenseService implements OnModuleInit {
         max_hits: searchParameters.max_hits || 100,
         page: searchParameters.page || 1,
         per_page: searchParameters.per_page || 20,
+        sort_by: searchParameters.sort_by || 'gloss:asc',
         // Add typo tolerance for phonology fields - allows 2 typos for better matching
         typo_tolerance_threshold: 0,
         // Allow prefix matching for better partial matches
