@@ -18,7 +18,7 @@
       <q-card-section class="column">
         <GlossVideoComponent
           v-if="selectedSense?.signVideos?.[0]"
-          :sign-video="selectedSense.signVideos[0]"
+          :sign-video="selectedSense.signVideos.sort((a, b) => a.priority - b.priority)[0] || selectedSense.signVideos[0]"
           :edit-mode="false"
         />
       </q-card-section>

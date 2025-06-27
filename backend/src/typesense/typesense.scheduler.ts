@@ -9,8 +9,8 @@ export class TypesenseScheduler {
 
   constructor(private readonly typesenseService: TypesenseService) {}
 
-  // Run every 10 seconds
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  // Run every 1 minute
+  @Cron(CronExpression.EVERY_MINUTE)
   async handleDailySync() {
     this.logger.log('Starting periodic Typesense sync...');
     try {
