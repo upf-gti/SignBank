@@ -347,6 +347,8 @@ const translations: TranslateKeys = {
   archiveGlossConfirmation: 'Estàs segur que vols arxivar aquesta glossa? Aquesta acció no es pot desfer.',
   glossArchivedSuccessfully: 'Glossa arxivada correctament',
   maxFileSize: 'Mida màxima del vídeo',
+  hideFilters: 'Amagar filtres',
+  showFilters: 'Mostrar filtres',
 };
 
 export default translations; 

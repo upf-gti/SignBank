@@ -1,5 +1,5 @@
 <template>
-  <PhonologyFilters
+  <SearchPhonologyFilters
     :phonology-data="phonologyData"
     :is-editable="true"
     @update:phonology-data="$emit('update:phonology-data', $event)"
@@ -7,15 +7,33 @@
 </template>
 
 <script setup lang="ts">
-import type { PhonologyData } from 'src/types/models';
-import PhonologyFilters from 'src/components/Shared/PhonologyFilters.vue';
+// Create a type for filter inputs that allows empty values
+type FilterInputs = {
+  hands: string | null;
+  configuration: string;
+  configurationChanges: string;
+  relationBetweenArticulators: string;
+  location: string;
+  movementRelatedOrientation: string;
+  orientationRelatedToLocation: string;
+  orientationChange: string;
+  contactType: string;
+  movementType: string;
+  vocalization: string;
+  nonManualComponent: string;
+  inicialization: string;
+  repeatedMovement: boolean | null;
+  movementDirection: string;
+};
+
+import SearchPhonologyFilters from './SearchPhonologyFilters.vue';
 
 defineProps<{
-  phonologyData: PhonologyData;
+  phonologyData: FilterInputs;
 }>();
 
 defineEmits<{
-  (e: 'update:phonology-data', value: PhonologyData): void;
+  (e: 'update:phonology-data', value: FilterInputs): void;
 }>();
 
 </script> 

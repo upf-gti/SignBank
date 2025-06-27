@@ -5,7 +5,28 @@ import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import SearchFilters from 'src/components/Search/SearchFilters.vue';
 import SearchResults from 'src/components/Search/SearchResults.vue';
+import SearchInput from 'src/components/Search/components/SearchInput.vue';
 import type { PhonologyData } from 'src/types/models';
+import translate from 'src/utils/translate';
+
+// Create a type for filter inputs that allows empty values
+type FilterInputs = {
+  hands: string | null;
+  configuration: string;
+  configurationChanges: string;
+  relationBetweenArticulators: string;
+  location: string;
+  movementRelatedOrientation: string;
+  orientationRelatedToLocation: string;
+  orientationChange: string;
+  contactType: string;
+  movementType: string;
+  vocalization: string;
+  nonManualComponent: string;
+  inicialization: string;
+  repeatedMovement: boolean | null;
+  movementDirection: string;
+};
 
 const $q = useQuasar();
 const router = useRouter();
@@ -18,11 +39,12 @@ const loading = ref(false);
 const page = ref(1);
 const perPage = ref(20);
 const showDetails = ref(false);
+const showFilters = ref(false);
 
 // Filters state
 const selectedLexicalCategory = ref<string>('');
 const selectedHands = ref<string>('');
-const filterInputs = ref<PhonologyData>({
+const filterInputs = ref<FilterInputs>({
   hands: null,
   configuration: '',
   configurationChanges: '',
@@ -116,6 +138,10 @@ function viewGlossDetails(glossId: string) {
   })
 }
 
+function toggleFilters() {
+  showFilters.value = !showFilters.value;
+}
+
 // Lifecycle
 onMounted(async () => {
   await performSearch();
@@ -128,32 +154,60 @@ onMounted(async () => {
       pageHeight = height-header
       return { height: `${height - header}px` };
     }"
-    class="row q-pa-md"
+    class="column q-pa-md no-wrap"
   >
-    <!-- Left Sidebar -->
-    <div class="col-12 col-md-3 q-pr-md full-height">
-      <SearchFilters
-        v-model:search-query="searchQuery"
-        v-model:selected-category="selectedLexicalCategory"
-        v-model:selected-hands="selectedHands"
-        v-model:filter-inputs="filterInputs"
-        @search="performSearch"
-        @clear="performSearch"
-      />
+    <!-- Top Row: Search Input and Buttons -->
+    <div class="row q-mb-md q-col-gutter-md">
+      <div class="col-12 col-md-2">
+        <q-btn
+          :icon="showFilters ? 'expand_less' : 'expand_more'"
+          :label="showFilters ? translate('hideFilters') : translate('showFilters')"
+          color="primary"
+          outline
+          class="full-width"
+          @click="toggleFilters"
+        />
+      </div>
+      <div class="col-12 col-md-10">
+        <SearchInput
+          :model-value="searchQuery"
+          @update:model-value="searchQuery = $event"
+          @search="performSearch"
+        />
+      </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="col-12 col-md-9 full-height">
-      <SearchResults
-        :results="searchResults"
-        :loading="loading"
-        :page="page"
-        :per-page="perPage"
-        :show-details="showDetails"
-        @update:page="(newPage) => { page = newPage; performSearch(); }"
-        @update:show-details="showDetails = $event"
-        @view-details="viewGlossDetails"
-      />
+    <!-- Main Content: Filters and Results -->
+    <div class="row q-col-gutter-md full-height">
+      <!-- Filters Sidebar -->
+      <div 
+        v-show="showFilters" 
+        class="col-12 col-md-3"
+        style="max-height: calc(100vh - 200px); overflow-y: auto;"
+      >
+        <SearchFilters
+          v-model:search-query="searchQuery"
+          v-model:selected-category="selectedLexicalCategory"
+          v-model:selected-hands="selectedHands"
+          v-model:filter-inputs="filterInputs"
+          @search="performSearch"
+          @clear="performSearch"
+        />
+      </div>
+
+      <!-- Search Results -->
+      <div class="col">
+        <SearchResults
+          :results="searchResults"
+          :loading="loading"
+          :page="page"
+          :per-page="perPage"
+          :show-details="showDetails"
+          @update:page="(newPage) => { page = newPage; performSearch(); }"
+          @update:show-details="showDetails = $event"
+          @view-details="viewGlossDetails"
+        />
+      </div>
     </div>
   </q-page>
 </template>
@@ -179,5 +233,12 @@ onMounted(async () => {
 
 .filters-container::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .q-page {
+    padding: 8px;
+  }
 }
 </style> 

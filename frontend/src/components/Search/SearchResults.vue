@@ -18,13 +18,13 @@
 
     <div
       v-else-if="hasResults"
-      class="row col" 
+      class="row q-col-gutter-md" 
       :style="{ overflowY: 'auto'}"
     >
       <div
         v-for="hit in results?.hits"
         :key="hit.document.id"
-        class="col-12"
+        class="col-12 col-md-6"
       >
         <ResultCard
           :document="hit.document"
@@ -36,7 +36,7 @@
 
     <div
       v-if="totalResults > perPage" 
-      class="flex flex-center"
+      class="flex flex-center q-mt-md"
     >
       <q-pagination
         :model-value="page"

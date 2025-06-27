@@ -794,6 +794,8 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   videoOrderUpdated: string;
   relationType: string;
   selectRelationType: string;
+  hideFilters: string;
+  showFilters: string;
 }
 
 export default TranslateKeys;
