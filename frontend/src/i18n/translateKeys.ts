@@ -2,6 +2,7 @@ export interface PhonologyTranslateKeys {
   phonology: {
     configurationChange: {
       EMPTY: string;
+      EMPTY_description: string;
       BENDING: string;
       BENDING_description: string;
       CLOSING: string;
@@ -645,6 +646,7 @@ interface TranslateKeys extends PhonologyTranslateKeys {
     videoFileTooLarge: string;
     invalidVideoFile: string;
     videoSizeExceeded: string;
+    failedToPlayVideo: string;
   };
   ACCEPTED: string;
   DENIED: string;

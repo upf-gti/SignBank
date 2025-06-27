@@ -4,6 +4,8 @@ TODOS
 - Add priority in examples and definitions
 - If gloss dont exist, go back to search
 - If validation runs, and fails, and user is in admin route, send him to search
+- Priority videos not working correctly
+
 
 ## How to change the app host
 

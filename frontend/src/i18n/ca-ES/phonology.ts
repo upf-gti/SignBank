@@ -3,7 +3,8 @@ import type { PhonologyTranslateKeys } from "../translateKeys"
 const phonology : PhonologyTranslateKeys = {
   phonology: {
     configurationChange: {
-      EMPTY: 'Buit',
+      EMPTY: '------- BUIT -------',
+      EMPTY_description: 'No hi ha canvis de configuració',
       BENDING: 'Flexió',
       BENDING_description: 'Els dits seleccionats es flexionen només en les articulacions proximals',
       CLOSING: 'Tancament',
@@ -44,7 +45,7 @@ const phonology : PhonologyTranslateKeys = {
       WIGGLING_description: 'Oscil·lació alterna dels dits seleccionats'
     },
     handConfiguration: {
-      EMPTY: 'Buit',
+      EMPTY: '------- BUIT -------',
       CONF_1: 'BABY_O',
       CONF_2: 'BABY_beak_closed',
       CONF_3: 'O',
@@ -98,7 +99,7 @@ const phonology : PhonologyTranslateKeys = {
       CONF_2A: 'ILY'
     },
     relationBetweenArticulators: {
-      EMPTY: 'Buit',
+      EMPTY: '------- BUIT -------',
       ABOVE: 'A dalt',
       ABOVE_BELOW: 'A dalt i a baix',
       AROUND: 'Al voltant',
@@ -112,7 +113,7 @@ const phonology : PhonologyTranslateKeys = {
       NEXT_TO: 'Al costat'
     },
     movementRelatedOrientation: {
-      EMPTY: 'Buit',
+      EMPTY: '------- BUIT -------',
       BACK: 'Darrere',
       BASE: 'Base',
       FINGER_TIPS: 'Puntes dels dits',
@@ -163,7 +164,7 @@ const phonology : PhonologyTranslateKeys = {
       RADIAL_OR_ULNAR: 'Radial | ulnar'
     },
     orientationRelatedToLocation: {
-      EMPTY: 'Buit',
+      EMPTY: '-------------',
       AO_FINGERS_CONTRA: 'Dits contra',
       AO_FINGERS_DOWN: 'Dits avall',
       AO_FINGERS_UP: 'Dits amunt',
@@ -193,7 +194,7 @@ const phonology : PhonologyTranslateKeys = {
       ULNAR: 'Ulnar'
     },
     orientationChange: {
-      EMPTY: 'Buit',
+      EMPTY: '-------------',
       EXTENSION: 'Extensió',
       EXTENSION_AND_PRONATION: 'Extensió + pronació',
       EXTENSION_TO_FLEXION: 'Extensió > flexió',
@@ -212,7 +213,7 @@ const phonology : PhonologyTranslateKeys = {
       SUPINATION_TO_EXTENSION: 'Supinació > extensió'
     },
     contactType: {
-      EMPTY: 'Buit',
+      EMPTY: '-------------',
       BRUSH: 'Fregament',
       CONTINUOUS: 'Continu',
       CONTINUOUS_TO_CONTINUOUS: 'Continu > continu',
@@ -228,7 +229,7 @@ const phonology : PhonologyTranslateKeys = {
       INITIAL_TO_FINAL: 'Inicial > final'
     },
     movementType: {
-      EMPTY: 'Buit',
+      EMPTY: '-------------',
       ARC: 'Arc',
       CIRCLE: 'Cercle',
       CROSS: 'Creu',
@@ -239,7 +240,7 @@ const phonology : PhonologyTranslateKeys = {
       STRAIGHT_TO_CIRCLE: 'Recte > cercle'
     },
     location: {
-      EMPTY: 'Buit',
+      EMPTY: '-------------',
       ARM: 'Braç',
       ARMPIT: 'Aixella',
       BACK: 'Esquena',
@@ -382,7 +383,7 @@ const phonology : PhonologyTranslateKeys = {
       BOTTOM_OR_CROTCH: 'Cul | entrecuix'
     },
     movementDirection: {
-      EMPTY: 'Buit',
+      EMPTY: '-------------',
       BACKWARDS: 'Enrere',
       BACKWARDS_AND_CONTRALATERAL: 'Enrere i contralateral',
       BACKWARDS_AND_DOWNWARDS: 'Enrere i avall',
