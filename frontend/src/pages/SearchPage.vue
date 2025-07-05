@@ -1,3 +1,102 @@
+
+<template>
+  <q-page 
+    :style-fn="(header: number, height: number) => {
+      pageHeight = height-header
+      return { height: `${height - header}px` };
+    }"
+    class="column q-pa-md no-wrap"
+  >
+    <!-- Top Row: Search Input and Buttons -->
+    <div class="row q-mb-md q-col-gutter-md justify-center items-center">
+      <div class="col-12 col-md-2">
+        <q-btn
+          :icon="showFilters ? 'expand_less' : 'expand_more'"
+          :label="showFilters ? translate('hideFilters') : translate('showFilters')"
+          color="primary"
+          outline
+          class="full-width"
+          @click="toggleFilters"
+        />
+      </div>
+      <div class="col-12 col-md-10">
+        <SearchInput
+          :model-value="searchQuery"
+          @update:model-value="searchQuery = $event"
+          @search="performSearch"
+        />
+      </div>
+    </div>
+
+    <!-- Main Content: Filters and Results -->
+    <div v-if="$q.screen.gt.md" class="row q-col-gutter-md col q-mt-md" :style="{ overflowY: 'auto' }">
+      <!-- Filters Sidebar -->
+      <div 
+        v-show="showFilters" 
+        class="col-12 col-md-3"
+        style="max-height: calc(100vh - 200px); overflow-y: auto;"
+      >
+        <SearchFilters
+          v-model:search-query="searchQuery"
+          v-model:selected-category="selectedLexicalCategory"
+          v-model:selected-hands="selectedHands"
+          v-model:filter-inputs="filterInputs"
+          @search="performSearch"
+          @clear="performSearch"
+        />
+      </div>
+
+      <!-- Search Results -->
+      <div class="col fit">
+        <SearchResults
+          :results="searchResults"
+          :loading="loading"
+          :page="page"
+          :per-page="perPage"
+          :show-details="showDetails"
+          @update:page="(newPage) => { page = newPage; performSearch(); }"
+          @update:show-details="showDetails = $event"
+          @view-details="viewGlossDetails"
+        />
+      </div>
+    </div>
+    <div v-else class="column q-col-gutter-md col q-mt-md no-wrap" :style="{ overflowY: 'auto' }">
+      <!-- Filters Sidebar -->
+      <div 
+        v-show="showFilters" 
+        class="col-12 col-md-3"
+      >
+        <SearchFilters
+          v-model:search-query="searchQuery"
+          v-model:selected-category="selectedLexicalCategory"
+          v-model:selected-hands="selectedHands"
+          v-model:filter-inputs="filterInputs"
+          @search="performSearch"
+          @clear="performSearch"
+        />
+      </div>
+
+      <!-- Search Results -->
+      <div class="col fit" 
+        v-show="!showFilters"
+        :style="{ overflowY: 'auto' }"
+        >
+        <SearchResults
+          :results="searchResults"
+          :loading="loading"
+          :page="page"
+          :per-page="perPage"
+          :show-details="showDetails"
+          @update:page="(newPage) => { page = newPage; performSearch(); }"
+          @update:show-details="showDetails = $event"
+          @view-details="viewGlossDetails"
+        />
+      </div>
+    </div>
+  </q-page>
+</template>
+
+
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { searchService, type SearchParams, type SearchResponse } from 'src/services/search.service';
@@ -147,103 +246,6 @@ onMounted(async () => {
   await performSearch();
 });
 </script>
-
-<template>
-  <q-page 
-    :style-fn="(header: number, height: number) => {
-      pageHeight = height-header
-      return { height: `${height - header}px` };
-    }"
-    class="column q-pa-md no-wrap"
-  >
-    <!-- Top Row: Search Input and Buttons -->
-    <div class="row q-mb-md q-col-gutter-md justify-center items-center">
-      <div class="col-12 col-md-2">
-        <q-btn
-          :icon="showFilters ? 'expand_less' : 'expand_more'"
-          :label="showFilters ? translate('hideFilters') : translate('showFilters')"
-          color="primary"
-          outline
-          class="full-width"
-          @click="toggleFilters"
-        />
-      </div>
-      <div class="col-12 col-md-10">
-        <SearchInput
-          :model-value="searchQuery"
-          @update:model-value="searchQuery = $event"
-          @search="performSearch"
-        />
-      </div>
-    </div>
-
-    <!-- Main Content: Filters and Results -->
-    <div v-if="$q.screen.gt.md" class="row q-col-gutter-md col q-mt-md" :style="{ overflowY: 'auto' }">
-      <!-- Filters Sidebar -->
-      <div 
-        v-show="showFilters" 
-        class="col-12 col-md-3"
-        style="max-height: calc(100vh - 200px); overflow-y: auto;"
-      >
-        <SearchFilters
-          v-model:search-query="searchQuery"
-          v-model:selected-category="selectedLexicalCategory"
-          v-model:selected-hands="selectedHands"
-          v-model:filter-inputs="filterInputs"
-          @search="performSearch"
-          @clear="performSearch"
-        />
-      </div>
-
-      <!-- Search Results -->
-      <div class="col">
-        <SearchResults
-          :results="searchResults"
-          :loading="loading"
-          :page="page"
-          :per-page="perPage"
-          :show-details="showDetails"
-          @update:page="(newPage) => { page = newPage; performSearch(); }"
-          @update:show-details="showDetails = $event"
-          @view-details="viewGlossDetails"
-        />
-      </div>
-    </div>
-    <div v-else class="column q-col-gutter-md col q-mt-md no-wrap" :style="{ overflowY: 'auto' }">
-      <!-- Filters Sidebar -->
-      <div 
-        v-show="showFilters" 
-        class="col-12 col-md-3"
-      >
-        <SearchFilters
-          v-model:search-query="searchQuery"
-          v-model:selected-category="selectedLexicalCategory"
-          v-model:selected-hands="selectedHands"
-          v-model:filter-inputs="filterInputs"
-          @search="performSearch"
-          @clear="performSearch"
-        />
-      </div>
-
-      <!-- Search Results -->
-      <div class="col" 
-      v-show="!showFilters"
-      :style="{ overflowY: 'auto' }"
-      >
-        <SearchResults
-          :results="searchResults"
-          :loading="loading"
-          :page="page"
-          :per-page="perPage"
-          :show-details="showDetails"
-          @update:page="(newPage) => { page = newPage; performSearch(); }"
-          @update:show-details="showDetails = $event"
-          @view-details="viewGlossDetails"
-        />
-      </div>
-    </div>
-  </q-page>
-</template>
 
 <style scoped>
 .q-expansion-item :deep(.q-item) {

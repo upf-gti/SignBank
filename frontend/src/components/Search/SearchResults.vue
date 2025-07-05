@@ -18,13 +18,13 @@
 
     <div
       v-else-if="hasResults"
-      class="row q-col-gutter-md" 
+      class="row q-col-gutter-md col" 
       :style="{ overflowY: 'auto'}"
     >
       <div
         v-for="hit in results?.hits"
         :key="hit.document.id"
-        class="col-12 col-lg-6"
+        class="col-12 col-lg-6 "
       >
         <ResultCard
           :document="hit.document"
