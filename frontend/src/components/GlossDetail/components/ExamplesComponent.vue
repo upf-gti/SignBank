@@ -38,54 +38,51 @@
               class="full-width q-px-md"
               style="background-color: transparent"
             >
-              <!-- Example Text -->
-              <q-input
-                v-if="isEditing"
-                v-model="example.example"
-                :label="translate('example')"
-                outlined
-                dense
-                class="col-12 q-mb-sm"
-              />
-              <div
-                v-else
-                class="text-h6 q-mb-md row justify-between items-center no-wrap"
-              >
-                <div class="col-7">
-                  {{ example.example }}
-                </div>
-                <div class="col-5">                  
-                  <video
-                    ref="videoPlayer"
-                    controls
-                    autoplay
-                    class="video-player"
-                    :src="getVideoUrl(example.exampleVideoURL)"
-                    muted
-                    @error="handleVideoError"
+              <div class="row no-wrap items-center">
+                <!-- Example Video -->
+                <div class="q-mb-md">
+                  <UploadVideoComponent
+                    v-if="isEditing && example.exampleVideoURL === ''"
+                    video-type="example"
+                    :custom-label="translate('addExampleVideo')"
+                    @upload-complete="(url) => uploadVideo(example, url)"
                   />
+                  <div
+                    v-else
+                    class="column q-gutter-sm"
+                  >
+                    <video
+                      ref="videoPlayer"
+                      controls
+                      autoplay
+                      class="video-player"
+                      :src="getVideoUrl(example.exampleVideoURL)"
+                      muted
+                      @error="handleVideoError"
+                    />
+                    <q-btn
+                      v-if="isEditing && example.exampleVideoURL"
+                      outline
+                      :label="translate('deleteExampleVideo')"
+                      icon="delete"
+                      @click="deleteExampleVideo(example)"
+                    />
                   </div>
                 </div>
-
-              <!-- Example Video -->
-              <div class="q-mb-md">
-                <UploadVideoComponent
-                  v-if="isEditing && example.exampleVideoURL === ''"
-                  video-type="example"
-                  :custom-label="translate('addExampleVideo')"
-                  @upload-complete="(url) => uploadVideo(example, url)"
+                <!-- Example Text -->
+                <q-input
+                  v-if="isEditing"
+                  v-model="example.example"
+                  :label="translate('example')"
+                  outlined
+                  dense
+                  class="col q-mb-sm q-ml-sm"
                 />
                 <div
                   v-else
-                  class="row justify-end q-gutter-sm"
+                  class="q-mb-md col q-ml-sm"
                 >
-                  <q-btn
-                    v-if="isEditing && example.exampleVideoURL"
-                    outline
-                    :label="translate('deleteExampleVideo')"
-                    icon="delete"
-                    @click="deleteExampleVideo(example)"
-                  />
+                  {{ example.example }}
                 </div>
               </div>
 
@@ -289,8 +286,8 @@ const deleteExampleVideo = async (example: Example) => {
 };
 
 
-const handleVideoError = (error: Error) => {
-  console.error('Error playing video:', error);
+const handleVideoError = (event: Event) => {
+  console.error('Error playing video:', event);
   $q.notify({
     type: 'negative',
     message: translate('errors.failedToPlayVideo')
@@ -302,7 +299,7 @@ const handleVideoError = (error: Error) => {
 <style scoped>
 .video-player{
   max-width: 100%;
-  max-height: calc(100vh - 150px);
+  max-height: 200px;
   width: auto;
   height: auto;
 }

@@ -44,50 +44,52 @@
               {{ definition.title }}
             </div>
 
-            <!-- Definition Text -->
-            <q-input
-              v-if="isEditing"
-              v-model="definition.definition"
-              :label="translate('definition')"
-              outlined            
-              dense
-              class="col-12 q-mb-sm"
-            />
-            <div
-              v-else
-              class="q-mb-md"
-            >
-              {{ definition.definition }}
-            </div>
-
-            <!-- Definition Video -->
-            <div class="q-mb-md">
-              <UploadVideoComponent
-                v-if="isEditing && !definition.videoDefinitionUrl"
-                video-type="definition"
-                :custom-label="translate('addDefinitionVideo')"
-                @upload-complete="(url) => uploadVideo(definition, url)"
+            <div class="row no-wrap items-center">
+              <!-- Definition Video -->
+              <div class="q-mb-md">
+                <UploadVideoComponent
+                  v-if="isEditing && !definition.videoDefinitionUrl"
+                  video-type="definition"
+                  :custom-label="translate('addDefinitionVideo')"
+                  @upload-complete="(url) => uploadVideo(definition, url)"
+                />
+                <div
+                  v-else
+                  class="column q-gutter-sm"
+                >
+                  <video
+                      ref="videoPlayer"
+                      controls
+                      autoplay
+                      class="video-player"
+                      :src="getVideoUrl(definition.videoDefinitionUrl || '')"
+                      muted
+                      @error="handleVideoError"
+                    />
+                  <q-btn
+                    v-if="isEditing && definition.videoDefinitionUrl"
+                    outline
+                    :label="translate('deleteDefinitionVideo')"
+                    icon="delete"
+                    @click="deleteDefinitionVideo(definition)"
+                  />
+                </div>
+              </div>
+              <!-- Definition Text -->
+              <q-input
+                v-if="isEditing"
+                v-model="definition.definition"
+                :label="translate('definition')"
+                outlined            
+                dense
+                class="col q-mb-sm q-ml-sm"
               />
               <div
                 v-else
-                class="row justify-end q-gutter-sm"
+                class="q-mb-md col q-ml-sm"
               >
-                <q-btn
-                  v-if="definition.videoDefinitionUrl"
-                  outline
-                  :label="translate('seeDefinitionVideo')"
-                  icon="play_arrow"
-                  :disable="!definition.videoDefinitionUrl"
-                  @click="openVideo(definition)"
-                />
-                <q-btn
-                  v-if="isEditing && definition.videoDefinitionUrl"
-                  outline
-                  :label="translate('deleteDefinitionVideo')"
-                  icon="delete"
-                  @click="deleteDefinitionVideo(definition)"
-                />
-              </div>
+                {{ definition.definition }}
+              </div>              
             </div>
 
             <!-- Definition Translations -->
@@ -181,6 +183,7 @@ import { api } from 'src/services/api';
 import { useQuasar } from 'quasar';
 import SenseTranslationsComponent from './SenseTranslationsComponent.vue';
 import DefinitionTranslationsComponent from './DefinitionTranslationsComponent.vue';
+import { getVideoUrl } from 'src/utils/videoUrl';
 
 const $q = useQuasar()
 const loading = ref(false)
@@ -394,10 +397,25 @@ const deleteDefinitionVideo = async (definition: Definition) => {
     });
   }
 };
+
+const handleVideoError = (error: Error) => {
+  console.error('Error playing video:', error);
+  $q.notify({
+    type: 'negative',
+    message: translate('errors.failedToPlayVideo')
+  });
+};
 </script>
 
 <style scoped>
 .q-item {
   min-height: 40px;
+}
+
+.video-player{
+  max-width: 100%;
+  max-height: 200px;
+  width: auto;
+  height: auto;
 }
 </style>
