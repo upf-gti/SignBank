@@ -16,6 +16,10 @@
       @accept-request="acceptRequest"
       @decline-request="declineRequest"
       @submit-request="submitRequest"
+    />    
+    <MainContent
+      v-if="!editMode && selectedSense"
+      :selected-sense="selectedSense"
     />
     <SenseSelector
       v-model="selectedSenseId"
@@ -23,10 +27,6 @@
       :edit-mode="editMode"
       :gloss-data="glossData"
       @update:gloss-data="handleGlossDataUpdate"
-    />
-    <MainContent
-      v-if="!editMode && selectedSense"
-      :selected-sense="selectedSense"
     />
     <MoreContentComponent
       v-if="glossData.senses.length > 0"

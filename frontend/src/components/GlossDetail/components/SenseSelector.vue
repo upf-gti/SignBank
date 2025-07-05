@@ -1,13 +1,19 @@
 <template>
   <q-card-section>
+    <div class="column">
+      <div class="text-h6">
+        {{ translate('senses') }}
+      </div>
     <div class="row">
       <q-btn-toggle
         v-model="selectedSenseId"
         :options="senses.map((sense) => ({
           label: (sense.senseTitle || glossData.gloss) + ( sense.senseTitle ? '' : ' (' + translate(sense.lexicalCategory) + ')' ),
           value: sense.id,
+          class: 'text-italic'
         }))"
-      />
+      >
+      </q-btn-toggle>
       <q-btn
         v-if="editMode && !addSense"
         icon="add"
@@ -213,6 +219,7 @@
         </q-card>
       </q-dialog>
     </div>
+  </div>
   </q-card-section>
 </template>
 
@@ -440,8 +447,6 @@ const handleDeleteConfirm = async () => {
     }
   }
 }
-
-
 
 const openEditSenses = () => {
   editSensesDialog.value = true
