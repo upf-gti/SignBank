@@ -77,7 +77,7 @@ import type { GlossData } from 'src/types/models';
 import ExamplesComponent from './ExamplesComponent.vue';
 import VideosComponent from './VideosComponent.vue';
 import RelatedGlosses from './RelatedGlosses.vue';
-import DefinitionsComponent from './DefinitionsComponent.vue';
+import DefinitionsComponent from './DefinitionsComponent/DefinitionsComponent.vue';
 
 const selectedContent = ref<string>('definitions')
 const sense = defineModel<Sense>({ required: true })
@@ -96,10 +96,7 @@ const updateGlossData = (glossData: GlossData) => {
 
 const handleTabChange = () => {
   setTimeout(() => {
-    window.scrollTo({
-      top: document.documentElement.scrollHeight,
-      behavior: 'smooth'
-    });
+    
   }, 100);
 }
 </script>

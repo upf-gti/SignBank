@@ -41,7 +41,7 @@
         />
       </div>
     </div>
-    <div class="row">
+    <div class="row q-gutter-sm">
       <q-btn
         v-if="allowEdit && !editMode && userStore.isAdmin"
         color="primary"

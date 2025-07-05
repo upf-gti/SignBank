@@ -22,96 +22,35 @@
         />
       </div>
     </div>
-    <q-list>
-      <q-item
+    <q-list 
+      v-if="!isMobile"
+      >
+        <DefinitionCardDesktop
+          v-for="(definition, index) in definitions.sort((a, b) => a.priority - b.priority)"
+          :key="definition.id || index"
+          :definition="definition"
+          :allow-edit="allowEdit"
+          @save="saveDefinition"
+          @delete="deleteDefinition"
+          @upload-video="uploadVideo"
+          @delete-video="deleteDefinitionVideo"
+          @video-error="handleVideoError"
+          @update-translations="updateDefinitionTranslations"
+        />
+      </q-list>
+      <q-list v-else>
+      <DefinitionCardMobile
         v-for="(definition, index) in definitions.sort((a, b) => a.priority - b.priority)"
         :key="definition.id || index"
-        class="column q-mb-lg"
-      >
-        <EditableModule
-          :allow-edit="allowEdit"
-          :show-delete="true"
-          :custom-edit-label="translate('editDefinition')"
-          :custom-delete-label="translate('deleteDefinition')"
-          @save="() => saveDefinition(definition)"
-          @delete="() => deleteDefinition(definition)"
-        >
-          <template #default="{ isEditing }">
-            <!-- Definition Title -->
-            <q-input
-              v-if="isEditing"
-              v-model="definition.title"
-              :label="translate('definitionTitle')"
-              outlined
-              dense
-              class="col-12 q-mb-sm"
-            />
-            <div
-              v-else
-              class="q-mb-md text-subtitle1"
-            >
-              {{ definition.title }}
-            </div>
-
-            <div class="row no-wrap items-center">
-              <!-- Definition Video -->
-              <div class="q-mb-md">
-                <UploadVideoComponent
-                  v-if="isEditing && !definition.videoDefinitionUrl"
-                  video-type="definition"
-                  :custom-label="translate('addDefinitionVideo')"
-                  @upload-complete="(url) => uploadVideo(definition, url)"
-                />
-                <div
-                  v-else
-                  class="column q-gutter-sm"
-                >
-                  <video
-                      v-if="definition.videoDefinitionUrl"
-                      ref="videoPlayer"
-                      controls
-                      autoplay
-                      class="video-player"
-                      :src="getVideoUrl(definition.videoDefinitionUrl || '')"
-                      muted
-                      @error="handleVideoError"
-                    />
-                  <q-btn
-                    v-if="isEditing && definition.videoDefinitionUrl"
-                    outline
-                    :label="translate('deleteDefinitionVideo')"
-                    icon="delete"
-                    @click="deleteDefinitionVideo(definition)"
-                  />
-                </div>
-              </div>
-              <!-- Definition Text -->
-              <q-input
-                v-if="isEditing"
-                v-model="definition.definition"
-                :label="translate('definition')"
-                outlined            
-                dense
-                class="col q-mb-sm q-ml-sm"
-              />
-              <div
-                v-else
-                class="q-mb-md col q-ml-sm"
-              >
-                {{ definition.definition }}
-              </div>              
-            </div>
-
-            <!-- Definition Translations -->
-            <DefinitionTranslationsComponent
-              :allow-edit="allowEdit"
-              :definition-id="definition.id || ''"
-              :translations="definition.definitionTranslations"
-              @update:translations="(translations) => definition.definitionTranslations = translations"
-            />
-          </template>
-        </EditableModule>
-      </q-item>
+        :definition="definition"
+        :allow-edit="allowEdit"
+        @save="saveDefinition"
+        @delete="deleteDefinition"
+        @upload-video="uploadVideo"
+        @delete-video="deleteDefinitionVideo"
+        @video-error="handleVideoError"
+        @update-translations="updateDefinitionTranslations"
+      />
     </q-list>
     <!-- Translations of the sense -->
     <div class="column">
@@ -195,18 +134,16 @@
 </template>
 
 <script setup lang="ts">
-import { Sense, Definition, GlossData } from 'src/types/models';
+import { Sense, Definition, GlossData, DefinitionTranslation } from 'src/types/models';
 import translate from 'src/utils/translate';
-import EditableModule from 'src/components/Shared/EditableModule.vue'
-import UploadVideoComponent from 'src/components/UploadVideoComponent.vue';
 import VideoPlayerPopup from 'src/components/VideoPlayerPopup.vue';
-import { ref, computed, nextTick } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { api } from 'src/services/api';
 import { useQuasar } from 'quasar';
-import SenseTranslationsComponent from './SenseTranslationsComponent.vue';
-import DefinitionTranslationsComponent from './DefinitionTranslationsComponent.vue';
+import SenseTranslationsComponent from '../SenseTranslationsComponent.vue';
+import DefinitionCardDesktop from './DefinitionCardDesktop.vue';
+import DefinitionCardMobile from './DefinitionCardMobile.vue';
 import CreateDefinitionDialog from './CreateDefinitionDialog.vue';
-import { getVideoUrl } from 'src/utils/videoUrl';
 
 const $q = useQuasar()
 const loading = ref(false)
@@ -216,6 +153,21 @@ const selectedVideoUrl = ref('')
 const selectedDefinition = ref<Definition | null>(null)
 const sortDefinitionsDialog = ref(false)
 const localDefinitions = ref<Definition[]>([])
+const isMobile = ref(false)
+
+// Screen size detection
+const checkScreenSize = () => {
+  isMobile.value = window.innerWidth <= 768;
+};
+
+onMounted(() => {
+  checkScreenSize();
+  window.addEventListener('resize', checkScreenSize);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkScreenSize);
+});
 
 const props = defineProps<{
   allowEdit: boolean;
@@ -420,6 +372,10 @@ const cancelSortDefinitions = () => {
   localDefinitions.value = []
 }
 
+const updateDefinitionTranslations = (definition: Definition, translations: DefinitionTranslation[]) => {
+  definition.definitionTranslations = translations;
+};
+
 const saveSortDefinitions = async () => {
   try {
     loading.value = true
@@ -477,14 +433,5 @@ const saveSortDefinitions = async () => {
 </script>
 
 <style scoped>
-.q-item {
-  min-height: 40px;
-}
-
-.video-player{
-  max-width: 100%;
-  max-height: 200px;
-  width: auto;
-  height: auto;
-}
+/* Styles are now handled in DefinitionCard component */
 </style>

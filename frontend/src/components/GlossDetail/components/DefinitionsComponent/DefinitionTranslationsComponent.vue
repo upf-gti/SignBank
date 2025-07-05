@@ -63,7 +63,7 @@
 <script setup lang="ts">
 import { DefinitionTranslation, Language, Sense, Definition } from 'src/types/models';
 import translate from 'src/utils/translate';
-import LanguageSelector from './LanguageSelector.vue'
+import LanguageSelector from '../LanguageSelector.vue'
 import EditableModule from 'src/components/Shared/EditableModule.vue'
 import { ref } from 'vue';
 import { api } from 'src/services/api';
