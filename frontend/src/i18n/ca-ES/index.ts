@@ -350,6 +350,7 @@ const translations: TranslateKeys = {
   hideFilters: 'Amagar filtres',
   showFilters: 'Mostrar filtres',
   videoNotSupported: 'El vídeo no és compatible amb el navegador.',
+  activeHand: 'Mà activa',
 };
 
 export default translations; 

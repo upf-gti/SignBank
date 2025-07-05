@@ -26,8 +26,7 @@
           v-else
           v-model="localData.hands"
           :options="[
-            { label: translate('right'), value: 'RIGHT' },
-            { label: translate('left'), value: 'LEFT' },
+            { label: translate('activeHand'), value: 'RIGHT' },
             { label: translate('both'), value: 'BOTH' }
           ]"
           spread

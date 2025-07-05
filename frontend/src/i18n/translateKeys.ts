@@ -797,6 +797,7 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   hideFilters: string;
   showFilters: string;
   videoNotSupported: string;
+  activeHand: string;
 }
 
 export default TranslateKeys;
