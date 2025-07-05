@@ -9,7 +9,17 @@
       </div>
     </template>
     <div
-      v-for="(translation, index) in translations.sort((a, b) => a.isNew ? -1 : b.isNew ? 1 : 0)"
+      v-for="(translation, index) in translations.sort((a, b) => {
+        // First sort by isNew (new items first)
+        if (a.isNew && !b.isNew) return -1;
+        if (!a.isNew && b.isNew) return 1;
+        
+        // Then sort by language: Catalan, Spanish, English
+        const languageOrder: Record<string, number> = { 'CATALAN': 1, 'SPANISH': 2, 'ENGLISH': 3 };
+        const aOrder = languageOrder[a.language] || 999;
+        const bOrder = languageOrder[b.language] || 999;
+        return aOrder - bOrder;
+      })"
       :key="translation.id || index"
       class="q-mb-sm"
     >
@@ -31,12 +41,11 @@
                 v-model="translation.language"
                 class="col"
               />
-              <div
+              <q-chip
                 v-else
-                class="text-subtitle2"
               >
                 {{ translate(translation.language) }}
-              </div>
+              </q-chip>
             </div>
 
             <q-input
