@@ -101,7 +101,21 @@ watch(() => props.sense, (newSense) => {
 }, { deep: true });
 
 const senseTranslations = computed(() => {
-  return localSense.value.senseTranslations || [];
+  const translations = localSense.value.senseTranslations || [];
+  
+  // Sort translations: Catalan first, then Spanish, then English, then others
+  return translations.sort((a, b) => {
+    const languageOrder = {
+      'CATALAN': 1,
+      'SPANISH': 2,
+      'ENGLISH': 3
+    };
+    
+    const orderA = languageOrder[a.language as keyof typeof languageOrder] || 4;
+    const orderB = languageOrder[b.language as keyof typeof languageOrder] || 4;
+    
+    return orderA - orderB;
+  });
 });
 
 const addTranslation = () => {
