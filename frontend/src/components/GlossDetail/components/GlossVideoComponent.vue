@@ -137,14 +137,13 @@ const getVideoIndex = (videoId: string) => {
 };
 
 const uploadVideo = (url: string) => {
-  const newSignVideo = {
-    ...localSignVideo.value,
-  }
-  const videoToUpdate = newSignVideo.videos.find(video => video.id === selectedVideo.value)
+  // Update the local state first
+  const videoToUpdate = localSignVideo.value.videos?.find(video => video.id === selectedVideo.value)
   if (videoToUpdate) {
     videoToUpdate.url = url
   }
-  emit('update:signVideo', newSignVideo)
+  // Then emit the updated state
+  emit('update:signVideo', localSignVideo.value)
 }
 
 const addAngle = () => {
