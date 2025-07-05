@@ -26,7 +26,7 @@ export class DefinitionsService {
         title: data.title || '',
         definition: data.definition,
         videoDefinitionUrl: data.videoDefinitionUrl,
-        priority: data.priority || 0,
+        priority: data.priority || 99,
         senseId: senseId
       },
       include: {

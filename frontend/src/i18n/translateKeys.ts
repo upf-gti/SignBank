@@ -649,6 +649,9 @@ interface TranslateKeys extends PhonologyTranslateKeys {
     invalidVideoFile: string;
     videoSizeExceeded: string;
     failedToPlayVideo: string;
+    failedToCreateDefinition: string;
+    failedToSortDefinitions: string;
+    unsupportedVideoFormat: string;
   };
   ACCEPTED: string;
   DENIED: string;
@@ -802,6 +805,8 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   showFilters: string;
   videoNotSupported: string;
   activeHand: string;
+  create: string;
+  optional: string;
 }
 
 export default TranslateKeys;

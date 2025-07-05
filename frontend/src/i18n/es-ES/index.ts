@@ -168,6 +168,13 @@ const translations: TranslateKeys = {
     failedToUploadVideo: 'Error al subir el vídeo',
     failedToArchiveGloss: 'Error al archivar la glosa',
     failedToUnarchiveGloss: 'Error al desarchivar la glosa',
+    failedToCreateDefinition: 'Error al crear la definición',
+    failedToPlayVideo: 'Error al reproducir el vídeo',
+    videoFileTooLarge: 'El archivo de vídeo es demasiado grande. El tamaño máximo es 20MB.',
+    invalidVideoFile: 'Por favor seleccione un archivo de vídeo válido.',
+    videoSizeExceeded: 'El tamaño del archivo de vídeo debe ser menor a 20MB',
+    unsupportedVideoFormat: 'Por favor, utilice un formato MP4, WebM o OGG.',
+    failedToSortDefinitions: 'Error al ordenar las definiciones',
   },
   ACCEPTED: 'Aceptado',
   DENIED: 'Denegado',
@@ -278,6 +285,12 @@ const translations: TranslateKeys = {
   confirmUnarchive: 'Confirmar Desarchivar',
   unarchiveGlossConfirmation: '¿Estás seguro de que quieres desarchivar esta glosa? Estará disponible para búsqueda nuevamente.',
   glossUnarchivedSuccessfully: 'Glosa desarchivada exitosamente',
+  optional: 'Opcional',
+  create: 'Crear',
+  startSearching: 'Iniciar búsqueda',
+  repeatedMovement: 'Movimiento repetido',
+  deleteExampleVideo: 'Eliminar vídeo de ejemplo',
+  errorSavingVideo: 'Error al guardar el vídeo',
 };
 
 export default translations; 

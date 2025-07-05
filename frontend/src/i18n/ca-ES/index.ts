@@ -177,7 +177,8 @@ const translations: TranslateKeys = {
     invalidVideoFile: 'Si us plau, seleccioneu un vídeo vàlid.',
     videoSizeExceeded: 'El vídeo és massa gran. La mida màxima és de {maxSize}MB.',
     unsupportedVideoFormat: 'Si us plau, utilitzeu format MP4, WebM o OGG.',
-    failedToPlayVideo: 'No s\'ha pogut reproduir el vídeo'
+    failedToPlayVideo: 'No s\'ha pogut reproduir el vídeo',
+    failedToCreateDefinition: 'No s\'ha pogut crear la definició'
   },
   ACCEPTED: 'Acceptat',
   exampleUpdatedSuccessfully: 'Exemple actualitzat correctament',
@@ -355,6 +356,8 @@ const translations: TranslateKeys = {
   senseCreatedSuccessfully: 'Accepció creada correctament',
   sortDefinitions: 'Ordenar definicions',
   definitionsSortedSuccessfully: 'Definicions ordenades correctament',
+  create: 'Crear',
+  optional: 'Opcional',
 };
 
 export default translations; 

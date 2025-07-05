@@ -34,7 +34,6 @@
           :custom-edit-label="translate('editDefinition')"
           :custom-delete-label="translate('deleteDefinition')"
           @save="() => saveDefinition(definition)"
-          @cancel="cancelDefinitionEdit"
           @delete="() => deleteDefinition(definition)"
         >
           <template #default="{ isEditing }">
@@ -113,58 +112,6 @@
           </template>
         </EditableModule>
       </q-item>
-      <q-item
-        v-if="displayCreateNewDefinition"
-        key="newDefinition"
-        class="column q-mb-lg"
-        ref="newDefinitionItem"
-      >
-        <EditableModule
-          :allow-edit="allowEdit"
-          :initial-edit-state="true"
-          @save="createNewDefinition"
-          @cancel="displayCreateNewDefinition = false"
-        >
-          <template #default="{ isEditing }">
-            <!-- Definition Title -->
-            <q-input
-              v-if="isEditing"
-              v-model="newDefinition.title"
-              :label="translate('definitionTitle')"
-              outlined
-              dense
-              class="col-12 q-mb-sm"
-            />
-
-            <!-- Definition Text -->
-            <q-input
-              v-if="isEditing"
-              v-model="newDefinition.definition"
-              :label="translate('definition')"
-              outlined            
-              dense
-              class="col-12 q-mb-sm"
-              ref="newDefinitionInput"
-            />
-            <div
-              v-else
-              class="q-mb-md"
-            >
-              {{ newDefinition.definition }}
-            </div>
-
-            <!-- Definition Video for new definition -->
-            <div class="q-mb-md">
-              <UploadVideoComponent
-                v-if="isEditing && !newDefinition.videoDefinitionUrl"
-                video-type="definition"
-                :custom-label="translate('addDefinitionVideo')"
-                @upload-complete="(url) => uploadVideo(newDefinition, url)"
-              />
-            </div>
-          </template>
-        </EditableModule>
-      </q-item>
     </q-list>
     <!-- Translations of the sense -->
     <div class="column">
@@ -238,6 +185,13 @@
       </q-card-actions>
     </q-card>
   </q-dialog>
+
+  <!-- Create Definition Dialog -->
+  <CreateDefinitionDialog
+    v-model="showCreateDefinitionDialog"
+    :sense-id="sense?.id || ''"
+    @definition-created="handleDefinitionCreated"
+  />
 </template>
 
 <script setup lang="ts">
@@ -251,30 +205,17 @@ import { api } from 'src/services/api';
 import { useQuasar } from 'quasar';
 import SenseTranslationsComponent from './SenseTranslationsComponent.vue';
 import DefinitionTranslationsComponent from './DefinitionTranslationsComponent.vue';
+import CreateDefinitionDialog from './CreateDefinitionDialog.vue';
 import { getVideoUrl } from 'src/utils/videoUrl';
 
 const $q = useQuasar()
 const loading = ref(false)
-const displayCreateNewDefinition = ref(false)
+const showCreateDefinitionDialog = ref(false)
 const showVideoDialog = ref(false)
 const selectedVideoUrl = ref('')
 const selectedDefinition = ref<Definition | null>(null)
 const sortDefinitionsDialog = ref(false)
 const localDefinitions = ref<Definition[]>([])
-const newDefinitionInput = ref<HTMLInputElement>()
-const newDefinitionItem = ref<HTMLElement>()
-
-const newDefinition = ref<Definition>({
-  id: '',
-  title: '',
-  definition: '',
-  videoDefinitionUrl: '',
-  priority: 0,
-  senseId: '',
-  definitionTranslations: [],
-  isEditing: true,
-  isNew: true,
-})
 
 const props = defineProps<{
   allowEdit: boolean;
@@ -289,36 +230,38 @@ const emit = defineEmits<{
 const definitions = computed(() => props.sense?.definitions || []);
 
 const addDefinition = () => {
-  displayCreateNewDefinition.value = true;
-  newDefinition.value = {
-    id: '',
-    title: '',
-    definition: '',
-    videoDefinitionUrl: '',
-    priority: 0,
-    senseId: props.sense?.id || '',
-    definitionTranslations: [],
-    isEditing: true,
-    isNew: true,
-  };
-  
-  // Focus on the definition input and scroll to it after the next tick to ensure the DOM is updated
-  nextTick(() => {
-    if (newDefinitionItem.value) {
-      // Scroll to the new definition form with smooth behavior
-      newDefinitionItem.value.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'center' 
-      });
-    }
+  showCreateDefinitionDialog.value = true;
+}
+
+const handleDefinitionCreated = async (definition: Definition) => {
+  if (!props.sense?.id) return;
+
+  try {
+    loading.value = true;
+
+    const createData: { title?: string, definition: string, videoDefinitionUrl?: string } = {
+      title: definition.title,
+      definition: definition.definition,
+    };
     
-    // Focus on the definition input after a short delay to ensure scrolling is complete
-    setTimeout(() => {
-      if (newDefinitionInput.value) {
-        newDefinitionInput.value.focus();
-      }
-    }, 300);
-  });
+    if (definition.videoDefinitionUrl) {
+      createData.videoDefinitionUrl = definition.videoDefinitionUrl;
+    }
+
+    const response = await api.definitions.create(props.sense.id, createData);
+
+    if (response.data && isGlossData(response.data)) {
+      emit('update:glossData', response.data);
+    }
+  } catch (error) {
+    console.error('Error creating new definition:', error);
+    $q.notify({ 
+      type: 'negative',
+      message: translate('errors.failedToCreateDefinition')
+    });
+  } finally {
+    loading.value = false;
+  }
 }
 
 const isGlossData = (data: any): data is GlossData => {
@@ -366,53 +309,7 @@ const saveDefinition = async (definition: Definition) => {
   }
 }
 
-const createNewDefinition = async () => {
-  if (!props.sense?.id) return;
 
-  try {
-    loading.value = true;
-
-    const createData: { title?: string, definition: string, videoDefinitionUrl?: string } = {
-      title: newDefinition.value.title,
-      definition: newDefinition.value.definition,
-    };
-    
-    if (newDefinition.value.videoDefinitionUrl) {
-      createData.videoDefinitionUrl = newDefinition.value.videoDefinitionUrl;
-    }
-
-    const response = await api.definitions.create(props.sense.id, createData);
-
-    if (response.data && isGlossData(response.data)) {
-      $q.notify({
-        type: 'positive',
-        message: translate('definitionCreatedSuccessfully')
-      });
-      emit('update:glossData', response.data);
-
-      displayCreateNewDefinition.value = false;
-      newDefinition.value = {
-        id: '',
-        title: '',
-        definition: '',
-        videoDefinitionUrl: '',
-        priority: 0,
-        senseId: props.sense.id,
-        definitionTranslations: [],
-        isEditing: true,
-        isNew: true,
-      }
-    }
-  } catch (error) {
-    console.error('Error creating new definition:', error);
-    $q.notify({ 
-      type: 'negative',
-      message: translate('errors.failedToCreateDefinition')
-    });
-  } finally {
-    loading.value = false;
-  }
-}
 
 const deleteDefinition = async (definition: Definition) => {
   if (!props.sense?.id) return;
@@ -437,9 +334,7 @@ const deleteDefinition = async (definition: Definition) => {
   }
 }
 
-const cancelDefinitionEdit = () => {
-  displayCreateNewDefinition.value = false;
-}
+
 
 const uploadVideo = async (definition: Definition, url: string) => {
   try {

@@ -6,6 +6,7 @@ TODOS
 - If validation runs, and fails, and user is in admin route, send him to search
 - Priority videos not working correctly
 - Pantalla de gestion de entradas
+- Click on the entire gloss seearch result
 
 
 

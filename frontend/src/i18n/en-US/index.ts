@@ -184,7 +184,9 @@ const translations: TranslateKeys = {
     accessDenied: 'Access denied',
     videoFileTooLarge: 'Video file is too large. Maximum size is 20MB.',
     invalidVideoFile: 'Please select a valid video file.',
-    videoSizeExceeded: 'Video file size must be less than 20MB'
+    videoSizeExceeded: 'Video file size must be less than 20MB',
+    failedToCreateDefinition: 'Failed to create definition',
+    failedToPlayVideo: 'Failed to play video'
   },
   sendRequest: 'Send Request',
   requestSubmittedSuccessfully: 'Request submitted successfully',
@@ -287,6 +289,8 @@ const translations: TranslateKeys = {
   confirmUnarchive: 'Confirm Unarchive',
   unarchiveGlossConfirmation: 'Are you sure you want to unarchive this gloss? It will be available for search again.',
   glossUnarchivedSuccessfully: 'Gloss unarchived successfully',
+  optional: 'Optional',
+  create: 'Create',
 };
 
 export default translations; 
