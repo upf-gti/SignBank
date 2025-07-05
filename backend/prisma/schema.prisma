@@ -612,6 +612,7 @@ model Definition {
     videoDefinitionUrl     String?
     sense                  Sense                   @relation(fields: [senseId], references: [id], onDelete: Cascade)
     senseId                String
+    priority               Int                     @default(0)
 }
 
 model Example {

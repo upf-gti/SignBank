@@ -2,19 +2,29 @@
   <q-card-section class="column">
     <div class="text-h5 q-mb-md row justify-between items-center">
       {{ translate('definitions') }}
-      <q-btn
-        v-if="allowEdit"
-        unelevated
-        outline
-        color="primary"
-        :label="translate('addDefinition')"
-        icon="add"
-        @click="addDefinition"
-      />
+      <div class="row q-gutter-sm">
+        <q-btn
+          v-if="allowEdit"
+          unelevated
+          outline
+          color="primary"
+          :label="translate('addDefinition')"
+          icon="add"
+          @click="addDefinition"
+        />
+        <q-btn
+          v-if="allowEdit && definitions.length > 1"
+          unelevated
+          outline
+          :label="translate('sortDefinitions')"
+          icon="sort"
+          @click="openSortDefinitions"
+        />
+      </div>
     </div>
     <q-list>
       <q-item
-        v-for="(definition, index) in definitions"
+        v-for="(definition, index) in definitions.sort((a, b) => a.priority - b.priority)"
         :key="definition.id || index"
         class="column q-mb-lg"
       >
@@ -58,6 +68,7 @@
                   class="column q-gutter-sm"
                 >
                   <video
+                      v-if="definition.videoDefinitionUrl"
                       ref="videoPlayer"
                       controls
                       autoplay
@@ -106,6 +117,7 @@
         v-if="displayCreateNewDefinition"
         key="newDefinition"
         class="column q-mb-lg"
+        ref="newDefinitionItem"
       >
         <EditableModule
           :allow-edit="allowEdit"
@@ -132,6 +144,7 @@
               outlined            
               dense
               class="col-12 q-mb-sm"
+              ref="newDefinitionInput"
             />
             <div
               v-else
@@ -170,6 +183,61 @@
     :title="selectedDefinition?.title || translate('definitionVideo')"
     muted
   />
+
+  <!-- Sort Definitions Dialog -->
+  <q-dialog v-model="sortDefinitionsDialog">
+    <q-card style="min-width: 500px">
+      <q-card-section>
+        <div class="text-h6">
+          {{ translate('sortDefinitions') }}
+        </div>
+      </q-card-section>
+
+      <q-card-section>
+        <div
+          v-for="(definition, index) in localDefinitions"
+          :key="definition.id || index"
+          class="row items-center q-mb-sm"
+        >
+          <div class="col">
+            <div class="text-bold">{{ definition.title }}</div>
+            <div >{{ definition.definition }}</div>
+          </div>
+          <div class="col-auto">
+            <q-btn
+              flat
+              round
+              dense
+              icon="arrow_upward"
+              :disable="index === 0"
+              @click="moveDefinition(index, 'up')"
+            />
+            <q-btn
+              flat
+              round
+              dense
+              icon="arrow_downward"
+              :disable="index === localDefinitions.length - 1"
+              @click="moveDefinition(index, 'down')"
+            />
+          </div>
+        </div>
+      </q-card-section>
+
+      <q-card-actions align="right">
+        <q-btn
+          flat
+          :label="translate('cancel')"
+          @click="cancelSortDefinitions"
+        />
+        <q-btn
+          flat
+          :label="translate('save')"
+          @click="saveSortDefinitions"
+        />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup lang="ts">
@@ -178,7 +246,7 @@ import translate from 'src/utils/translate';
 import EditableModule from 'src/components/Shared/EditableModule.vue'
 import UploadVideoComponent from 'src/components/UploadVideoComponent.vue';
 import VideoPlayerPopup from 'src/components/VideoPlayerPopup.vue';
-import { ref, computed } from 'vue';
+import { ref, computed, nextTick } from 'vue';
 import { api } from 'src/services/api';
 import { useQuasar } from 'quasar';
 import SenseTranslationsComponent from './SenseTranslationsComponent.vue';
@@ -191,12 +259,17 @@ const displayCreateNewDefinition = ref(false)
 const showVideoDialog = ref(false)
 const selectedVideoUrl = ref('')
 const selectedDefinition = ref<Definition | null>(null)
+const sortDefinitionsDialog = ref(false)
+const localDefinitions = ref<Definition[]>([])
+const newDefinitionInput = ref<HTMLInputElement>()
+const newDefinitionItem = ref<HTMLElement>()
 
 const newDefinition = ref<Definition>({
   id: '',
   title: '',
   definition: '',
   videoDefinitionUrl: '',
+  priority: 0,
   senseId: '',
   definitionTranslations: [],
   isEditing: true,
@@ -222,11 +295,30 @@ const addDefinition = () => {
     title: '',
     definition: '',
     videoDefinitionUrl: '',
+    priority: 0,
     senseId: props.sense?.id || '',
     definitionTranslations: [],
     isEditing: true,
     isNew: true,
   };
+  
+  // Focus on the definition input and scroll to it after the next tick to ensure the DOM is updated
+  nextTick(() => {
+    if (newDefinitionItem.value) {
+      // Scroll to the new definition form with smooth behavior
+      newDefinitionItem.value.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center' 
+      });
+    }
+    
+    // Focus on the definition input after a short delay to ensure scrolling is complete
+    setTimeout(() => {
+      if (newDefinitionInput.value) {
+        newDefinitionInput.value.focus();
+      }
+    }, 300);
+  });
 }
 
 const isGlossData = (data: any): data is GlossData => {
@@ -304,6 +396,7 @@ const createNewDefinition = async () => {
         title: '',
         definition: '',
         videoDefinitionUrl: '',
+        priority: 0,
         senseId: props.sense.id,
         definitionTranslations: [],
         isEditing: true,
@@ -398,13 +491,94 @@ const deleteDefinitionVideo = async (definition: Definition) => {
   }
 };
 
-const handleVideoError = (error: Error) => {
-  console.error('Error playing video:', error);
+const handleVideoError = (event: Event) => {
+  console.error('Error playing video:', event);
   $q.notify({
     type: 'negative',
     message: translate('errors.failedToPlayVideo')
   });
 };
+
+const openSortDefinitions = () => {
+  localDefinitions.value = [...definitions.value]
+  sortDefinitionsDialog.value = true
+}
+
+const moveDefinition = (index: number, direction: 'up' | 'down') => {
+  const newIndex = direction === 'up' ? index - 1 : index + 1
+  if ((direction === 'up' && index > 0) || 
+      (direction === 'down' && index < localDefinitions.value.length - 1)) {
+    
+    const definitionToMove = localDefinitions.value[index]
+    const otherDefinition = localDefinitions.value[newIndex]
+    
+    if (!definitionToMove || !otherDefinition) return
+
+    // Swap the definitions
+    localDefinitions.value[index] = otherDefinition
+    localDefinitions.value[newIndex] = definitionToMove
+  }
+}
+
+const cancelSortDefinitions = () => {
+  sortDefinitionsDialog.value = false
+  localDefinitions.value = []
+}
+
+const saveSortDefinitions = async () => {
+  try {
+    loading.value = true
+    
+    if (!props.sense?.id) {
+      throw new Error('Sense ID is required')
+    }
+    
+    // Update each definition with their new priority based on position
+    const updatePromises = localDefinitions.value.map((definition, index) => {
+      const updateData: { title?: string, definition?: string, videoDefinitionUrl?: string, priority?: number } = {
+        title: definition.title,
+        definition: definition.definition,
+        priority: index // Assign sequential priorities: 0, 1, 2, ...
+      }
+      
+      if (definition.videoDefinitionUrl) {
+        updateData.videoDefinitionUrl = definition.videoDefinitionUrl
+      }
+      
+      return api.definitions.update(props.sense!.id!, definition.id!, updateData)
+    })
+    
+    if (updatePromises.length === 0) {
+      throw new Error('No valid definitions to update')
+    }
+    
+    const responses = await Promise.all(updatePromises)
+    
+    // Use the last response to update the parent
+    const lastResponse = responses[responses.length - 1]
+    if (lastResponse && isGlossData(lastResponse.data)) {
+      emit('update:glossData', lastResponse.data)
+    }
+    
+    sortDefinitionsDialog.value = false
+    localDefinitions.value = []
+    
+    $q.notify({
+      message: translate('definitionsSortedSuccessfully'),
+      color: 'positive',
+      icon: 'check'
+    })
+  } catch (error) {
+    console.error('Error sorting definitions:', error)
+    $q.notify({
+      message: translate('errors.failedToSortDefinitions'),
+      color: 'negative',
+      icon: 'error'
+    })
+  } finally {
+    loading.value = false
+  }
+}
 </script>
 
 <style scoped>

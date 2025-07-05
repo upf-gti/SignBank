@@ -351,6 +351,10 @@ const translations: TranslateKeys = {
   showFilters: 'Mostrar filtres',
   videoNotSupported: 'El vídeo no és compatible amb el navegador.',
   activeHand: 'Mà activa',
+  confirmDeleteSenseMessage: 'Estàs segur que vols eliminar aquesta accepció? Aquesta acció no es pot desfer.',
+  senseCreatedSuccessfully: 'Accepció creada correctament',
+  sortDefinitions: 'Ordenar definicions',
+  definitionsSortedSuccessfully: 'Definicions ordenades correctament',
 };
 
 export default translations; 

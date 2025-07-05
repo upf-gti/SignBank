@@ -1,5 +1,5 @@
 import { Language } from '@prisma/client'
-import { IsString, IsNotEmpty, IsOptional, IsEnum } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsEnum, IsNumber } from 'class-validator';
 
 export class CreateDefinitionDto {
   @IsString()
@@ -13,6 +13,10 @@ export class CreateDefinitionDto {
   @IsString()
   @IsOptional()
   videoDefinitionUrl?: string;
+
+  @IsNumber()
+  @IsOptional()
+  priority?: number;
 }
 
 export class UpdateDefinitionDto {
@@ -27,6 +31,10 @@ export class UpdateDefinitionDto {
   @IsString()
   @IsOptional()
   videoDefinitionUrl?: string;
+
+  @IsNumber()
+  @IsOptional()
+  priority?: number;
 }
 
 export class CreateDefinitionTranslationDto {

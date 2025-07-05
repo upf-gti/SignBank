@@ -158,10 +158,10 @@ export const api = {
   },
   // Definitions endpoints
   definitions: {
-    create: (senseId: string, data: { title?: string, definition: string, videoDefinitionUrl?: string }) =>
+    create: (senseId: string, data: { title?: string, definition: string, videoDefinitionUrl?: string, priority?: number }) =>
       apiClient.post<GlossData>(`/definitions/sense/${senseId}`, data),
 
-    update: (senseId: string, definitionId: string, data: { title?: string, definition?: string, videoDefinitionUrl?: string }) =>
+    update: (senseId: string, definitionId: string, data: { title?: string, definition?: string, videoDefinitionUrl?: string, priority?: number }) =>
       apiClient.put<GlossData>(`/definitions/sense/${senseId}/${definitionId}`, data),
 
     delete: (senseId: string, definitionId: string) =>

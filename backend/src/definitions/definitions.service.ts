@@ -26,6 +26,7 @@ export class DefinitionsService {
         title: data.title || '',
         definition: data.definition,
         videoDefinitionUrl: data.videoDefinitionUrl,
+        priority: data.priority || 0,
         senseId: senseId
       },
       include: {
@@ -57,6 +58,7 @@ export class DefinitionsService {
         title: data.title,
         definition: data.definition,
         videoDefinitionUrl: data.videoDefinitionUrl,
+        ...(data.priority !== undefined && { priority: data.priority }),
       },
       include: {
         definitionTranslations: true,

@@ -658,6 +658,8 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   NOUN: string;
   VERB: string;
   ADJECTIVE: string;
+  sortDefinitions: string;
+  definitionsSortedSuccessfully: string;
   ADVERB: string;
   PRONOUN: string;
   PREPOSITION: string;
