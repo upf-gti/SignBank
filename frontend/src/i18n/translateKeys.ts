@@ -590,6 +590,7 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   senses: string;
   signVideos: string;
   validationErrors: string;
+  senseCreatedSuccessfully: string;
   ok: string;
   deleteExample: string;
   deleteExampleTranslation: string;

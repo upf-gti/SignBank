@@ -116,6 +116,7 @@ const submitRequest = () => {
 }
 
 const handleGlossDataUpdate = (updatedGlossData: GlossData) => {
+  debugger
   // Emit the update to the parent component
   emit('update:glossData', updatedGlossData)
 }

@@ -35,6 +35,7 @@
           :submitting="submitting"
           @save-gloss="saveGloss"
           @submit-request="submitRequest"
+          @update:gloss-data="handleGlossDataUpdate"
         />
       </template>
     </div>
@@ -169,6 +170,10 @@ const submitRequest = async () => {
     submitting.value = false;
   }
 };
+
+const handleGlossDataUpdate = (updatedGlossData: GlossData) => {
+  glossData.value = updatedGlossData
+}
 
 onMounted(async () => {
   if (!userStore.isLoggedIn) {
