@@ -47,7 +47,7 @@ const translations: TranslateKeys = {
   videos: 'Vídeos',
   videoDefinition: 'Definición de vídeo',
   videoDefinitions: 'Definiciones de vídeo',
-  requestWord: 'Solicitar palabra',
+  createEntry: 'Crear entrada',
   confirmRequests: 'Confirmar solicitudes',
   logout: 'Cerrar sesión',
   login: 'Iniciar sesión',

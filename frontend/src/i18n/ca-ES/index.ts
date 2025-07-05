@@ -50,7 +50,7 @@ const translations: TranslateKeys = {
   videos: 'Vídeos',
   videoDefinition: 'Definició de vídeo',
   videoDefinitions: 'Definicions de vídeo',
-  requestWord: 'Sol·licitar paraula',
+  createEntry: 'Crear entrada',
   confirmRequests: 'Confirmar sol·licituds',
   logout: 'Tancar sessió',
   login: 'Iniciar sessió',

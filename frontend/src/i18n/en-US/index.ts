@@ -53,7 +53,7 @@ const translations: TranslateKeys = {
   videos: 'Videos',
   videoDefinition: 'Video definition',
   videoDefinitions: 'Video definitions',
-  requestWord: 'Request word',
+  createEntry: 'Create entry',
   confirmRequests: 'Confirm requests',
   logout: 'Logout',
   login: 'Login',

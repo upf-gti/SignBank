@@ -50,7 +50,7 @@
           <q-item-section avatar>
             <q-icon name="list" />
           </q-item-section>
-          <q-item-section>{{ translate('requestWord') }}</q-item-section>
+          <q-item-section>{{ translate('createEntry') }}</q-item-section>
         </q-item>
         
         <q-item
@@ -126,7 +126,7 @@
         <q-btn
           v-if="userStore.isLoggedIn"
           flat
-          :label="translate('requestWord')"
+          :label="translate('createEntry')"
           @click="navigateTo('/my-requests')"
         />
         <q-btn

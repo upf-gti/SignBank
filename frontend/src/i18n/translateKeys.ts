@@ -517,7 +517,7 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   videos: string;
   videoDefinition: string;
   videoDefinitions: string;
-  requestWord: string;
+  createEntry: string;
   confirmRequests: string;
   logout: string;
   login: string;
