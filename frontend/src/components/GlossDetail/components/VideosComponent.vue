@@ -245,7 +245,18 @@ const updateSignVideo = async (video: SignVideo, index: number) => {
     let response;
     if (currentVideo.id) {
       // Update the video
-      response = await api.signVideos.update(currentVideo.id, currentVideo);
+      const payload = { ...currentVideo };
+      
+      // Remove empty values from videoData (phonology)
+      if (payload.videoData) {
+        Object.keys(payload.videoData).forEach((key: string) => {
+          if (payload.videoData[key as keyof PhonologyData] === '' || payload.videoData[key as keyof PhonologyData] === null || payload.videoData[key as keyof PhonologyData] === undefined) {
+            delete payload.videoData[key as keyof PhonologyData];
+          }
+        });
+      }
+      
+      response = await api.signVideos.update(currentVideo.id, payload);
     } else {
       // Create the video
       response = await api.signVideos.create(currentVideo);

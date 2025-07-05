@@ -27,20 +27,20 @@ export class SignVideosService {
     const videoData = await this.prisma.videoData.create({
       data: {
         id: createSignVideoDto.videoData.id,
-        hands: createSignVideoDto.videoData.hands,
-        configuration: createSignVideoDto.videoData.configuration,
-        configurationChanges: createSignVideoDto.videoData.configurationChanges,
-        relationBetweenArticulators: createSignVideoDto.videoData.relationBetweenArticulators,
-        location: createSignVideoDto.videoData.location,
-        movementRelatedOrientation: createSignVideoDto.videoData.movementRelatedOrientation,
-        orientationRelatedToLocation: createSignVideoDto.videoData.orientationRelatedToLocation,
-        orientationChange: createSignVideoDto.videoData.orientationChange,
-        contactType: createSignVideoDto.videoData.contactType,
-        movementType: createSignVideoDto.videoData.movementType,
-        movementDirection: createSignVideoDto.videoData.movementDirection,
-        vocalization: createSignVideoDto.videoData.vocalization,
-        nonManualComponent: createSignVideoDto.videoData.nonManualComponent,
-        inicialization: createSignVideoDto.videoData.inicialization
+        hands: createSignVideoDto.videoData.hands || 'RIGHT',
+        configuration: createSignVideoDto.videoData.configuration || 'EMPTY',
+        configurationChanges: createSignVideoDto.videoData.configurationChanges || 'EMPTY',
+        relationBetweenArticulators: createSignVideoDto.videoData.relationBetweenArticulators || 'EMPTY',
+        location: createSignVideoDto.videoData.location || 'EMPTY',
+        movementRelatedOrientation: createSignVideoDto.videoData.movementRelatedOrientation || 'EMPTY',
+        orientationRelatedToLocation: createSignVideoDto.videoData.orientationRelatedToLocation || 'EMPTY',
+        orientationChange: createSignVideoDto.videoData.orientationChange || 'EMPTY',
+        contactType: createSignVideoDto.videoData.contactType || 'EMPTY',
+        movementType: createSignVideoDto.videoData.movementType || 'EMPTY',
+        movementDirection: createSignVideoDto.videoData.movementDirection || 'EMPTY',
+        vocalization: createSignVideoDto.videoData.vocalization || '',
+        nonManualComponent: createSignVideoDto.videoData.nonManualComponent || '',
+        inicialization: createSignVideoDto.videoData.inicialization || ''
       }
     });
 
@@ -97,20 +97,20 @@ export class SignVideosService {
       where: { id: signVideo.videoData.id },
       data: {
         id: updateSignVideoDto.videoData.id,
-        hands: updateSignVideoDto.videoData.hands,
-        configuration: updateSignVideoDto.videoData.configuration,
-        configurationChanges: updateSignVideoDto.videoData.configurationChanges,
-        relationBetweenArticulators: updateSignVideoDto.videoData.relationBetweenArticulators,
-        location: updateSignVideoDto.videoData.location,
-        movementRelatedOrientation: updateSignVideoDto.videoData.movementRelatedOrientation,
-        orientationRelatedToLocation: updateSignVideoDto.videoData.orientationRelatedToLocation,
-        orientationChange: updateSignVideoDto.videoData.orientationChange,
-        contactType: updateSignVideoDto.videoData.contactType,
-        movementType: updateSignVideoDto.videoData.movementType,
-        movementDirection: updateSignVideoDto.videoData.movementDirection,
-        vocalization: updateSignVideoDto.videoData.vocalization,
-        nonManualComponent: updateSignVideoDto.videoData.nonManualComponent,
-        inicialization: updateSignVideoDto.videoData.inicialization
+        hands: updateSignVideoDto.videoData.hands || 'RIGHT',
+        configuration: updateSignVideoDto.videoData.configuration || 'EMPTY',
+        configurationChanges: updateSignVideoDto.videoData.configurationChanges || 'EMPTY',
+        relationBetweenArticulators: updateSignVideoDto.videoData.relationBetweenArticulators || 'EMPTY',
+        location: updateSignVideoDto.videoData.location || 'EMPTY',
+        movementRelatedOrientation: updateSignVideoDto.videoData.movementRelatedOrientation || 'EMPTY',
+        orientationRelatedToLocation: updateSignVideoDto.videoData.orientationRelatedToLocation || 'EMPTY',
+        orientationChange: updateSignVideoDto.videoData.orientationChange || 'EMPTY',
+        contactType: updateSignVideoDto.videoData.contactType || 'EMPTY',
+        movementType: updateSignVideoDto.videoData.movementType || 'EMPTY',
+        movementDirection: updateSignVideoDto.videoData.movementDirection || 'EMPTY',
+        vocalization: updateSignVideoDto.videoData.vocalization || '',
+        nonManualComponent: updateSignVideoDto.videoData.nonManualComponent || '',
+        inicialization: updateSignVideoDto.videoData.inicialization || ''
       }
     });
 
