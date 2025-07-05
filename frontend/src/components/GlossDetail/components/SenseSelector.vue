@@ -313,51 +313,22 @@ const saveSense = async () => {
 }
 
 const moveSense = async (index: number, direction: 'up' | 'down') => {
-  try {
-    const newIndex = direction === 'up' ? index - 1 : index + 1
-    if ((direction === 'up' && index > 0) || 
-        (direction === 'down' && index < localSenses.value.length - 1)) {
-      
-      loading.value = true
-      const senseToMove = localSenses.value[index]
-      const otherSense = localSenses.value[newIndex]
-      
-      if (!senseToMove || !senseToMove.id || !otherSense || !otherSense.id) return
+  const newIndex = direction === 'up' ? index - 1 : index + 1
+  if ((direction === 'up' && index > 0) || 
+      (direction === 'down' && index < localSenses.value.length - 1)) {
+    
+    const senseToMove = localSenses.value[index]
+    const otherSense = localSenses.value[newIndex]
+    
+    if (!senseToMove || !otherSense) return
 
-      // Update priorities
-      const tempPriority = senseToMove.priority
-      senseToMove.priority = otherSense.priority
-      otherSense.priority = tempPriority
+    // Update priorities locally only
+    const tempPriority = senseToMove.priority
+    senseToMove.priority = otherSense.priority
+    otherSense.priority = tempPriority
 
-      // Update both senses
-      const [, response] = await Promise.all([
-        api.senses.update(props.glossData.id || '', senseToMove.id, {
-          senseTitle: senseToMove.senseTitle,
-          lexicalCategory: senseToMove.lexicalCategory,
-          priority: senseToMove.priority
-        }),
-        api.senses.update(props.glossData.id || '', otherSense.id, {
-          senseTitle: otherSense.senseTitle,
-          lexicalCategory: otherSense.lexicalCategory,
-          priority: otherSense.priority
-        })
-      ])
-
-      // Update the parent with the latest data
-      emit('update:glossData', response.data)
-
-      // Sort the local senses by priority
-      localSenses.value.sort((a, b) => a.priority - b.priority)
-    }
-  } catch (error) {
-    console.error('Error updating sense priority:', error)
-    $q.notify({
-      message: translate('errors.failedToUpdateSensePriority'),
-      color: 'negative',
-      icon: 'error'
-    })
-  } finally {
-    loading.value = false
+    // Sort the local senses by priority
+    localSenses.value.sort((a, b) => a.priority - b.priority)
   }
 }
 
@@ -398,10 +369,62 @@ const saveSingleSense = async () => {
   }
 }
 
-const saveEditSenses = () => {
-  // Emit the updated gloss data to parent
-  emit('update:glossData', props.glossData)
-  editSensesDialog.value = false
+const saveEditSenses = async () => {
+  try {
+    loading.value = true
+    
+    if (!props.glossData.id) {
+      throw new Error('Gloss data ID is required')
+    }
+    
+    // Filter out senses without IDs
+    const sensesWithIds = localSenses.value.filter(sense => sense.id)
+    
+    if (sensesWithIds.length === 0) {
+      throw new Error('No valid senses to update')
+    }
+    
+    // Sort senses by their current priority and assign new sequential priorities
+    const sortedSenses = [...sensesWithIds].sort((a, b) => a.priority - b.priority)
+    const sensesWithNewPriorities = sortedSenses.map((sense, index) => ({
+      ...sense,
+      priority: index // Assign sequential priorities: 0, 1, 2, ...
+    }))
+    
+    // Send all senses with their new sequential priorities to the backend
+    const updatePromises = sensesWithNewPriorities.map(sense => 
+      api.senses.update(props.glossData.id!, sense.id!, {
+        senseTitle: sense.senseTitle,
+        lexicalCategory: sense.lexicalCategory,
+        priority: sense.priority
+      })
+    )
+    
+    const responses = await Promise.all(updatePromises)
+    
+    // Use the last response to update the parent (assuming all responses have the same updated data)
+    const lastResponse = responses[responses.length - 1]
+    if (lastResponse) {
+      emit('update:glossData', lastResponse.data)
+    }
+    
+    editSensesDialog.value = false
+    
+    $q.notify({
+      message: translate('sensesUpdatedSuccessfully'),
+      color: 'positive',
+      icon: 'check'
+    })
+  } catch (error) {
+    console.error('Error updating senses:', error)
+    $q.notify({
+      message: translate('errors.failedToUpdateSenses'),
+      color: 'negative',
+      icon: 'error'
+    })
+  } finally {
+    loading.value = false
+  }
 }
 
 const cancelEditSenses = () => {

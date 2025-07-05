@@ -16,7 +16,6 @@ import translate from 'src/utils/translate';
 import { Language } from 'src/types/models';
 
 const languageOptions = Object.values(Language).map(lang => {
-  debugger
   return {
     value: lang,
     label: translate(lang)
