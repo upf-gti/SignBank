@@ -44,7 +44,7 @@ const phonology : PhonologyTranslateKeys = {
       WIGGLING_description: 'Alternated bending of the selected fingers'
     },
     handConfiguration: {
-      EMPTY: 'Empty',
+      EMPTY: '------- BUIT -------',
       CONF_1: 'BABY_O',
       CONF_2: 'BABY_beak_closed',
       CONF_3: 'O',
