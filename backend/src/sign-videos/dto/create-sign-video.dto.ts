@@ -92,7 +92,7 @@ export class CreateSignVideoDto {
   videoDataId: string;
 
   @IsString()
-  senseId: string;
+  glossDataId: string;
 
   @IsArray()
   @ValidateNested({ each: true })

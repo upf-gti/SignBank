@@ -1,5 +1,5 @@
 <template>
-  <q-card flat class="result-card">
+  <q-card flat class="result-card" @click="$emit('view-details', document.glossId)">
     <!-- Desktop Layout (Horizontal) -->
     <q-card-section horizontal class="desktop-layout">
       <template v-if="document.url">
@@ -54,12 +54,6 @@
               {{ translate(document.lexicalCategory) }}
             </q-chip>
           </div>
-          <q-btn
-            color="primary"
-            :label="t('viewDetails')"
-            dense
-            @click="$emit('view-details', document.glossId)"
-          />
         </div>
       </q-card-section>
     </q-card-section>
@@ -115,16 +109,6 @@
         >
           {{ translate(document.lexicalCategory) }}
         </q-chip>
-
-        <!-- Details Button at Bottom -->
-        <div class="text-center">
-          <q-btn
-            color="primary"
-            class="float-right"
-            :label="t('viewDetails')"
-            @click="$emit('view-details', document.glossId)"
-          />
-        </div>
       </q-card-section>
     </div>
   </q-card>
@@ -162,6 +146,7 @@ defineEmits<{
 .result-card {
   height: 100%;
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .result-card:hover {

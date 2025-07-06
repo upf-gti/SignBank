@@ -78,6 +78,7 @@ const glossData = ref<GlossData>({
   senses: [],
   glossRequest: null,
   isCreatedFromEdit: false,
+  glossVideos: []
 });
 
 const fetchGlossRequest = async () => {

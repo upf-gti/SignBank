@@ -99,7 +99,12 @@ export class GlossRequestsService {
                 senseTranslations: true,
               },
             },
-            glossVideos: true,
+            glossVideos: {
+              include: {
+                videos: true,
+                videoData: true,
+              },
+            },
             minimalPairsAsSource: {
               include: {
                 sourceGloss: {
@@ -239,7 +244,12 @@ export class GlossRequestsService {
       include: {
         requestedGlossData: {
           include: {
-            glossVideos: true,
+            glossVideos: {
+              include: {
+                videos: true,
+                videoData: true,
+              },
+            },
             senses: {
               include: {
                 definitions: {

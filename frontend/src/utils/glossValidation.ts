@@ -28,6 +28,18 @@ export function validateGloss(glossData: GlossData): ValidationError[] {
     errors.push(...senseErrors);
   });
 
+  // Check for at least one video
+  if (!glossData.glossVideos || glossData.glossVideos.length === 0) {
+    errors.push({
+      message: translate('validation.videoRequired')
+    });
+  } else {
+    // Validate each video
+    glossData.glossVideos.forEach((video) => {
+      const videoErrors = validateSignVideo(video);
+      errors.push(...videoErrors);
+    });
+  }
   return errors;
 }
 
@@ -55,18 +67,7 @@ function validateSense(sense: Sense, senseNumber: number): ValidationError[] {
     });
   }
 
-  // Check for at least one video
-  if (!sense.signVideos || sense.signVideos.length === 0) {
-    errors.push({
-      message: translate('validation.videoRequired', { senseTitle })
-    });
-  } else {
-    // Validate each video
-    sense.signVideos.forEach((video) => {
-      const videoErrors = validateSignVideo(video, senseTitle);
-      errors.push(...videoErrors);
-    });
-  }
+  
 
   // Validate examples if they exist
   if (sense.examples && sense.examples.length > 0) {
@@ -138,13 +139,13 @@ function validateExample(example: Example, senseTitle: string): ValidationError[
   return errors;
 }
 
-function validateSignVideo(signVideo: SignVideo, senseTitle: string): ValidationError[] {
+function validateSignVideo(signVideo: SignVideo): ValidationError[] {
   const errors: ValidationError[] = [];
 
   // Check if videos array exists and has at least one video
   if (!signVideo.videos || signVideo.videos.length === 0) {
     errors.push({
-      message: translate('validation.videoRequired', { senseTitle })
+      message: translate('validation.videoRequired')
     });
   } else {
     // Get the video title from SignVideo or use a default
@@ -156,11 +157,11 @@ function validateSignVideo(signVideo: SignVideo, senseTitle: string): Validation
     signVideo.videos.forEach((video) => {
       if (!video.angle || video.angle.trim() === '') {
         errors.push({
-          message: translate('validation.videoAngleRequiredForVideo', { senseTitle, videoTitle })
+          message: translate('validation.videoAngleRequiredForVideo', { videoTitle })
         });
       } else if (!video.url || video.url.trim() === '') {
         errors.push({
-          message: translate('validation.videoUrlRequiredForAngleAndVideo', { senseTitle, angle: video.angle, videoTitle })
+          message: translate('validation.videoUrlRequiredForAngleAndVideo', { angle: video.angle, videoTitle })
         });
       }
     });

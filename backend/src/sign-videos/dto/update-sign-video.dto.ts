@@ -95,7 +95,7 @@ export class UpdateSignVideoDto {
   videoDataId: string;
 
   @IsString()
-  senseId: string;
+  glossDataId: string;
 
   @IsArray()
   @ValidateNested({ each: true })

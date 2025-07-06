@@ -12,16 +12,6 @@ export class SignVideosService {
   ) {}
 
   async create(createSignVideoDto: CreateSignVideoDto): Promise<GlossData> {
-    const sense = await this.prisma.sense.findUnique({
-      where: { id: createSignVideoDto.senseId },
-      include: {
-        glossData: true
-      }
-    });
-
-    if (!sense) {
-      throw new NotFoundException(`Sense with ID "${createSignVideoDto.senseId}" not found`);
-    }
 
     // Create the video data first
     const videoData = await this.prisma.videoData.create({
@@ -50,7 +40,7 @@ export class SignVideosService {
       priority: createSignVideoDto.priority,
       glossData: {
         connect: {
-          id: createSignVideoDto.senseId
+          id: createSignVideoDto.glossDataId
         }
       },
       videoData: {
@@ -71,7 +61,7 @@ export class SignVideosService {
       data: signVideoData
     });
 
-    return this.glossDataService.getGlossData(sense.glossData.id);
+    return this.glossDataService.getGlossData(createSignVideoDto.glossDataId);
   }
 
   async update(id: string, updateSignVideoDto: UpdateSignVideoDto): Promise<GlossData> {
