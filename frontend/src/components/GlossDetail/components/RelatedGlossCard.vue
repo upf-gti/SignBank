@@ -20,8 +20,7 @@
                 text-color="white"
                 class="relation-chip"
               >
-                {{ gloss.relationType }}
-                <q-tooltip>{{ getRelationDescription(gloss.relationType) }}</q-tooltip>
+                {{ translate(gloss.relationType) }}
               </q-chip>
             </div>
           </div>
@@ -80,16 +79,6 @@ const emit = defineEmits<{
 
 const loading = ref(false);
 
-function getRelationDescription(type: string): string {
-  const descriptions: Record<string, string> = {
-    SYNONYM: t('synonymDescription'),
-    ANTONYM: t('antonymDescription'),
-    HOMONYM: t('homonymDescription'),
-    VARIANT: t('variantDescription'),
-    ASSOCIATED_CONCEPT: t('associatedConceptDescription')
-  };
-  return descriptions[type] || type;
-}
 
  function handleDelete() {
   if (!props.gloss.id) return;

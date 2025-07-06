@@ -74,7 +74,7 @@ import translate from 'src/utils/translate';
 import { ref, watch } from 'vue';
 import { Sense } from 'src/types/models';
 import type { GlossData } from 'src/types/models';
-import ExamplesComponent from './ExamplesComponent.vue';
+import ExamplesComponent from './ExamplesComponent/ExamplesComponent.vue';
 import VideosComponent from './VideosComponent.vue';
 import RelatedGlosses from './RelatedGlosses.vue';
 import DefinitionsComponent from './DefinitionsComponent/DefinitionsComponent.vue';

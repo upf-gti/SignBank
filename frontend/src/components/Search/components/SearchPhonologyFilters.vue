@@ -540,8 +540,11 @@
             class="text-grey-5"
           >{{ translate('notSet') }}</span>
         </div>
-        <q-btn-toggle
-          v-else
+        <div v-else class="column">
+          <q-label>
+            {{ translate('repeatedMovement') }}
+          </q-label>
+          <q-btn-toggle
           v-model="localData.repeatedMovement"
           :options="[
             { label: translate('yes'), value: true },
@@ -550,6 +553,7 @@
           spread
           no-caps
           unelevated
+          :label="translate('repeatedMovement')"
           toggle-color="primary"
           color="grey-3"
           text-color="grey-8"
@@ -557,6 +561,7 @@
           clearable
           @update:model-value="updateBooleanField('repeatedMovement', $event)"
         />
+      </div>
       </div>
     </div>
   </div>

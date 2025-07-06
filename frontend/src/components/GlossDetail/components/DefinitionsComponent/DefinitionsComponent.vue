@@ -25,6 +25,7 @@
     <q-list 
       v-if="!isMobile"
       >
+      <!-- Desktop -->
         <DefinitionCardDesktop
           v-for="(definition, index) in definitions.sort((a, b) => a.priority - b.priority)"
           :key="definition.id || index"
@@ -39,6 +40,7 @@
         />
       </q-list>
       <q-list v-else>
+        <!-- Mobile -->
       <DefinitionCardMobile
         v-for="(definition, index) in definitions.sort((a, b) => a.priority - b.priority)"
         :key="definition.id || index"

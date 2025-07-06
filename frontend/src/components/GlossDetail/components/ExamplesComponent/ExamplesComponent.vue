@@ -13,7 +13,7 @@
     </div>
 
     <q-list
-      class="row q-col-gutter-md "
+      class="row q-col-gutter-md"
       separator
     >
       <q-item
@@ -21,82 +21,31 @@
         :key="example.id || index"
         class="col-12 q-pa-none"
       >
-        <EditableModule
+        <!-- Desktop Version -->
+        <ExampleCardDesktop
+          v-if="$q.screen.gt.sm"
+          :example="example"
           :allow-edit="editMode"
-          :initial-edit-state="example.isNew || false"
-          :show-delete="true"
-          :custom-edit-label="translate('editExample')"
-          :custom-delete-label="translate('deleteExample')"
-          class="full-width q-pa-none"
-          @save="() => saveExample(example)"
-          @cancel="() => cancelExample(example)"
-          @delete="() => deleteExample(example)"
-        >
-          <template #default="{ isEditing }">
-            <q-card
-              flat
-              class="full-width q-px-md"
-              style="background-color: transparent"
-            >
-              <div class="row no-wrap items-center">
-                <!-- Example Video -->
-                <div class="q-mb-md">
-                  <UploadVideoComponent
-                    v-if="isEditing && example.exampleVideoURL === ''"
-                    video-type="example"
-                    :custom-label="translate('addExampleVideo')"
-                    @upload-complete="(url) => uploadVideo(example, url)"
-                  />
-                  <div
-                    v-else
-                    class="column q-gutter-sm"
-                  >
-                    <video
-                      ref="videoPlayer"
-                      controls
-                      autoplay
-                      class="video-player"
-                      :src="getVideoUrl(example.exampleVideoURL)"
-                      muted
-                      @error="handleVideoError"
-                    />
-                    <q-btn
-                      v-if="isEditing && example.exampleVideoURL"
-                      outline
-                      :label="translate('deleteExampleVideo')"
-                      icon="delete"
-                      @click="deleteExampleVideo(example)"
-                    />
-                  </div>
-                </div>
-                <!-- Example Text -->
-                <q-input
-                  v-if="isEditing"
-                  v-model="example.example"
-                  :label="translate('example')"
-                  outlined
-                  dense
-                  class="col q-mb-sm q-ml-sm"
-                />
-                <div
-                  v-else
-                  class="q-mb-md col q-ml-sm"
-                >
-                  {{ example.example }}
-                </div>
-              </div>
+          @save="saveExample"
+          @delete="deleteExample"
+          @upload-video="uploadVideo"
+          @delete-video="deleteExampleVideo"
+          @video-error="handleVideoError"
+          @update-gloss-data="(data) => emit('update:glossData', data)"
+        />
 
-              <!-- Example Translations -->
-              <div v-if="!example.isNew">
-                <ExampleTranslationsComponent
-                  :example="example"
-                  :allow-edit="editMode"
-                  @update:gloss-data="(data) => emit('update:glossData', data)"
-                />
-              </div>
-            </q-card>
-          </template>
-        </EditableModule>
+        <!-- Mobile Version -->
+        <ExampleCardMobile
+          v-else
+          :example="example"
+          :allow-edit="editMode"
+          @save="saveExample"
+          @delete="deleteExample"
+          @upload-video="uploadVideo"
+          @delete-video="deleteExampleVideo"
+          @video-error="handleVideoError"
+          @update-gloss-data="(data) => emit('update:glossData', data)"
+        />
       </q-item>
     </q-list>
   </q-card-section>
@@ -114,12 +63,10 @@ import { Sense, Example, GlossData } from 'src/types/models';
 import translate from 'src/utils/translate';
 import { api } from 'src/services/api';
 import { useQuasar } from 'quasar';
-import EditableModule from 'src/components/Shared/EditableModule.vue';
-import UploadVideoComponent from 'src/components/UploadVideoComponent.vue';
 import VideoPlayerPopup from 'src/components/VideoPlayerPopup.vue';
-import ExampleTranslationsComponent from './ExampleTranslationsComponent.vue';
+import ExampleCardDesktop from './ExampleCardDesktop.vue';
+import ExampleCardMobile from './ExampleCardMobile.vue';
 import { ref, computed, watch } from 'vue';
-import { getVideoUrl } from 'src/utils/videoUrl';
 
 const $q = useQuasar();
 const loading = ref(false);
@@ -226,15 +173,6 @@ const deleteExample = async (example: Example) => {
   }
 };
 
-const cancelExample = (example: Example) => {
-  if (!example.id) {
-    const index = localSense.value.examples.findIndex(e => e === example);
-    if (index !== -1) {
-      localSense.value.examples.splice(index, 1);
-    }
-  }
-};
-
 const uploadVideo = async (example: Example, url: string) => {
   try {
     // Delete the old video if it exists and is different from the new one
@@ -252,12 +190,6 @@ const uploadVideo = async (example: Example, url: string) => {
       message: translate('errors.failedToUploadVideo')
     });
   }
-};
-
-const openVideo = (example: Example) => {
-  selectedExample.value = example;
-  selectedVideoUrl.value = example.exampleVideoURL;
-  showVideoDialog.value = true;
 };
 
 const deleteExampleVideo = async (example: Example) => {
@@ -285,7 +217,6 @@ const deleteExampleVideo = async (example: Example) => {
   }
 };
 
-
 const handleVideoError = (event: Event) => {
   console.error('Error playing video:', event);
   $q.notify({
@@ -293,15 +224,4 @@ const handleVideoError = (event: Event) => {
     message: translate('errors.failedToPlayVideo')
   });
 };
-
-</script>
-
-<style scoped>
-.video-player{
-  max-width: 100%;
-  max-height: 200px;
-  width: auto;
-  height: auto;
-}
-</style>
-
+</script> 

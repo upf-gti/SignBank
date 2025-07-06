@@ -239,6 +239,8 @@ const translations: TranslateKeys = {
   notSent: 'No enviat',
   contactType: 'Tipus de contacte',
   movementType: 'Forma de moviment',
+  antonym: 'Antònim',
+  interjection: 'Interjecció',
   videoUpdated: 'Vídeo actualitzat',
   relationBetweenArticulators: 'Relació entre articuladors',
   location: 'Ubicació',

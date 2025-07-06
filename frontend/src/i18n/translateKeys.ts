@@ -660,6 +660,8 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   video: string;
   NOUN: string;
   VERB: string;
+  interjection: string;
+  antonym: string;
   ADJECTIVE: string;
   sortDefinitions: string;
   definitionsSortedSuccessfully: string;
