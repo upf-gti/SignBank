@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import * as Typesense from 'typesense';
 import { VIDEOS_COLLECTION_NAME, videosSchema } from './typesense.config';
 import { VideoIndex } from './types/video-index.type';
-import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType, MovementDirection, GlossStatus } from '@prisma/client';
+import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType, MovementDirection, GlossStatus, SignVideo, GlossData, VideoData } from '@prisma/client';
 
 @Injectable()
 export class TypesenseService implements OnModuleInit {
@@ -85,11 +85,7 @@ export class TypesenseService implements OnModuleInit {
         include: {
           videos: true,
           videoData: true,
-          sense: {
-            include: {
-              glossData: true
-            }
-          }
+          glossData: true
         }
       });
     } catch (error) {
@@ -169,33 +165,9 @@ export class TypesenseService implements OnModuleInit {
       id: string;
       title: string;
       videos: { url: string }[];
-      videoData: {
-        hands: Hand;
-        configuration: HandConfiguration;
-        configurationChanges: ConfigurationChange;
-        relationBetweenArticulators: RelationBetweenArticulators;
-        location: Location;
-        movementRelatedOrientation: MovementRelatedOrientation;
-        orientationRelatedToLocation: OrientationRelatedToLocation;
-        orientationChange: OrientationChange;
-        contactType: ContactType;
-        movementType: MovementType;
-        movementDirection: MovementDirection;
-        vocalization: string;
-        nonManualComponent: string;
-        inicialization: string;
-        repeatedMovement: boolean;
-      };
+      videoData: VideoData;
     },
-    sense: {
-      id: string;
-      senseTitle: string;
-      lexicalCategory: string;
-      glossData: {
-        id: string;
-        gloss: string;
-      };
-    }
+    glossData: GlossData
   ): VideoIndex {
     const document: VideoIndex = {
       id: signVideo.id,
@@ -216,11 +188,8 @@ export class TypesenseService implements OnModuleInit {
       nonManualComponent: signVideo.videoData?.nonManualComponent || '',
       inicialization: signVideo.videoData?.inicialization || '',
       repeatedMovement: signVideo.videoData?.repeatedMovement || false,
-      senseId: sense.id,
-      senseTitle: sense.senseTitle || '',
-      lexicalCategory: sense.lexicalCategory || 'OTHER',
-      glossId: sense.glossData.id,
-      gloss: sense.glossData.gloss || ''
+      glossId: glossData.id,
+      gloss: glossData.gloss || ''  
     };
 
     // Log the document for debugging
@@ -241,18 +210,14 @@ export class TypesenseService implements OnModuleInit {
         include: {
           glossData: {
             include: {
-              senses: {
+              senses: true,
+              glossVideos: {
                 include: {
-                  glossData: true,
-                  signVideos: {
-                    include: {
-                      videos: true,
-                      videoData: true
-                    },
-                    orderBy: {
-                      priority: 'desc'
-                    }
-                  }
+                  videos: true,
+                  videoData: true
+                },
+                orderBy: {
+                  priority: 'desc'
                 }
               }
             }
@@ -265,11 +230,11 @@ export class TypesenseService implements OnModuleInit {
       const documents: VideoIndex[] = [];
 
       for (const entry of updatedEntries) {
-        const sense = entry.glossData.senses[0];
+        const glossData = entry.glossData;
         
-          if (sense.signVideos.length > 0) {
-            const highestPrioritySignVideo = sense.signVideos.sort((a, b) => a.priority - b.priority)[0];
-            const document = this.createVideoDocument(highestPrioritySignVideo, sense);
+          if (glossData.glossVideos.length > 0) {
+            const highestPrioritySignVideo = glossData.glossVideos.sort((a, b) => a.priority - b.priority)[0];
+            const document = this.createVideoDocument(highestPrioritySignVideo, glossData);
             documents.push(document);
             totalDocuments++;
 
@@ -305,33 +270,32 @@ export class TypesenseService implements OnModuleInit {
               senses: {
                 include: {
                   glossData: true,
-                  signVideos: {
-                    include: {
-                      videos: true,
-                      videoData: true
-                    },
-                    orderBy: {
-                      priority: 'desc'
-                    }
-                  }
+                  
+                }
+              },
+              glossVideos: {
+                include: {
+                  videos: true,
+                  videoData: true
+                },
+                orderBy: {
+                  priority: 'desc'
                 }
               }
             }
           }
         }
       });
-      // const senses = dictionaryEntries.flatMap(entry => entry.glossData.senses);
 
       let totalDocuments = 0;
       const BATCH_SIZE = 100;
       const documents: VideoIndex[] = [];
 
-      // for (const sense of senses) {
       for (const entry of dictionaryEntries) {
-        const sense = entry.glossData.senses[0];
-        if (sense.signVideos.length > 0) {
-          const highestPrioritySignVideo = sense.signVideos.sort((a, b) => a.priority - b.priority)[0];
-          const document = this.createVideoDocument(highestPrioritySignVideo, sense);
+        const glossData = entry.glossData;
+        if (glossData.glossVideos.length > 0) {
+          const highestPrioritySignVideo = glossData.glossVideos.sort((a, b) => a.priority - b.priority)[0];
+          const document = this.createVideoDocument(highestPrioritySignVideo, glossData);
           documents.push(document);
           totalDocuments++;
 
@@ -382,9 +346,9 @@ export class TypesenseService implements OnModuleInit {
       
       const defaultParams = {
         q: searchParameters.q || '*',
-        query_by: searchParameters.query_by || 'gloss,senseTitle,signVideoTitle,configuration,location,hands,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection,repeatedMovement',
+        query_by: searchParameters.query_by || 'gloss,signVideoTitle,configuration,location,hands,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection',
         filter_by: searchParameters.filter_by || '',
-        facet_by: searchParameters.facet_by || 'configuration,location,hands,lexicalCategory,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection,repeatedMovement',
+        facet_by: searchParameters.facet_by || 'configuration,location,hands,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection,repeatedMovement',
         max_hits: searchParameters.max_hits || 100,
         page: searchParameters.page || 1,
         per_page: searchParameters.per_page || 20,

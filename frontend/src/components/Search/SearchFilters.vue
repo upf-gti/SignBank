@@ -10,8 +10,8 @@
           @click="clearFilters" />
       </div>
       <div class="filters-content">
-        <FilterCategories :selected-category="selectedCategory"
-          @update:selected-category="$emit('update:selectedCategory', $event)" />
+        <!-- <FilterCategories :selected-category="selectedCategory"
+          @update:selected-category="$emit('update:selectedCategory', $event)" /> -->
         <FilterInputs :phonology-data="filterInputs" @update:phonology-data="$emit('update:filterInputs', $event)" />
       </div>
     </q-card-section>
@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import translate from 'src/utils/translate'
-import FilterCategories from './components/FilterCategories.vue'
+// import FilterCategories from './components/FilterCategories.vue'
 import FilterInputs from './components/FilterInputs.vue'
 
 // Create a type for filter inputs that allows empty values

@@ -48,7 +48,7 @@ export class SignVideosService {
     const signVideoData: Prisma.SignVideoCreateInput = {
       title: createSignVideoDto.title,
       priority: createSignVideoDto.priority,
-      sense: {
+      glossData: {
         connect: {
           id: createSignVideoDto.senseId
         }
@@ -78,11 +78,7 @@ export class SignVideosService {
     const signVideo = await this.prisma.signVideo.findUnique({
       where: { id },
       include: {
-        sense: {
-          include: {
-            glossData: true
-          }
-        },
+        glossData: true,
         videoData: true,
         videos: true
       }
@@ -94,7 +90,7 @@ export class SignVideosService {
 
     // Update video data
     await this.prisma.videoData.update({
-      where: { id: signVideo.videoData.id },
+      where: { id: signVideo.videoDataId },
       data: {
         id: updateSignVideoDto.videoData.id,
         hands: updateSignVideoDto.videoData.hands || 'RIGHT',
@@ -137,7 +133,7 @@ export class SignVideosService {
       data: signVideoData
     });
 
-    return this.glossDataService.getGlossData(signVideo.sense.glossData.id);
+    return this.glossDataService.getGlossData(signVideo.glossDataId);
   }
 
   async remove(id: string): Promise<GlossData> {
@@ -145,16 +141,12 @@ export class SignVideosService {
       const signVideo = await this.prisma.signVideo.findUniqueOrThrow({
         where: { id },
         include: {
-          sense: {
-            include: {
-              glossData: true
-            }
-          },
+          glossData: true,
           videoData: true
         }
       });
 
-      const glossDataId = signVideo.sense.glossData.id;
+      const glossDataId = signVideo.glossDataId;
       
       // Delete the sign video
       await this.prisma.signVideo.delete({

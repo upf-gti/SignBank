@@ -22,10 +22,6 @@ export const videosSchema: CollectionCreateSchema = {
     { name: 'vocalization', type: 'string', facet: true },
     { name: 'nonManualComponent', type: 'string', facet: true },
     { name: 'inicialization', type: 'string', facet: true },
-    { name: 'senseId', type: 'string', facet: true },
-    { name: 'senseTitle', type: 'string', facet: true, sort: true },
-    { name: 'lexicalCategory', type: 'string', facet: true },
-    { name: 'glossId', type: 'string' },
     { name: 'gloss', type: 'string', facet: true, sort: true },
     { name: 'repeatedMovement', type: 'bool' }
   ]

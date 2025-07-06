@@ -17,6 +17,12 @@ export class GlossDataService {
       where: { id },
       include: {
         dictionaryEntry: true,
+        glossVideos: {
+          include: {
+            videos: true,
+            videoData: true,
+          },
+        },
         senses: {
           orderBy: {
             priority: 'asc',
@@ -27,12 +33,7 @@ export class GlossDataService {
                 definitionTranslations: true,
               },
             },
-            signVideos: {
-              include: {
-                videos: true,
-                videoData: true,
-              },
-            },
+           
             examples: {
               include: {
                 exampleTranslations: true,
@@ -45,21 +46,13 @@ export class GlossDataService {
           include: {
             sourceGloss: {
               include: {
-                senses: {
-                  include: {
-                    signVideos: true,
-                  },
-                },
+                glossVideos: true,
                 dictionaryEntry: true,
               },
             },
             targetGloss: {
               include: {
-                senses: {
-                  include: {
-                    signVideos: true,
-                  },
-                },
+                glossVideos: true,
                 dictionaryEntry: true,
               },
             },
@@ -76,11 +69,7 @@ export class GlossDataService {
           include: {
             targetGloss: {
               include: {
-                senses: {
-                  include: {
-                    signVideos: true,
-                  },
-                },
+                glossVideos: true,
                 dictionaryEntry: true,
               },
             },           
@@ -97,11 +86,7 @@ export class GlossDataService {
           include: {
             sourceGloss: {
               include: {
-                senses: {
-                  include: {
-                    signVideos: true,
-                  },
-                },
+                glossVideos: true,
               },
             },
           },
@@ -801,7 +786,7 @@ export class GlossDataService {
   async updateSignVideoPriority(signVideoId: string, priority: number) {
     const signVideo = await this.prisma.signVideo.findUnique({
       where: { id: signVideoId },
-      include: { sense: true }
+      include: { glossData: true }
     });
 
     if (!signVideo) {
@@ -813,17 +798,17 @@ export class GlossDataService {
       data: { priority }
     });
 
-    return this.getGlossData(signVideo.sense.glossDataId);
+    return this.getGlossData(signVideo.glossDataId);
   }
 
-  async reorderSignVideos(senseId: string, signVideoIds: string[]) {
-    const sense = await this.prisma.sense.findUnique({
-      where: { id: senseId },
-      include: { signVideos: true }
+  async reorderSignVideos(glossDataId: string, signVideoIds: string[]) {
+    const glossData = await this.prisma.glossData.findUnique({
+      where: { id: glossDataId },
+      include: { glossVideos: true }
     });
 
-    if (!sense) {
-      throw new NotFoundException('Sense not found');
+    if (!glossData) {
+      throw new NotFoundException('GlossData not found');
     }
 
     // Update priorities based on the order in the array
@@ -836,7 +821,7 @@ export class GlossDataService {
 
     await Promise.all(updatePromises);
 
-    return this.getGlossData(sense.glossDataId);
+    return this.getGlossData(glossDataId);
   }
 
   // Video priority management
@@ -845,7 +830,7 @@ export class GlossDataService {
       where: { id: videoId },
       include: { 
         signVideo: { 
-          include: { sense: true } 
+          include: { glossData: true } 
         } 
       }
     });
@@ -859,7 +844,7 @@ export class GlossDataService {
       data: { priority }
     });
 
-    return this.getGlossData(video.signVideo.sense.glossDataId);
+    return this.getGlossData(video.signVideo.glossDataId);
   }
 
   async reorderVideos(signVideoId: string, videoIds: string[]) {
@@ -867,7 +852,7 @@ export class GlossDataService {
       where: { id: signVideoId },
       include: { 
         videos: true,
-        sense: true 
+        glossData: true 
       }
     });
 
@@ -885,7 +870,7 @@ export class GlossDataService {
 
     await Promise.all(updatePromises);
 
-    return this.getGlossData(signVideo.sense.glossDataId);
+    return this.getGlossData(signVideo.glossDataId);
   }
 
   private async syncGlossToTypesense(glossId: string) {
@@ -893,14 +878,10 @@ export class GlossDataService {
     const glossData = await this.prisma.glossData.findUnique({
       where: { id: glossId },
       include: {
-        senses: {
+        glossVideos: {
           include: {
-            signVideos: {
-              include: {
                 videos: true,
                 videoData: true
-              }
-            }
           }
         }
       }
@@ -911,19 +892,9 @@ export class GlossDataService {
     }
 
     // Create documents for each sign video
-    for (const sense of glossData.senses) {
-      for (const signVideo of sense.signVideos) {
-        const document = this.typesenseService.createVideoDocument(signVideo, {
-          id: sense.id,
-          senseTitle: sense.senseTitle,
-          lexicalCategory: sense.lexicalCategory,
-          glossData: {
-            id: glossData.id,
-            gloss: glossData.gloss
-          }
-        });
-        await this.typesenseService.upsertDocument(document);
-      }
+    for (const glossVideo of glossData.glossVideos) {
+      const document = this.typesenseService.createVideoDocument(glossVideo, glossData);
+      await this.typesenseService.upsertDocument(document);
     }
   }
 } 

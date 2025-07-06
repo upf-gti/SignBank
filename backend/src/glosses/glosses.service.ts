@@ -17,12 +17,6 @@ export class GlossesService {
                 definitionTranslations: true,
               },
             },
-            signVideos: {
-              include: {
-                videos: true,
-                videoData: true,
-              },
-            },
             examples: {
               include: {
                 exampleTranslations: true,
@@ -31,13 +25,20 @@ export class GlossesService {
             senseTranslations: true,
           },
         },
+        glossVideos: {
+          include: {
+            videos: true,
+            videoData: true,
+          },
+        },
         relationsAsSource: {
           include: {
             targetGloss: {
               include: {
-                senses: {
+                glossVideos: {
                   include: {
-                    signVideos: true,
+                    videos: true,
+                    videoData: true,
                   },
                 },
               },
@@ -58,9 +59,10 @@ export class GlossesService {
           include: {
             sourceGloss: {
               include: {
-                senses: {
+                glossVideos: {
                   include: {
-                    signVideos: true,
+                    videos: true,
+                    videoData: true,
                   },
                 },
               },
@@ -74,9 +76,10 @@ export class GlossesService {
           include: {
             targetGloss: {
               include: {
-                senses: {
+                glossVideos: {
                   include: {
-                    signVideos: true,
+                    videos: true,
+                    videoData: true,
                   },
                 },
               },

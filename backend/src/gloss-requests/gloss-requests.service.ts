@@ -59,10 +59,10 @@ export class GlossRequestsService {
             senses: {
               include: {
                 definitions: true,
-                signVideos: true,
                 examples: true,
               },
             },
+            glossVideos: true,
           },
         },
       },
@@ -91,12 +91,6 @@ export class GlossRequestsService {
                     definitionTranslations: true,
                   },
                 },
-                signVideos: {
-                  include: {
-                    videos: true,
-                    videoData: true,
-                  },
-                },
                 examples: {
                   include: {
                     exampleTranslations: true,
@@ -105,24 +99,17 @@ export class GlossRequestsService {
                 senseTranslations: true,
               },
             },
+            glossVideos: true,
             minimalPairsAsSource: {
               include: {
                 sourceGloss: {
                   include: {
-                    senses: {
-                      include: {
-                        signVideos: true,
-                      },
-                    },
+                    glossVideos: true,
                   },
                 },
                 targetGloss: {
                   include: {
-                    senses: {
-                      include: {
-                        signVideos: true,
-                      },
-                    },
+                    glossVideos: true,
                   },
                 },
               },
@@ -131,11 +118,7 @@ export class GlossRequestsService {
               include: {
                 targetGloss: {
                   include: {
-                    senses: {
-                      include: {
-                        signVideos: true,
-                      },
-                    },
+                    glossVideos: true,
                   },
                 },
               },
@@ -144,11 +127,7 @@ export class GlossRequestsService {
               include: {
                 sourceGloss: {
                   include: {
-                    senses: {
-                      include: {
-                        signVideos: true,
-                      },
-                    },
+                    glossVideos: true,
                   },
                 },
               },
@@ -237,10 +216,10 @@ export class GlossRequestsService {
         },
         requestedGlossData: {
           include: {
+            glossVideos: true,
             senses: {
               include: {
                 definitions: true,
-                signVideos: true,
                 examples: true,
               },
             },
@@ -260,6 +239,7 @@ export class GlossRequestsService {
       include: {
         requestedGlossData: {
           include: {
+            glossVideos: true,
             senses: {
               include: {
                 definitions: {
@@ -270,11 +250,6 @@ export class GlossRequestsService {
                 examples: {
                   include: {
                     exampleTranslations: true,
-                  },
-                },
-                signVideos: {
-                  include: {
-                    videos: true,
                   },
                 },
                 senseTranslations: true,
@@ -324,6 +299,7 @@ export class GlossRequestsService {
         },
         requestedGlossData: {
           include: {
+            glossVideos: true,
             senses: {
               include: {
                 definitions: {
@@ -334,11 +310,6 @@ export class GlossRequestsService {
                 examples: {
                   include: {
                     exampleTranslations: true,
-                  },
-                },
-                signVideos: {
-                  include: {
-                    videos: true,
                   },
                 },
                 senseTranslations: true,

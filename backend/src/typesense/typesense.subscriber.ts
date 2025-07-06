@@ -53,11 +53,8 @@ export class TypesenseSubscriber {
           nonManualComponent: signVideo.videoData.nonManualComponent,
           inicialization: signVideo.videoData.inicialization,
           repeatedMovement: signVideo.videoData.repeatedMovement,
-          senseId: signVideo.sense.id,
-          senseTitle: signVideo.sense.senseTitle,
-          lexicalCategory: signVideo.sense.lexicalCategory || 'OTHER',
-          glossId: signVideo.sense.glossData.id,
-          gloss: signVideo.sense.glossData.gloss
+          glossId: signVideo.glossData.id,
+          gloss: signVideo.glossData.gloss
         };
 
         await this.typesenseService.upsertDocument(document);

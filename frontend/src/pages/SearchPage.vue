@@ -165,9 +165,6 @@ const filterInputs = ref<FilterInputs>({
 const filterBy = computed(() => {
   const filters = [];
   
-  if (selectedLexicalCategory.value !== '' && selectedLexicalCategory.value !== null) {
-    filters.push(`lexicalCategory:='${selectedLexicalCategory.value}'`);
-  }
   
   if (selectedHands.value !== '' && selectedHands.value !== null) {
     filters.push(`hands:='${selectedHands.value}'`);
@@ -217,7 +214,7 @@ async function performSearch() {
       page: Number(page.value),
       limit: Number(perPage.value),
       filter_by: filterBy.value || undefined,
-      facet_by: 'lexicalCategory,hands,configuration,configurationChanges,relationBetweenArticulators,location,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType'
+      facet_by: 'hands,configuration,configurationChanges,relationBetweenArticulators,location,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType'
     };
     
     searchResults.value = await searchService.search(params);

@@ -24,11 +24,7 @@ export interface VideoIndex {
   vocalization: string;
   nonManualComponent: string;
   inicialization: string;
-  
-  // Sense data
-  senseId: string;
-  senseTitle: string;
-  lexicalCategory: string;
+
   
   // Gloss data
   glossId: string;

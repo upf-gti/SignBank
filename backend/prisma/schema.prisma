@@ -565,6 +565,7 @@ model GlossData {
     isCreatedFromEdit    Boolean          @default(false)
     dictionaryEntry      DictionaryEntry?
     glossRequest         GlossRequest?
+    glossVideos          SignVideo[]
     senses               Sense[]
     relationsAsSource    RelatedGloss[]   @relation("RelationSource")
     relationsAsTarget    RelatedGloss[]   @relation("RelationTarget")
@@ -589,7 +590,6 @@ model Sense {
     priority          Int                @default(0)
     definitions       Definition[]
     lexicalCategory   LexicalCategory    @default(NOUN)
-    signVideos        SignVideo[]
     glossDataId       String
     glossData         GlossData          @relation(fields: [glossDataId], references: [id], onDelete: Cascade)
     examples          Example[]
@@ -647,8 +647,8 @@ model SignVideo {
     priority    Int       @default(0)
     videoData   VideoData @relation(fields: [videoDataId], references: [id], onDelete: Cascade)
     videoDataId String
-    sense       Sense     @relation(fields: [senseId], references: [id], onDelete: Cascade)
-    senseId     String
+    glossData   GlossData @relation(fields: [glossDataId], references: [id], onDelete: Cascade)
+    glossDataId String
 }
 
 model VideoData {
