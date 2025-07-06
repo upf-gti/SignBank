@@ -116,7 +116,7 @@ import { useQuasar } from 'quasar';
 import api from 'src/services/api';
 import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType, MovementDirection } from 'src/types/enums';
 
-const sense = defineModel<Sense>({ required: true });
+const glossData = defineModel<GlossData>({ required: true });
 const emit = defineEmits<{
   (e: 'update:glossData', glossData: GlossData): void
 }>();
@@ -130,7 +130,7 @@ const $q = useQuasar();
 const videosBackup = ref<SignVideo[]>([]);
 const isCreatingVideo = ref(false);
 
-const videos = computed(() => sense.value?.signVideos || []);
+const videos = computed(() => glossData.value?.glossVideos || []);
 
 const sortedVideos = computed(() => {
   const videoList = [...videos.value];
@@ -142,17 +142,17 @@ const sortedVideos = computed(() => {
   });
 });
 
-watch(() => sense.value.signVideos, (newVideos) => {
+watch(() => glossData.value.glossVideos, (newVideos) => {
   videosBackup.value = JSON.parse(JSON.stringify(newVideos));
 }, { deep: true });
 
 const updateLocalVideo = (newVideo: SignVideo, index: number) => {
-  sense.value.signVideos[index] = newVideo;
+  glossData.value.glossVideos[index] = newVideo;
 };
 
 const addVideo = () => {
   // Get the highest priority
-  const maxPriority = Math.max(...sense.value.signVideos.map(v => v.priority || 0), 0);
+  const maxPriority = Math.max(...glossData.value.glossVideos.map(v => v.priority || 0), 0);
   
   // Create new video with the highest priority
   const newVideo: SignVideo = {
@@ -160,7 +160,7 @@ const addVideo = () => {
     title: '',
     priority: maxPriority + 1,
     videoDataId: '',
-    senseId: sense.value.id || '',
+    glossDataId: glossData.value.id || '',
     isNew: true,
     videos: [{
       id: Date.now().toString(),
@@ -181,7 +181,7 @@ const addVideo = () => {
       contactType: ContactType.CONTINUOUS,
       movementType: MovementType.STRAIGHT,
       movementDirection: MovementDirection.FORWARDS,
-      repeatedMovement: null,
+      repeatedMovement: false,
       vocalization: '',
       nonManualComponent: '',
       inicialization: '',
@@ -190,12 +190,12 @@ const addVideo = () => {
   };
 
   // Add the video at the beginning of the array
-  sense.value.signVideos.unshift(newVideo);
+  glossData.value.glossVideos.unshift(newVideo);
   isCreatingVideo.value = true;
 }
 
 const removeVideo = async (index: number) => {
-  const video = sense.value.signVideos[index];
+  const video = glossData.value.glossVideos[index];
   if (!video) return;
   
   try {
@@ -206,7 +206,7 @@ const removeVideo = async (index: number) => {
     if (index === 0 && isCreatingVideo.value) {
       isCreatingVideo.value = false;
     }
-    sense.value.signVideos.splice(index, 1);
+    glossData.value.glossVideos.splice(index, 1);
     
     $q.notify({
       type: 'positive',
@@ -223,7 +223,7 @@ const removeVideo = async (index: number) => {
 
 const updateSignVideo = async (video: SignVideo, index: number) => {
   try {
-    const currentVideo = sense.value.signVideos[index];
+    const currentVideo = glossData.value.glossVideos[index];
     if (!currentVideo) return;
 
     // Validate if video has a videoUrl and an angle
@@ -283,8 +283,8 @@ const updateSignVideo = async (video: SignVideo, index: number) => {
 }
 
 const updateVideoData = (index: number, videoData: PhonologyData) => {
-  if (sense.value.signVideos[index]) {
-    sense.value.signVideos[index].videoData = videoData;
+  if (glossData.value.glossVideos[index]) {
+    glossData.value.glossVideos[index].videoData = videoData;
   }
 }
 
@@ -297,7 +297,7 @@ const handleVideoCancel = (index: number) => {
   } else {
     // Otherwise revert to backup
     if (videosBackup.value[index]) {
-      sense.value.signVideos[index] = JSON.parse(JSON.stringify(videosBackup.value[index]));
+      glossData.value.glossVideos[index] = JSON.parse(JSON.stringify(videosBackup.value[index]));
     }
   }
 }

@@ -17,8 +17,8 @@
       </q-card-section>
       <q-card-section class="column">
         <GlossVideoComponent
-          v-if="selectedSense?.signVideos?.[0]"
-          :sign-video="selectedSense.signVideos.sort((a, b) => a.priority - b.priority)[0] || selectedSense.signVideos[0]"
+          v-if="glossData?.glossVideos?.[0]"
+          :sign-video="glossData.glossVideos.sort((a, b) => a.priority - b.priority)[0] || glossData.glossVideos[0]"
           :edit-mode="false"
         />
       </q-card-section>
@@ -27,12 +27,13 @@
 </template>
 
 <script setup lang="ts">
-import { Sense } from 'src/types/models'
+import { Sense, GlossData } from 'src/types/models'
 import GlossVideoComponent from './GlossVideoComponent.vue'
 import translate from 'src/utils/translate';
 
-const { selectedSense } = defineProps<{
+const { selectedSense, glossData } = defineProps<{
   selectedSense: Sense
+  glossData: GlossData
 }>()
 
 </script>

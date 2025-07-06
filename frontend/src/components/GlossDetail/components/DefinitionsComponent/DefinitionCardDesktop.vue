@@ -28,7 +28,7 @@
         <!-- Definition Content - Side by Side Layout -->
         <div class="definition-content-desktop">
           <!-- Definition Video Section -->
-          <div class="definition-video-section-desktop">
+          <div class="definition-video-section-desktop" v-if="definition.videoDefinitionUrl || isEditing">
             <UploadVideoComponent
               v-if="isEditing && !definition.videoDefinitionUrl"
               video-type="definition"
@@ -60,7 +60,7 @@
           </div>
 
           <!-- Definition Text Section -->
-          <div class="definition-text-section-desktop">
+          <div class="col">
             <q-input
               v-if="isEditing"
               v-model="definition.definition"
@@ -138,6 +138,7 @@ const emit = defineEmits<{
   gap: 24px;
   margin-bottom: 20px;
   align-items: flex-start;
+  flex-direction: row;
 }
 
 .definition-video-section-desktop {

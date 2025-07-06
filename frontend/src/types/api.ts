@@ -1,4 +1,4 @@
-import type { GlossData , Language, Hand, RequestStatus } from './models'
+import type { GlossData , Language, RequestStatus, Hand } from './models'
 
 export type WordStatus = 'PUBLISHED' | 'DRAFT' | 'PENDING';
 
@@ -51,7 +51,6 @@ export interface Sense {
   priority: number;
   lexicalCategory: string;
   definitions: Definition[];
-  signVideos: SignVideo[];
 }
 
 export interface RelatedGloss {
@@ -72,6 +71,7 @@ export interface Gloss {
   isCreatedFromEdit: boolean;
   sense: Sense;
   RelatedGloss: RelatedGloss[];
+  glossVideos: SignVideo[];
 }
 
 // Request DTOs

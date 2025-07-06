@@ -20,6 +20,7 @@
     <MainContent
       v-if="!editMode && selectedSense"
       :selected-sense="selectedSense"
+      :gloss-data="glossData"
     />
     <SenseSelector
       v-model="selectedSenseId"

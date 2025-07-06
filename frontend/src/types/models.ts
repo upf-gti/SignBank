@@ -155,7 +155,7 @@ export interface SignVideo {
   title: string;
   priority: number;
   videoDataId: string;
-  senseId: string;
+  glossDataId: string;
   videos: Video[];
   minimalPairs: MinimalPair[];
   videoData: PhonologyData;
@@ -193,6 +193,7 @@ export interface GlossData {
     id?: string;
     status: 'PUBLISHED' | 'ARCHIVED';
   };
+  glossVideos: SignVideo[];
 }
 
 export interface dictionaryEntry {
