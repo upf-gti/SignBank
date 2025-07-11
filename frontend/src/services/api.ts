@@ -223,6 +223,8 @@ export const api = {
     updateRole: (userId: string, role: 'ADMIN' | 'USER') =>
       apiClient.put(`/users/${userId}/role`, { role }),
     delete: (userId: string) => apiClient.delete(`/users/${userId}`),
+    changePassword: (userId: string, newPassword: string) =>
+      apiClient.put(`/users/${userId}/password`, { newPassword }),
   },
 }
 

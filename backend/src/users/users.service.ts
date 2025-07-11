@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { UserRepository } from '../repositories/user.repository';
 import { Role } from '@prisma/client';
+import * as argon2 from 'argon2';
 
 @Injectable()
 export class UsersService {
@@ -53,6 +54,18 @@ export class UsersService {
     // you might want to add an 'active' field to the User model
     const deletedUser = await this.userRepository.delete(userId);
     const { password, accessToken, refreshToken, ...userWithoutSensitiveData } = deletedUser;
+    return userWithoutSensitiveData;
+  }
+
+  async changePassword(userId: string, newPassword: string) {
+    const user = await this.userRepository.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const hashedPassword = await argon2.hash(newPassword);
+    const updatedUser = await this.userRepository.update(userId, { password: hashedPassword });
+    const { password, accessToken, refreshToken, ...userWithoutSensitiveData } = updatedUser;
     return userWithoutSensitiveData;
   }
 } 

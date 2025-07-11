@@ -839,6 +839,14 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   cannotDemoteLastAdmin: string;
   cannotDeleteLastAdmin: string;
   searchUsers: string;
+  changePassword: string;
+  changePasswordFor: string;
+  newPassword: string;
+  confirmPasswordRequired: string;
+  passwordMinLength: string;
+  passwordsDoNotMatch: string;
+  passwordChanged: string;
+  errorChangingPassword: string;
 }
 
 export default TranslateKeys;

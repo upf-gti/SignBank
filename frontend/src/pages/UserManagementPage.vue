@@ -71,24 +71,35 @@
           <!-- Actions Column -->
           <template #body-cell-actions="props">
             <q-td :props="props">
-              <q-btn
-                :icon="'delete'"
-                color="negative"
-                size="sm"
-                flat
-                :disable="isLastAdmin(props.row) || currentUser?.id === props.row.id"
-                @click="confirmDeleteUser(props.row)"
-              >
-                <q-tooltip v-if="!isLastAdmin(props.row) && currentUser?.id !== props.row.id">
-                  {{ translate('deleteUser') }}
-                </q-tooltip>
-                <q-tooltip v-else-if="isLastAdmin(props.row)">
-                  {{ translate('cannotDeleteLastAdmin') }}
-                </q-tooltip>
-                <q-tooltip v-else>
-                  {{ translate('deleteUser') }}
-                </q-tooltip>
-              </q-btn>
+              <div class="row q-gutter-xs justify-center">
+                <q-btn
+                  :icon="'lock'"
+                  color="primary"
+                  size="sm"
+                  flat
+                  @click="openChangePasswordDialog(props.row)"
+                >
+                  <q-tooltip>{{ translate('changePassword') }}</q-tooltip>
+                </q-btn>
+                <q-btn
+                  :icon="'delete'"
+                  color="negative"
+                  size="sm"
+                  flat
+                  :disable="isLastAdmin(props.row) || currentUser?.id === props.row.id"
+                  @click="confirmDeleteUser(props.row)"
+                >
+                  <q-tooltip v-if="!isLastAdmin(props.row) && currentUser?.id !== props.row.id">
+                    {{ translate('deleteUser') }}
+                  </q-tooltip>
+                  <q-tooltip v-else-if="isLastAdmin(props.row)">
+                    {{ translate('cannotDeleteLastAdmin') }}
+                  </q-tooltip>
+                  <q-tooltip v-else>
+                    {{ translate('deleteUser') }}
+                  </q-tooltip>
+                </q-btn>
+              </div>
             </q-td>
           </template>
         </q-table>
@@ -195,6 +206,57 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <!-- Change Password Dialog -->
+    <q-dialog v-model="showChangePasswordDialog">
+      <q-card style="min-width: 400px">
+        <q-card-section>
+          <div class="text-h6">{{ translate('changePassword') }}</div>
+        </q-card-section>
+
+        <q-card-section>
+          <q-form @submit="changePassword" class="q-gutter-md">
+            <div class="text-body2 q-mb-md">
+              {{ translate('changePasswordFor', { username: userToChangePassword?.username }) }}
+            </div>
+
+            <q-input
+              v-model="newPassword"
+              :label="translate('newPassword')"
+              type="password"
+              outlined
+              :rules="[val => !!val || translate('passwordRequired'), val => val.length >= 6 || translate('passwordMinLength')]"
+            />
+
+            <q-input
+              v-model="confirmPassword"
+              :label="translate('confirmPassword')"
+              type="password"
+              outlined
+              :rules="[
+                val => !!val || translate('confirmPasswordRequired'),
+                val => val === newPassword || translate('passwordsDoNotMatch')
+              ]"
+            />
+
+            <div class="row q-gutter-sm justify-end">
+              <q-btn
+                :label="translate('cancel')"
+                color="grey"
+                flat
+                @click="showChangePasswordDialog = false"
+              />
+              <q-btn
+                :label="translate('changePassword')"
+                type="submit"
+                color="primary"
+                :loading="changingPassword"
+              />
+            </div>
+          </q-form>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -219,6 +281,11 @@ const deleting = ref(false);
 const showCreateDialog = ref(false);
 const showDeleteDialog = ref(false);
 const userToDelete = ref<User | null>(null);
+const showChangePasswordDialog = ref(false);
+const userToChangePassword = ref<User | null>(null);
+const newPassword = ref('');
+const confirmPassword = ref('');
+const changingPassword = ref(false);
 
 // New user form
 const newUser = ref({
@@ -403,6 +470,39 @@ function isLastAdmin(user: User): boolean {
   if (user.role !== Role.ADMIN) return false;
   const adminUsers = users.value.filter(u => u.role === Role.ADMIN);
   return adminUsers.length <= 1;
+}
+
+function openChangePasswordDialog(user: User) {
+  userToChangePassword.value = user;
+  showChangePasswordDialog.value = true;
+}
+
+async function changePassword() {
+  if (!userToChangePassword.value || !newPassword.value) return;
+
+  try {
+    changingPassword.value = true;
+    await api.users.changePassword(userToChangePassword.value.id, newPassword.value);
+    $q.notify({
+      type: 'positive',
+      message: translate('passwordChanged')
+    });
+    showChangePasswordDialog.value = false;
+    resetPasswordForm();
+  } catch (error) {
+    $q.notify({
+      type: 'negative',
+      message: error instanceof Error ? error.message : translate('errorChangingPassword')
+    });
+  } finally {
+    changingPassword.value = false;
+  }
+}
+
+function resetPasswordForm() {
+  newPassword.value = '';
+  confirmPassword.value = '';
+  userToChangePassword.value = null;
 }
 
 // Lifecycle

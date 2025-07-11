@@ -178,7 +178,8 @@ const translations: TranslateKeys = {
     videoSizeExceeded: 'El vídeo és massa gran. La mida màxima és de {maxSize}MB.',
     unsupportedVideoFormat: 'Si us plau, utilitzeu format MP4, WebM o OGG.',
     failedToPlayVideo: 'No s\'ha pogut reproduir el vídeo',
-    failedToCreateDefinition: 'No s\'ha pogut crear la definició'
+    failedToCreateDefinition: 'No s\'ha pogut crear la definició',
+    failedToSortDefinitions: 'No s\'ha pogut ordenar les definicions'
   },
   ACCEPTED: 'Acceptat',
   exampleUpdatedSuccessfully: 'Exemple actualitzat correctament',
@@ -205,8 +206,6 @@ const translations: TranslateKeys = {
   deleteUser: 'Eliminar usuari',
   confirmDelete: 'Confirmar eliminació',
   deleteUserConfirm: 'Estàs segur que vols eliminar l\'usuari {username}?',
-  delete: 'Eliminar',
-  create: 'Crear',
   username: 'Nom d\'usuari',
   name: 'Nom',
   lastName: 'Cognom',
@@ -249,7 +248,6 @@ const translations: TranslateKeys = {
   translations: 'Traduccions',
   noTranslationsYet: 'Encara no hi ha traduccions',
   edit: 'Editar',
-  delete: 'Eliminar',
   loading: 'Carregant',
   exampleVideo: 'Vídeo d\'exemple',
   CATALAN: 'Català',
@@ -358,7 +356,6 @@ const translations: TranslateKeys = {
   definitionTranslationSavedSuccessfully: 'Traducció de definició desada correctament',
   definitionTranslationDeletedSuccessfully: 'Traducció de definició eliminada correctament',
   exampleSavedSuccessfully: 'Exemple desat correctament',
-  confirmDelete: 'Confirmar eliminació',
   confirmDeleteMessage: 'Esteu segur que voleu eliminar aquesta definició?',
   exampleDeletedSuccessfully: 'Exemple eliminat correctament',
   exampleTranslationDeletedSuccessfully: 'Traducció d\'exemple eliminada correctament',
@@ -391,8 +388,17 @@ const translations: TranslateKeys = {
   senseCreatedSuccessfully: 'Accepció creada correctament',
   sortDefinitions: 'Ordenar definicions',
   definitionsSortedSuccessfully: 'Definicions ordenades correctament',
-  create: 'Crear',
   optional: 'Opcional',
+  changePassword: 'Canviar contrasenya',
+  changePasswordFor: 'Canviar contrasenya per a {username}',
+  newPassword: 'Nova contrasenya',
+  confirmPasswordRequired: 'Confirmar contrasenya és obligatori',
+  passwordMinLength: 'La contrasenya ha de tenir almenys 6 caràcters',
+  passwordsDoNotMatch: 'Les contrasenyes no coincideixen',
+  passwordChanged: 'Contrasenya canviada correctament',
+  errorChangingPassword: 'Error en canviar la contrasenya',
+  delete: 'Eliminar',
+  create: 'Crear',
 };
 
 export default translations; 
