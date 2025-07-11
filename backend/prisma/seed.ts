@@ -266,18 +266,18 @@ async function main() {
         data: {
           title: `COLL - ${sense.senseTitle}`,
           priority: 1,
-          sense: {
+          glossData: {
             connect: {
-              id: sense.id
+              id: collGlossData.id
             }
           },
           videoData: {
             create: {
-              hands: sense.senseTitle === 'Human neck' ? Hand.RIGHT : Hand.BOTH,
+              hands: sense.senseTitle === 'Coll (part del cos)' ? Hand.RIGHT : Hand.BOTH,
               configuration: HandConfiguration.CONF_1,
               configurationChanges: ConfigurationChange.BENDING,
               relationBetweenArticulators: RelationBetweenArticulators.ABOVE,
-              location: sense.senseTitle === 'Human neck' ? Location.NECK : Location.NEUTRAL_SPACE,
+              location: sense.senseTitle === 'Coll (part del cos)' ? Location.NECK : Location.NEUTRAL_SPACE,
               movementRelatedOrientation: MovementRelatedOrientation.FRONT,
               orientationRelatedToLocation: OrientationRelatedToLocation.AO_FINGERS_CONTRA,
               orientationChange: OrientationChange.EXTENSION,
@@ -502,9 +502,9 @@ async function main() {
     data: {
       title: '',
       priority: 1,
-      sense: {
+      glossData: {
         connect: {
-          id: contentSense.id
+          id: contentGlossData.id
         }
       },
       videoData: {
@@ -548,9 +548,9 @@ async function main() {
     data: {
       title: '',
       priority: 1,
-      sense: {
+      glossData: {
         connect: {
-          id: felicSense.id
+          id: felicGlossData.id
         }
       },
       videoData: {
@@ -1203,9 +1203,9 @@ async function main() {
       data: {
         title: '',
         priority: 1,
-        sense: {
+        glossData: {
           connect: {
-            id: petitSense.id
+            id: petitGlossData.id
           }
         },
         videoData: {
@@ -1247,9 +1247,9 @@ async function main() {
       data: {
         title: '',
         priority: 1,
-        sense: {
+        glossData: {
           connect: {
-            id: granSense.id
+            id: granGlossData.id
           }
         },
         videoData: {
@@ -1291,9 +1291,9 @@ async function main() {
       data: {
         title: '',
         priority: 1,
-        sense: {
+        glossData: {
           connect: {
-            id: bancSense1.id
+            id: bancGlossData.id
           }
         },
         videoData: {
@@ -1333,10 +1333,10 @@ async function main() {
     prisma.signVideo.create({
       data: {
         title: '',
-        priority: 1,
-        sense: {
+        priority: 2,
+        glossData: {
           connect: {
-            id: bancSense2.id
+            id: bancGlossData.id
           }
         },
         videoData: {
@@ -1378,9 +1378,9 @@ async function main() {
       data: {
         title: '',
         priority: 1,
-        sense: {
+        glossData: {
           connect: {
-            id: sotaSense.id
+            id: sotaGlossData.id
           }
         },
         videoData: {
@@ -1422,9 +1422,9 @@ async function main() {
       data: {
         title: '',
         priority: 1,
-        sense: {
+        glossData: {
           connect: {
-            id: sobreSense.id
+            id: sobreGlossData.id
           }
         },
         videoData: {
@@ -1465,10 +1465,10 @@ async function main() {
     prisma.signVideo.create({
       data: {
         title: '',
-        priority: 2,
-        sense: {
+        priority: 3,
+        glossData: {
           connect: {
-            id: sobreSense2.id
+            id: sobreGlossData.id
           }
         },
         videoData: {

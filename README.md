@@ -1,9 +1,7 @@
 
 TODOS
 - Creacio usuaris
-- If gloss dont exist, go back to search
-- If validation runs, and fails, and user is in admin route, send him to search
-- Pantalla de gestion de entradas
+- Pantalla de gestion de entradas (Fase 2)
 
 
 
