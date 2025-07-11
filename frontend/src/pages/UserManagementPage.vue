@@ -15,461 +15,99 @@
     </div>
 
     <!-- Users Table -->
-          <q-card flat class="col column no-wrap" >
-        <q-card-section>
-          <div class="row items-center justify-between">
-            <div class="text-h6">{{ translate('allUsers') }}</div>
-            <q-input
-              v-model="searchQuery"
-              :placeholder="translate('searchUsers')"
-              dense
-              outlined
-              clearable
-              class="search-input"
-              style="width: 300px;"
-            >
-              <template #prepend>
-                <q-icon name="search" />
-              </template>
-            </q-input>
-          </div>
-        </q-card-section>
-      
-      <q-card-section class="col overflow-auto">
-                  <q-table
-            flat
-            :rows="filteredUsers"
-            :columns="columns"
-            :loading="loading"
-            row-key="id"
-            class="my-sticky-header-table"
-            hide-bottom
-            virtual-scroll
-            :pagination="{ rowsPerPage: 0 }"
-          >
-          <!-- Role Column -->
-          <template #body-cell-role="props">
-            <q-td :props="props">
-              <q-select
-                v-model="props.row.role"
-                :options="roleOptions"
-                dense
-                outlined
-                :disable="isLastAdmin(props.row)"
-                @update:model-value="(newRole) => {
-                  const roleValue = typeof newRole === 'object' ? newRole.value : newRole;
-                  updateUserRole(props.row.id, roleValue);
-                }"
-              >
-                <q-tooltip v-if="isLastAdmin(props.row)">
-                  {{ translate('cannotDemoteLastAdmin') }}
-                </q-tooltip>
-              </q-select>
-            </q-td>
-          </template>
-
-          <!-- Actions Column -->
-          <template #body-cell-actions="props">
-            <q-td :props="props">
-              <div class="row q-gutter-xs justify-center">
-                <q-btn
-                  :icon="'lock'"
-                  color="primary"
-                  size="sm"
-                  flat
-                  @click="openChangePasswordDialog(props.row)"
-                >
-                  <q-tooltip>{{ translate('changePassword') }}</q-tooltip>
-                </q-btn>
-                <q-btn
-                  :icon="'delete'"
-                  color="negative"
-                  size="sm"
-                  flat
-                  :disable="isLastAdmin(props.row) || currentUser?.id === props.row.id"
-                  @click="confirmDeleteUser(props.row)"
-                >
-                  <q-tooltip v-if="!isLastAdmin(props.row) && currentUser?.id !== props.row.id">
-                    {{ translate('deleteUser') }}
-                  </q-tooltip>
-                  <q-tooltip v-else-if="isLastAdmin(props.row)">
-                    {{ translate('cannotDeleteLastAdmin') }}
-                  </q-tooltip>
-                  <q-tooltip v-else>
-                    {{ translate('deleteUser') }}
-                  </q-tooltip>
-                </q-btn>
-              </div>
-            </q-td>
-          </template>
-        </q-table>
-      </q-card-section>
-    </q-card>
+    <UsersTable
+      :users="users"
+      :loading="loading"
+      :search-query="searchQuery"
+      :role-options="roleOptions"
+      :current-user="currentUser"
+      @update:search-query="searchQuery = $event"
+      @change-password="openChangePasswordDialog"
+      @delete-user="confirmDeleteUser"
+      @update-user-role="updateUserRole"
+    />
 
     <!-- Create User Dialog -->
-    <q-dialog v-model="showCreateDialog">
-      <q-card style="min-width: 400px">
-        <q-card-section>
-          <div class="text-h6">{{ translate('createUser') }}</div>
-        </q-card-section>
-
-        <q-card-section>
-          <q-form @submit="createUser" class="q-gutter-md">
-            <q-input
-              v-model="newUser.username"
-              :label="translate('username')"
-              outlined
-              :rules="[val => !!val || translate('usernameRequired')]"
-            />
-
-            <q-input
-              v-model="newUser.email"
-              :label="translate('email')"
-              type="email"
-              outlined
-              :rules="[val => !!val || translate('emailRequired')]"
-            />
-
-            <q-input
-              v-model="newUser.name"
-              :label="translate('name')"
-              outlined
-              :rules="[val => !!val || translate('nameRequired')]"
-            />
-
-            <q-input
-              v-model="newUser.lastName"
-              :label="translate('lastName')"
-              outlined
-              :rules="[val => !!val || translate('lastNameRequired')]"
-            />
-
-            <q-input
-              v-model="newUser.password"
-              :label="translate('password')"
-              type="password"
-              outlined
-              :rules="[val => !!val || translate('passwordRequired')]"
-            />
-
-            <q-select
-              v-model="newUser.role"
-              :label="translate('role')"
-              :options="roleOptions"
-              outlined
-              :rules="[val => !!val || translate('roleRequired')]"
-            />
-
-            <div class="row q-gutter-sm justify-end">
-              <q-btn
-                :label="translate('cancel')"
-                color="grey"
-                flat
-                @click="showCreateDialog = false"
-              />
-              <q-btn
-                :label="translate('create')"
-                type="submit"
-                color="primary"
-                :loading="creating"
-              />
-            </div>
-          </q-form>
-        </q-card-section>
-      </q-card>
-    </q-dialog>
+    <CreateUserDialog
+      :show="showCreateDialog"
+      :loading="creating"
+      :role-options="roleOptions"
+      @close="showCreateDialog = false"
+      @submit="handleCreateUser"
+    />
 
     <!-- Delete Confirmation Dialog -->
-    <q-dialog v-model="showDeleteDialog">
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">{{ translate('confirmDelete') }}</div>
-        </q-card-section>
-
-        <q-card-section>
-          {{ translate('deleteUserConfirm', { username: userToDelete?.username }) }}
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn
-            :label="translate('cancel')"
-            color="grey"
-            flat
-            @click="showDeleteDialog = false"
-          />
-          <q-btn
-            :label="translate('delete')"
-            color="negative"
-            @click="deleteUser"
-            :loading="deleting"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+    <DeleteUserDialog
+      :show="showDeleteDialog"
+      :loading="deleting"
+      :user="userToDelete"
+      @close="showDeleteDialog = false"
+      @confirm="handleDeleteUser"
+    />
 
     <!-- Change Password Dialog -->
-    <q-dialog v-model="showChangePasswordDialog">
-      <q-card style="min-width: 400px">
-        <q-card-section>
-          <div class="text-h6">{{ translate('changePassword') }}</div>
-        </q-card-section>
-
-        <q-card-section>
-          <q-form @submit="changePassword" class="q-gutter-md">
-            <div class="text-body2 q-mb-md">
-              {{ translate('changePasswordFor', { username: userToChangePassword?.username }) }}
-            </div>
-
-            <q-input
-              v-model="newPassword"
-              :label="translate('newPassword')"
-              type="password"
-              outlined
-              :rules="[val => !!val || translate('passwordRequired'), val => val.length >= 6 || translate('passwordMinLength')]"
-            />
-
-            <q-input
-              v-model="confirmPassword"
-              :label="translate('confirmPassword')"
-              type="password"
-              outlined
-              :rules="[
-                val => !!val || translate('confirmPasswordRequired'),
-                val => val === newPassword || translate('passwordsDoNotMatch')
-              ]"
-            />
-
-            <div class="row q-gutter-sm justify-end">
-              <q-btn
-                :label="translate('cancel')"
-                color="grey"
-                flat
-                @click="showChangePasswordDialog = false"
-              />
-              <q-btn
-                :label="translate('changePassword')"
-                type="submit"
-                color="primary"
-                :loading="changingPassword"
-              />
-            </div>
-          </q-form>
-        </q-card-section>
-      </q-card>
-    </q-dialog>
+    <ChangePasswordDialog
+      :show="showChangePasswordDialog"
+      :loading="changingPassword"
+      :user="userToChangePassword"
+      @close="showChangePasswordDialog = false"
+      @submit="handleChangePassword"
+    />
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
-import { useQuasar } from 'quasar';
-import { api } from 'src/services/api';
-import useUserStore from 'src/stores/user.store';
-import type { User } from 'src/types/models';
-import { Role } from 'src/types/models';
+import { ref, onMounted } from 'vue';
 import translate from 'src/utils/translate';
+import { useUserManagement } from 'src/composables/UserManagement/useUserManagement';
+import {
+  UsersTable,
+  CreateUserDialog,
+  DeleteUserDialog,
+  ChangePasswordDialog
+} from 'src/components/UserManagement';
+import type { User } from 'src/types/models';
 
-const $q = useQuasar();
-const userStore = useUserStore();
 const pageHeight = ref(0);
-// Reactive data
-const users = ref<User[]>([]);
-const searchQuery = ref('');
-const loading = ref(false);
-const creating = ref(false);
-const deleting = ref(false);
+
+// Use the composable
+const {
+  users,
+  searchQuery,
+  loading,
+  creating,
+  deleting,
+  changingPassword,
+  currentUser,
+  roleOptions,
+  loadUsers,
+  updateUserRole,
+  createUser,
+  deleteUser,
+  changePassword
+} = useUserManagement();
+
+// Dialog states
 const showCreateDialog = ref(false);
 const showDeleteDialog = ref(false);
-const userToDelete = ref<User | null>(null);
 const showChangePasswordDialog = ref(false);
+const userToDelete = ref<User | null>(null);
 const userToChangePassword = ref<User | null>(null);
-const newPassword = ref('');
-const confirmPassword = ref('');
-const changingPassword = ref(false);
 
-// New user form
-const newUser = ref({
-  username: '',
-  email: '',
-  name: '',
-  lastName: '',
-  password: '',
-  role: Role.USER as Role
-});
-
-// Computed properties
-const currentUser = computed(() => ({
-  id: '', // We'll need to get this from the store or API
-  role: userStore.role
-}));
-
-const filteredUsers = computed(() => {
-  if (!searchQuery.value) return users.value;
-  
-  const query = searchQuery.value.toLowerCase();
-  return users.value.filter(user => 
-    user.name.toLowerCase().includes(query) ||
-    user.username.toLowerCase().includes(query) ||
-    user.email.toLowerCase().includes(query)
-  );
-});
-const roleOptions = [
-  { label: translate('admin'), value: Role.ADMIN },
-  { label: translate('user'), value: Role.USER }
-];
-
-// Table columns
-const columns = [
-  {
-    name: 'username',
-    label: translate('username'),
-    field: 'username',
-    align: 'left' as const,
-    sortable: true
-  },
-  {
-    name: 'email',
-    label: translate('email'),
-    field: 'email',
-    align: 'left' as const,
-    sortable: true
-  },
-  {
-    name: 'name',
-    label: translate('name'),
-    field: 'name',
-    align: 'left' as const,
-    sortable: true
-  },
-  {
-    name: 'lastName',
-    label: translate('lastName'),
-    field: 'lastName',
-    align: 'left' as const,
-    sortable: true
-  },
-  {
-    name: 'role',
-    label: translate('role'),
-    field: 'role',
-    align: 'left' as const,
-    sortable: true,
-    format: (val: Role) => translate(val.toLowerCase())
-  },
-  {
-    name: 'createdAt',
-    label: translate('createdAt'),
-    field: 'createdAt',
-    align: 'left' as const,
-    sortable: true,
-    format: (val: string) => new Date(val).toLocaleDateString()
-  },
-  {
-    name: 'actions',
-    label: translate('actions'),
-    field: 'actions',
-    align: 'center' as const,
-    sortable: false
-  }
-];
-
-// Methods
-async function loadUsers() {
-  try {
-    loading.value = true;
-    const response = await api.users.getAll();
-    users.value = response.data;
-  } catch (error) {
-    $q.notify({
-      type: 'negative',
-      message: error instanceof Error ? error.message : translate('errorLoadingUsers')
-    });
-  } finally {
-    loading.value = false;
-  }
-}
-
-async function updateUserRole(userId: string, newRole: Role) {
-  try {
-    await api.users.updateRole(userId, newRole);
-    $q.notify({
-      type: 'positive',
-      message: translate('userRoleUpdated')
-    });
-    await loadUsers(); // Reload to get updated data
-  } catch (error) {
-    $q.notify({
-      type: 'negative',
-      message: error instanceof Error ? error.message : translate('errorUpdatingRole')
-    });
-    await loadUsers(); // Reload to revert changes
-  }
-}
-
-async function createUser() {
-  try {
-    creating.value = true;
-    await api.auth.register(newUser.value);
-    $q.notify({
-      type: 'positive',
-      message: translate('userCreated')
-    });
-    showCreateDialog.value = false;
-    resetNewUserForm();
-    await loadUsers();
-  } catch (error) {
-    $q.notify({
-      type: 'negative',
-      message: error instanceof Error ? error.message : translate('errorCreatingUser')
-    });
-  } finally {
-    creating.value = false;
-  }
-}
-
+// Event handlers
 function confirmDeleteUser(user: User) {
   userToDelete.value = user;
   showDeleteDialog.value = true;
 }
 
-async function deleteUser() {
+async function handleDeleteUser() {
   if (!userToDelete.value) return;
-
-  try {
-    deleting.value = true;
-    await api.users.delete(userToDelete.value.id);
-    $q.notify({
-      type: 'positive',
-      message: translate('userDeleted')
-    });
+  
+  const success = await deleteUser(userToDelete.value.id);
+  if (success) {
     showDeleteDialog.value = false;
     userToDelete.value = null;
-    await loadUsers();
-  } catch (error) {
-    $q.notify({
-      type: 'negative',
-      message: error instanceof Error ? error.message : translate('errorDeletingUser')
-    });
-  } finally {
-    deleting.value = false;
   }
-}
-
-function resetNewUserForm() {
-  newUser.value = {
-    username: '',
-    email: '',
-    name: '',
-    lastName: '',
-    password: '',
-    role: Role.USER
-  };
-}
-
-function isLastAdmin(user: User): boolean {
-  if (user.role !== Role.ADMIN) return false;
-  const adminUsers = users.value.filter(u => u.role === Role.ADMIN);
-  return adminUsers.length <= 1;
 }
 
 function openChangePasswordDialog(user: User) {
@@ -477,39 +115,35 @@ function openChangePasswordDialog(user: User) {
   showChangePasswordDialog.value = true;
 }
 
-async function changePassword() {
-  if (!userToChangePassword.value || !newPassword.value) return;
-
-  try {
-    changingPassword.value = true;
-    await api.users.changePassword(userToChangePassword.value.id, newPassword.value);
-    $q.notify({
-      type: 'positive',
-      message: translate('passwordChanged')
-    });
+async function handleChangePassword(password: string) {
+  if (!userToChangePassword.value) return;
+  
+  const success = await changePassword(userToChangePassword.value.id, password);
+  if (success) {
     showChangePasswordDialog.value = false;
-    resetPasswordForm();
-  } catch (error) {
-    $q.notify({
-      type: 'negative',
-      message: error instanceof Error ? error.message : translate('errorChangingPassword')
-    });
-  } finally {
-    changingPassword.value = false;
+    userToChangePassword.value = null;
   }
 }
 
-function resetPasswordForm() {
-  newPassword.value = '';
-  confirmPassword.value = '';
-  userToChangePassword.value = null;
+async function handleCreateUser(userData: {
+  username: string;
+  email: string;
+  name: string;
+  lastName: string;
+  password: string;
+  role: any;
+}) {
+  const success = await createUser(userData);
+  if (success) {
+    showCreateDialog.value = false;
+  }
 }
 
 // Lifecycle
 onMounted(() => {
   loadUsers();
 });
-</script> 
+</script>
 <style lang="sass">
 .my-sticky-header-table
   /* height or max-height is important */
