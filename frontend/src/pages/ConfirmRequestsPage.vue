@@ -1,5 +1,9 @@
 <template>
-  <q-page class="q-pa-md">
+  <q-page class="q-pa-md no-wrap"
+  :style-fn="(header: number, height: number) => {
+      pageHeight = height-header
+      return { height: `${height - header}px` };
+    }" >
     <div class="row justify-between items-center q-mb-md">
       <div class="text-h5">
         {{ translate('pendingRequests') }}
@@ -50,9 +54,15 @@
           </q-card-section>
   
           <q-card-section class="row justify-between items-center">
-            <div class="text-caption">
-              {{ translate('requested') }}: {{ new Date(request.createdAt).toLocaleDateString() }}
+            <div class="column items-start">
+              <div class="text-caption">
+                {{ translate('requested') }}: {{ new Date(request.createdAt).toLocaleDateString() }}
+              </div>
+              <div class="text-caption">
+                {{ translate('requestedBy') }}: {{ request.creator.name }} {{ request.creator.lastName }}
+              </div>
             </div>
+            
             <q-btn
               flat
               dense
@@ -73,15 +83,14 @@
   import { useRouter } from 'vue-router';
   import { api } from 'src/services/api';
   import translate from 'src/utils/translate';
-  import type {GlossRequest, RequestStatus } from 'src/types/models';
+  import type { GlossRequest } from 'src/types/models';
+  import { RequestStatus } from 'src/types/models';
   
   const $router = useRouter();
-  
+  const pageHeight = ref(0);
   const requests = ref<GlossRequest[]>();
   const loading = ref(true);
   const error = ref<string | null>(null);
-  
-  const showNewRequestDialog = ref(false);
   
   onMounted(async () => {
     await fetchRequests();
@@ -101,9 +110,9 @@
   
   const getStatusColor = (status: RequestStatus): string => {
     switch (status) {
-      case 'ACCEPTED':
+      case RequestStatus.ACCEPTED:
         return 'positive';
-      case 'DENIED':
+      case RequestStatus.DENIED:
         return 'negative';
       default:
         return 'warning';

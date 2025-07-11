@@ -78,7 +78,7 @@ const emit = defineEmits<{
 
 const loading = ref(false);
 
-async function handleDelete() {
+ function handleDelete() {
   if (!props.pair.id) return;
   loading.value = true;
   try {

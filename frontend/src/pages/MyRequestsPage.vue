@@ -1,5 +1,10 @@
 <template>
-  <q-page class="q-pa-md">
+  <q-page class="q-pa-md"
+  :style-fn="(header: number, height: number) => {
+      pageHeight = height-header
+      return { height: `${height - header}px` };
+    }"
+    >
     <div class="row justify-between items-center q-mb-md">
       <div class="text-h5">
         {{ translate('myGlossRequests') }}
@@ -94,6 +99,18 @@
                     {{ translate('requested') }}: {{ new Date(request.createdAt).toLocaleDateString() }}
                   </div>
                   <div
+                    v-if="request.status === 'ACCEPTED'"
+                    class="text-caption q-mb-sm"
+                  >
+                    {{ translate('acceptedBy') }}: {{ request.acceptedBy?.name }} {{ request.acceptedBy?.lastName }}
+                  </div>
+                  <div
+                    v-if="request.status === 'DENIED'"
+                    class="text-caption q-mb-sm"
+                  >
+                    {{ translate('deniedBy') }}: {{ request.deniedBy?.name }} {{ request.deniedBy?.lastName }}
+                  </div>
+                  <div
                     v-if="request.status === 'DENIED' && request.denyReason"
                     class="text-caption text-negative q-mb-sm"
                   >
@@ -116,7 +133,7 @@
                     dense
                     icon="info"
                     :label="translate('details')"
-                    @click="$router.push(`/my-requests/view/${request.id}`)"
+                    @click="request.status === 'NOT_COMPLETED' ? $router.push(`/my-requests/edit/${request.id}`) : $router.push(`/my-requests/view/${request.id}`)"
                   />
                 </q-card-actions>
               </q-card>
@@ -133,10 +150,10 @@ import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { api } from 'src/services/api';
 import translate from 'src/utils/translate';
-import type { GlossRequest, RequestStatus } from 'src/types/models';
+import { GlossRequest, RequestStatus } from 'src/types/models';
 
 const $router = useRouter();
-
+const pageHeight = ref(0);
 const requests = ref<GlossRequest[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
@@ -160,20 +177,20 @@ const fetchRequests = async () => {
 
 const filteredRequests = computed(() => {
   return {
-    not_sent: requests.value?.filter(r => r.status === 'NOT_COMPLETED') || [],
-    pending: requests.value?.filter(r => r.status === 'WAITING_FOR_APPROVAL') || [],
-    accepted: requests.value?.filter(r => r.status === 'ACCEPTED') || [],
-    denied: requests.value?.filter(r => r.status === 'DENIED') || []
+    not_sent: requests.value?.filter(r => r.status === RequestStatus.NOT_COMPLETED) || [],
+    pending: requests.value?.filter(r => r.status === RequestStatus.WAITING_FOR_APPROVAL) || [],
+    accepted: requests.value?.filter(r => r.status === RequestStatus.ACCEPTED) || [],
+    denied: requests.value?.filter(r => r.status === RequestStatus.DENIED) || []
   };
 });
 
 const getStatusColor = (status: RequestStatus): string => {
   switch (status) {
-    case 'ACCEPTED':
+    case RequestStatus.ACCEPTED:
       return 'positive';
-    case 'DENIED':
+    case RequestStatus.DENIED:
       return 'negative';
-    case 'NOT_COMPLETED':
+    case RequestStatus.NOT_COMPLETED:
       return 'grey';
     default:
       return 'warning';

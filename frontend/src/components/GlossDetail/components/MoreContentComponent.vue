@@ -7,6 +7,7 @@
       indicator-color="primary"
       align="justify"
       narrow-indicator
+      @update:model-value="handleTabChange"
     >
       <q-tab
         name="definitions"
@@ -41,7 +42,7 @@
 
       <q-tab-panel name="videos">
         <VideosComponent
-          v-model="sense"
+          v-model="localGlossData"
           :edit-mode="editMode"
           @update:gloss-data="updateGlossData"
         />
@@ -57,10 +58,10 @@
 
       <q-tab-panel name="related">
         <RelatedGlosses
-          :related-glosses="glossData.relationsAsSource || []"
-          :minimal-pairs="glossData.minimalPairsAsSource || []"
+          :related-glosses="localGlossData.relationsAsSource || []"
+          :minimal-pairs="localGlossData.minimalPairsAsSource || []"
           :edit-mode="editMode"
-          :gloss-id="glossData.id || ''"
+          :gloss-id="localGlossData.id || ''"
           @update:gloss-data="updateGlossData"
         />
       </q-tab-panel>
@@ -70,13 +71,13 @@
 
 <script setup lang="ts">
 import translate from 'src/utils/translate';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { Sense } from 'src/types/models';
 import type { GlossData } from 'src/types/models';
-import ExamplesComponent from './ExamplesComponent.vue';
+import ExamplesComponent from './ExamplesComponent/ExamplesComponent.vue';
 import VideosComponent from './VideosComponent.vue';
 import RelatedGlosses from './RelatedGlosses.vue';
-import DefinitionsComponent from './DefinitionsComponent.vue';
+import DefinitionsComponent from './DefinitionsComponent/DefinitionsComponent.vue';
 
 const selectedContent = ref<string>('definitions')
 const sense = defineModel<Sense>({ required: true })
@@ -89,7 +90,19 @@ const { glossData, editMode } = defineProps<{
   editMode: boolean;
 }>();
 
+watch(() => glossData, (newGlossData) => {
+  localGlossData.value = newGlossData;
+}, { deep: true });
+
+const localGlossData = ref<GlossData>(glossData);
+
 const updateGlossData = (glossData: GlossData) => {
   emit('update:glossData', glossData);
+}
+
+const handleTabChange = () => {
+  setTimeout(() => {
+    
+  }, 100);
 }
 </script>

@@ -11,7 +11,7 @@
     <PhonologyFilters
       :phonology-data="videoData"
       :is-editable="editMode"
-      @update:phonologyData="$emit('update:video-data', $event)"
+      @update:phonology-data="$emit('update:video-data', $event)"
     />
   </q-card-section>
 </template>

@@ -10,7 +10,7 @@
         <div class="row items-center justify-between">
           <div>
             <div class="text-h6 gloss-title">
-              {{ gloss.targetGloss.gloss }}
+              {{ gloss.targetGloss?.gloss }}
               <q-tooltip>{{ t('clickToView') }}</q-tooltip>
             </div>
             <div class="relation-type">
@@ -20,8 +20,7 @@
                 text-color="white"
                 class="relation-chip"
               >
-                {{ gloss.relationType }}
-                <q-tooltip>{{ getRelationDescription(gloss.relationType) }}</q-tooltip>
+                {{ translate(gloss.relationType) }}
               </q-chip>
             </div>
           </div>
@@ -80,22 +79,12 @@ const emit = defineEmits<{
 
 const loading = ref(false);
 
-function getRelationDescription(type: string): string {
-  const descriptions: Record<string, string> = {
-    SYNONYM: t('synonymDescription'),
-    ANTONYM: t('antonymDescription'),
-    HOMONYM: t('homonymDescription'),
-    VARIANT: t('variantDescription'),
-    ASSOCIATED_CONCEPT: t('associatedConceptDescription')
-  };
-  return descriptions[type] || type;
-}
 
-async function handleDelete() {
+ function handleDelete() {
   if (!props.gloss.id) return;
   loading.value = true;
   try {
-    await emit('delete', props.gloss.id);
+    emit('delete', props.gloss.id);
   } finally {
     loading.value = false;
   }

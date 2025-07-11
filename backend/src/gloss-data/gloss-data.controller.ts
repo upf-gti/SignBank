@@ -17,6 +17,27 @@ export class GlossDataController {
     return this.glossDataService.getGlossData(id);
   }
 
+  @Patch(':id/gloss')
+  @Roles(Role.ADMIN)
+  async updateGloss(
+    @Param('id') id: string,
+    @Body() data: { gloss: string }
+  ) {
+    return this.glossDataService.updateGloss(id, data.gloss);
+  }
+
+  @Patch(':id/archive')
+  @Roles(Role.ADMIN)
+  async archiveGloss(@Param('id') id: string) {
+    return this.glossDataService.archiveGloss(id);
+  }
+
+  @Patch(':id/unarchive')
+  @Roles(Role.ADMIN)
+  async unarchiveGloss(@Param('id') id: string) {
+    return this.glossDataService.unarchiveGloss(id);
+  }
+
   // Sense management
   @Post(':id/senses')
   async addSense(

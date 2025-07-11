@@ -1,12 +1,131 @@
+
+<template>
+  <q-page 
+    :style-fn="(header: number, height: number) => {
+      pageHeight = height-header
+      return { height: `${height - header}px` };
+    }"
+    class="column q-pa-md no-wrap"
+  >
+    <!-- Top Row: Search Input and Buttons -->
+    <div class="row q-mb-md q-col-gutter-md justify-center items-center">
+      <div class="col-12 col-md-2">
+        <q-btn
+          :icon="showFilters ? 'expand_less' : 'expand_more'"
+          :label="showFilters ? translate('hideFilters') : translate('showFilters')"
+          color="primary"
+          outline
+          class="full-width"
+          @click="toggleFilters"
+        />
+      </div>
+      <div class="col-12 col-md-10">
+        <SearchInput
+          :model-value="searchQuery"
+          @update:model-value="searchQuery = $event"
+          @search="performSearch"
+        />
+      </div>
+    </div>
+
+    <!-- Main Content: Filters and Results -->
+    <div v-if="$q.screen.gt.md" class="row q-col-gutter-md col" :style="{ overflowY: 'auto' }">
+      <!-- Filters Sidebar -->
+      <div 
+        v-show="showFilters" 
+        class="col-12 col-md-3"
+        style="max-height: calc(100vh - 200px); overflow-y: auto;"
+      >
+        <SearchFilters
+          v-model:search-query="searchQuery"
+          v-model:selected-category="selectedLexicalCategory"
+          v-model:selected-hands="selectedHands"
+          v-model:filter-inputs="filterInputs"
+          @search="performSearch"
+          @clear="performSearch"
+        />
+      </div>
+
+      <!-- Search Results -->
+      <div class="col fit">
+        <SearchResults
+          :results="searchResults"
+          :loading="loading"
+          :page="page"
+          :per-page="perPage"
+          :show-details="showDetails"
+          @update:page="(newPage) => { page = newPage; performSearch(); }"
+          @update:show-details="showDetails = $event"
+          @view-details="viewGlossDetails"
+        />
+      </div>
+    </div>
+    <div v-else class="column q-col-gutter-md col q-mt-md no-wrap" :style="{ overflowY: 'auto' }">
+      <!-- Filters Sidebar -->
+      <div 
+        v-show="showFilters" 
+        class="col-12 col-md-3"
+      >
+        <SearchFilters
+          v-model:search-query="searchQuery"
+          v-model:selected-category="selectedLexicalCategory"
+          v-model:selected-hands="selectedHands"
+          v-model:filter-inputs="filterInputs"
+          @search="performSearch"
+          @clear="performSearch"
+        />
+      </div>
+
+      <!-- Search Results -->
+      <div class="col fit" 
+        v-show="!showFilters"
+        :style="{ overflowY: 'auto' }"
+        >
+        <SearchResults
+          :results="searchResults"
+          :loading="loading"
+          :page="page"
+          :per-page="perPage"
+          :show-details="showDetails"
+          @update:page="(newPage) => { page = newPage; performSearch(); }"
+          @update:show-details="showDetails = $event"
+          @view-details="viewGlossDetails"
+        />
+      </div>
+    </div>
+  </q-page>
+</template>
+
+
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { searchService, type SearchParams, type SearchResponse } from 'src/services/search.service';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import SearchFilters from 'src/components/Search/SearchFilters.vue';
 import SearchResults from 'src/components/Search/SearchResults.vue';
+import SearchInput from 'src/components/Search/components/SearchInput.vue';
 import type { PhonologyData } from 'src/types/models';
-import { Hand } from 'src/types/enums';
+import translate from 'src/utils/translate';
+
+// Create a type for filter inputs that allows empty values
+type FilterInputs = {
+  hands: string | null;
+  configuration: string;
+  configurationChanges: string;
+  relationBetweenArticulators: string;
+  location: string;
+  movementRelatedOrientation: string;
+  orientationRelatedToLocation: string;
+  orientationChange: string;
+  contactType: string;
+  movementType: string;
+  vocalization: string;
+  nonManualComponent: string;
+  inicialization: string;
+  repeatedMovement: boolean | null;
+  movementDirection: string;
+};
 
 const $q = useQuasar();
 const router = useRouter();
@@ -17,14 +136,29 @@ const searchQuery = ref('');
 const searchResults = ref<SearchResponse | null>(null);
 const loading = ref(false);
 const page = ref(1);
-const perPage = ref(20);
 const showDetails = ref(false);
+
+// Dynamic perPage calculation based on screen size
+const perPage = computed(() => {
+  const width = window.innerWidth;
+  
+  if (width >= 1900) {
+    return 24; // 4 columns × 6 rows
+  } else if (width >= 1024) {
+    return 21; // 3 columns × 7 rows
+  } else if (width >= 600) {
+    return 20; // 2 columns × 10 rows
+  } else {
+    return 20; // 1 column × 20 rows
+  }
+});
+const showFilters = ref(false);
 
 // Filters state
 const selectedLexicalCategory = ref<string>('');
 const selectedHands = ref<string>('');
-const filterInputs = ref<PhonologyData>({
-  hands: Hand.RIGHT,
+const filterInputs = ref<FilterInputs>({
+  hands: null,
   configuration: '',
   configurationChanges: '',
   relationBetweenArticulators: '',
@@ -36,16 +170,15 @@ const filterInputs = ref<PhonologyData>({
   movementType: '',
   vocalization: '',
   nonManualComponent: '',
-  inicialization: '' 
+  inicialization: '',
+  repeatedMovement: null,
+  movementDirection: ''
 });
 
 // Computed properties
 const filterBy = computed(() => {
   const filters = [];
   
-  if (selectedLexicalCategory.value !== '' && selectedLexicalCategory.value !== null) {
-    filters.push(`lexicalCategory:='${selectedLexicalCategory.value}'`);
-  }
   
   if (selectedHands.value !== '' && selectedHands.value !== null) {
     filters.push(`hands:='${selectedHands.value}'`);
@@ -54,20 +187,17 @@ const filterBy = computed(() => {
   // Add text input filters - using contains operator for fuzzy matching
   for (const [field, value] of Object.entries(filterInputs.value)) {
     if (value !== '' && value !== null) {
-      // Use contains operator for phonology fields to enable partial matching
-      filters.push(`${field}:='${value}'`);
+      // Handle boolean values differently
+      if (typeof value === 'boolean') {
+        filters.push(`${field}:=${value}`);
+      } else {
+        // Use contains operator for phonology fields to enable partial matching
+        filters.push(`${field}:='${value}'`);
+      }
     }
   }
   
   return filters.join(' && ');
-});
-
-const hasResults = computed(() => {
-  return searchResults.value?.hits && searchResults.value.hits.length > 0;
-});
-
-const totalResults = computed(() => {
-  return searchResults.value?.found || 0;
 });
 
 // Methods
@@ -80,7 +210,7 @@ async function performSearch() {
     
     // If there are phonology filters selected, add them to the search query for fuzzy matching
     const phonologyTerms = [];
-    for (const [field, value] of Object.entries(filterInputs.value)) {
+    for (const [, value] of Object.entries(filterInputs.value)) {
       if (value !== '') {
         phonologyTerms.push(value);
       }
@@ -98,7 +228,7 @@ async function performSearch() {
       page: Number(page.value),
       limit: Number(perPage.value),
       filter_by: filterBy.value || undefined,
-      facet_by: 'lexicalCategory,hands,configuration,configurationChanges,relationBetweenArticulators,location,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType'
+      facet_by: 'hands,configuration,configurationChanges,relationBetweenArticulators,location,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType'
     };
     
     searchResults.value = await searchService.search(params);
@@ -118,50 +248,43 @@ function viewGlossDetails(glossId: string) {
   })
 }
 
+function toggleFilters() {
+  showFilters.value = !showFilters.value;
+}
+
 // Lifecycle
-onMounted(() => {
-  performSearch();
+onMounted(async () => {
+  await performSearch();
 });
 </script>
-
-<template>
-  <q-page 
-    :style-fn="(header: number, height: number) => {
-      pageHeight = height-header
-      return { height: `${height - header}px` };
-    }"
-    class="row q-pa-md"
-  >
-    <!-- Left Sidebar -->
-    <div class="col-12 col-md-3 q-pr-md">
-      <SearchFilters
-        v-model:search-query="searchQuery"
-        v-model:selected-category="selectedLexicalCategory"
-        v-model:selected-hands="selectedHands"
-        v-model:filter-inputs="filterInputs"
-        @search="performSearch"
-        @clear="performSearch"
-      />
-    </div>
-
-    <!-- Main Content -->
-    <div class="col-12 col-md-9">
-      <SearchResults
-        :results="searchResults"
-        :loading="loading"
-        :page="page"
-        :per-page="perPage"
-        :show-details="showDetails"
-        @update:page="(newPage) => { page = newPage; performSearch(); }"
-        @update:show-details="showDetails = $event"
-        @view-details="viewGlossDetails"
-      />
-    </div>
-  </q-page>
-</template>
 
 <style scoped>
 .q-expansion-item :deep(.q-item) {
   padding: 4px 0;
+}
+
+/* Add a subtle scrollbar style */
+.filters-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.filters-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.filters-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.filters-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .q-page {
+    padding: 8px;
+  }
 }
 </style> 

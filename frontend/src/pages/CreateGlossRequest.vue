@@ -1,5 +1,10 @@
 <template>
-  <q-page padding>
+  <q-page padding 
+  :style-fn="(header: number, height: number) => {
+      pageHeight = height-header
+      return { height: `${height - header}px` };
+    }"
+    >
     <div class="row justify-center">
       <div class="col-12 col-md-8 col-lg-6">
         <q-card class="q-pa-lg">
@@ -30,8 +35,6 @@
               />
             </div>
           </q-form>
-
-          
         </q-card>
       </div>
     </div>
@@ -47,7 +50,7 @@ import { api } from 'src/services/api'
 
 const router = useRouter()
 const $q = useQuasar()
-
+const pageHeight = ref(0);
 const loading = ref(false)
 const form = ref({
   gloss: ''
@@ -59,7 +62,9 @@ async function onSubmit() {
     const response = await api.glossRequests.create(form.value)
 
     // Navigate to the edit page for this request
-    router.push(`/my-requests/edit/${response.data.id}`)
+    router.push(`/my-requests/edit/${response.data.id}`).catch((err) => {
+      console.error(err)
+    })
   } catch (error) {
     console.error('Error creating gloss request:', error)
     $q.notify({

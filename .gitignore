@@ -3,3 +3,7 @@ database
 FileServer
 .env
 mongoDb/data
+# Lock files
+pnpm-lock.yaml
+**/yarn.lock
+**/package-lock.json

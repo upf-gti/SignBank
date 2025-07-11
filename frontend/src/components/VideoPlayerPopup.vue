@@ -25,6 +25,7 @@
           loop
           class="video-player"
           :src="getVideoUrl(videoUrl)"
+          muted
           @error="handleVideoError"
         />
         <div class="text-h6 q-mt-md">

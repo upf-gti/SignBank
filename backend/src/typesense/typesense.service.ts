@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import * as Typesense from 'typesense';
 import { VIDEOS_COLLECTION_NAME, videosSchema } from './typesense.config';
 import { VideoIndex } from './types/video-index.type';
+import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType, MovementDirection, GlossStatus, SignVideo, GlossData, VideoData } from '@prisma/client';
 
 @Injectable()
 export class TypesenseService implements OnModuleInit {
@@ -46,6 +47,28 @@ export class TypesenseService implements OnModuleInit {
     }
   }
 
+  async deleteDocumentsByGlossId(glossId: string) {
+    try {
+      // Search for all documents with the specific glossId
+      const searchResults = await this.client.collections(VIDEOS_COLLECTION_NAME).documents().search({
+        q: '*',
+        filter_by: `glossId:=${glossId}`,
+        per_page: 250 // Maximum documents per page
+      });
+
+      // Delete each document found
+      const deletePromises = searchResults.hits.map(hit => 
+        this.deleteDocument((hit.document as any).id)
+      );
+
+      await Promise.all(deletePromises);
+      this.logger.log(`Deleted ${searchResults.hits.length} documents for gloss ${glossId}`);
+    } catch (error) {
+      this.logger.error(`Failed to delete documents for gloss ${glossId}:`, error.stack);
+      throw error;
+    }
+  }
+
   async upsertDocument(document: VideoIndex) {
     try {
       await this.client.collections(VIDEOS_COLLECTION_NAME).documents().upsert(document);
@@ -62,9 +85,20 @@ export class TypesenseService implements OnModuleInit {
         include: {
           videos: true,
           videoData: true,
-          sense: {
+          glossData: {
             include: {
-              glossData: true
+              senses: {
+                include: {
+                  definitions: {
+                    orderBy: {
+                      priority: 'asc'
+                    }
+                  }
+                },
+                orderBy: {
+                  priority: 'asc'
+                }
+              }
             }
           }
         }
@@ -113,83 +147,228 @@ export class TypesenseService implements OnModuleInit {
     }
   }
 
-  async syncAllVideos() {
-    this.logger.log('Starting video sync...');
+  private async importDocuments(documents: VideoIndex[]) {
     try {
-      const dictionaryEntries = await this.prisma.dictionaryEntry.findMany({
+      const results = [];
+      // Process documents one by one
+      for (const document of documents) {
+        try {
+          // Use upsert which will create or update the document
+          const result = await this.client.collections(VIDEOS_COLLECTION_NAME).documents().upsert(document);
+          this.logger.debug(`Successfully upserted document ${document.id}`);
+        } catch (error) {
+          this.logger.error(`Failed to process document ${document.id}:`, {
+            error: error.message,
+            document: JSON.stringify(document, null, 2)
+          });
+          results.push({ success: false, error: error.message });
+        }
+      }      
+      return results;
+    } catch (error) {
+      this.logger.error('Import error:', {
+        message: error.message,
+        stack: error.stack,
+        details: error.importResults ? JSON.stringify(error.importResults, null, 2) : 'No import results available'
+      });
+      throw error;
+    }
+  }
+
+  createVideoDocument(
+    signVideo: {
+      id: string;
+      title: string;
+      videos: { url: string }[];
+      videoData: VideoData;
+    },
+    glossData: GlossData & {
+      senses?: {
+        id: string;
+        priority: number;
+        definitions: {
+          id: string;
+          definition: string;
+          priority: number;
+        }[];
+      }[];
+    }
+  ): VideoIndex {
+    // Get the first description of the first sense
+    let description = '';
+    if (glossData.senses && glossData.senses.length > 0) {
+      // Sort senses by priority (ascending) and get the first one
+      const firstSense = glossData.senses.sort((a, b) => a.priority - b.priority)[0];
+      if (firstSense.definitions && firstSense.definitions.length > 0) {
+        // Sort definitions by priority (ascending) and get the first one
+        const firstDefinition = firstSense.definitions.sort((a, b) => a.priority - b.priority)[0];
+        description = firstDefinition.definition;
+      }
+    }
+
+    const document: VideoIndex = {
+      id: signVideo.id,
+      url: signVideo.videos[0]?.url || '',
+      signVideoTitle: signVideo.title || '',
+      hands: signVideo.videoData?.hands || Hand.RIGHT,
+      configuration: signVideo.videoData?.configuration || '',
+      configurationChanges: signVideo.videoData?.configurationChanges || '',
+      relationBetweenArticulators: signVideo.videoData?.relationBetweenArticulators || '',
+      location: signVideo.videoData?.location || '',
+      movementRelatedOrientation: signVideo.videoData?.movementRelatedOrientation || '',
+      orientationRelatedToLocation: signVideo.videoData?.orientationRelatedToLocation || '',
+      orientationChange: signVideo.videoData?.orientationChange || '',
+      contactType: signVideo.videoData?.contactType || '',
+      movementType: signVideo.videoData?.movementType || '',
+      movementDirection: signVideo.videoData?.movementDirection || '',
+      vocalization: signVideo.videoData?.vocalization || '',
+      nonManualComponent: signVideo.videoData?.nonManualComponent || '',
+      inicialization: signVideo.videoData?.inicialization || '',
+      repeatedMovement: signVideo.videoData?.repeatedMovement || false,
+      glossId: glossData.id,
+      gloss: glossData.gloss || '',
+      description: description
+    };
+
+    // Log the document for debugging
+    this.logger.debug('Created document:', JSON.stringify(document, null, 2));
+
+    return document;
+  }
+
+  async updateTypesense(lastSyncTime: Date) {
+    this.logger.log('Starting incremental Typesense update...');
+    try {
+      const updatedEntries = await this.prisma.dictionaryEntry.findMany({
+        where: {
+          updatedAt: {
+            gt: lastSyncTime
+          }
+        },
         include: {
           glossData: {
             include: {
               senses: {
                 include: {
-                  glossData: true,
-                  signVideos: {
-                    include: {
-                      videos: true,
-                      videoData: true
-                    },
+                  definitions: {
                     orderBy: {
-                      priority: 'desc'
+                      priority: 'asc'
                     }
                   }
+                },
+                orderBy: {
+                  priority: 'asc'
+                }
+              },
+              glossVideos: {
+                include: {
+                  videos: true,
+                  videoData: true
+                },
+                orderBy: {
+                  priority: 'desc'
                 }
               }
             }
           }
         }
       });
-      
-      const senses = dictionaryEntries.flatMap(entry => entry.glossData.senses);
 
       let totalDocuments = 0;
       const BATCH_SIZE = 100;
       const documents: VideoIndex[] = [];
 
-      for (const sense of senses) {
+      for (const entry of updatedEntries) {
+        const glossData = entry.glossData;
         
-          const highestPrioritySignVideo = sense.signVideos[0];
-          
-          const document: VideoIndex = {
-            id: highestPrioritySignVideo.id,
-            url: highestPrioritySignVideo.videos[0]?.url || null,
-            signVideoTitle: highestPrioritySignVideo.title,
-            hands: highestPrioritySignVideo.videoData?.hands || 'RIGHT',
-            configuration: highestPrioritySignVideo.videoData?.configuration || '',
-            configurationChanges: highestPrioritySignVideo.videoData?.configurationChanges || '',
-            relationBetweenArticulators: highestPrioritySignVideo.videoData?.relationBetweenArticulators || '',
-            location: highestPrioritySignVideo.videoData?.location || '',
-            movementRelatedOrientation: highestPrioritySignVideo.videoData?.movementRelatedOrientation || '',
-            orientationRelatedToLocation: highestPrioritySignVideo.videoData?.orientationRelatedToLocation || '',
-            orientationChange: highestPrioritySignVideo.videoData?.orientationChange || '',
-            contactType: highestPrioritySignVideo.videoData?.contactType || '',
-            movementType: highestPrioritySignVideo.videoData?.movementType || '',
-            vocalization: highestPrioritySignVideo.videoData?.vocalization || '',
-            nonManualComponent: highestPrioritySignVideo.videoData?.nonManualComponent || '',
-            inicialization: highestPrioritySignVideo.videoData?.inicialization || '',
-            senseId: sense.id,
-            senseTitle: sense.senseTitle,
-            lexicalCategory: sense.lexicalCategory || 'OTHER',
-            glossId: sense.glossData.id,
-            gloss: sense.glossData.gloss
-          };
+          if (glossData.glossVideos.length > 0) {
+            const highestPrioritySignVideo = glossData.glossVideos.sort((a, b) => a.priority - b.priority)[0];
+            const document = this.createVideoDocument(highestPrioritySignVideo, glossData);
+            documents.push(document);
+            totalDocuments++;
 
+            if (documents.length >= BATCH_SIZE) {
+              await this.importDocuments(documents);
+              documents.length = 0;
+            }
+          }
+      }
+
+      if (documents.length > 0) {
+        await this.importDocuments(documents);
+      }
+
+      this.logger.log(`Incremental update completed: ${totalDocuments} documents processed`);
+      return { success: true, count: totalDocuments };
+    } catch (error) {
+      this.logger.error('Error updating Typesense:', error);
+      throw error;
+    }
+  }
+
+  async syncAllVideos() {
+    this.logger.log('Starting video sync...');
+    try {
+      const dictionaryEntries = await this.prisma.dictionaryEntry.findMany({
+        where: {
+          status: GlossStatus.PUBLISHED
+        },
+        include: {
+          glossData: {
+            include: {
+              senses: {
+                include: {
+                  definitions: {
+                    orderBy: {
+                      priority: 'asc'
+                    }
+                  }
+                },
+                orderBy: {
+                  priority: 'asc'
+                }
+              },
+              glossVideos: {
+                include: {
+                  videos: true,
+                  videoData: true
+                },
+                orderBy: {
+                  priority: 'desc'
+                }
+              }
+            }
+          }
+        }
+      });
+
+      let totalDocuments = 0;
+      const BATCH_SIZE = 100;
+      const documents: VideoIndex[] = [];
+
+      for (const entry of dictionaryEntries) {
+        const glossData = entry.glossData;
+        if (glossData.glossVideos.length > 0) {
+          const highestPrioritySignVideo = glossData.glossVideos.sort((a, b) => a.priority - b.priority)[0];
+          const document = this.createVideoDocument(highestPrioritySignVideo, glossData);
           documents.push(document);
           totalDocuments++;
 
-        if (documents.length >= BATCH_SIZE) {
-          await this.client.collections(VIDEOS_COLLECTION_NAME).documents().import(documents);
-          documents.length = 0;
+          if (documents.length >= BATCH_SIZE) {
+            await this.importDocuments(documents);
+            documents.length = 0;
+          }
         }
       }
 
       if (documents.length > 0) {
-        await this.client.collections(VIDEOS_COLLECTION_NAME).documents().import(documents);
+        await this.importDocuments(documents);
       }
 
       this.logger.log(`Sync completed: ${totalDocuments} documents processed`);
       return { success: true, count: totalDocuments };
     } catch (error) {
-      this.logger.error('Error syncing to Typesense:', error.stack);
+      this.logger.error('Error syncing to Typesense:', error);
       throw error;
     }
   }
@@ -202,6 +381,7 @@ export class TypesenseService implements OnModuleInit {
     max_hits?: number;
     page?: number;
     per_page?: number;
+    sort_by?: string;
   }) {
     try {
       const phonologyFields = [
@@ -214,17 +394,20 @@ export class TypesenseService implements OnModuleInit {
         'orientationChange',
         'contactType',
         'movementType',
-        'hands'
+        'movementDirection',
+        'hands',
+        'repeatedMovement'
       ];
       
       const defaultParams = {
         q: searchParameters.q || '*',
-        query_by: searchParameters.query_by || 'gloss,senseTitle,signVideoTitle,configuration,location,hands,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType',
+        query_by: searchParameters.query_by || 'gloss,signVideoTitle,description,configuration,location,hands,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection',
         filter_by: searchParameters.filter_by || '',
-        facet_by: searchParameters.facet_by || 'configuration,location,hands,lexicalCategory,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType',
+        facet_by: searchParameters.facet_by || 'configuration,location,hands,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection,repeatedMovement,description,gloss,signVideoTitle',
         max_hits: searchParameters.max_hits || 100,
         page: searchParameters.page || 1,
         per_page: searchParameters.per_page || 20,
+        sort_by: searchParameters.sort_by || 'gloss:asc',
         // Add typo tolerance for phonology fields - allows 2 typos for better matching
         typo_tolerance_threshold: 0,
         // Allow prefix matching for better partial matches

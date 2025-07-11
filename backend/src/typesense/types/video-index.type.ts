@@ -1,4 +1,4 @@
-import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType } from '@prisma/client';
+import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType, MovementDirection } from '@prisma/client';
 
 export interface VideoIndex {
   id: string;
@@ -19,16 +19,15 @@ export interface VideoIndex {
   orientationChange: OrientationChange | '';
   contactType: ContactType | '';
   movementType: MovementType | '';
+  movementDirection: MovementDirection | '';
+  repeatedMovement: boolean;
   vocalization: string;
   nonManualComponent: string;
   inicialization: string;
-  
-  // Sense data
-  senseId: string;
-  senseTitle: string;
-  lexicalCategory: string;
+
   
   // Gloss data
   glossId: string;
   gloss: string;
+  description: string; // First description of the first sense
 } 

@@ -11,7 +11,7 @@
       <q-card-section class="row justify-between">
         <div>
           <q-chip outline>
-            {{ minimalPair.distinction }}
+            {{ translate(minimalPair.distinction) }}
           </q-chip>
           <div class="text-h6">
             {{ minimalPair.minimalPairGloss.gloss }}

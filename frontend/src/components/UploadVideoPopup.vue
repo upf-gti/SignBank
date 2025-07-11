@@ -19,6 +19,17 @@
           dense
           @update:model-value="handleFileSelect"
         />
+        
+        <div class="text-caption text-grey-6 q-mt-xs">
+          {{ translate('maxFileSize') }}: 20MB
+        </div>
+        
+        <div
+          v-if="errorMessage"
+          class="text-negative q-mt-sm text-caption"
+        >
+          {{ errorMessage }}
+        </div>
       </q-card-section>
 
       <q-card-section v-if="loading">
@@ -53,6 +64,7 @@ import { ref, watch } from 'vue';
 import { api } from 'src/services/api';
 import translate from 'src/utils/translate';
 import { useQuasar } from 'quasar';
+import { validateVideoFile } from 'src/utils/videoValidation';
 
 const $q = useQuasar();
 
@@ -68,6 +80,7 @@ const emit = defineEmits<{
 
 const selectedFile = ref<File | null>(null);
 const loading = ref(false);
+const errorMessage = ref('');
 
 const showDialog = ref(props.showDialog);
 
@@ -79,11 +92,26 @@ watch(showDialog, (newValue) => {
   emit('update:show-dialog', newValue);
   if (!newValue) {
     selectedFile.value = null;
+    errorMessage.value = '';
   }
 });
 
 const handleFileSelect = (file: File | null) => {
+  if (!file) {
+    errorMessage.value = '';
+    selectedFile.value = null;
+    return;
+  }
+
+  const validation = validateVideoFile(file, translate);
+  if (!validation.isValid) {
+    errorMessage.value = validation.error || translate('errors.invalidVideoFile');
+    selectedFile.value = null;
+    return;
+  }
+
   selectedFile.value = file;
+  errorMessage.value = '';
 };
 
 const closeDialog = () => {

@@ -1,6 +1,6 @@
 import { IsString, IsNotEmpty, IsArray, ValidateNested, IsOptional, IsNumber, IsEnum } from 'class-validator';
 import { Type } from 'class-transformer';
-import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType } from '@prisma/client';
+import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType, MovementDirection } from '@prisma/client';
 
 class VideoDto {
   @IsString()
@@ -28,43 +28,56 @@ class VideoDataDto {
   hands: Hand;
 
   @IsEnum(HandConfiguration)
-  configuration: HandConfiguration;
+  @IsOptional()
+  configuration?: HandConfiguration;
 
   @IsEnum(ConfigurationChange)
-  configurationChanges: ConfigurationChange;
+  @IsOptional()
+  configurationChanges?: ConfigurationChange;
 
   @IsEnum(RelationBetweenArticulators)
-  relationBetweenArticulators: RelationBetweenArticulators;
+  @IsOptional()
+  relationBetweenArticulators?: RelationBetweenArticulators;
 
   @IsEnum(Location)
-  location: Location;
+  @IsOptional()
+  location?: Location;
 
   @IsEnum(MovementRelatedOrientation)
-  movementRelatedOrientation: MovementRelatedOrientation;
+  @IsOptional()
+  movementRelatedOrientation?: MovementRelatedOrientation;
 
   @IsEnum(OrientationRelatedToLocation)
-  orientationRelatedToLocation: OrientationRelatedToLocation;
+  @IsOptional()
+  orientationRelatedToLocation?: OrientationRelatedToLocation;
 
   @IsEnum(OrientationChange)
-  orientationChange: OrientationChange;
+  @IsOptional()
+  orientationChange?: OrientationChange;
 
   @IsEnum(ContactType)
-  contactType: ContactType;
+  @IsOptional()
+  contactType?: ContactType;
 
   @IsEnum(MovementType)
-  movementType: MovementType;
+  @IsOptional()
+  movementType?: MovementType;
+
+  @IsEnum(MovementDirection)
+  @IsOptional()
+  movementDirection?: MovementDirection;
 
   @IsString()
   @IsOptional()
-  vocalization: string;
+  vocalization?: string;
 
   @IsString()
   @IsOptional()
-  nonManualComponent: string;
+  nonManualComponent?: string;
 
   @IsString()
   @IsOptional()
-  inicialization: string;
+  inicialization?: string;
 }
 
 export class UpdateSignVideoDto {
@@ -82,7 +95,7 @@ export class UpdateSignVideoDto {
   videoDataId: string;
 
   @IsString()
-  senseId: string;
+  glossDataId: string;
 
   @IsArray()
   @ValidateNested({ each: true })

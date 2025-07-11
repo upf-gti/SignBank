@@ -1,16 +1,15 @@
 <template>
   <q-card-section class="row justify-between items-center">
     <q-card
-      class="col-12 col-md-8"
+      class="col"
       flat
-      bordered
     >
       <q-card-section class="row justify-start items-center">
         <q-chip
           outline
           color="primary"
         >
-          {{ selectedSense?.lexicalCategory }}
+          {{ translate(selectedSense?.lexicalCategory) }}
         </q-chip>
         <span class="text-h6">
           {{ selectedSense?.senseTitle }}
@@ -18,28 +17,29 @@
       </q-card-section>
       <q-card-section class="column">
         <GlossVideoComponent
-          v-if="selectedSense?.signVideos?.[0]"
-          :sign-video="selectedSense.signVideos[0]"
+          v-if="glossData?.glossVideos?.[0]"
+          :sign-video="glossData.glossVideos.sort((a, b) => a.priority - b.priority)[0] || glossData.glossVideos[0]"
           :edit-mode="false"
         />
       </q-card-section>
-    </q-card>
-    <q-card
-      class="col-12 col-md-4 full-height"
-      flat
-      bordered
-    >
-      <div class="full-height">
-        quick info
-      </div>
     </q-card>
   </q-card-section>
 </template>
 
 <script setup lang="ts">
-import { Sense } from 'src/types/models'
+import { Sense, GlossData } from 'src/types/models'
 import GlossVideoComponent from './GlossVideoComponent.vue'
-const { selectedSense } = defineProps<{
+import translate from 'src/utils/translate';
+
+const { selectedSense, glossData } = defineProps<{
   selectedSense: Sense
+  glossData: GlossData
 }>()
+
 </script>
+
+<style scoped>
+.full-height {
+  height: 100%;
+}
+</style>

@@ -34,18 +34,24 @@ export class GlossRequestsService {
             id: true,
             username: true,
             email: true,
+            name: true,
+            lastName: true,
           },
         },
         acceptedBy: {
           select: {
             id: true,
             username: true,
+            name: true,
+            lastName: true,
           },
         },
         deniedBy: {
           select: {
             id: true,
             username: true,
+            name: true,
+            lastName: true,
           },
         },
         requestedGlossData: {
@@ -53,10 +59,10 @@ export class GlossRequestsService {
             senses: {
               include: {
                 definitions: true,
-                signVideos: true,
                 examples: true,
               },
             },
+            glossVideos: true,
           },
         },
       },
@@ -85,12 +91,6 @@ export class GlossRequestsService {
                     definitionTranslations: true,
                   },
                 },
-                signVideos: {
-                  include: {
-                    videos: true,
-                    videoData: true,
-                  },
-                },
                 examples: {
                   include: {
                     exampleTranslations: true,
@@ -99,24 +99,22 @@ export class GlossRequestsService {
                 senseTranslations: true,
               },
             },
+            glossVideos: {
+              include: {
+                videos: true,
+                videoData: true,
+              },
+            },
             minimalPairsAsSource: {
               include: {
                 sourceGloss: {
                   include: {
-                    senses: {
-                      include: {
-                        signVideos: true,
-                      },
-                    },
+                    glossVideos: true,
                   },
                 },
                 targetGloss: {
                   include: {
-                    senses: {
-                      include: {
-                        signVideos: true,
-                      },
-                    },
+                    glossVideos: true,
                   },
                 },
               },
@@ -125,11 +123,16 @@ export class GlossRequestsService {
               include: {
                 targetGloss: {
                   include: {
-                    senses: {
-                      include: {
-                        signVideos: true,
-                      },
-                    },
+                    glossVideos: true,
+                  },
+                },
+              },
+            },
+            relationsAsTarget: {
+              include: {
+                sourceGloss: {
+                  include: {
+                    glossVideos: true,
                   },
                 },
               },
@@ -218,10 +221,10 @@ export class GlossRequestsService {
         },
         requestedGlossData: {
           include: {
+            glossVideos: true,
             senses: {
               include: {
                 definitions: true,
-                signVideos: true,
                 examples: true,
               },
             },
@@ -241,6 +244,12 @@ export class GlossRequestsService {
       include: {
         requestedGlossData: {
           include: {
+            glossVideos: {
+              include: {
+                videos: true,
+                videoData: true,
+              },
+            },
             senses: {
               include: {
                 definitions: {
@@ -251,11 +260,6 @@ export class GlossRequestsService {
                 examples: {
                   include: {
                     exampleTranslations: true,
-                  },
-                },
-                signVideos: {
-                  include: {
-                    videos: true,
                   },
                 },
                 senseTranslations: true,
@@ -305,6 +309,7 @@ export class GlossRequestsService {
         },
         requestedGlossData: {
           include: {
+            glossVideos: true,
             senses: {
               include: {
                 definitions: {
@@ -315,11 +320,6 @@ export class GlossRequestsService {
                 examples: {
                   include: {
                     exampleTranslations: true,
-                  },
-                },
-                signVideos: {
-                  include: {
-                    videos: true,
                   },
                 },
                 senseTranslations: true,

@@ -35,6 +35,7 @@
           :submitting="submitting"
           @save-gloss="saveGloss"
           @submit-request="submitRequest"
+          @update:gloss-data="handleGlossDataUpdate"
         />
       </template>
     </div>
@@ -77,6 +78,7 @@ const glossData = ref<GlossData>({
   senses: [],
   glossRequest: null,
   isCreatedFromEdit: false,
+  glossVideos: []
 });
 
 const fetchGlossRequest = async () => {
@@ -87,7 +89,7 @@ const fetchGlossRequest = async () => {
     glossData.value = response.data.requestedGlossData;
     
     // Set edit mode based on request status - only editable if NOT_COMPLETED
-    editMode.value = response.data.status === 'NOT_COMPLETED';
+    editMode.value = response.data.status === RequestStatus.NOT_COMPLETED;
   } catch (err) {
     console.error('Error fetching gloss request:', err);
     error.value = translate('errors.failedToLoadGlossRequest');
@@ -170,9 +172,15 @@ const submitRequest = async () => {
   }
 };
 
+const handleGlossDataUpdate = (updatedGlossData: GlossData) => {
+  glossData.value = updatedGlossData
+}
+
 onMounted(async () => {
   if (!userStore.isLoggedIn) {
-    router.push('/');
+    router.push('/').catch((err) => {
+      console.error(err)
+    })
     return;
   }
   await fetchGlossRequest();

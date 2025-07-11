@@ -1,14 +1,25 @@
 <template>
   <q-expansion-item 
+    v-if="translations.length > 0 || allowEdit"
     :label="translate('translations')"
-    >
+  >
     <template #header>
       <div class="text-subtitle1 q-mb-sm">
         {{ translate('translations') }}
       </div>
     </template>
     <div
-      v-for="(translation, index) in translations.sort((a, b) => a.isNew ? -1 : b.isNew ? 1 : 0)"
+      v-for="(translation, index) in translations.sort((a, b) => {
+        // First sort by isNew (new items first)
+        if (a.isNew && !b.isNew) return -1;
+        if (!a.isNew && b.isNew) return 1;
+        
+        // Then sort by language: Catalan, Spanish, English
+        const languageOrder: Record<string, number> = { 'CATALAN': 1, 'SPANISH': 2, 'ENGLISH': 3 };
+        const aOrder = languageOrder[a.language] || 999;
+        const bOrder = languageOrder[b.language] || 999;
+        return aOrder - bOrder;
+      })"
       :key="translation.id || index"
       class="q-mb-sm"
     >
@@ -24,32 +35,31 @@
       >
         <template #default="{ isEditing }">
           <div class="q-mx-md">
-          <div class="row items-center q-gutter-sm ">
-            <LanguageSelector
+            <div class="row items-center q-gutter-sm ">
+              <LanguageSelector
+                v-if="isEditing"
+                v-model="translation.language"
+                class="col"
+              />
+              <q-chip
+                v-else
+              >
+                {{ translate(translation.language) }}
+              </q-chip>
+            </div>
+
+            <q-input
               v-if="isEditing"
-              v-model="translation.language"
-              class="col"
+              v-model="translation.translation"
+              :label="translate('translation')"
+              outlined
+              dense
+              class="col-12 q-mt-sm"
             />
             <div
               v-else
-              class="text-subtitle2"
+              class="text-body1"
             >
-              {{ translate(translation.language) }}
-            </div>
-          </div>
-
-          <q-input
-            v-if="isEditing"
-            v-model="translation.translation"
-            :label="translate('translation')"
-            outlined
-            dense
-            class="col-12 q-mt-sm"
-          />
-          <div
-            v-else
-            class="text-body1"
-          >
               {{ translation.translation }}
             </div>
           </div>

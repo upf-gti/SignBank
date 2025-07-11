@@ -8,12 +8,8 @@ export interface RelatedGloss {
   sourceGlossId?: string;
   targetGlossId?: string;
   relationType: RelationType;
-  sourceGloss?: {
-    gloss: string;
-  };
-  targetGloss: {
-    gloss: string;
-  };
+  sourceGloss?: SearchResult;
+  targetGloss?: SearchResult;
 }
 
 export interface MinimalPair {

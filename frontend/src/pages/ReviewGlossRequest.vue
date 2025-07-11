@@ -63,7 +63,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import GlossDetailComponent from 'src/components/GlossDetail/GlossDetailComponent.vue';
-import { GlossData, GlossRequest, RequestStatus } from 'src/types/models';
+import { GlossData, GlossRequest } from 'src/types/models';
 import api from 'src/services/api';
 import useUserStore from 'src/stores/user.store';
 import { useRouter, useRoute } from 'vue-router';
@@ -110,7 +110,7 @@ const fetchGlossRequest = async () => {
   }
 };
 
-const acceptRequest = async (updatedGlossData: GlossData) => {
+const acceptRequest = async () => {
   try {
     loading.value = true;
     const requestId = route.params.id as string;
@@ -123,7 +123,9 @@ const acceptRequest = async (updatedGlossData: GlossData) => {
     });
     
     // Redirect to pending requests page
-    router.push('/confirm-requests');
+    router.push('/confirm-requests').catch((err) => {
+      console.error(err)
+    })
   } catch (err) {
     console.error('Error accepting request:', err);
     $q.notify({
@@ -135,7 +137,7 @@ const acceptRequest = async (updatedGlossData: GlossData) => {
   }
 };
 
-const declineRequest = async () => {
+const declineRequest =  () => {
   try {
     // Show dialog to get decline reason
     $q.dialog({
@@ -147,7 +149,7 @@ const declineRequest = async () => {
       },
       cancel: true,
       persistent: true
-    }).onOk(async (reason: string) => {
+    }).onOk( (reason: string) => {
       if (!reason.trim()) {
         $q.notify({
           type: 'negative',
@@ -159,7 +161,13 @@ const declineRequest = async () => {
       try {
         loading.value = true;
         const requestId = route.params.id as string;
-        await api.glossRequests.decline(requestId, { denyReason: reason });
+        api.glossRequests.decline(requestId, { denyReason: reason }).catch((err) => {
+          console.error('Error declining request:', err);
+          $q.notify({
+            type: 'negative',
+            message: translate('errors.failedToDeclineRequest')
+          });
+        });
         
         // Show success notification
         $q.notify({
@@ -168,7 +176,9 @@ const declineRequest = async () => {
         });
         
         // Redirect to pending requests page
-        router.push('/confirm-requests');
+        router.push('/confirm-requests').catch((err) => {
+          console.error(err)
+        })
       } catch (err) {
         console.error('Error declining request:', err);
         $q.notify({
@@ -187,7 +197,9 @@ const declineRequest = async () => {
 onMounted(async () => {
   // Check if user is admin
   if (!userStore.isAdmin) {
-    router.push('/');
+    router.push('/').catch((err) => {
+      console.error(err)
+    })
     return;
   }
   await fetchGlossRequest();

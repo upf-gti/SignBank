@@ -31,6 +31,7 @@ export interface SearchResult {
   lexicalCategory: string;
   glossId: string;
   gloss: string;
+  description: string;
 }
 
 export interface SearchResponse {

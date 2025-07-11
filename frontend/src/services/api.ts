@@ -1,6 +1,6 @@
 import type { AxiosResponse } from "axios"
 import { apiClient } from "src/boot/axios"
-import type { GlossRequest, GlossData, Definition, Translation, Language, SignVideo } from 'src/types/models'
+import type { GlossRequest, GlossData, Language, SignVideo } from 'src/types/models'
 import type { SearchParams } from "./search.service"
 import type {
   CreateGlossRequestDto,
@@ -22,6 +22,12 @@ export const api = {
     },
     editGloss: (glossDataId: string, data: GlossData) =>
       apiClient.patch<GlossData>(`/gloss-data/${glossDataId}`, data),
+    updateGloss: (glossDataId: string, data: { gloss: string }) =>
+      apiClient.patch<GlossData>(`/gloss-data/${glossDataId}/gloss`, data),
+    archiveGloss: (glossDataId: string) =>
+      apiClient.patch<GlossData>(`/gloss-data/${glossDataId}/archive`),
+    unarchiveGloss: (glossDataId: string) =>
+      apiClient.patch<GlossData>(`/gloss-data/${glossDataId}/unarchive`),
   },
   // Senses endpoints
   senses: {
@@ -47,6 +53,9 @@ export const api = {
 
     delete: (id: string) =>
       apiClient.delete<GlossData>(`/examples/${id}`),
+
+    deleteVideo: (id: string) =>
+      apiClient.delete<GlossData>(`/examples/${id}/video`),
   },
   // Translations endpoints
   translations: {
@@ -86,7 +95,7 @@ export const api = {
     }
   },
   videos: {
-    upload: (file: File, type: 'gloss' | 'example' = 'gloss'): Promise<AxiosResponse<{ url: string }>> => {
+    upload: (file: File, type: 'gloss' | 'example' | 'definition' = 'gloss'): Promise<AxiosResponse<{ url: string }>> => {
       const formData = new FormData();
       formData.append('video', file);
       formData.append('type', type);
@@ -113,6 +122,7 @@ export const api = {
     logout: () => apiClient.post('/auth/logout'),
     refresh: (data: { refresh_token: string }) =>
       apiClient.post('/auth/refresh', data),
+    verify: () => apiClient.get('/auth/verify'),
   },
   // Gloss requests endpoints
   glossRequests: {
@@ -148,17 +158,26 @@ export const api = {
   },
   // Definitions endpoints
   definitions: {
-    create: (senseId: string, data: { title?: string, definition: string }) =>
+    create: (senseId: string, data: { title?: string, definition: string, videoDefinitionUrl?: string, priority?: number }) =>
       apiClient.post<GlossData>(`/definitions/sense/${senseId}`, data),
 
-    update: (senseId: string, definitionId: string, data: { title?: string, definition?: string }) =>
+    update: (senseId: string, definitionId: string, data: { title?: string, definition?: string, videoDefinitionUrl?: string, priority?: number }) =>
       apiClient.put<GlossData>(`/definitions/sense/${senseId}/${definitionId}`, data),
 
     delete: (senseId: string, definitionId: string) =>
       apiClient.delete<GlossData>(`/definitions/sense/${senseId}/${definitionId}`),
 
+    deleteVideo: (senseId: string, definitionId: string) =>
+      apiClient.delete<GlossData>(`/definitions/sense/${senseId}/${definitionId}/video`),
+
+    createTranslation: (definitionId: string, data: { translation: string, language: Language }) =>
+      apiClient.post<GlossData>(`/definitions/${definitionId}/translations`, data),
+
     updateTranslation: (definitionId: string, translationId: string, data: { translation: string, language: Language }) =>
       apiClient.put<GlossData>(`/definitions/${definitionId}/translations/${translationId}`, data),
+
+    deleteTranslation: (definitionId: string, translationId: string) =>
+      apiClient.delete<GlossData>(`/definitions/${definitionId}/translations/${translationId}`),
   },
   // Relations endpoints
   relations: {
@@ -197,6 +216,15 @@ export const api = {
 
     reorder: (signVideoId: string, data: { videoIds: string[] }) =>
       apiClient.post<GlossData>(`/gloss-data/sign-videos/${signVideoId}/videos/reorder`, data),
+  },
+  // Users endpoints (admin only)
+  users: {
+    getAll: () => apiClient.get('/users'),
+    updateRole: (userId: string, role: 'ADMIN' | 'USER') =>
+      apiClient.put(`/users/${userId}/role`, { role }),
+    delete: (userId: string) => apiClient.delete(`/users/${userId}`),
+    changePassword: (userId: string, newPassword: string) =>
+      apiClient.put(`/users/${userId}/password`, { newPassword }),
   },
 }
 

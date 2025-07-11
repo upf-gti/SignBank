@@ -12,6 +12,27 @@ export function useAuthentication() {
   const isAuthenticated = computed(() => userStore.isLoggedIn)
   const isAdmin = computed(() => userStore.isAdmin)
 
+  async function verifyAuth() {
+    if (!userStore.isLoggedIn) return false;
+    
+    try {
+      const { data } = await api.auth.verify()
+      return true
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        try {
+          await refreshToken()
+          return true
+        } catch {
+          logout()
+          return false
+        }
+      }
+      logout()
+      return false
+    }
+  }
+
   async function login(email: string, password: string) {
     try {
       isLoading.value = true
@@ -70,7 +91,7 @@ export function useAuthentication() {
 
   function logout() {
     userStore.logout()
-    router.push()
+    router.push('/')
   }
 
   return {
@@ -78,6 +99,7 @@ export function useAuthentication() {
     register,
     logout,
     refreshToken,
+    verifyAuth,
     isLoading,
     error,
     isAuthenticated,

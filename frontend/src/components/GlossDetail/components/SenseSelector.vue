@@ -1,13 +1,19 @@
 <template>
   <q-card-section>
+    <div class="column">
+      <div class="text-h6">
+        {{ translate('senses') }}
+      </div>
     <div class="row">
       <q-btn-toggle
         v-model="selectedSenseId"
         :options="senses.map((sense) => ({
-          label: (sense.senseTitle || glossData.gloss) + ' (' + translate(sense.lexicalCategory) + ')',
+          label: (sense.senseTitle || glossData.gloss) + ( sense.senseTitle ? '' : ' (' + translate(sense.lexicalCategory) + ')' ),
           value: sense.id,
+          class: 'text-italic'
         }))"
-      />
+      >
+      </q-btn-toggle>
       <q-btn
         v-if="editMode && !addSense"
         icon="add"
@@ -84,7 +90,7 @@
               class="row items-center q-mb-sm"
             >
               <div class="col">
-                {{ (sense.senseTitle || glossData.gloss) + ' (' + translate(sense.lexicalCategory) + ')' }}
+                {{ (sense.senseTitle || glossData.gloss) + ( sense.senseTitle ? '' : ' (' + translate(sense.lexicalCategory) + ')') }}
               </div>
               <div class="col-auto">
                 <q-btn
@@ -213,13 +219,15 @@
         </q-card>
       </q-dialog>
     </div>
+  </div>
   </q-card-section>
 </template>
 
 <script setup lang="ts">
-import type { Sense, GlossData, Definition, SignVideo, Example, SenseTranslation } from 'src/types/models'
+import type { Sense, GlossData } from 'src/types/models'
 import translate from 'src/utils/translate'
-import { ref, computed, watch } from 'vue'
+import { LEXICAL_CATEGORIES } from 'src/utils/lexicalCategories'
+import { ref, watch } from 'vue'
 import { api } from 'src/services/api'
 import { useQuasar } from 'quasar'
 
@@ -267,35 +275,7 @@ const newSense = ref({
   lexicalCategory: ''
 })
 
-const lexicalCategories = ref([
-  { label: translate('adjective'), value: 'ADJECTIVE' },
-  { label: translate('interjection'), value: 'INTERJECTION' },
-  { label: translate('noun'), value: 'NOUN' },
-  { label: translate('nounOrVerb'), value: 'NOUN_OR_VERB' },
-  { label: translate('nounOrAdjective'), value: 'NOUN_OR_ADJECTIVE' },
-  { label: translate('nounAdjectiveOrVerb'), value: 'NOUN_ADJECTIVE_OR_VERB' },
-  { label: translate('verbOrAdjective'), value: 'VERB_OR_ADJECTIVE' },
-  { label: translate('particle'), value: 'PARTICLE' },
-  { label: translate('verb'), value: 'VERB' },
-  { label: translate('adverb'), value: 'ADVERB' },
-  { label: translate('pronoun'), value: 'PRONOUN' },
-  { label: translate('nounAdjectiveOrAdverb'), value: 'NOUN_ADJECTIVE_OR_ADVERB' },
-  { label: translate('particleNounOrVerb'), value: 'PARTICLE_NOUN_OR_VERB' },
-  { label: translate('nounOrAdverb'), value: 'NOUN_OR_ADVERB' },
-  { label: translate('verbAdjectiveOrAdverb'), value: 'VERB_ADJECTIVE_OR_ADVERB' },
-  { label: translate('verbOrInterjection'), value: 'VERB_OR_INTERJECTION' },
-  { label: translate('adjectiveOrAdverb'), value: 'ADJECTIVE_OR_ADVERB' },
-  { label: translate('verbAdjectiveOrParticle'), value: 'VERB_ADJECTIVE_OR_PARTICLE' },
-  { label: translate('particleOrAdjective'), value: 'PARTICLE_OR_ADJECTIVE' },
-  { label: translate('nounAdjectiveOrParticle'), value: 'NOUN_ADJECTIVE_OR_PARTICLE' },
-  { label: translate('verbOrAdverb'), value: 'VERB_OR_ADVERB' },
-  { label: translate('particleOrAdverb'), value: 'PARTICLE_OR_ADVERB' },
-  { label: translate('nounVerbOrAdverb'), value: 'NOUN_VERB_OR_ADVERB' },
-  { label: translate('nounOrInterjection'), value: 'NOUN_OR_INTERJECTION' },
-  { label: translate('adverbOrInterjection'), value: 'ADVERB_OR_INTERJECTION' },
-  { label: translate('verbOrParticle'), value: 'VERB_OR_PARTICLE' },
-  { label: translate('nounOrPreposition'), value: 'NOUN_OR_PREPOSITION' }
-])
+const lexicalCategories = ref(LEXICAL_CATEGORIES)
 
 const saveSense = async () => {
   try {
@@ -333,51 +313,22 @@ const saveSense = async () => {
 }
 
 const moveSense = async (index: number, direction: 'up' | 'down') => {
-  try {
-    const newIndex = direction === 'up' ? index - 1 : index + 1
-    if ((direction === 'up' && index > 0) || 
-        (direction === 'down' && index < localSenses.value.length - 1)) {
-      
-      loading.value = true
-      const senseToMove = localSenses.value[index]
-      const otherSense = localSenses.value[newIndex]
-      
-      if (!senseToMove || !senseToMove.id || !otherSense || !otherSense.id) return
+  const newIndex = direction === 'up' ? index - 1 : index + 1
+  if ((direction === 'up' && index > 0) || 
+      (direction === 'down' && index < localSenses.value.length - 1)) {
+    
+    const senseToMove = localSenses.value[index]
+    const otherSense = localSenses.value[newIndex]
+    
+    if (!senseToMove || !otherSense) return
 
-      // Update priorities
-      const tempPriority = senseToMove.priority
-      senseToMove.priority = otherSense.priority
-      otherSense.priority = tempPriority
+    // Update priorities locally only
+    const tempPriority = senseToMove.priority
+    senseToMove.priority = otherSense.priority
+    otherSense.priority = tempPriority
 
-      // Update both senses
-      const [response1, response2] = await Promise.all([
-        api.senses.update(props.glossData.id || '', senseToMove.id, {
-          senseTitle: senseToMove.senseTitle,
-          lexicalCategory: senseToMove.lexicalCategory,
-          priority: senseToMove.priority
-        }),
-        api.senses.update(props.glossData.id || '', otherSense.id, {
-          senseTitle: otherSense.senseTitle,
-          lexicalCategory: otherSense.lexicalCategory,
-          priority: otherSense.priority
-        })
-      ])
-
-      // Update the parent with the latest data
-      emit('update:glossData', response2.data)
-
-      // Sort the local senses by priority
-      localSenses.value.sort((a, b) => a.priority - b.priority)
-    }
-  } catch (error) {
-    console.error('Error updating sense priority:', error)
-    $q.notify({
-      message: translate('errors.failedToUpdateSensePriority'),
-      color: 'negative',
-      icon: 'error'
-    })
-  } finally {
-    loading.value = false
+    // Sort the local senses by priority
+    localSenses.value.sort((a, b) => a.priority - b.priority)
   }
 }
 
@@ -418,10 +369,62 @@ const saveSingleSense = async () => {
   }
 }
 
-const saveEditSenses = () => {
-  // Emit the updated gloss data to parent
-  emit('update:glossData', props.glossData)
-  editSensesDialog.value = false
+const saveEditSenses = async () => {
+  try {
+    loading.value = true
+    
+    if (!props.glossData.id) {
+      throw new Error('Gloss data ID is required')
+    }
+    
+    // Filter out senses without IDs
+    const sensesWithIds = localSenses.value.filter(sense => sense.id)
+    
+    if (sensesWithIds.length === 0) {
+      throw new Error('No valid senses to update')
+    }
+    
+    // Sort senses by their current priority and assign new sequential priorities
+    const sortedSenses = [...sensesWithIds].sort((a, b) => a.priority - b.priority)
+    const sensesWithNewPriorities = sortedSenses.map((sense, index) => ({
+      ...sense,
+      priority: index // Assign sequential priorities: 0, 1, 2, ...
+    }))
+    
+    // Send all senses with their new sequential priorities to the backend
+    const updatePromises = sensesWithNewPriorities.map(sense => 
+      api.senses.update(props.glossData.id!, sense.id!, {
+        senseTitle: sense.senseTitle,
+        lexicalCategory: sense.lexicalCategory,
+        priority: sense.priority
+      })
+    )
+    
+    const responses = await Promise.all(updatePromises)
+    
+    // Use the last response to update the parent (assuming all responses have the same updated data)
+    const lastResponse = responses[responses.length - 1]
+    if (lastResponse) {
+      emit('update:glossData', lastResponse.data)
+    }
+    
+    editSensesDialog.value = false
+    
+    $q.notify({
+      message: translate('sensesUpdatedSuccessfully'),
+      color: 'positive',
+      icon: 'check'
+    })
+  } catch (error) {
+    console.error('Error updating senses:', error)
+    $q.notify({
+      message: translate('errors.failedToUpdateSenses'),
+      color: 'negative',
+      icon: 'error'
+    })
+  } finally {
+    loading.value = false
+  }
 }
 
 const cancelEditSenses = () => {
@@ -466,13 +469,6 @@ const handleDeleteConfirm = async () => {
       loading.value = false
     }
   }
-}
-
-const deleteSense = (sense: Sense) => {
-  if (props.senses.length <= 1) {
-    return // Don't allow deleting the last sense
-  }
-  confirmDelete(sense)
 }
 
 const openEditSenses = () => {

@@ -58,15 +58,22 @@ export class VideosController {
         if (!file.mimetype.includes('video')) {
           return cb(new Error('Only video files are allowed!'), false);
         }
+        
+        // Only allow specific video formats
+        const allowedFormats = ['video/mp4', 'video/webm', 'video/ogg'];
+        if (!allowedFormats.includes(file.mimetype)) {
+          return cb(new Error('Only MP4, WebM, and OGG video formats are supported.'), false);
+        }
+        
         cb(null, true);
       },
       limits: {
-        fileSize: 1024 * 1024 * 100, // 100MB limit
+        fileSize: 1024 * 1024 * 20, // 20MB limit
       },
     }),
   )
   async uploadVideo(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() file: any,
     @Body('type') type: 'gloss' | 'example' = 'gloss'
   ) {
     return this.videosService.uploadVideo(file, type);

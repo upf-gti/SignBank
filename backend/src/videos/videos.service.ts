@@ -8,14 +8,25 @@ import { basename, join } from 'path';
 export class VideosService {
   private readonly dufsUrl = process.env.DUFS_URL || 'http://localhost:5000';
 
-  async uploadVideo(file: Express.Multer.File, type: 'gloss' | 'example' = 'gloss'): Promise<{ url: string }> {
+  async uploadVideo(file: any, type: 'gloss' | 'example' | 'definition' = 'gloss'): Promise<{ url: string }> {
     try {
       const fileStream = createReadStream(file.path);
       const stats = await stat(file.path);
-      
       // Use the filename that Multer generated (the basename of the full path)
       const uniqueFilename = basename(file.path);
-      const baseDir = type === 'example' ? 'example-videos' : 'gloss-videos';
+      let baseDir: string;
+      
+      switch (type) {
+        case 'example':
+          baseDir = 'example-videos';
+          break;
+        case 'definition':
+          baseDir = 'definition-videos';
+          break;
+        default:
+          baseDir = 'gloss-videos';
+      }
+      
       const uploadUrl = `${this.dufsUrl}/${baseDir}/${uniqueFilename}`;
       
       await axios.put(uploadUrl, fileStream, {
@@ -50,6 +61,7 @@ export class VideosService {
   }
 
   async deleteVideo(videoUrl: string): Promise<void> {
+    console.log('Deleting video', videoUrl);
     try {
       // The videoUrl is already in the format "baseDir/filename"
       const deleteUrl = `${this.dufsUrl}/${videoUrl}`;

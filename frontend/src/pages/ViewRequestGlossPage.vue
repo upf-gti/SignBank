@@ -77,7 +77,7 @@ function getGlossRequestData() {
   }
 }
 
-const acceptRequest = async (updatedGlossData: GlossData) => {
+const acceptRequest = async () => {
   try {
     loading.value = true
     await api.glossRequests.accept(route.params.id as string)

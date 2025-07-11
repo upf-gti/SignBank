@@ -1,16 +1,14 @@
 
 TODOS
-- Edit Glosses
-- Minimal Pairs relations to videos and not to entire gloss
-- Delete Relations
-- Edit Senses and delete
+- Millorar proces de creacio d'usuaris i de restaurar contrasenya
+- Pantalla de gestion de entradas (Fase 2)
+
+
 
 ## How to change the app host
 
 In the .env file, change the BASEURL to the domain you want to use for your app.
 In the nginx.conf file, change the server_name directive to match the domain you want to use.
-
-
 
 ### Environment Configuration
 
@@ -39,35 +37,6 @@ To start the project locally:
 docker-compose -f docker-compose-local.yaml build
 docker-compose -f docker-compose-local.yaml up
 ```
-## Test Deployment
-
-To deploy the project in test mode:
-
-```bash
-docker-compose -f docker-compose-test.yaml build
-docker-compose -f docker-compose-test.yaml up
-```
-
-## Seeding the Database
-
-To seed the database with initial data:
-
-1. Navigate to the MongoDB folder:
-
-```bash
-cd mongoDB
-```
-
-2. Install dependencies and run the seed script:
-
-```bash
-npm install
-npm run seed
-```
-
-Or if you don't have npm, you can execute this command from inside mongoDB container
-
-Then restart backend container to sync all words into typesense
 
 ## Production Deployment
 
@@ -75,10 +44,33 @@ To deploy the project in production mode:
 
 ```bash
 docker-compose -f docker-compose-production.yaml build
-docker-compose -f docker-compose-production.yaml up
+docker-compose -f docker-compose-production.yaml up -d
 ```
 
+-d is for running docker compose in detached mode, so you can still use the terminal.
 
+The first time we run the application, we will need to create the database, so, while the docker compose is running we will go to /backend folder.
+
+There we need a .env file with the following:
+
+```
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/signbank
+```
+
+Then, in the backend folder we will run:
+```
+npx prisma migrate dev
+```
+
+To create the databse.
+
+Then to see if everything is working we can go to the url we set. 
+Or we can go back to the project folder and run:
+
+```
+docker compose -f docker-compose-production.yaml down
+docker-compose -f docker-compose-production.yaml up
+```
 
 ## Project Structure
 

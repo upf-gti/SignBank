@@ -4,6 +4,97 @@
     style="height: 10vh"
   >
     <loginComponent v-model="isLoginDialogOpen" />
+    
+    <!-- Sidebar Navigation -->
+    <q-drawer
+      v-model="isSidebarOpen"
+      side="right"
+      :width="280"
+      bordered
+      overlay
+      class="bg-secondary"
+    >
+      
+      <q-list padding>
+        <q-item
+          v-if="route.path !== '/search' && route.path !== '/'"
+          clickable
+          v-ripple
+          @click="navigateTo('/search')"
+        >
+          <q-item-section avatar>
+            <q-icon name="search" />
+          </q-item-section>
+          <q-item-section class="text-caption">{{ translate('searchGloss') }}</q-item-section>
+        </q-item>
+        
+        <q-item
+          v-if="userStore.isLoggedIn"
+          clickable
+          v-ripple
+          @click="navigateTo('/my-requests')"
+        >
+          <q-item-section avatar>
+            <q-icon name="add" />
+          </q-item-section>
+          <q-item-section class="text-caption">{{ translate('createEntry') }}</q-item-section>
+        </q-item>
+        
+        <q-item
+          v-if="userStore.isAdmin && userStore.isLoggedIn"
+          clickable
+          v-ripple
+          @click="navigateTo('/confirm-requests')"
+        >
+          <q-item-section avatar>
+            <q-icon name="check_circle" />
+          </q-item-section>
+          <q-item-section class="text-caption">{{ translate('confirmRequests') }}</q-item-section>
+        </q-item>
+        
+        <q-item
+          v-if="userStore.isAdmin && userStore.isLoggedIn"
+          clickable
+          v-ripple
+          @click="navigateTo('/user-management')"
+        >
+          <q-item-section avatar>
+            <q-icon name="people" />
+          </q-item-section>
+          <q-item-section class="text-caption">{{ translate('userManagement') }}</q-item-section>
+        </q-item>
+      </q-list>
+      
+      <!-- Authentication buttons at the bottom -->
+      <div class="absolute-bottom q-pa-md">
+        <q-item
+          v-if="!userStore.isLoggedIn"
+          clickable
+          v-ripple
+          @click="openLogin"
+          class="rounded-borders q-mb-sm"
+        >
+          <q-item-section avatar>
+            <q-icon name="login" color="primary" />
+          </q-item-section>
+          <q-item-section class="text-primary text-caption">{{ translate('login') }}</q-item-section>
+        </q-item>
+        
+        <q-item
+          v-if="userStore.isLoggedIn"
+          clickable
+          v-ripple
+          @click="userStore.logout"
+          class="rounded-borders"
+        >
+          <q-item-section avatar>
+            <q-icon name="logout" color="negative" />
+          </q-item-section>
+          <q-item-section class="text-negative text-caption">{{ translate('logout') }}</q-item-section>
+        </q-item>
+      </div>
+    </q-drawer>
+
     <q-toolbar class="row no-wrap">
       <q-toolbar-title class="col">
         <q-img
@@ -14,106 +105,47 @@
         <q-img
           class="header-logo cursor-pointer q-mr-md"
           src="https://www.upf.edu/o/upf-2016-theme/images/upf/logo.png"
-          @click="$router.push('/')"
+          @click="navigateTo('/')"
         />
       </q-toolbar-title>
 
-      <q-form
-        v-if="shouldShowSearch"
-        class="search-container row no-wrap col"
-        @submit="onSubmit"
-      >
-        <q-input
-          v-model="search"
-          outlined
-          dense
-          :placeholder="translate('search')"
-          class="header-search"
-        >
-          <template #append>
-            <q-btn
-              icon="search"
-              flat
-            />
-          </template>
-        </q-input>
-      </q-form>
       <q-space />
 
-      <q-btn-group
-        class="col justify-end"
+      <!-- Menu Button - Always visible -->
+      <q-btn
         flat
-      >
-        <q-btn
-          v-if="userStore.isLoggedIn" 
-          flat
-          :label="translate('requestWord')"
-          @click="$router.push('/my-requests')"
-        />
-        <q-btn
-          v-if="userStore.isAdmin && userStore.isLoggedIn"
-          flat
-          :label="translate('confirmRequests')"
-          @click="$router.push('/confirm-requests')"
-        />
-        <q-btn
-          v-if="!userStore.isLoggedIn"
-          flat
-          :label="translate('login')"
-          icon="login"
-          @click="isLoginDialogOpen = true"
-        />
-        <q-btn
-          v-if="userStore.isLoggedIn"
-          flat
-          :label="translate('logout')"
-          icon="logout"
-          @click="userStore.logout"
-        />
-      </q-btn-group>
+        dense
+        round
+        :icon="isSidebarOpen ? 'close' : 'menu'"
+        :aria-label="isSidebarOpen ? 'Close menu' : 'Open menu'"
+        @click="isSidebarOpen = !isSidebarOpen"
+      />
     </q-toolbar>
   </q-header>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useRoute } from 'vue-router';
-import loginComponent from '../components/loginComponent.vue';
+import { ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import loginComponent from '../components/loginComponent.vue'
 import useUser from 'src/stores/user.store'
 import translate from 'src/utils/translate'
 
 const userStore = useUser()
 const route = useRoute()
-const router = useRouter();
+const router = useRouter()
 const isLoginDialogOpen = ref(false)
-const search = ref('')
+const isSidebarOpen = ref(false)
 
-const shouldShowSearch = computed(() => {
-  return !['/'].includes(route.path)
-})
+const navigateTo = (path: string) => {
+  router.push(path)
+  isSidebarOpen.value = false
+}
 
-import { useRouter } from 'vue-router';
-
-
-const onSubmit = async () => {
-  if (search.value.trim()) {
-    // If we're already on the results page, replace the current route
-    if (route.path === '/results') {
-      await router.replace({
-        path: '/results',
-        query: { search: search.value.trim() }
-      });
-      // Optionally, emit an event that the parent component can listen to
-      // to refresh the search results
-      window.dispatchEvent(new Event('search-updated'));
-    } else {
-      await router.push({
-        path: '/results',
-        query: { search: search.value.trim() }
-      });
-    }
-  }
-};
+const openLogin = () => {
+  isLoginDialogOpen.value = true
+  isSidebarOpen.value = false
+}
 </script>
 
 <style scoped>
@@ -122,17 +154,38 @@ const onSubmit = async () => {
   transition: transform 0.2s;
 }
 
-
-.search-container {
-  width: 40%;
-  max-width: 500px;
-}
-
-.header-search {
-  width: 100%;
+.header-logo:hover {
+  transform: scale(1.05);
 }
 
 .q-btn {
   margin: 0 4px;
+}
+
+/* Drawer styling for all screen sizes */
+.q-drawer {
+  z-index: 2000;
+}
+
+.q-drawer__content {
+  background: var(--q-secondary);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 599px) {
+  .header-logo {
+    width: 80px;
+  }
+  
+  .q-toolbar {
+    padding: 0 8px;
+  }
+}
+
+/* Desktop drawer adjustments */
+@media (min-width: 600px) {
+  .q-drawer {
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+  }
 }
 </style>

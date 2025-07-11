@@ -51,7 +51,7 @@
                   <q-btn
                     color="primary"
                     dense
-                    :label="t('applyFilters')"
+                    :label="t('apply')"
                     @click="performSearch"
                   />
                 </div>
@@ -61,10 +61,9 @@
                 :selected-category="selectedCategory"
                 @update:selected-category="updateCategory"
               />
-
               <FilterInputs
-                :model-value="filterInputs"
-                @update:model-value="updateFilterInputs"
+                :phonology-data="filterInputs"
+                @update:phonology-data="updateFilterInputs"
               />
             </q-card-section>
           </q-card>
@@ -174,7 +173,7 @@ import { getVideoUrl } from 'src/utils/videoUrl';
 import SearchInput from 'src/components/Search/components/SearchInput.vue';
 import FilterCategories from 'src/components/Search/components/FilterCategories.vue';
 import FilterInputs from 'src/components/Search/components/FilterInputs.vue';
-import type { FilterInputs as FilterInputsType } from 'src/components/Search/types';
+import type { PhonologyData } from 'src/types/models';
 
 const t = (key: string) => translate(key);
 
@@ -200,14 +199,14 @@ const loading = ref(false);
 const page = ref(1);
 const perPage = ref(20);
 const selectedCategory = ref('');
-const filterInputs = ref<FilterInputsType>({
-  hands: '',
+const filterInputs = ref<PhonologyData>({
+  hands: null,
   configuration: '',
   configurationChanges: '',
   relationBetweenArticulators: '',
   location: '',
   movementRelatedOrientation: '',
-  locationRelatedOrientation: '',
+  orientationRelatedToLocation: '',
   orientationChange: '',
   contactType: '',
   movementType: '',
@@ -246,7 +245,7 @@ async function performSearch() {
     }
     
     for (const [field, value] of Object.entries(filterInputs.value)) {
-      if (value.trim()) {
+      if (value && value.trim()) {
         filters.push(`${field}:='${value.trim()}'`);
       }
     }
@@ -275,33 +274,39 @@ function updateCategory(value: string) {
   selectedCategory.value = value;
 }
 
-function updateFilterInputs(value: FilterInputsType) {
+function updateFilterInputs(value: PhonologyData) {
   filterInputs.value = value;
 }
 
 function updatePage(value: number) {
   page.value = value;
-  performSearch();
+  performSearch().catch((err) => {
+    console.error(err)
+  })
 }
 
 function clearFilters() {
   selectedCategory.value = '';
   filterInputs.value = {
-    hands: '',
+    hands: null,
     configuration: '',
     configurationChanges: '',
     relationBetweenArticulators: '',
     location: '',
     movementRelatedOrientation: '',
-    locationRelatedOrientation: '',
+    orientationRelatedToLocation: '',
     orientationChange: '',
     contactType: '',
     movementType: '',
     vocalization: '',
     nonManualComponent: '',
-    inicialization: ''
+    inicialization: '',
+    repeatedMovement: null,
+    movementDirection: ''
   };
-  performSearch();
+  performSearch().catch((err) => {
+    console.error(err)
+  })
 }
 
 function selectGloss(gloss: SearchResult) {

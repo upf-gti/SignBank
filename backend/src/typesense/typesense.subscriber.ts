@@ -34,6 +34,18 @@ export class TypesenseSubscriber {
 
       // Update each video document for this SignVideo
       for (const video of signVideo.videos) {
+        // Get the first description of the first sense
+        let description = '';
+        if (signVideo.glossData.senses && signVideo.glossData.senses.length > 0) {
+          // Sort senses by priority (ascending) and get the first one
+          const firstSense = signVideo.glossData.senses.sort((a, b) => a.priority - b.priority)[0];
+          if (firstSense.definitions && firstSense.definitions.length > 0) {
+            // Sort definitions by priority (ascending) and get the first one
+            const firstDefinition = firstSense.definitions.sort((a, b) => a.priority - b.priority)[0];
+            description = firstDefinition.definition;
+          }
+        }
+
         const document: VideoIndex = {
           id: video.id,
           url: video.url,
@@ -48,14 +60,14 @@ export class TypesenseSubscriber {
           orientationChange: signVideo.videoData.orientationChange,
           contactType: signVideo.videoData.contactType,
           movementType: signVideo.videoData.movementType,
+          movementDirection: signVideo.videoData.movementDirection,
           vocalization: signVideo.videoData.vocalization,
           nonManualComponent: signVideo.videoData.nonManualComponent,
           inicialization: signVideo.videoData.inicialization,
-          senseId: signVideo.sense.id,
-          senseTitle: signVideo.sense.senseTitle,
-          lexicalCategory: signVideo.sense.lexicalCategory || 'OTHER',
-          glossId: signVideo.sense.glossData.id,
-          gloss: signVideo.sense.glossData.gloss
+          repeatedMovement: signVideo.videoData.repeatedMovement,
+          glossId: signVideo.glossData.id,
+          gloss: signVideo.glossData.gloss,
+          description: description
         };
 
         await this.typesenseService.upsertDocument(document);

@@ -1,21 +1,32 @@
 <template>
-  <div class="phonology-filters q-pa-md">
+  <div class="phonology-filters overflow-x-hidden">
     <div class="column q-col-gutter-md">
       <!-- Hands -->
       <div class="col">
-        <q-item-label caption>
+        <q-item-label
+          v-if="!isEditable"
+          caption
+        >
           {{ translate('hands') }}
         </q-item-label>
-        <div v-if="!isEditable" class="q-py-sm">
-          <span v-if="localData.hands" class="text-body2">{{ getHandLabel(localData.hands) }}</span>
-          <span v-else class="text-grey-5">{{ translate('notSet') }}</span>
+        <div
+          v-if="!isEditable"
+          class="q-py-sm"
+        >
+          <span
+            v-if="localData.hands"
+            class="text-body2"
+          >{{ getHandLabel(localData.hands) }}</span>
+          <span
+            v-else
+            class="text-grey-5"
+          >{{ translate('notSet') }}</span>
         </div>
         <q-btn-toggle
           v-else
           v-model="localData.hands"
           :options="[
-            { label: translate('right'), value: 'RIGHT' },
-            { label: translate('left'), value: 'LEFT' },
+            { label: translate('activeHand'), value: 'RIGHT' },
             { label: translate('both'), value: 'BOTH' }
           ]"
           spread
@@ -25,18 +36,31 @@
           color="grey-3"
           text-color="grey-8"
           class="full-width"
+          :clearable="route.path === '/search'"
           @update:model-value="updateField('hands', $event)"
         />
       </div>
 
       <!-- Configuration -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label
+          v-if="!isEditable"
+          caption
+        >
           {{ translate('configuration') }}
         </q-item-label>
-        <div v-if="!isEditable" class="q-py-sm">
-          <span v-if="localData.configuration" class="text-body2">{{ getConfigurationLabel(localData.configuration) }}</span>
-          <span v-else class="text-grey-5">{{ translate('notSet') }}</span>
+        <div
+          v-if="!isEditable"
+          class="q-py-sm"
+        >
+          <span
+            v-if="localData.configuration"
+            class="text-body2"
+          >{{ getConfigurationLabel(localData.configuration) }}</span>
+          <span
+            v-else
+            class="text-grey-5"
+          >{{ translate('notSet') }}</span>
         </div>
         <q-select
           v-else
@@ -56,12 +80,24 @@
 
       <!-- Configuration Changes -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label
+          v-if="!isEditable"
+          caption
+        >
           {{ translate('configurationChanges') }}
         </q-item-label>
-        <div v-if="!isEditable" class="q-py-sm">
-          <span v-if="localData.configurationChanges" class="text-body2">{{ getConfigurationChangesLabel(localData.configurationChanges) }}</span>
-          <span v-else class="text-grey-5">{{ translate('notSet') }}</span>
+        <div
+          v-if="!isEditable"
+          class="q-py-sm"
+        >
+          <span
+            v-if="localData.configurationChanges"
+            class="text-body2"
+          >{{ getConfigurationChangesLabel(localData.configurationChanges) }}</span>
+          <span
+            v-else
+            class="text-grey-5"
+          >{{ translate('notSet') }}</span>
         </div>
         <q-select
           v-else
@@ -77,11 +113,16 @@
           @filter="(val, update) => filterFn(val, update, phonologyOptions.configurationChangeOptions, 'configurationChanges')"
           @update:model-value="updateField('configurationChanges', $event)"
         >
-          <template v-slot:option="{ opt }">
+          <template #option="{ opt }">
             <q-item v-close-popup>
               <q-item-section>
                 <q-item-label>{{ opt.label }}</q-item-label>
-                <q-item-label caption v-if="opt.description">{{ opt.description }}</q-item-label>
+                <q-item-label
+                  v-if="opt.description"
+                  caption
+                >
+                  {{ opt.description }}
+                </q-item-label>
               </q-item-section>
             </q-item>
           </template>
@@ -90,12 +131,24 @@
 
       <!-- Relation Between Articulators -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label
+          v-if="!isEditable"
+          caption
+        >
           {{ translate('relationBetweenArticulators') }}
         </q-item-label>
-        <div v-if="!isEditable" class="q-py-sm">
-          <span v-if="localData.relationBetweenArticulators" class="text-body2">{{ getRelationBetweenArticulatorsLabel(localData.relationBetweenArticulators) }}</span>
-          <span v-else class="text-grey-5">{{ translate('notSet') }}</span>
+        <div
+          v-if="!isEditable"
+          class="q-py-sm"
+        >
+          <span
+            v-if="localData.relationBetweenArticulators"
+            class="text-body2"
+          >{{ getRelationBetweenArticulatorsLabel(localData.relationBetweenArticulators) }}</span>
+          <span
+            v-else
+            class="text-grey-5"
+          >{{ translate('notSet') }}</span>
         </div>
         <q-select
           v-else
@@ -115,12 +168,24 @@
 
       <!-- Location -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label
+          v-if="!isEditable"
+          caption
+        >
           {{ translate('location') }}
         </q-item-label>
-        <div v-if="!isEditable" class="q-py-sm">
-          <span v-if="localData.location" class="text-body2">{{ getLocationLabel(localData.location) }}</span>
-          <span v-else class="text-grey-5">{{ translate('notSet') }}</span>
+        <div
+          v-if="!isEditable"
+          class="q-py-sm"
+        >
+          <span
+            v-if="localData.location"
+            class="text-body2"
+          >{{ getLocationLabel(localData.location) }}</span>
+          <span
+            v-else
+            class="text-grey-5"
+          >{{ translate('notSet') }}</span>
         </div>
         <q-select
           v-else
@@ -140,12 +205,24 @@
 
       <!-- Movement Related Orientation -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label
+          v-if="!isEditable"
+          caption
+        >
           {{ translate('movementRelatedOrientation') }}
         </q-item-label>
-        <div v-if="!isEditable" class="q-py-sm">
-          <span v-if="localData.movementRelatedOrientation" class="text-body2">{{ getMovementRelatedOrientationLabel(localData.movementRelatedOrientation) }}</span>
-          <span v-else class="text-grey-5">{{ translate('notSet') }}</span>
+        <div
+          v-if="!isEditable"
+          class="q-py-sm"
+        >
+          <span
+            v-if="localData.movementRelatedOrientation"
+            class="text-body2"
+          >{{ getMovementRelatedOrientationLabel(localData.movementRelatedOrientation) }}</span>
+          <span
+            v-else
+            class="text-grey-5"
+          >{{ translate('notSet') }}</span>
         </div>
         <q-select
           v-else
@@ -165,12 +242,24 @@
 
       <!-- Orientation Related To Location -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label
+          v-if="!isEditable"
+          caption
+        >
           {{ translate('orientationRelatedToLocation') }}
         </q-item-label>
-        <div v-if="!isEditable" class="q-py-sm">
-          <span v-if="localData.orientationRelatedToLocation" class="text-body2">{{ getOrientationRelatedToLocationLabel(localData.orientationRelatedToLocation) }}</span>
-          <span v-else class="text-grey-5">{{ translate('notSet') }}</span>
+        <div
+          v-if="!isEditable"
+          class="q-py-sm"
+        >
+          <span
+            v-if="localData.orientationRelatedToLocation"
+            class="text-body2"
+          >{{ getOrientationRelatedToLocationLabel(localData.orientationRelatedToLocation) }}</span>
+          <span
+            v-else
+            class="text-grey-5"
+          >{{ translate('notSet') }}</span>
         </div>
         <q-select
           v-else
@@ -190,12 +279,24 @@
 
       <!-- Orientation Change -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label
+          v-if="!isEditable"
+          caption
+        >
           {{ translate('orientationChange') }}
         </q-item-label>
-        <div v-if="!isEditable" class="q-py-sm">
-          <span v-if="localData.orientationChange" class="text-body2">{{ getOrientationChangeLabel(localData.orientationChange) }}</span>
-          <span v-else class="text-grey-5">{{ translate('notSet') }}</span>
+        <div
+          v-if="!isEditable"
+          class="q-py-sm"
+        >
+          <span
+            v-if="localData.orientationChange"
+            class="text-body2"
+          >{{ getOrientationChangeLabel(localData.orientationChange) }}</span>
+          <span
+            v-else
+            class="text-grey-5"
+          >{{ translate('notSet') }}</span>
         </div>
         <q-select
           v-else
@@ -215,12 +316,24 @@
 
       <!-- Contact Type -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label
+          v-if="!isEditable"
+          caption
+        >
           {{ translate('contactType') }}
         </q-item-label>
-        <div v-if="!isEditable" class="q-py-sm">
-          <span v-if="localData.contactType" class="text-body2">{{ getContactTypeLabel(localData.contactType) }}</span>
-          <span v-else class="text-grey-5">{{ translate('notSet') }}</span>
+        <div
+          v-if="!isEditable"
+          class="q-py-sm"
+        >
+          <span
+            v-if="localData.contactType"
+            class="text-body2"
+          >{{ getContactTypeLabel(localData.contactType) }}</span>
+          <span
+            v-else
+            class="text-grey-5"
+          >{{ translate('notSet') }}</span>
         </div>
         <q-select
           v-else
@@ -240,12 +353,24 @@
 
       <!-- Movement Type -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label
+          v-if="!isEditable"
+          caption
+        >
           {{ translate('movementType') }}
         </q-item-label>
-        <div v-if="!isEditable" class="q-py-sm">
-          <span v-if="localData.movementType" class="text-body2">{{ getMovementTypeLabel(localData.movementType) }}</span>
-          <span v-else class="text-grey-5">{{ translate('notSet') }}</span>
+        <div
+          v-if="!isEditable"
+          class="q-py-sm"
+        >
+          <span
+            v-if="localData.movementType"
+            class="text-body2"
+          >{{ getMovementTypeLabel(localData.movementType) }}</span>
+          <span
+            v-else
+            class="text-grey-5"
+          >{{ translate('notSet') }}</span>
         </div>
         <q-select
           v-else
@@ -263,14 +388,63 @@
         />
       </div>
 
+      <!-- Movement Direction -->
+      <div class="col-12 col-sm-6 col-md-4">
+        <q-item-label
+          v-if="!isEditable"
+          caption
+        >
+          {{ translate('movementDirection') }}
+        </q-item-label>
+        <div
+          v-if="!isEditable"
+          class="q-py-sm"
+        >
+          <span
+            v-if="localData.movementDirection"
+            class="text-body2"
+          >{{ getMovementDirectionLabel(localData.movementDirection) }}</span>
+          <span
+            v-else
+            class="text-grey-5"
+          >{{ translate('notSet') }}</span>
+        </div>
+        <q-select
+          v-else
+          v-model="localData.movementDirection"
+          :options="filteredOptions.movementDirection"
+          :label="translate('movementDirection')"
+          clearable
+          emit-value
+          map-options
+          options-dense
+          use-input
+          input-debounce="300"
+          @filter="(val, update) => filterFn(val, update, phonologyOptions.movementDirectionOptions, 'movementDirection')"
+          @update:model-value="updateField('movementDirection', $event)"
+        />
+      </div>
+
       <!-- Vocalization -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label
+          v-if="!isEditable"
+          caption
+        >
           {{ translate('vocalization') }}
         </q-item-label>
-        <div v-if="!isEditable" class="q-py-sm">
-          <span v-if="localData.vocalization" class="text-body2">{{ localData.vocalization }}</span>
-          <span v-else class="text-grey-5">{{ translate('notSet') }}</span>
+        <div
+          v-if="!isEditable"
+          class="q-py-sm"
+        >
+          <span
+            v-if="localData.vocalization"
+            class="text-body2"
+          >{{ localData.vocalization }}</span>
+          <span
+            v-else
+            class="text-grey-5"
+          >{{ translate('notSet') }}</span>
         </div>
         <q-input
           v-else
@@ -285,12 +459,24 @@
 
       <!-- Non Manual Component -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label
+          v-if="!isEditable"
+          caption
+        >
           {{ translate('nonManualComponent') }}
         </q-item-label>
-        <div v-if="!isEditable" class="q-py-sm">
-          <span v-if="localData.nonManualComponent" class="text-body2">{{ localData.nonManualComponent }}</span>
-          <span v-else class="text-grey-5">{{ translate('notSet') }}</span>
+        <div
+          v-if="!isEditable"
+          class="q-py-sm"
+        >
+          <span
+            v-if="localData.nonManualComponent"
+            class="text-body2"
+          >{{ localData.nonManualComponent }}</span>
+          <span
+            v-else
+            class="text-grey-5"
+          >{{ translate('notSet') }}</span>
         </div>
         <q-input
           v-else
@@ -305,12 +491,24 @@
 
       <!-- Inicialization -->
       <div class="col-12 col-sm-6 col-md-4">
-        <q-item-label caption>
+        <q-item-label
+          v-if="!isEditable"
+          caption
+        >
           {{ translate('inicialization') }}
         </q-item-label>
-        <div v-if="!isEditable" class="q-py-sm">
-          <span v-if="localData.inicialization" class="text-body2">{{ localData.inicialization }}</span>
-          <span v-else class="text-grey-5">{{ translate('notSet') }}</span>
+        <div
+          v-if="!isEditable"
+          class="q-py-sm"
+        >
+          <span
+            v-if="localData.inicialization"
+            class="text-body2"
+          >{{ localData.inicialization }}</span>
+          <span
+            v-else
+            class="text-grey-5"
+          >{{ translate('notSet') }}</span>
         </div>
         <q-input
           v-else
@@ -322,15 +520,57 @@
           @update:model-value="updateField('inicialization', $event)"
         />
       </div>
+
+      <!-- Repeated Movement -->
+      <div class="col-12 col-sm-6 col-md-4">
+        <q-item-label
+          caption
+        >
+          {{ translate('repeatedMovement') }}
+        </q-item-label>
+        <div
+          v-if="!isEditable"
+          class="q-py-sm"
+        >
+          <span
+            v-if="localData.repeatedMovement"
+            class="text-body2"
+          >{{ translate('yes') }}</span>
+          <span
+            v-else
+            class="text-grey-5"
+          >{{ translate('no') }}</span>
+        </div>
+        <q-btn-toggle
+          v-else
+          v-model="localData.repeatedMovement"
+          :options="[
+            { label: translate('yes'), value: true },
+            { label: translate('no'), value: false }
+          ]"
+          spread
+          no-caps
+          unelevated
+          toggle-color="primary"
+          color="grey-3"
+          text-color="grey-8"
+          class="full-width"
+          :clearable="route.path === '/search'"
+          @update:model-value="updateBooleanField('repeatedMovement', $event)"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import translate from 'src/utils/translate';
 import { usePhonologyOptions } from '../../utils/phonologyOptions';
 import type { PhonologyData } from 'src/types/models';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
 
 interface SelectOption {
   value: string;
@@ -362,6 +602,7 @@ const filteredOptions = ref({
   orientationChange: phonologyOptions.orientationChangeOptions,
   contactType: phonologyOptions.contactTypeOptions,
   movementType: phonologyOptions.movementTypeOptions,
+  movementDirection: phonologyOptions.movementDirectionOptions,
 });
 
 // Keep local data in sync with prop changes
@@ -393,7 +634,7 @@ function filterFn(
   });
 }
 
-const updateField = (field: keyof PhonologyData, value: string | string[] | number | null) => {
+const updateField = (field: keyof PhonologyData, value: string | string[] | number | null | boolean) => {
   localData.value = {
     ...localData.value,
     [field]: value !== null ? String(value) : ''
@@ -458,12 +699,38 @@ const getMovementTypeLabel = (movementType: string) => {
   const option = phonologyOptions.movementTypeOptions.find(o => o.value === movementType);
   return option ? option.label : '';
 };
+
+const getMovementDirectionLabel = (movementDirection: string) => {
+  const option = phonologyOptions.movementDirectionOptions.find(o => o.value === movementDirection);
+  return option ? option.label : '';
+};
+
+const updateBooleanField = (field: keyof PhonologyData, value: boolean) => {
+  localData.value = {
+    ...localData.value,
+    [field]: value
+  };
+  emit('update:phonologyData', localData.value);
+};
 </script>
 
 <style scoped>
 .phonology-filters {
   width: 100%;
   max-height: 100%;
-  overflow-y: auto;
+}
+
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
 }
 </style> 

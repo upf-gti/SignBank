@@ -61,6 +61,8 @@ enum RelationType {
     REGIONAL_VARIANT
     ASSOCIATED_CONCEPT
     ANTONYM
+    HOMONYM
+    VARIANT
     HYPERNYM
     HYPONYM
 }
@@ -83,6 +85,7 @@ enum EditStatus {
 }
 
 enum HandConfiguration {
+    EMPTY
     CONF_1
     CONF_2
     CONF_3
@@ -137,6 +140,7 @@ enum HandConfiguration {
 }
 
 enum ConfigurationChange {
+    EMPTY
     BENDING
     CLOSING
     CLOSING_AND_RUBBING
@@ -159,6 +163,7 @@ enum ConfigurationChange {
 }
 
 enum RelationBetweenArticulators {
+    EMPTY
     ABOVE
     ABOVE_BELOW
     AROUND
@@ -173,6 +178,7 @@ enum RelationBetweenArticulators {
 }
 
 enum Location {
+    EMPTY
     ARM
     ARMPIT
     BACK
@@ -319,6 +325,7 @@ enum Location {
 }
 
 enum MovementRelatedOrientation {
+    EMPTY
     BACK
     BASE
     FINGER_TIPS
@@ -370,6 +377,7 @@ enum MovementRelatedOrientation {
 }
 
 enum OrientationRelatedToLocation {
+    EMPTY
     AO_FINGERS_CONTRA
     AO_FINGERS_DOWN
     AO_FINGERS_UP
@@ -400,6 +408,7 @@ enum OrientationRelatedToLocation {
 }
 
 enum OrientationChange {
+    EMPTY
     EXTENSION
     EXTENSION_AND_PRONATION
     EXTENSION_TO_FLEXION
@@ -419,6 +428,7 @@ enum OrientationChange {
 }
 
 enum ContactType {
+    EMPTY
     BRUSH
     CONTINUOUS
     CONTINUOUS_TO_CONTINUOUS
@@ -435,6 +445,7 @@ enum ContactType {
 }
 
 enum MovementType {
+    EMPTY
     ARC
     CIRCLE
     CROSS
@@ -445,9 +456,78 @@ enum MovementType {
     STRAIGHT_TO_CIRCLE
 }
 
+enum MovementDirection {
+    EMPTY
+    BACKWARDS
+    BACKWARDS_AND_CONTRALATERAL
+    BACKWARDS_AND_DOWNWARDS
+    BACKWARDS_AND_IPSILATERAL
+    BACKWARDS_AND_UPWARDS
+    BACKWARDS_TO_DOWNWARDS
+    BACKWARDS_TO_FORWARDS
+    BACKWARDS_OR_FORWARDS
+    CONTRALATERAL
+    CONTRALATERAL_AND_DOWNWARDS
+    CONTRALATERAL_AND_FORWARDS
+    CONTRALATERAL_AND_UPWARDS
+    CONTRALATERAL_TO_FORWARDS
+    CONTRALATERAL_TO_IPSILATERAL
+    DISTAL
+    DOWNWARDS
+    DOWNWARDS_AND_CONTRALATERAL_OR_IPSILATERAL
+    DOWNWARDS_AND_FORWARDS
+    DOWNWARDS_AND_IPSILATERAL
+    DOWNWARDS_AND_IPSILATERAL_TO_DOWNWARDS
+    DOWNWARDS_AND_TOWARDS
+    DOWNWARDS_TO_CONTRALATERAL
+    DOWNWARDS_TO_FORWARDS
+    DOWNWARDS_TO_IPSILATERAL
+    DOWNWARDS_TO_UPWARDS
+    DOWNWARDS_OR_UPWARDS
+    DOWNWARDS_OR_UPWARDS_AND_IPSILATERAL
+    FORWARDS
+    FORWARDS_AND_IPSILATERAL
+    FORWARDS_AND_UPWARDS
+    FORWARDS_TO_BACKWARDS
+    FORWARDS_TO_CONTRALATERAL
+    FORWARDS_TO_DOWNWARDS
+    FORWARDS_TO_IPSILATERAL
+    FORWARDS_TO_IPSILATERAL_TO_FORWARDS
+    FORWARDS_TO_UPWARDS
+    FROM_LOCATION
+    IPSILATERAL
+    IPSILATERAL_AND_UP_AND_DOWN
+    IPSILATERAL_AND_UPWARDS
+    IPSILATERAL_TO_CONTRALATERAL
+    IPSILATERAL_TO_DOWNWARDS
+    IPSILATERAL_TO_DOWNWARDS_TO_CONTRALATERAL
+    IPSILATERAL_TO_UPWARDS
+    IPSILATERAL_AND_CONTRALATERAL
+    IPSILATERAL_OR_CONTRALATERAL
+    LATERAL
+    PROXIMAL
+    TO_AND_FRO
+    TOWARDS_LOCATION
+    UP_AND_DOWN
+    UPWARDS
+    UPWARDS_TO_DOWNWARDS
+    UPWARDS_TO_FORWARDS_TO_DOWNWARDS
+    UPWARDS_TO_IPSILATERAL
+    VARIABLE
+    FORWARDS_AND_DOWNWARDS
+    CONTRALATERAL_TO_DOWNWARDS
+    DOWNWARDS_TO_CONTRALATERAL_TO_IPSILATERAL
+    UPWARDS_AND_FORWARDS
+    IPSILATERAL_TO_FORWARDS
+    IPSILATERAL_TO_BACKWARDS_TO_CONTRALATERAL
+    IPSILATERAL_AND_DOWNWARDS
+}
+
 model User {
     id               String         @id @default(uuid())
     username         String         @unique
+    name             String
+    lastName         String
     email            String         @unique
     password         String
     role             Role           @default(USER)
@@ -485,6 +565,7 @@ model GlossData {
     isCreatedFromEdit    Boolean          @default(false)
     dictionaryEntry      DictionaryEntry?
     glossRequest         GlossRequest?
+    glossVideos          SignVideo[]
     senses               Sense[]
     relationsAsSource    RelatedGloss[]   @relation("RelationSource")
     relationsAsTarget    RelatedGloss[]   @relation("RelationTarget")
@@ -509,7 +590,6 @@ model Sense {
     priority          Int                @default(0)
     definitions       Definition[]
     lexicalCategory   LexicalCategory    @default(NOUN)
-    signVideos        SignVideo[]
     glossDataId       String
     glossData         GlossData          @relation(fields: [glossDataId], references: [id], onDelete: Cascade)
     examples          Example[]
@@ -532,6 +612,7 @@ model Definition {
     videoDefinitionUrl     String?
     sense                  Sense                   @relation(fields: [senseId], references: [id], onDelete: Cascade)
     senseId                String
+    priority               Int                     @default(0)
 }
 
 model Example {
@@ -566,8 +647,8 @@ model SignVideo {
     priority    Int       @default(0)
     videoData   VideoData @relation(fields: [videoDataId], references: [id], onDelete: Cascade)
     videoDataId String
-    sense       Sense     @relation(fields: [senseId], references: [id], onDelete: Cascade)
-    senseId     String
+    glossData   GlossData @relation(fields: [glossDataId], references: [id], onDelete: Cascade)
+    glossDataId String
 }
 
 model VideoData {
@@ -581,9 +662,11 @@ model VideoData {
     orientationChange            OrientationChange
     contactType                  ContactType
     movementType                 MovementType
+    movementDirection            MovementDirection
     vocalization                 String
     nonManualComponent           String
     inicialization               String
+    repeatedMovement             Boolean                      @default(false)
     signVideo                    SignVideo[]
     id                           String                       @id @default(uuid())
 }

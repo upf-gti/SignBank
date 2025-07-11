@@ -1,4 +1,3 @@
-import { useI18n } from 'vue-i18n';
 import {
   Hand,
   HandConfiguration,
@@ -10,6 +9,7 @@ import {
   OrientationChange,
   ContactType,
   MovementType,
+  MovementDirection,
 } from '../types/enums';
 import translate from './translate'
 
@@ -73,6 +73,11 @@ export function usePhonologyOptions() {
     label: t(`phonology.movementType.${value}`),
   }));
 
+  const movementDirectionOptions: SelectOption[] = Object.values(MovementDirection).map(value => ({
+    value,
+    label: t(`phonology.movementDirection.${value}`),
+  }));
+
   return {
     handOptions,
     handConfigurationOptions,
@@ -84,5 +89,6 @@ export function usePhonologyOptions() {
     orientationChangeOptions,
     contactTypeOptions,
     movementTypeOptions,
+    movementDirectionOptions,
   };
 } 

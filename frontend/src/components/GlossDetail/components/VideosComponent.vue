@@ -1,6 +1,8 @@
 <template>
   <div class="videos-component q-pa-sm">
-    <div class="text-h5 q-mb-md">{{ translate('videos') }}</div>
+    <div class="text-h5 q-mb-md">
+      {{ translate('videos') }}
+    </div>
 
     <div class="row q-col-gutter-md no-wrap overflow-auto">
       <!-- Add video button - visible when editMode is true and not creating a video -->
@@ -14,7 +16,7 @@
           class="add-video-card cursor-pointer"
           @click="addVideo"
         >
-          <q-card-section class="column items-center justify-center text-grey-7">
+          <q-card-section class="column items-center justify-center text-grey-7 fit">
             <q-icon
               name="add"
               size="48px"
@@ -45,7 +47,10 @@
               <div class="text-subtitle1 ellipsis">
                 {{ video.title }}
               </div>
-              <div v-if="editMode && !video.isNew" class="row">
+              <div
+                v-if="editMode && !video.isNew"
+                class="row"
+              >
                 <q-btn
                   flat
                   round
@@ -109,9 +114,9 @@ import EditableModule from 'src/components/Shared/EditableModule.vue';
 import { ref, watch, computed } from 'vue';
 import { useQuasar } from 'quasar';
 import api from 'src/services/api';
-import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType } from 'src/types/enums';
+import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType, MovementDirection } from 'src/types/enums';
 
-const sense = defineModel<Sense>({ required: true });
+const glossData = defineModel<GlossData>({ required: true });
 const emit = defineEmits<{
   (e: 'update:glossData', glossData: GlossData): void
 }>();
@@ -125,7 +130,7 @@ const $q = useQuasar();
 const videosBackup = ref<SignVideo[]>([]);
 const isCreatingVideo = ref(false);
 
-const videos = computed(() => sense.value?.signVideos || []);
+const videos = computed(() => glossData.value?.glossVideos || []);
 
 const sortedVideos = computed(() => {
   const videoList = [...videos.value];
@@ -137,17 +142,17 @@ const sortedVideos = computed(() => {
   });
 });
 
-watch(() => sense.value.signVideos, (newVideos) => {
+watch(() => glossData.value.glossVideos, (newVideos) => {
   videosBackup.value = JSON.parse(JSON.stringify(newVideos));
 }, { deep: true });
 
 const updateLocalVideo = (newVideo: SignVideo, index: number) => {
-  sense.value.signVideos[index] = newVideo;
+  glossData.value.glossVideos[index] = newVideo;
 };
 
 const addVideo = () => {
   // Get the highest priority
-  const maxPriority = Math.max(...sense.value.signVideos.map(v => v.priority || 0), 0);
+  const maxPriority = Math.max(...glossData.value.glossVideos.map(v => v.priority || 0), 0);
   
   // Create new video with the highest priority
   const newVideo: SignVideo = {
@@ -155,7 +160,7 @@ const addVideo = () => {
     title: '',
     priority: maxPriority + 1,
     videoDataId: '',
-    senseId: sense.value.id || '',
+    glossDataId: glossData.value.id || '',
     isNew: true,
     videos: [{
       id: Date.now().toString(),
@@ -175,6 +180,8 @@ const addVideo = () => {
       orientationChange: OrientationChange.EXTENSION,
       contactType: ContactType.CONTINUOUS,
       movementType: MovementType.STRAIGHT,
+      movementDirection: MovementDirection.FORWARDS,
+      repeatedMovement: false,
       vocalization: '',
       nonManualComponent: '',
       inicialization: '',
@@ -183,12 +190,12 @@ const addVideo = () => {
   };
 
   // Add the video at the beginning of the array
-  sense.value.signVideos.unshift(newVideo);
+  glossData.value.glossVideos.unshift(newVideo);
   isCreatingVideo.value = true;
 }
 
 const removeVideo = async (index: number) => {
-  const video = sense.value.signVideos[index];
+  const video = glossData.value.glossVideos[index];
   if (!video) return;
   
   try {
@@ -199,7 +206,7 @@ const removeVideo = async (index: number) => {
     if (index === 0 && isCreatingVideo.value) {
       isCreatingVideo.value = false;
     }
-    sense.value.signVideos.splice(index, 1);
+    glossData.value.glossVideos.splice(index, 1);
     
     $q.notify({
       type: 'positive',
@@ -216,7 +223,7 @@ const removeVideo = async (index: number) => {
 
 const updateSignVideo = async (video: SignVideo, index: number) => {
   try {
-    const currentVideo = sense.value.signVideos[index];
+    const currentVideo = glossData.value.glossVideos[index];
     if (!currentVideo) return;
 
     // Validate if video has a videoUrl and an angle
@@ -238,7 +245,18 @@ const updateSignVideo = async (video: SignVideo, index: number) => {
     let response;
     if (currentVideo.id) {
       // Update the video
-      response = await api.signVideos.update(currentVideo.id, currentVideo);
+      const payload = { ...currentVideo };
+      
+      // Remove empty values from videoData (phonology)
+      if (payload.videoData) {
+        Object.keys(payload.videoData).forEach((key: string) => {
+          if (payload.videoData[key as keyof PhonologyData] === '' || payload.videoData[key as keyof PhonologyData] === null || payload.videoData[key as keyof PhonologyData] === undefined) {
+            delete payload.videoData[key as keyof PhonologyData];
+          }
+        });
+      }
+      
+      response = await api.signVideos.update(currentVideo.id, payload);
     } else {
       // Create the video
       response = await api.signVideos.create(currentVideo);
@@ -265,19 +283,21 @@ const updateSignVideo = async (video: SignVideo, index: number) => {
 }
 
 const updateVideoData = (index: number, videoData: PhonologyData) => {
-  if (sense.value.signVideos[index]) {
-    sense.value.signVideos[index].videoData = videoData;
+  if (glossData.value.glossVideos[index]) {
+    glossData.value.glossVideos[index].videoData = videoData;
   }
 }
 
 const handleVideoCancel = (index: number) => {
   if (index === 0 && isCreatingVideo.value) {
     // If cancelling a new video creation, remove it
-    removeVideo(index);
+    removeVideo(index).catch((err) => {
+      console.error(err)
+    })
   } else {
     // Otherwise revert to backup
     if (videosBackup.value[index]) {
-      sense.value.signVideos[index] = JSON.parse(JSON.stringify(videosBackup.value[index]));
+      glossData.value.glossVideos[index] = JSON.parse(JSON.stringify(videosBackup.value[index]));
     }
   }
 }

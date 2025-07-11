@@ -1,5 +1,5 @@
 import type { RelatedGloss, MinimalPair } from "./gloss"
-import { 
+import type { 
   Hand,
   HandConfiguration,
   ConfigurationChange,
@@ -10,6 +10,7 @@ import {
   ContactType,
   MovementType,
   Location,
+  MovementDirection,
 } from './enums';
 
 export type WordStatus = 'PUBLISHED' | 'DRAFT' | 'PENDING';
@@ -19,6 +20,14 @@ export interface Translation {
   translation: string;
   language: string;
   definitionId: string;
+}
+
+export interface DefinitionTranslation {
+  id?: string;
+  translation: string;
+  language: string;
+  definitionId: string;
+  isNew?: boolean;
 }
 
 export interface ExampleTranslation {
@@ -55,10 +64,10 @@ export interface Definition {
   id?: string;
   title: string;
   definition: string;
-  videoDefinitionId: string;
+  videoDefinitionUrl?: string;
+  priority: number;
   senseId: string;
-  definitionTranslations: Translation[];
-  videoDefinition: VideoDefinition;
+  definitionTranslations: DefinitionTranslation[];
   isNew?: boolean;
   isEditing?: boolean;
 }
@@ -72,18 +81,20 @@ export interface Video {
 
 export interface PhonologyData {
   hands: Hand;
-  configuration: HandConfiguration | '';
-  configurationChanges: ConfigurationChange | '';
-  relationBetweenArticulators: RelationBetweenArticulators | '';
-  location: Location | '';
-  movementRelatedOrientation: MovementRelatedOrientation | '';
-  orientationRelatedToLocation: OrientationRelatedToLocation | '';
-  orientationChange: OrientationChange | '';
-  contactType: ContactType | '';
-  movementType: MovementType | '';
-  vocalization: string | '';
-  nonManualComponent: string | '';
-  inicialization: string | '';
+  configuration: HandConfiguration;
+  configurationChanges: ConfigurationChange;
+  relationBetweenArticulators: RelationBetweenArticulators;
+  location: Location;
+  movementRelatedOrientation: MovementRelatedOrientation;
+  orientationRelatedToLocation: OrientationRelatedToLocation;
+  orientationChange: OrientationChange;
+  contactType: ContactType;
+  movementType: MovementType;
+  movementDirection: MovementDirection;
+  vocalization: string;
+  nonManualComponent: string;
+  repeatedMovement: boolean;
+  inicialization: string;
   id?: string;
 }
 
@@ -144,7 +155,7 @@ export interface SignVideo {
   title: string;
   priority: number;
   videoDataId: string;
-  senseId: string;
+  glossDataId: string;
   videos: Video[];
   minimalPairs: MinimalPair[];
   videoData: PhonologyData;
@@ -178,6 +189,11 @@ export interface GlossData {
   minimalPairsAsSource: MinimalPair[];
   minimalPairsAsTarget: MinimalPair[];
   glossRequest: string | null;
+  dictionaryEntry?: {
+    id?: string;
+    status: 'PUBLISHED' | 'ARCHIVED';
+  };
+  glossVideos: SignVideo[];
 }
 
 export interface dictionaryEntry {
@@ -194,10 +210,19 @@ export interface dictionaryEntry {
   glossData: GlossData;
 }
 
+export enum Role {
+  ADMIN = 'ADMIN',
+  USER = 'USER'
+}
+
 export interface User {
   id: string;
   username: string;
   email: string;
+  name: string;
+  lastName: string;
+  role: Role;
+  createdAt: string;
 }
 
 export interface GlossRequest {

@@ -26,6 +26,19 @@ export function validateGlossRequest(glossRequest: any): ValidationError[] {
     errors.push(...senseErrors);
   });
 
+  // Check for at least one video
+  if (!glossRequest.requestedGlossData.glossVideos || glossRequest.requestedGlossData.glossVideos.length === 0) {
+    errors.push({
+      message: `Video is required`
+    });
+  } else {
+    // Validate each video
+    glossRequest.requestedGlossData.glossVideos.forEach((video: any) => {
+      const videoErrors = validateSignVideo(video);
+      errors.push(...videoErrors);
+    });
+  }
+
   return errors;
 }
 
@@ -53,18 +66,7 @@ function validateSense(sense: any, senseNumber: number): ValidationError[] {
     });
   }
 
-  // Check for at least one video
-  if (!sense.signVideos || sense.signVideos.length === 0) {
-    errors.push({
-      message: `Video is required for ${senseTitle}`
-    });
-  } else {
-    // Validate each video
-    sense.signVideos.forEach((video: any) => {
-      const videoErrors = validateSignVideo(video, senseTitle);
-      errors.push(...videoErrors);
-    });
-  }
+  
 
   // Validate examples if they exist
   if (sense.examples && sense.examples.length > 0) {
@@ -136,13 +138,13 @@ function validateExample(example: any, senseTitle: string): ValidationError[] {
   return errors;
 }
 
-function validateSignVideo(signVideo: any, senseTitle: string): ValidationError[] {
+function validateSignVideo(signVideo: any): ValidationError[] {
   const errors: ValidationError[] = [];
 
   // Check if videos array exists and has at least one video
   if (!signVideo.videos || signVideo.videos.length === 0) {
     errors.push({
-      message: `Video is required for ${senseTitle}`
+      message: `Video is required`
     });
   } else {
     // Get the video title from SignVideo or use a default
@@ -154,11 +156,11 @@ function validateSignVideo(signVideo: any, senseTitle: string): ValidationError[
     signVideo.videos.forEach((video: any) => {
       if (!video.angle || video.angle.trim() === '') {
         errors.push({
-          message: `Video angle is required for video in ${senseTitle}`
+          message: `Video angle is required`
         });
       } else if (!video.url || video.url.trim() === '') {
         errors.push({
-          message: `Video URL is required for ${video.angle} angle in ${senseTitle}`
+          message: `Video URL is required`
         });
       }
     });

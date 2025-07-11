@@ -7,7 +7,7 @@ export const videosSchema: CollectionCreateSchema = {
   fields: [
     { name: 'id', type: 'string' },
     { name: 'url', type: 'string' },
-    { name: 'signVideoTitle', type: 'string', facet: true },
+    { name: 'signVideoTitle', type: 'string', facet: true, sort: true },
     { name: 'hands', type: 'string', facet: true },
     { name: 'configuration', type: 'string', facet: true },
     { name: 'configurationChanges', type: 'string', facet: true },
@@ -18,13 +18,12 @@ export const videosSchema: CollectionCreateSchema = {
     { name: 'orientationChange', type: 'string', facet: true },
     { name: 'contactType', type: 'string', facet: true },
     { name: 'movementType', type: 'string', facet: true },
+    { name: 'movementDirection', type: 'string', facet: true },
     { name: 'vocalization', type: 'string', facet: true },
     { name: 'nonManualComponent', type: 'string', facet: true },
     { name: 'inicialization', type: 'string', facet: true },
-    { name: 'senseId', type: 'string', facet: true },
-    { name: 'senseTitle', type: 'string', facet: true },
-    { name: 'lexicalCategory', type: 'string', facet: true },
-    { name: 'glossId', type: 'string' },
-    { name: 'gloss', type: 'string', facet: true }
+    { name: 'gloss', type: 'string', facet: true, sort: true },
+    { name: 'description', type: 'string', facet: true },
+    { name: 'repeatedMovement', type: 'bool' }
   ]
 }; 

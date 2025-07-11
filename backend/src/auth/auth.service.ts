@@ -48,7 +48,7 @@ export class AuthService {
     };
   }
 
-  async register(userData: { username: string; email: string; password: string; role?: Role }) {
+  async register(userData: { username: string; email: string; password: string; role?: Role; name?: string; lastName?: string }) {
     if (await this.users.findByUsername(userData.username)) {
       throw new ConflictException('Username already exists');
     }
@@ -61,6 +61,8 @@ export class AuthService {
       email: userData.email,
       password: hashedPassword,
       role: userData.role || Role.USER,
+      name: userData.name,
+      lastName: userData.lastName,
       createdAt: new Date()
     });
     const { password: _, ...userWithoutPassword } = user;

@@ -12,9 +12,15 @@
       :submitting="submitting"
       @edit-gloss="editGloss"
       @cancel-gloss="cancelGloss"
+      @update:gloss-data="handleGlossDataUpdate"
       @accept-request="acceptRequest"
       @decline-request="declineRequest"
       @submit-request="submitRequest"
+    />    
+    <MainContent
+      v-if="!editMode && selectedSense"
+      :selected-sense="selectedSense"
+      :gloss-data="glossData"
     />
     <SenseSelector
       v-model="selectedSenseId"
@@ -22,10 +28,6 @@
       :edit-mode="editMode"
       :gloss-data="glossData"
       @update:gloss-data="handleGlossDataUpdate"
-    />
-    <MainContent
-      v-if="!editMode && selectedSense"
-      :selected-sense="selectedSense"
     />
     <MoreContentComponent
       v-if="glossData.senses.length > 0"
@@ -50,6 +52,7 @@ import translate from 'src/utils/translate'
 
 const emit = defineEmits<{
   (e: 'update:editMode', mode: boolean): void
+  (e: 'update:glossData', glossData: GlossData): void
   (e: 'acceptRequest', glossData: GlossData): void
   (e: 'declineRequest'): void
   (e: 'submitRequest'): void
@@ -114,9 +117,8 @@ const submitRequest = () => {
 }
 
 const handleGlossDataUpdate = (updatedGlossData: GlossData) => {
-  // Update the local glossData with the new data
-  Object.assign(glossData, updatedGlossData)
-  selectedSenseId.value = glossData.senses[0]?.id as string
+  // Emit the update to the parent component
+  emit('update:glossData', updatedGlossData)
 }
 
 
