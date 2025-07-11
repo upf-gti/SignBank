@@ -5,28 +5,15 @@
   >
     <loginComponent v-model="isLoginDialogOpen" />
     
-    <!-- Mobile Sidebar -->
+    <!-- Sidebar Navigation -->
     <q-drawer
       v-model="isSidebarOpen"
       side="right"
-      :width="250"
-      :breakpoint="600"
+      :width="280"
       bordered
+      overlay
       class="bg-secondary"
     >
-      <!-- Close button at the top -->
-      <div class="row justify-end q-pa-sm">
-        <q-btn
-          flat
-          round
-          dense
-          icon="close"
-          aria-label="Close menu"
-          @click="isSidebarOpen = false"
-        />
-      </div>
-      
-      <q-separator />
       
       <q-list padding>
         <q-item
@@ -38,7 +25,7 @@
           <q-item-section avatar>
             <q-icon name="search" />
           </q-item-section>
-          <q-item-section>{{ translate('searchGloss') }}</q-item-section>
+          <q-item-section class="text-caption">{{ translate('searchGloss') }}</q-item-section>
         </q-item>
         
         <q-item
@@ -48,9 +35,9 @@
           @click="navigateTo('/my-requests')"
         >
           <q-item-section avatar>
-            <q-icon name="list" />
+            <q-icon name="add" />
           </q-item-section>
-          <q-item-section>{{ translate('createEntry') }}</q-item-section>
+          <q-item-section class="text-caption">{{ translate('createEntry') }}</q-item-section>
         </q-item>
         
         <q-item
@@ -62,7 +49,7 @@
           <q-item-section avatar>
             <q-icon name="check_circle" />
           </q-item-section>
-          <q-item-section>{{ translate('confirmRequests') }}</q-item-section>
+          <q-item-section class="text-caption">{{ translate('confirmRequests') }}</q-item-section>
         </q-item>
         
         <q-item
@@ -74,7 +61,7 @@
           <q-item-section avatar>
             <q-icon name="people" />
           </q-item-section>
-          <q-item-section>{{ translate('userManagement') }}</q-item-section>
+          <q-item-section class="text-caption">{{ translate('userManagement') }}</q-item-section>
         </q-item>
       </q-list>
       
@@ -90,7 +77,7 @@
           <q-item-section avatar>
             <q-icon name="login" color="primary" />
           </q-item-section>
-          <q-item-section class="text-primary">{{ translate('login') }}</q-item-section>
+          <q-item-section class="text-primary text-caption">{{ translate('login') }}</q-item-section>
         </q-item>
         
         <q-item
@@ -103,7 +90,7 @@
           <q-item-section avatar>
             <q-icon name="logout" color="negative" />
           </q-item-section>
-          <q-item-section class="text-negative">{{ translate('logout') }}</q-item-section>
+          <q-item-section class="text-negative text-caption">{{ translate('logout') }}</q-item-section>
         </q-item>
       </div>
     </q-drawer>
@@ -124,60 +111,14 @@
 
       <q-space />
 
-      <!-- Desktop Navigation -->
-      <q-btn-group
-        class="col justify-end gt-sm"
-        flat
-      >
-        <q-btn
-          v-if="route.path !== '/search' && route.path !== '/'"
-          flat
-          :label="translate('searchGloss')"
-          @click="navigateTo('/search')"
-        />
-        <q-btn
-          v-if="userStore.isLoggedIn"
-          flat
-          :label="translate('createEntry')"
-          @click="navigateTo('/my-requests')"
-        />
-        <q-btn
-          v-if="userStore.isAdmin && userStore.isLoggedIn"
-          flat
-          :label="translate('confirmRequests')"
-          @click="navigateTo('/confirm-requests')"
-        />
-        <q-btn
-          v-if="userStore.isAdmin && userStore.isLoggedIn"
-          flat
-          :label="translate('userManagement')"
-          @click="navigateTo('/user-management')"
-        />
-        <q-btn
-          v-if="!userStore.isLoggedIn"
-          flat
-          :label="translate('login')"
-          icon="login"
-          @click="openLogin"
-        />
-        <q-btn
-          v-if="userStore.isLoggedIn"
-          flat
-          :label="translate('logout')"
-          icon="logout"
-          @click="userStore.logout"
-        />
-      </q-btn-group>
-
-      <!-- Mobile Menu Button -->
+      <!-- Menu Button - Always visible -->
       <q-btn
         flat
         dense
         round
-        icon="menu"
-        aria-label="Menu"
-        class="lt-md"
-        @click="isSidebarOpen = true"
+        :icon="isSidebarOpen ? 'close' : 'menu'"
+        :aria-label="isSidebarOpen ? 'Close menu' : 'Open menu'"
+        @click="isSidebarOpen = !isSidebarOpen"
       />
     </q-toolbar>
   </q-header>
@@ -221,6 +162,15 @@ const openLogin = () => {
   margin: 0 4px;
 }
 
+/* Drawer styling for all screen sizes */
+.q-drawer {
+  z-index: 2000;
+}
+
+.q-drawer__content {
+  background: var(--q-secondary);
+}
+
 /* Mobile responsive adjustments */
 @media (max-width: 599px) {
   .header-logo {
@@ -229,6 +179,13 @@ const openLogin = () => {
   
   .q-toolbar {
     padding: 0 8px;
+  }
+}
+
+/* Desktop drawer adjustments */
+@media (min-width: 600px) {
+  .q-drawer {
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
   }
 }
 </style>
