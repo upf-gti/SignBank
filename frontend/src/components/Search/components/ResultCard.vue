@@ -1,116 +1,64 @@
 <template>
   <q-card flat class="result-card" @click="$emit('view-details', document.glossId)">
-    <!-- Desktop Layout (Horizontal) -->
-    <q-card-section horizontal class="desktop-layout">
-      <template v-if="document.url">
-        <q-card-section class="col-5 col-sm-4">
-          <div class="relative-position">
-            <video
-              class="full-width"
-              :src="getVideoUrl(document.url)"
-              preload="metadata"
-              loop
-              :autoplay="true"
-              muted
-              @error="handleVideoError"
-              @loadeddata="handleVideoLoaded"
-            >
-              <source
-                :src="getVideoUrl(document.url)"
-                type="video/mp4"
-              >
-              {{ t('videoNotSupported') }}
-            </video>
-            <div
-              v-if="isLoading"
-              class="absolute-center"
-            >
-              <q-spinner
-                color="primary"
-                size="1.5em"
-              />
-            </div>
-          </div>
-        </q-card-section>
-      </template>
-      
-      <q-card-section class="col no-wrap">
-        <div class="row items-start justify-between">
-          <div class="col">
-            <div class="text-h6 text-truncate">
-              {{ document.gloss }}
-            </div>
-            <div class="text-subtitle2 text-truncate">
-              {{ document.senseTitle }}
-            </div>
-            
-            <q-chip
-              v-if="document.lexicalCategory"
-              dense
-              color="primary"
-              text-color="white"
-              class="q-mt-sm"
-            >
-              {{ translate(document.lexicalCategory) }}
-            </q-chip>
-          </div>
+    <!-- Video Section -->
+    <q-card-section v-if="document.url" class="video-section">
+      <div class="video-container">
+        <video
+          class="video-player"
+          :src="getVideoUrl(document.url)"
+          preload="metadata"
+          loop
+          :autoplay="true"
+          muted
+          @error="handleVideoError"
+          @loadeddata="handleVideoLoaded"
+        >
+          <source
+            :src="getVideoUrl(document.url)"
+            type="video/mp4"
+          >
+          {{ t('videoNotSupported') }}
+        </video>
+        <div
+          v-if="isLoading"
+          class="absolute-center"
+        >
+          <q-spinner
+            color="primary"
+            size="1.5em"
+          />
         </div>
-      </q-card-section>
+      </div>
     </q-card-section>
 
-    <!-- Mobile Layout (Vertical) -->
-    <div class="mobile-layout">
-      <!-- Video Section -->
-      <q-card-section v-if="document.url" class="video-section">
-        <div class="relative-position">
-          <video
-            class="full-width"
-            :src="getVideoUrl(document.url)"
-            preload="metadata"
-            loop
-            :autoplay="true"
-            muted
-            @error="handleVideoError"
-            @loadeddata="handleVideoLoaded"
-          >
-            <source
-              :src="getVideoUrl(document.url)"
-              type="video/mp4"
-            >
-            {{ t('videoNotSupported') }}
-          </video>
-          <div
-            v-if="isLoading"
-            class="absolute-center"
-          >
-            <q-spinner
-              color="primary"
-              size="1.5em"
-            />
-          </div>
-        </div>
-      </q-card-section>
-
-      <!-- Content Section -->
-      <q-card-section class="content-section">
-        <div class="text-h6 text-truncate q-mb-sm">
-          {{ document.gloss }}
-        </div>
-        <div class="text-subtitle2 text-truncate q-mb-sm">
-          {{ document.senseTitle }}
-        </div>
-        
-        <q-chip
-          v-if="document.lexicalCategory"
-          dense
-          color="primary"
-          text-color="white"
-          class="q-mb-md"
-        >
-          {{ translate(document.lexicalCategory) }}
-        </q-chip>
-      </q-card-section>
-    </div>
+    <!-- Content Section -->
+    <q-card-section class="content-section">
+      <!-- Gloss -->
+      <div class="text-h6 text-truncate q-mb-sm">
+        {{ document.gloss }}
+      </div>
+      
+      <!-- Definition -->
+      <div v-if="document.description" class="text-body2 text-grey-7 q-mb-sm description-text">
+        {{ document.description }}
+      </div>
+      
+      <!-- Sense Title -->
+      <div class="text-subtitle2 text-truncate q-mb-sm">
+        {{ document.senseTitle }}
+      </div>
+      
+      <!-- Lexical Category -->
+      <q-chip
+        v-if="document.lexicalCategory"
+        dense
+        color="primary"
+        text-color="white"
+        class="q-mb-md"
+      >
+        {{ translate(document.lexicalCategory) }}
+      </q-chip>
+    </q-card-section>
   </q-card>
 </template>
 
@@ -147,6 +95,8 @@ defineEmits<{
   height: 100%;
   transition: all 0.3s ease;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
 }
 
 .result-card:hover {
@@ -154,38 +104,54 @@ defineEmits<{
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Desktop Layout (Horizontal) - Default */
-.desktop-layout {
+.video-section {
+  padding-bottom: 8px;
+}
+
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 200px; /* Fixed height for consistent sizing */
   display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-.mobile-layout {
-  display: none;
+.video-player {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* This will center and maintain aspect ratio */
+  width: auto;
+  height: auto;
+  border-radius: 6px;
 }
 
-/* Mobile Layout (Vertical) - When card width < 500px */
-@media (max-width: 500px) {
-  .desktop-layout {
-    display: none;
-  }
-  
-  .mobile-layout {
-    display: block;
-  }
-  
-  .video-section {
-    padding-bottom: 8px;
-  }
-  
-  .content-section {
-    padding-top: 8px;
-  }
+.content-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-top: 8px;
+}
+
+.description-text {
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Mobile responsive adjustments */
 @media (max-width: 768px) {
   .result-card {
     margin-bottom: 8px;
+  }
+  
+  .video-container {
+    height: 150px; /* Slightly smaller on mobile */
   }
 }
 </style> 

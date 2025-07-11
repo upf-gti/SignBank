@@ -29,7 +29,7 @@
     </div>
 
     <!-- Main Content: Filters and Results -->
-    <div v-if="$q.screen.gt.md" class="row q-col-gutter-md col q-mt-md" :style="{ overflowY: 'auto' }">
+    <div v-if="$q.screen.gt.md" class="row q-col-gutter-md col" :style="{ overflowY: 'auto' }">
       <!-- Filters Sidebar -->
       <div 
         v-show="showFilters" 
@@ -98,7 +98,7 @@
 
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { searchService, type SearchParams, type SearchResponse } from 'src/services/search.service';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
@@ -136,8 +136,22 @@ const searchQuery = ref('');
 const searchResults = ref<SearchResponse | null>(null);
 const loading = ref(false);
 const page = ref(1);
-const perPage = ref(20);
 const showDetails = ref(false);
+
+// Dynamic perPage calculation based on screen size
+const perPage = computed(() => {
+  const width = window.innerWidth;
+  
+  if (width >= 1900) {
+    return 24; // 4 columns × 6 rows
+  } else if (width >= 1024) {
+    return 21; // 3 columns × 7 rows
+  } else if (width >= 600) {
+    return 20; // 2 columns × 10 rows
+  } else {
+    return 20; // 1 column × 20 rows
+  }
+});
 const showFilters = ref(false);
 
 // Filters state

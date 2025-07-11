@@ -10,7 +10,7 @@ export class SearchService {
     try {
       const searchParameters = {
         q: searchQuery.query,
-        query_by: 'gloss,signVideoTitle,configuration,configurationChanges,relationBetweenArticulators,location,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,hands',
+        query_by: 'gloss,signVideoTitle,configuration,configurationChanges,description,relationBetweenArticulators,location,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,hands',
         filter_by: searchQuery.filter_by,
         facet_by: searchQuery.facet_by,
         page: searchQuery.page,

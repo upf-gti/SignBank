@@ -29,4 +29,5 @@ export interface VideoIndex {
   // Gloss data
   glossId: string;
   gloss: string;
+  description: string; // First description of the first sense
 } 

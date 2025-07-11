@@ -85,7 +85,22 @@ export class TypesenseService implements OnModuleInit {
         include: {
           videos: true,
           videoData: true,
-          glossData: true
+          glossData: {
+            include: {
+              senses: {
+                include: {
+                  definitions: {
+                    orderBy: {
+                      priority: 'asc'
+                    }
+                  }
+                },
+                orderBy: {
+                  priority: 'asc'
+                }
+              }
+            }
+          }
         }
       });
     } catch (error) {
@@ -167,8 +182,30 @@ export class TypesenseService implements OnModuleInit {
       videos: { url: string }[];
       videoData: VideoData;
     },
-    glossData: GlossData
+    glossData: GlossData & {
+      senses?: {
+        id: string;
+        priority: number;
+        definitions: {
+          id: string;
+          definition: string;
+          priority: number;
+        }[];
+      }[];
+    }
   ): VideoIndex {
+    // Get the first description of the first sense
+    let description = '';
+    if (glossData.senses && glossData.senses.length > 0) {
+      // Sort senses by priority (ascending) and get the first one
+      const firstSense = glossData.senses.sort((a, b) => a.priority - b.priority)[0];
+      if (firstSense.definitions && firstSense.definitions.length > 0) {
+        // Sort definitions by priority (ascending) and get the first one
+        const firstDefinition = firstSense.definitions.sort((a, b) => a.priority - b.priority)[0];
+        description = firstDefinition.definition;
+      }
+    }
+
     const document: VideoIndex = {
       id: signVideo.id,
       url: signVideo.videos[0]?.url || '',
@@ -189,7 +226,8 @@ export class TypesenseService implements OnModuleInit {
       inicialization: signVideo.videoData?.inicialization || '',
       repeatedMovement: signVideo.videoData?.repeatedMovement || false,
       glossId: glossData.id,
-      gloss: glossData.gloss || ''  
+      gloss: glossData.gloss || '',
+      description: description
     };
 
     // Log the document for debugging
@@ -210,7 +248,18 @@ export class TypesenseService implements OnModuleInit {
         include: {
           glossData: {
             include: {
-              senses: true,
+              senses: {
+                include: {
+                  definitions: {
+                    orderBy: {
+                      priority: 'asc'
+                    }
+                  }
+                },
+                orderBy: {
+                  priority: 'asc'
+                }
+              },
               glossVideos: {
                 include: {
                   videos: true,
@@ -269,8 +318,14 @@ export class TypesenseService implements OnModuleInit {
             include: {
               senses: {
                 include: {
-                  glossData: true,
-                  
+                  definitions: {
+                    orderBy: {
+                      priority: 'asc'
+                    }
+                  }
+                },
+                orderBy: {
+                  priority: 'asc'
                 }
               },
               glossVideos: {
@@ -346,9 +401,9 @@ export class TypesenseService implements OnModuleInit {
       
       const defaultParams = {
         q: searchParameters.q || '*',
-        query_by: searchParameters.query_by || 'gloss,signVideoTitle,configuration,location,hands,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection',
+        query_by: searchParameters.query_by || 'gloss,signVideoTitle,description,configuration,location,hands,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection',
         filter_by: searchParameters.filter_by || '',
-        facet_by: searchParameters.facet_by || 'configuration,location,hands,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection,repeatedMovement',
+        facet_by: searchParameters.facet_by || 'configuration,location,hands,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection,repeatedMovement,description,gloss,signVideoTitle',
         max_hits: searchParameters.max_hits || 100,
         page: searchParameters.page || 1,
         per_page: searchParameters.per_page || 20,

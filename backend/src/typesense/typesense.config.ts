@@ -23,6 +23,7 @@ export const videosSchema: CollectionCreateSchema = {
     { name: 'nonManualComponent', type: 'string', facet: true },
     { name: 'inicialization', type: 'string', facet: true },
     { name: 'gloss', type: 'string', facet: true, sort: true },
+    { name: 'description', type: 'string', facet: true },
     { name: 'repeatedMovement', type: 'bool' }
   ]
 }; 
