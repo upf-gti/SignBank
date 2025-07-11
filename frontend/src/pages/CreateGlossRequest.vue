@@ -1,5 +1,10 @@
 <template>
-  <q-page padding>
+  <q-page padding 
+  :style-fn="(header: number, height: number) => {
+      pageHeight = height-header
+      return { height: `${height - header}px` };
+    }"
+    >
     <div class="row justify-center">
       <div class="col-12 col-md-8 col-lg-6">
         <q-card class="q-pa-lg">
@@ -45,7 +50,7 @@ import { api } from 'src/services/api'
 
 const router = useRouter()
 const $q = useQuasar()
-
+const pageHeight = ref(0);
 const loading = ref(false)
 const form = ref({
   gloss: ''

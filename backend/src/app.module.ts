@@ -15,6 +15,7 @@ import { ExamplesModule } from './examples/examples.module';
 import { TranslationsModule } from './translations/translations.module';
 import { DefinitionsModule } from './definitions/definitions.module';
 import { ExampleTranslationsModule } from './example-translations/example-translations.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { ExampleTranslationsModule } from './example-translations/example-transl
     TranslationsModule,
     DefinitionsModule,
     ExampleTranslationsModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

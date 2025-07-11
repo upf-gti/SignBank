@@ -809,6 +809,35 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   activeHand: string;
   create: string;
   optional: string;
+  // User Management
+  userManagement: string;
+  allUsers: string;
+  createUser: string;
+  deleteUser: string;
+  deleteUserConfirm: string;
+  username: string;
+  name: string;
+  lastName: string;
+  role: string;
+  admin: string;
+  user: string;
+  createdAt: string;
+  actions: string;
+  usernameRequired: string;
+  emailRequired: string;
+  nameRequired: string;
+  lastNameRequired: string;
+  passwordRequired: string;
+  roleRequired: string;
+  userCreated: string;
+  userDeleted: string;
+  userRoleUpdated: string;
+  errorLoadingUsers: string;
+  errorCreatingUser: string;
+  errorDeletingUser: string;
+  errorUpdatingRole: string;
+  cannotDemoteLastAdmin: string;
+  cannotDeleteLastAdmin: string;
 }
 
 export default TranslateKeys;

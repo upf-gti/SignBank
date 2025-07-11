@@ -217,6 +217,13 @@ export const api = {
     reorder: (signVideoId: string, data: { videoIds: string[] }) =>
       apiClient.post<GlossData>(`/gloss-data/sign-videos/${signVideoId}/videos/reorder`, data),
   },
+  // Users endpoints (admin only)
+  users: {
+    getAll: () => apiClient.get('/users'),
+    updateRole: (userId: string, role: 'ADMIN' | 'USER') =>
+      apiClient.put(`/users/${userId}/role`, { role }),
+    delete: (userId: string) => apiClient.delete(`/users/${userId}`),
+  },
 }
 
 export default api

@@ -210,12 +210,19 @@ export interface dictionaryEntry {
   glossData: GlossData;
 }
 
+export enum Role {
+  ADMIN = 'ADMIN',
+  USER = 'USER'
+}
+
 export interface User {
   id: string;
   username: string;
   email: string;
   name: string;
   lastName: string;
+  role: Role;
+  createdAt: string;
 }
 
 export interface GlossRequest {

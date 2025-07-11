@@ -12,11 +12,6 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/register',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/RegisterPage.vue') }],
-  },
-  {
     path: '/gloss/:gloss',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/GlossPage.vue') }],
@@ -37,6 +32,13 @@ const routes: RouteRecordRaw[] = [
     children: [
       { path: '', component: () => import('pages/ConfirmRequestsPage.vue') },
       { path: 'review/:id', component: () => import('pages/ReviewGlossRequest.vue') },
+    ],
+  },
+  {
+    path: '/user-management',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/UserManagementPage.vue') },
     ],
   },
 

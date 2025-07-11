@@ -1,5 +1,9 @@
 <template>
-  <q-page class="q-pa-md">
+  <q-page class="q-pa-md no-wrap"
+  :style-fn="(header: number, height: number) => {
+      pageHeight = height-header
+      return { height: `${height - header}px` };
+    }" >
     <div class="row justify-between items-center q-mb-md">
       <div class="text-h5">
         {{ translate('pendingRequests') }}
@@ -83,7 +87,7 @@
   import { RequestStatus } from 'src/types/models';
   
   const $router = useRouter();
-  
+  const pageHeight = ref(0);
   const requests = ref<GlossRequest[]>();
   const loading = ref(true);
   const error = ref<string | null>(null);

@@ -59,4 +59,10 @@ export class UserRepository {
       where: { role },
     });
   }
+
+  async countByRole(role: Role): Promise<number> {
+    return this.prisma.user.count({
+      where: { role },
+    });
+  }
 } 

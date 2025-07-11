@@ -64,6 +64,18 @@
           </q-item-section>
           <q-item-section>{{ translate('confirmRequests') }}</q-item-section>
         </q-item>
+        
+        <q-item
+          v-if="userStore.isAdmin && userStore.isLoggedIn"
+          clickable
+          v-ripple
+          @click="navigateTo('/user-management')"
+        >
+          <q-item-section avatar>
+            <q-icon name="people" />
+          </q-item-section>
+          <q-item-section>{{ translate('userManagement') }}</q-item-section>
+        </q-item>
       </q-list>
       
       <!-- Authentication buttons at the bottom -->
@@ -134,6 +146,12 @@
           flat
           :label="translate('confirmRequests')"
           @click="navigateTo('/confirm-requests')"
+        />
+        <q-btn
+          v-if="userStore.isAdmin && userStore.isLoggedIn"
+          flat
+          :label="translate('userManagement')"
+          @click="navigateTo('/user-management')"
         />
         <q-btn
           v-if="!userStore.isLoggedIn"
