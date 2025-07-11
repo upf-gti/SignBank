@@ -838,6 +838,7 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   errorUpdatingRole: string;
   cannotDemoteLastAdmin: string;
   cannotDeleteLastAdmin: string;
+  searchUsers: string;
 }
 
 export default TranslateKeys;

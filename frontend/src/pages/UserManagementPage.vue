@@ -15,23 +15,38 @@
     </div>
 
     <!-- Users Table -->
-    <q-card flat class="col column no-wrap" >
-      <q-card-section>
-        <div class="text-h6">{{ translate('allUsers') }}</div>
-      </q-card-section>
+          <q-card flat class="col column no-wrap" >
+        <q-card-section>
+          <div class="row items-center justify-between">
+            <div class="text-h6">{{ translate('allUsers') }}</div>
+            <q-input
+              v-model="searchQuery"
+              :placeholder="translate('searchUsers')"
+              dense
+              outlined
+              clearable
+              class="search-input"
+              style="width: 300px;"
+            >
+              <template #prepend>
+                <q-icon name="search" />
+              </template>
+            </q-input>
+          </div>
+        </q-card-section>
       
       <q-card-section class="col overflow-auto">
-        <q-table
-          flat
-          :rows="users"
-          :columns="columns"
-          :loading="loading"
-          row-key="id"
-          class="my-sticky-header-table"
-          hide-bottom
-          virtual-scroll
-          :pagination="{ rowsPerPage: 0 }"
-        >
+                  <q-table
+            flat
+            :rows="filteredUsers"
+            :columns="columns"
+            :loading="loading"
+            row-key="id"
+            class="my-sticky-header-table"
+            hide-bottom
+            virtual-scroll
+            :pagination="{ rowsPerPage: 0 }"
+          >
           <!-- Role Column -->
           <template #body-cell-role="props">
             <q-td :props="props">
@@ -197,6 +212,7 @@ const userStore = useUserStore();
 const pageHeight = ref(0);
 // Reactive data
 const users = ref<User[]>([]);
+const searchQuery = ref('');
 const loading = ref(false);
 const creating = ref(false);
 const deleting = ref(false);
@@ -219,6 +235,17 @@ const currentUser = computed(() => ({
   id: '', // We'll need to get this from the store or API
   role: userStore.role
 }));
+
+const filteredUsers = computed(() => {
+  if (!searchQuery.value) return users.value;
+  
+  const query = searchQuery.value.toLowerCase();
+  return users.value.filter(user => 
+    user.name.toLowerCase().includes(query) ||
+    user.username.toLowerCase().includes(query) ||
+    user.email.toLowerCase().includes(query)
+  );
+});
 const roleOptions = [
   { label: translate('admin'), value: Role.ADMIN },
   { label: translate('user'), value: Role.USER }

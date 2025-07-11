@@ -229,6 +229,7 @@ const translations: TranslateKeys = {
   errorUpdatingRole: 'Error updating role',
   cannotDemoteLastAdmin: 'Cannot demote the last admin user',
   cannotDeleteLastAdmin: 'Cannot delete the last admin user',
+  searchUsers: 'Search users...',
   details: 'Details',
   video: 'Video',
   NOUN: 'Noun',

@@ -230,6 +230,7 @@ const translations: TranslateKeys = {
   errorUpdatingRole: 'Error al actualitzar el rol',
   cannotDemoteLastAdmin: 'No es pot degradar l\'últim administrador',
   cannotDeleteLastAdmin: 'No es pot eliminar l\'últim administrador',
+  searchUsers: 'Cercar usuaris...',
   editSingleSenseDialog: 'Diàleg d\'edició de accepció únic',
   editSenses: 'Editar accepcions',
   archive: 'Arxivar',
