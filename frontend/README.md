@@ -1,5 +1,12 @@
 # Frontend (Quasar/Vue.js)
 
+## Table of Contents
+- [Overview](#overview)
+- [Development Setup](#-development-setup)
+- [Project Structure](#-project-structure)
+- [Communication](#-communication)
+- [Further Documentation](#-further-documentation)
+
 ## Overview
 
 This is the frontend client for SignBank, built with Quasar (Vue.js). It provides the user interface for searching, viewing, and managing sign language glossaries.

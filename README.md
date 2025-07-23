@@ -1,5 +1,21 @@
 # SignBank
 
+## Table of Contents
+- [Project Overview](#-project-overview)
+- [Prerequisites](#-prerequisites)
+- [Getting Started](#-getting-started)
+- [Project Structure](#-project-structure)
+- [Maintenance](#-maintenance)
+- [Security](#-security)
+- [Deployment](#-deployment)
+- [API Documentation](#-api-documentation)
+- [Component Documentation](#-component-documentation)
+- [How to change the app host](#how-to-change-the-app-host)
+- [Local Development](#local-development)
+- [Production Deployment](#production-deployment)
+
+---
+
 A modern fullstack platform for sign language management and search.
 
 - **Frontend:** Quasar (Vue.js)
@@ -8,6 +24,12 @@ A modern fullstack platform for sign language management and search.
 - **Search Engine:** Typesense
 - **Proxy/SSL:** NGINX
 - **Orchestration:** Docker & Docker Compose
+
+---
+
+**Quick links:**
+- [Backend Documentation](./backend/README.md)
+- [Frontend Documentation](./frontend/README.md)
 
 ---
 

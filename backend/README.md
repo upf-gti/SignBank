@@ -1,5 +1,13 @@
 # SignBank Backend
 
+## Table of Contents
+- [Setup and Configuration](#setup-and-configuration)
+- [Prisma ORM Setup](#prisma-orm-setup)
+- [Database Diagram](#database-diagram)
+- [API Documentation](#api-documentation)
+- [Notes](#notes)
+
+
 ## Setup and Configuration
 
 ### Prisma ORM Setup
