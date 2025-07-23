@@ -1,0 +1,2 @@
+- Millorar proces de creacio d'usuaris i de restaurar contrasenya
+- Pantalla de gestion de entradas (Fase 2)
