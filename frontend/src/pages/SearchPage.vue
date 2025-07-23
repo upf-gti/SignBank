@@ -64,7 +64,7 @@
       <!-- Filters Sidebar -->
       <div 
         v-show="showFilters" 
-        class="col-12 col-md-3"
+        class="col-12"
       >
         <SearchFilters
           v-model:search-query="searchQuery"
