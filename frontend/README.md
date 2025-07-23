@@ -1,58 +1,68 @@
-# SignBank UPD (Frontend)
+# Frontend (Quasar/Vue.js)
 
-Frontend application for the SignBank project built with Quasar Framework (Vue.js-based).
+## Overview
 
-## Installation
+This is the frontend client for SignBank, built with Quasar (Vue.js). It provides the user interface for searching, viewing, and managing sign language glossaries.
 
-Install the dependencies:
+---
 
-```bash
-yarn
-# or
-npm install
-```
+## 🚀 Development Setup
 
-## Development
+Through docker compose in main folder
 
-### Start the app in development mode
-Features hot-code reloading, error reporting, etc.
+---
 
-```bash
-quasar dev
-```
+## 📁 Project Structure
 
-### Lint the files
+### Pages (`src/pages/`)
+Each file in this directory represents a main route/page in the application:
+- `SearchPage.vue` – Main search interface
+- `GlossPage.vue` – Gloss detail view
+- `UserManagementPage.vue` – Admin user management
+- `MyRequestsPage.vue` – User’s requests overview
+- `CreateGlossRequest.vue` – Form to request a new gloss
+- `EditGlossRequest.vue` – Edit an existing gloss request
+- `ConfirmRequestsPage.vue` – Confirm pending requests
+- `ReviewGlossRequest.vue` – Review a gloss request
+- `ViewRequestGlossPage.vue` – View details of a request
+- `ErrorNotFound.vue` – 404 error page
 
-```bash
-yarn lint
-# or
-npm run lint
-```
+### Components (`src/components/`)
+Reusable UI building blocks, organized by feature or shared use:
 
-## Production Build
+- **GlossDetail/**
+  - `GlossDetailComponent.vue` – Main wrapper for gloss details
+  - `components/`
+    - **DefinitionsComponent/**
+      - `DefinitionsComponent.vue`, `CreateDefinitionDialog.vue`, `DefinitionCard.vue`, `DefinitionCardDesktop.vue`, `DefinitionCardMobile.vue`, `DefinitionTranslationsComponent.vue`
+    - **ExamplesComponent/**
+      - `ExamplesComponent.vue`, `ExampleCardDesktop.vue`, `ExampleCardMobile.vue`
+    - Other gloss-related components:  
+      `GlossHeader.vue`, `GlossSearch.vue`, `GlossVideoComponent.vue`, `LanguageSelector.vue`, `MainContent.vue`, `MinimalPairCard.vue`, `MinimalPairsList.vue`, `MoreContentComponent.vue`, `RelatedGlossCard.vue`, `RelatedGlosses.vue`, `RelatedGlossesList.vue`, `SenseSelector.vue`, `SenseTranslationsComponent.vue`, `SignFonologyComponent.vue`, `VideosComponent.vue`, `ExampleTranslationsComponent.vue`
 
-```bash
-quasar build
-```
+- **Search/**
+  - `SearchResults.vue`, `SearchFilters.vue`, `types.ts`
+  - `components/`
+    - `SearchInput.vue`, `ResultCard.vue`, `SearchPhonologyFilters.vue`, `FilterInputs.vue`, `FilterCategories.vue`
 
-## Docker
+- **Shared/**
+  - `EditableModule.vue`, `PhonologyFilters.vue`
 
-The frontend application can be containerized using:
-- For local development: `Dockerfile.local`
-- For production: `Dockerfile.prod`
+- **UserManagement/**
+  - `UsersTable.vue`, `CreateUserDialog.vue`, `ChangePasswordDialog.vue`, `DeleteUserDialog.vue`, `index.ts`
 
-These are typically used through the root docker-compose configuration.
+- Other global components:
+  - `HeaderComponent.vue`, `LoadingComponent.vue`, `loginComponent.vue`, `UploadVideoComponent.vue`, `UploadVideoPopup.vue`, `VideoPlayer.vue`, `VideoPlayerPopup.vue`
 
-## Configuration
+---
 
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js) for customizing the Quasar configuration.
+## 🌐 Communication
 
-## Project Structure
+- Uses Axios to communicate with the backend API.
+- Real-time search via Typesense.
 
-- `src/` - Source code
-  - `components/` - Reusable Vue components
-  - `pages/` - Application pages
-  - `boot/` - Initialization scripts
-  - `css/` - Global styles
-  - `layouts/` - Page layouts
-- `public/` - Static assets
+---
+
+## 📚 Further Documentation
+
+See the main [README.md](../README.md) for full-stack setup, deployment, and architecture details.
