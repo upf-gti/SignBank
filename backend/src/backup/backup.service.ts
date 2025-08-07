@@ -32,13 +32,18 @@ export class BackupService {
     try {
       this.logger.log('Creating database backup...');
       
-      // Get the path to the backup script (use source directory, not dist)
-      const scriptPath = path.join(__dirname, '../../../scripts/backup-database.js');
+      // Get the path to the backup script (works in both dev and production)
+      const fs = require('fs');
+      let scriptPath = path.join(__dirname, '../../../scripts/backup-database.js');
+      
+      // If running from dist folder, adjust path to source
+      if (__dirname.includes('dist')) {
+        scriptPath = path.join(__dirname, '../../scripts/backup-database.js');
+      }
       
       this.logger.log(`Backup script path: ${scriptPath}`);
       
       // Check if script exists
-      const fs = require('fs');
       if (!fs.existsSync(scriptPath)) {
         throw new Error(`Backup script not found at: ${scriptPath}`);
       }
