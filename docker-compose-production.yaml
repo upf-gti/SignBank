@@ -30,6 +30,7 @@ services:
       - NODE_ENV=production
     volumes:
       - ./nginx/certs:/app/certs:ro
+      - ./backups:/app/dist/backups
     ports:
       - 9229:9229
     cap_add:
