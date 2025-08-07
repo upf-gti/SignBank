@@ -77,7 +77,8 @@ export class BackupService {
    */
   async getBackupStatus() {
     try {
-      const backupDir = path.join(__dirname, '../../backups');
+      // Always use the main backups directory, not dist/backups
+      const backupDir = path.join(__dirname, '../../../backups');
       const fs = require('fs');
       
       if (!fs.existsSync(backupDir)) {
@@ -143,7 +144,8 @@ export class BackupService {
   async cleanOldBackups(): Promise<number> {
     try {
       const config = getBackupConfig();
-      const backupDir = path.join(__dirname, '../../backups');
+      // Always use the main backups directory, not dist/backups
+      const backupDir = path.join(__dirname, '../../../backups');
       const fs = require('fs');
       
       if (!fs.existsSync(backupDir)) {
