@@ -222,17 +222,21 @@ There we need a .env file with the following:
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/signbank
 ```
 
+First run the database container:
+
+```bash
+docker-compose -f docker-compose-local.yaml up -d postgres
+```
+
 Then, in the backend folder we will run:
 ```
-npx prisma migrate dev
+npx prisma db push
 ```
 
 To create the databse.
 
-Then to see if everything is working we can go to the url we set. 
-Or we can go back to the project folder and run:
+Then we can run the entire project:
 
 ```
-docker compose -f docker-compose-production.yaml down
 docker-compose -f docker-compose-production.yaml up
 ```

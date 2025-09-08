@@ -126,7 +126,6 @@ services:
       - POSTGRES_HOST=postgres
       - DBLIST=${POSTGRES_DB:-signbank}   # databases to back up
       - REMOVE_BEFORE=30                  # keep backups for 30 days
-      - RUN_ONCE=true
     volumes:
       - ./backend/backups:/backups
     depends_on:
