@@ -30,6 +30,7 @@ services:
       - NODE_ENV=production
     volumes:
       - ./nginx/certs:/app/certs:ro
+      - ./backups:/app/dist/backups
     ports:
       - 9229:9229
     cap_add:
@@ -115,6 +116,23 @@ services:
     networks:
       - signbank
     restart: always
+  db-backup:
+    image: kartoza/pg-backup:17-3.5
+    container_name: db-backup
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASS=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_PORT=5432
+      - POSTGRES_HOST=postgres
+      - DBLIST=${POSTGRES_DB:-signbank}   # databases to back up
+      - REMOVE_BEFORE=30                  # keep backups for 30 days
+      - RUN_ONCE=true
+    volumes:
+      - ./backend/backups:/backups
+    depends_on:
+      - postgres
+    networks:
+      - signbank
 
 volumes:
   postgres_prod_data:
