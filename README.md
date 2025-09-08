@@ -6,6 +6,7 @@
 - [Getting Started](#-getting-started)
 - [Project Structure](#-project-structure)
 - [Maintenance](#-maintenance)
+- [Database Backups](#-database-backups)   <-- add this line
 - [Security](#-security)
 - [Deployment](#-deployment)
 - [API Documentation](#-api-documentation)
@@ -116,6 +117,22 @@ SignBank/
   ```bash
   docker system prune -a
   ```
+
+---
+
+## 💾 Database Backups
+
+The project includes an automatic PostgreSQL backup service using the
+[`kartoza/pg-backup`](https://github.com/kartoza/docker-pg-backup) image.
+
+- **Service:** `db-backup`
+- **Schedule:** Daily backups at 23:00 (configurable via `CRON_SCHEDULE`)
+- **Retention:** Old backups older than 30 days are automatically removed (`REMOVE_BEFORE=30`)
+- **Storage:** Backups are written to the `./backups/` folder on the host machine
+
+### Backup Files
+
+Backups are stored in a year/month/day directory structure, for example:
 
 ---
 
