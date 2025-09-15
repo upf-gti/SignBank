@@ -6,11 +6,9 @@
 - [Getting Started](#-getting-started)
 - [Project Structure](#-project-structure)
 - [Maintenance](#-maintenance)
-- [Database Backups](#-database-backups)   <-- add this line
+- [Database Backups](#-database-backups) 
 - [Security](#-security)
 - [Deployment](#-deployment)
-- [API Documentation](#-api-documentation)
-- [Component Documentation](#-component-documentation)
 - [How to change the app host](#how-to-change-the-app-host)
 - [Local Development](#local-development)
 - [Production Deployment](#production-deployment)
@@ -82,11 +80,6 @@ docker-compose -f docker-compose-local.yaml up --build
 
 - For production, use `docker-compose-production.yaml` and ensure you have valid SSL certificates in `nginx/certs/`.
 
-### 4. Access the services
-
-- **Frontend:** https://<your-domain>/
-- **Backend API:** https://<your-domain>/api
-
 ---
 
 ## 🛠 Project Structure
@@ -110,7 +103,7 @@ SignBank/
 
 - Rebuild containers:
   ```bash
-  docker-compose down -v --remove-orphans
+  docker-compose down --remove-orphans
   docker-compose build
   ```
 - Clean Docker cache:
@@ -132,8 +125,7 @@ The project includes an automatic PostgreSQL backup service using the
 
 ### Backup Files
 
-Backups are stored in a year/month/day directory structure, for example:
-
+Backups are stored in a year/month/day directory structure.
 ---
 
 ## 🔐 Security
@@ -141,6 +133,7 @@ Backups are stored in a year/month/day directory structure, for example:
 - Never hardcode the Typesense API key.
 - Use HTTPS in production (configure NGINX and SSL certificates).
 - Control access via backend authentication.
+- Change databse user, passowrd and name. (We got two hack attemps, probably due the "bank" in the page title)
 
 ---
 
@@ -149,24 +142,6 @@ Backups are stored in a year/month/day directory structure, for example:
 - Use Docker volumes for persistent DB and Typesense data.
 - Open required ports: 443 (HTTPS).
 - Use valid SSL certificates (e.g., Let’s Encrypt) in `nginx/certs/`.
-
----
-
-## 📄 API Documentation
-
-> API documentation will be provided in the future.  
-> See `backend/README.md` for endpoints and authentication details.
-
----
-
-## 🧩 Component Documentation
-
-Each main folder contains its own `README.md` for technical details:
-
-- [`backend/README.md`](./backend/README.md): Endpoints, authentication, Typesense integration, etc.
-- [`frontend/README.md`](./frontend/README.md): Framework, structure, communication with backend, etc.
-- [`nginx/README.md`](./nginx/README.md): Reverse proxy, SSL, routing.
-- [`typesense/README.md`](./typesense/README.md): Collections, schema, data import.
 
 ---
 
@@ -216,7 +191,7 @@ docker-compose -f docker-compose-production.yaml up -d
 
 The first time we run the application, we will need to create the database, so, while the docker compose is running we will go to /backend folder.
 
-There we need a .env file with the following:
+There we need a .env file with the following, or change it with the database url with the custom values you set in the .env file:
 
 ```
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/signbank
