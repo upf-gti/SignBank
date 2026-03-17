@@ -2,7 +2,9 @@ node_modules
 database
 FileServer
 .env
-mongoDb/data
+typesense/typesense_data
+nginx/certs
+
 # Lock files
 pnpm-lock.yaml
 **/yarn.lock
