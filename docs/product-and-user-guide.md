@@ -76,3 +76,4 @@ Log in as admin → review pending requests → accept (publishes per your data 
 - Operators and developers: root [README.md](../README.md) (Docker, env, deployment, backups).
 - API reference: [backend/README.md](../backend/README.md).
 - Code map: [application-structure.md](./application-structure.md).
+- Future ideas: [phase-2-features.md](./phase-2-features.md).

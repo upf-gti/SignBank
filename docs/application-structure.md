@@ -144,5 +144,6 @@ More detail: [frontend/README.md](../frontend/README.md).
 ## Related reading
 
 - [Product and user guide](./product-and-user-guide.md) — What the app is for and how people use it.
+- [Phase 2 feature ideas](./phase-2-features.md) — Possible future enhancements.
 - [Backend API & DB diagram](../backend/README.md)
 - [Frontend file map](../frontend/README.md)

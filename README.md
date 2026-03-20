@@ -27,6 +27,9 @@ A modern fullstack platform for sign language management and search.
 ---
 
 **Quick links:**
+- [Application structure](./docs/application-structure.md) — how the repo and services are organized
+- [Product & user guide](./docs/product-and-user-guide.md) — what the app does and what each role does
+- [Phase 2 feature ideas](./docs/phase-2-features.md) — possible future enhancements
 - [Backend Documentation](./backend/README.md)
 - [Frontend Documentation](./frontend/README.md)
 
