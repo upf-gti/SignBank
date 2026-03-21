@@ -31,6 +31,17 @@ services:
         condition: service_healthy
       typesense:
         condition: service_started
+    command: >
+      sh -c "set -e &&
+      echo 'Running database migrations...' &&
+      npx prisma migrate deploy &&
+      echo 'Generating Prisma Client...' &&
+      npx prisma generate &&
+      if [ \"$$SEED_DB\" = \"true\" ]; then
+        echo 'Seeding database...' &&
+        npx prisma db seed;
+      fi &&
+      exec npm run start:docker:dev"
 
   frontend:
     build:

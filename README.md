@@ -16,7 +16,7 @@ A sign language dictionary platform with video-based entries, multilingual trans
 ## Prerequisites
 
 - [Docker](https://docs.docker.com/get-docker/) and Docker Compose (v2+)
-- `make` (available by default on macOS/Linux)
+- `make` (available by default on macOS/Linux; on Windows install via [Chocolatey](https://community.chocolatey.org/packages/make) with `choco install make`, [Scoop](https://scoop.sh/) with `scoop install make`, or use [WSL](https://learn.microsoft.com/windows/wsl/))
 
 ## Quick Start
 
