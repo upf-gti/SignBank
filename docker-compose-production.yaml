@@ -58,11 +58,11 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB:-signbank_prod}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB:-signbank_prod}"]
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
       interval: 10s
       timeout: 5s
-      retries: 5
-      start_period: 30s
+      retries: 10
+      start_period: 60s
     networks:
       - signbank
     volumes:
@@ -82,11 +82,11 @@ services:
       - typesense_prod_data:/data
     command: '--data-dir /data --api-key=${TYPESENSE_API_KEY} --enable-cors'
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8108/health"]
+      test: ["CMD-SHELL", "bash -c ':> /dev/tcp/127.0.0.1/8108' || exit 1"]
       interval: 10s
       timeout: 5s
-      retries: 5
-      start_period: 30s
+      retries: 10
+      start_period: 60s
 
   dufs:
     image: sigoden/dufs

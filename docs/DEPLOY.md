@@ -190,6 +190,30 @@ Set all env vars in the Dockploy project settings (never commit secrets).
 | Search empty after restart | Typesense bootstrap logs; admin `POST /api/typesense/sync` |
 | Videos 404 | `FileServer/` exists and dufs volume mounted |
 | Migration failed | `prisma migrate status`; see DATABASE.md |
+| Typesense / postgres unhealthy | See [Healthcheck failures](#healthcheck-failures) below |
+
+---
+
+## Healthcheck failures
+
+If deploy fails with `typesense is unhealthy` or `postgres failed to start`:
+
+1. **Required env vars in Dockploy** — confirm these are set (not empty):
+   - `POSTGRES_PASSWORD`
+   - `TYPESENSE_API_KEY` (any long random string; same value used by Typesense and backend)
+   - `JWT_SECRET` (32+ characters)
+
+2. **Typesense** — no Docker healthcheck (same as local dev). Backend starts after Typesense **container starts**, not after a health probe. The Typesense image has no `wget`, `curl`, or reliable shell for HTTP/TCP checks.
+
+3. **Postgres** — healthcheck uses `pg_isready -U signbank -d signbank`. Keep `POSTGRES_USER=signbank` and `POSTGRES_DB=signbank`, or update the healthcheck in compose to match.
+
+4. **Redeploy after compose changes** — in Dockploy, stop/remove the stack or redeploy so healthcheck config is recreated (Docker does not always update healthchecks on existing containers).
+
+5. **Inspect logs** (SSH on server):
+   ```bash
+   docker logs signbank-typesense
+   docker logs signbank-postgres
+   ```
 
 ---
 
