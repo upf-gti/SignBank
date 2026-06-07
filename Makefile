@@ -1,10 +1,11 @@
 COMPOSE_LOCAL  = docker compose -f docker-compose-local.yaml
 COMPOSE_TEST   = docker compose -f docker-compose-test.yaml
 COMPOSE_PROD   = docker compose -f docker-compose-production.yaml
+COMPOSE_DOCKPLOY = docker compose -f docker-compose.dockploy.yaml
 CERT_CRT       = nginx/certs/server.crt
 CERT_KEY       = nginx/certs/server.key
 
-.PHONY: setup up down build logs seed migrate clean rebuild shell help check-certs
+.PHONY: setup up down build logs seed migrate clean rebuild shell help check-certs bootstrap-prod deploy-prod deploy-dockploy render-nginx
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
@@ -73,3 +74,15 @@ prod-up: ## Start the production environment
 
 prod-down: ## Stop the production environment
 	$(COMPOSE_PROD) down
+
+bootstrap-prod: ## First-time production server setup (dirs, certs, nginx config)
+	bash scripts/prod-bootstrap.sh
+
+deploy-prod: ## Backup, build, and deploy production stack
+	bash scripts/deploy.sh prod
+
+deploy-dockploy: ## Build and deploy Dockploy compose stack
+	bash scripts/deploy.sh dockploy
+
+render-nginx: ## Render production nginx config from BASE_URL in .env
+	bash scripts/render-nginx-config.sh

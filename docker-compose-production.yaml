@@ -10,20 +10,17 @@ services:
     container_name: backend-prod
     environment:
       - PORT=443
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-prod:5432/${POSTGRES_DB:-signbank_prod}?schema=public
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-signbank_prod}?schema=public
       - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}
+      - TYPESENSE_HOST=typesense
+      - TYPESENSE_PORT=8108
+      - DUFS_URL=http://dufs:5000
       - BASE_URL=${BASE_URL:-localhost}
-      - DUFS_URL=${DUFS_URL}
-      - TYPESENSE_HOST=${TYPESENSE_HOST}
-      - TYPESENSE_PORT=${TYPESENSE_PORT}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_EXPIRATION=${JWT_EXPIRATION:-24h}
       - ADMIN_EMAIL=${ADMIN_EMAIL}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
       - PRISMA_CLI_BINARY_TARGETS=linux-musl,linux-musl-openssl-3.0.x
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB:-signbank_prod}
       - NODE_ENV=production
       - BACKUP_ENABLED=false
     volumes:
@@ -113,6 +110,9 @@ services:
     networks:
       - signbank
     restart: always
+    depends_on:
+      - backend
+      - frontend
 
   db-backup:
     image: kartoza/pg-backup:17-3.5
@@ -121,7 +121,7 @@ services:
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
       - POSTGRES_PASS=${POSTGRES_PASSWORD:-postgres}
       - POSTGRES_PORT=5432
-      - POSTGRES_HOST=postgres-prod
+      - POSTGRES_HOST=postgres
       - DBLIST=${POSTGRES_DB:-signbank_prod}
       - REMOVE_BEFORE=30
       - CRON_SCHEDULE='0 4 * * *'

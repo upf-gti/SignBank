@@ -11,7 +11,21 @@ See also: [OPERATIONS_PLAN.md](./OPERATIONS_PLAN.md) | [DATABASE.md](./DATABASE.
 | Local dev | `docker-compose-local.yaml` | `make setup` |
 | Test (Dockploy) | `docker-compose.dockploy.yaml` | Dockploy UI |
 | Test (manual) | `docker-compose-test.yaml` | `make test-up` |
-| Production | `docker-compose-production.yaml` | `make prod-up` |
+| Production | `docker-compose-production.yaml` | `make bootstrap-prod` then `make deploy-prod` |
+| Dockploy (manual) | `docker-compose.dockploy.yaml` | `make deploy-dockploy` |
+
+---
+
+## Deploy scripts
+
+| Script | Purpose |
+|--------|---------|
+| `bash scripts/prod-bootstrap.sh` | First-time setup: `.env`, dirs, SSL certs, nginx config |
+| `bash scripts/deploy.sh prod` | Pre-deploy backup, build, up, migrate status check |
+| `bash scripts/deploy.sh dockploy` | Build and deploy Dockploy compose (no nginx) |
+| `bash scripts/render-nginx-config.sh` | Regenerate nginx prod config from `BASE_URL` |
+
+Makefile shortcuts: `make bootstrap-prod`, `make deploy-prod`, `make deploy-dockploy`, `make render-nginx`
 
 ---
 
@@ -52,7 +66,8 @@ mkdir -p FileServer/gloss-videos FileServer/example-videos FileServer/definition
 
 - **Local:** `make setup` checks for `nginx/certs/server.crt` + `.key`
 - **Dockploy:** Enable Let's Encrypt in Dockploy for your domain
-- **Manual prod:** Place certs in `nginx/certs/` or configure Let's Encrypt
+- **Manual prod:** `make bootstrap-prod` generates self-signed certs, or place real certs in `nginx/certs/`
+- **Domain change:** update `BASE_URL` in `.env`, then `make render-nginx`
 
 ### 5. Deploy
 
@@ -62,10 +77,17 @@ make setup
 make logs
 ```
 
-**Production:**
+**Production (recommended):**
+```bash
+make bootstrap-prod   # first time only
+# edit .env
+make deploy-prod
+make logs             # COMPOSE_LOCAL for local; use docker compose -f docker-compose-production.yaml logs -f
+```
+
+**Production (quick, no backup script):**
 ```bash
 make prod-up
-make logs
 ```
 
 **Dockploy:** See [Dockploy routing](#dockploy-routing) below.
@@ -84,7 +106,8 @@ Migrations run automatically via `backend/docker-entrypoint.sh` on container sta
 
 Verify after deploy:
 ```bash
-docker compose exec backend npx prisma migrate status
+docker compose -f docker-compose-production.yaml exec backend npx prisma migrate status
+# or: included automatically in make deploy-prod
 ```
 
 Expected: `Database schema is up to date`
