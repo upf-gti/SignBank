@@ -1,15 +1,16 @@
 import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from '../prisma/prisma.service';
-import { TypesenseService } from '../typesense/typesense.service';
 import { UpdateSenseDto, ReorderSenseDto } from './dto/update-sense.dto';
 import { UpdateDefinitionDto, UpdateDefinitionTranslationDto } from './dto/update-definition.dto';
 import { GlossStatus, Language } from '@prisma/client';
+import { GLOSS_SEARCH_SYNC_EVENT } from '../typesense/types/gloss-index.type';
 
 @Injectable()
 export class GlossDataService {
   constructor(
     private prisma: PrismaService,
-    private typesenseService: TypesenseService
+    private eventEmitter: EventEmitter2,
   ) {}
 
   async getGlossData(id: string) {
@@ -131,7 +132,12 @@ export class GlossDataService {
         }
       }
     });
+    this.notifySearchIndex(id);
     return this.getGlossData(id);
+  }
+
+  private notifySearchIndex(glossDataId: string) {
+    this.eventEmitter.emit(GLOSS_SEARCH_SYNC_EVENT, { glossDataId });
   }
 
   async archiveGloss(id: string) {
@@ -152,14 +158,7 @@ export class GlossDataService {
       }
     });
 
-    // Remove from Typesense search index
-    try {
-      await this.typesenseService.deleteDocumentsByGlossId(id);
-    } catch (error) {
-      // Log the error but don't fail the archive operation
-      console.error(`Failed to remove gloss ${id} from Typesense index:`, error);
-    }
-
+    this.notifySearchIndex(id);
     return this.getGlossData(id);
   }
 
@@ -181,14 +180,7 @@ export class GlossDataService {
       }
     });
 
-    // Re-add to Typesense search index by syncing the gloss
-    try {
-      await this.syncGlossToTypesense(id);
-    } catch (error) {
-      // Log the error but don't fail the unarchive operation
-      console.error(`Failed to add gloss ${id} back to Typesense index:`, error);
-    }
-
+    this.notifySearchIndex(id);
     return this.getGlossData(id);
   }
 
@@ -216,6 +208,7 @@ export class GlossDataService {
       }
     });
 
+    this.notifySearchIndex(glossDataId);
     return this.getGlossData(glossDataId);
   }
 
@@ -243,10 +236,21 @@ export class GlossDataService {
       return this.getGlossData(glossDataId);
     }
 
-    const start = Math.min(oldIndex, newIndex);
-    const end = Math.max(oldIndex, newIndex);
-    const movingUp = oldIndex > newIndex;
+    const reordered = [...senses];
+    const [moved] = reordered.splice(oldIndex, 1);
+    reordered.splice(newIndex, 0, moved);
 
+    await this.prisma.$transaction(
+      reordered.map((s, index) =>
+        this.prisma.sense.update({
+          where: { id: s.id },
+          data: { priority: index },
+        }),
+      ),
+    );
+
+    this.notifySearchIndex(glossDataId);
+    return this.getGlossData(glossDataId);
   }
 
   async deleteSense(glossDataId: string, senseId: string) {
@@ -339,6 +343,7 @@ export class GlossDataService {
       }
     });
 
+    this.notifySearchIndex(sense.glossDataId);
     return this.getGlossData(sense.glossDataId);
   }
 
@@ -798,6 +803,7 @@ export class GlossDataService {
       data: { priority }
     });
 
+    this.notifySearchIndex(signVideo.glossDataId);
     return this.getGlossData(signVideo.glossDataId);
   }
 
@@ -821,6 +827,7 @@ export class GlossDataService {
 
     await Promise.all(updatePromises);
 
+    this.notifySearchIndex(glossDataId);
     return this.getGlossData(glossDataId);
   }
 
@@ -844,6 +851,7 @@ export class GlossDataService {
       data: { priority }
     });
 
+    this.notifySearchIndex(video.signVideo.glossDataId);
     return this.getGlossData(video.signVideo.glossDataId);
   }
 
@@ -870,31 +878,7 @@ export class GlossDataService {
 
     await Promise.all(updatePromises);
 
+    this.notifySearchIndex(signVideo.glossDataId);
     return this.getGlossData(signVideo.glossDataId);
-  }
-
-  private async syncGlossToTypesense(glossId: string) {
-    // Get the gloss data with all its sign videos
-    const glossData = await this.prisma.glossData.findUnique({
-      where: { id: glossId },
-      include: {
-        glossVideos: {
-          include: {
-                videos: true,
-                videoData: true
-          }
-        }
-      }
-    });
-
-    if (!glossData) {
-      throw new NotFoundException('Gloss data not found');
-    }
-
-    // Create documents for each sign video
-    for (const glossVideo of glossData.glossVideos) {
-      const document = this.typesenseService.createVideoDocument(glossVideo, glossData);
-      await this.typesenseService.upsertDocument(document);
-    }
   }
 } 

@@ -1,15 +1,22 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { CreateSignVideoDto, UpdateSignVideoDto } from './dto/index';
 import { PrismaService } from 'src/prisma/prisma.service'
 import { GlossData, Hand, Prisma } from '@prisma/client'
 import { GlossDataService } from 'src/gloss-data/gloss-data.service'
+import { GLOSS_SEARCH_SYNC_EVENT } from '../typesense/types/gloss-index.type';
 
 @Injectable()
 export class SignVideosService {    
   constructor(
     private prisma: PrismaService,
-    private glossDataService: GlossDataService
+    private glossDataService: GlossDataService,
+    private eventEmitter: EventEmitter2,
   ) {}
+
+  private notifySearchIndex(glossDataId: string) {
+    this.eventEmitter.emit(GLOSS_SEARCH_SYNC_EVENT, { glossDataId });
+  }
 
   async create(createSignVideoDto: CreateSignVideoDto): Promise<GlossData> {
 
@@ -61,6 +68,7 @@ export class SignVideosService {
       data: signVideoData
     });
 
+    this.notifySearchIndex(createSignVideoDto.glossDataId);
     return this.glossDataService.getGlossData(createSignVideoDto.glossDataId);
   }
 
@@ -123,6 +131,7 @@ export class SignVideosService {
       data: signVideoData
     });
 
+    this.notifySearchIndex(signVideo.glossDataId);
     return this.glossDataService.getGlossData(signVideo.glossDataId);
   }
 
@@ -143,9 +152,10 @@ export class SignVideosService {
         where: { id }
       });
 
+      this.notifySearchIndex(glossDataId);
       return this.glossDataService.getGlossData(glossDataId);
     } catch (error) {
       throw new NotFoundException(`SignVideo with ID ${id} not found or could not be deleted`);
     }
   }
-} 
+}

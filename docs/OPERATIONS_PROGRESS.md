@@ -28,10 +28,10 @@ Update this file after each completed task.
 
 | ID | Task | Status | Notes |
 |----|------|--------|-------|
-| 2.1 | Unify index model (one doc per gloss) | pending | |
-| 2.2 | Add lexicalCategory etc. to Typesense schema | pending | |
-| 2.3 | Wire event emits on gloss/video mutations | pending | |
-| 2.4 | Remove Typesense periodic crons | done | removed every-minute; nightly reconcile only |
+| 2.1 | Unify index model (one doc per gloss) | done | id = glossData.id |
+| 2.2 | Add lexicalCategory etc. to Typesense schema | done | run sync/recreate once on existing envs |
+| 2.3 | Wire event emits on gloss/video mutations | done | gloss.search.sync event |
+| 2.4 | Remove Typesense periodic crons | done | done in Phase 1 |
 | 3B.2 | scripts/deploy.sh + prod-bootstrap.sh | pending | |
 | 3B.3 | Harden docker-compose-production.yaml | partial | removed 5432/9229 ports, JWT, backup path |
 | 3B.4 | Frontend prod Dockerfile entrypoint | pending | |
@@ -47,11 +47,12 @@ Update this file after each completed task.
 | 2026-06-07 | Created OPERATIONS_PLAN.md, OPERATIONS_PROGRESS.md |
 | 2026-06-07 | **Phase 1 complete** — Typesense stability, JWT/env, backup, auth, DEPLOY.md, DATABASE.md |
 | 2026-06-07 | **Phase 3A complete** — docker-compose.dockploy.yaml, frontend entrypoint fix |
+| 2026-06-07 | **Phase 2 complete** — unified gloss index, schema fields, event-driven sync |
 
 ---
 
 ## Current focus
 
-**Next:** Phase 2 — Search correctness (unify index model, schema fields, event emits)
+**Next:** Phase 3B — deploy scripts + prod compose hardening
 
-**Dockploy:** Import `docker-compose.dockploy.yaml`, set env vars, map routes per DEPLOY.md
+**After deploy:** Admin `POST /typesense/sync/recreate` once for new search schema fields

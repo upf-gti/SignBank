@@ -133,7 +133,7 @@ Set all env vars in the Dockploy project settings (never commit secrets).
 
 ## Admin-only maintenance endpoints
 
-Require JWT + ADMIN role:
+**Note:** After deploying Phase 2 search changes, run `POST /api/typesense/sync/recreate` once (admin) to apply the new schema fields (`lexicalCategory`, `senseTitle`, etc.).
 
 - `GET /typesense/status` — index stats
 - `POST /typesense/sync` — full re-index (non-destructive)

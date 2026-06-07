@@ -228,7 +228,7 @@ async function performSearch() {
       page: Number(page.value),
       limit: Number(perPage.value),
       filter_by: filterBy.value || undefined,
-      facet_by: 'hands,configuration,configurationChanges,relationBetweenArticulators,location,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType'
+      facet_by: 'lexicalCategory,hands,configuration,configurationChanges,relationBetweenArticulators,location,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType'
     };
     
     searchResults.value = await searchService.search(params);
