@@ -22,19 +22,23 @@ export class TypesenseService implements OnModuleInit {
     });
   }
 
-  async onModuleInit() {
-    try {
-      this.logger.log('Initializing Typesense service...');      
+  onModuleInit() {
+    this.logger.log('Initializing Typesense service...');
+    void this.bootstrapTypesense();
+  }
 
-      // First, initialize the collection
-      await this.initializeCollection();
-      
-      // Then sync all videos
-      await this.syncAllVideos();
-      this.logger.log('Initial sync completed');
+  private async bootstrapTypesense() {
+    try {
+      await this.ensureCollectionExists();
+      const result = await this.syncAllVideos();
+      this.logger.log(
+        `Initial Typesense sync completed: ${result.count} documents indexed`,
+      );
     } catch (error) {
-      this.logger.error('Error during Typesense initialization:', error.stack);
-      throw error;
+      this.logger.error(
+        'Typesense bootstrap failed — app will continue without search index sync',
+        error.stack,
+      );
     }
   }
 
@@ -109,20 +113,53 @@ export class TypesenseService implements OnModuleInit {
     }
   }
 
-  async initializeCollection() {
+  async ensureCollectionExists() {
+    try {
+      await this.client.collections(VIDEOS_COLLECTION_NAME).retrieve();
+      return {
+        success: true,
+        created: false,
+        message: 'Collection already exists',
+      };
+    } catch (error) {
+      if (error.httpStatus !== 404) {
+        this.logger.error('Error checking Typesense collection:', error.stack);
+        throw error;
+      }
+
+      await this.client.collections().create(videosSchema);
+      this.logger.log('Typesense collection created');
+      return {
+        success: true,
+        created: true,
+        message: 'Collection created successfully',
+      };
+    }
+  }
+
+  /** Destructive: drops and recreates the collection. Admin-only via API. */
+  async recreateCollection() {
     try {
       try {
         await this.client.collections(VIDEOS_COLLECTION_NAME).delete();
       } catch (error) {
-        // Collection didn't exist, continue
+        if (error.httpStatus !== 404) {
+          throw error;
+        }
       }
 
       await this.client.collections().create(videosSchema);
-      return { success: true, message: 'Collection initialized successfully' };
+      this.logger.warn('Typesense collection recreated (all documents removed)');
+      return { success: true, message: 'Collection recreated successfully' };
     } catch (error) {
-      this.logger.error('Error initializing Typesense collection:', error.stack);
+      this.logger.error('Error recreating Typesense collection:', error.stack);
       throw error;
     }
+  }
+
+  /** @deprecated Use ensureCollectionExists. Kept for backward-compatible admin calls. */
+  async initializeCollection() {
+    return this.ensureCollectionExists();
   }
 
   async getCollectionStatus() {

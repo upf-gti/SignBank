@@ -16,6 +16,8 @@ services:
       - DUFS_URL=${DUFS_URL}
       - TYPESENSE_HOST=${TYPESENSE_HOST}
       - TYPESENSE_PORT=${TYPESENSE_PORT}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=${JWT_EXPIRATION:-24h}
       - SEED_DB=true
     ports:
       - 9229:9229
