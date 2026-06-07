@@ -33,31 +33,31 @@ Makefile shortcuts: `make bootstrap-prod`, `make deploy-prod`, `make deploy-dock
 
 Workflow: `.github/workflows/ci.yml`
 
-Two workflows:
-
-| Workflow | When | What it does |
-|----------|------|--------------|
-| **CI** | PR into `main`, or push to `main` | Tests + compile only — **no image publish** |
-| **Publish** | After CI succeeds on **push to `main`** only | Builds and pushes images to GHCR |
-
-Pull requests run **CI** only. **Publish** is skipped because the triggering CI event is `pull_request`, not `push`. Images are published once when a PR is **merged** into `main`.
-
-| Event | CI | Publish |
-|-------|----|---------|
-| Pull request into `main` | Runs | Skipped |
-| Merge into `main` | Runs | Runs after CI passes |
+| Event | Tests + build | Publish to GHCR |
+|-------|---------------|-----------------|
+| Pull request into `main` | Yes | No |
+| Push / merge to `main` | Yes | Yes (after tests pass) |
+| Manual **Run workflow** on `main` | Yes | Yes |
 
 **Images published:**
-- `ghcr.io/<owner>/<repo>/backend:main`, `:latest`, `:sha-abc123`
-- `ghcr.io/<owner>/<repo>/frontend:main`, `:latest`, `:sha-abc123`
+- `ghcr.io/upf-gti/signbank/backend:main`, `:latest`, `:sha-abc123`
+- `ghcr.io/upf-gti/signbank/frontend:main`, `:latest`, `:sha-abc123`
+
+(GHCR lowercases the repo name: `SignBank` → `signbank`.)
 
 **One-time GitHub setup:**
 
 1. **Repository variable** `BASE_URL` — your test/prod hostname (used when building frontend images), e.g. `test.signbank.example.com`
-2. **GHCR visibility** — after first push, open GitHub → Packages → each package → **Change visibility** to Public (or add a GHCR read token in Dockploy)
-3. **Dockploy** — use `docker-compose.ghcr.yaml` instead of `docker-compose.dockploy.yaml` and set:
-   - `GHCR_OWNER` / `GHCR_REPO` (lowercase)
-   - `IMAGE_TAG=main` (or `latest` — both are published on merge to main)
+2. **Make GHCR packages public** (required for Dockploy without registry login):
+   - GitHub → **upf-gti** org → **Packages** (or repo → Packages after first publish)
+   - Open `backend` and `frontend` packages → **Package settings** → **Change visibility** → **Public**
+   - Org packages are **private by default**; private packages return `unauthorized` on pull without credentials
+3. **Dockploy** — use `docker-compose.ghcr.yaml` and set:
+   - `GHCR_OWNER=upf-gti`, `GHCR_REPO=signbank`, `IMAGE_TAG=main`
+
+**If pull fails with `unauthorized`:** images were never published yet, or packages are still private. Until both are fixed, use `docker-compose.dockploy.yaml` (builds on the server, no GHCR).
+
+**Re-publish manually:** Actions → **CI** → **Run workflow** → branch `main`.
 
 **Local pull-based deploy:**
 ```bash
