@@ -4,7 +4,7 @@
 # Set in Dockploy / .env:
 #   GHCR_OWNER=upf-gti          (GitHub org or user, lowercase)
 #   GHCR_REPO=signbank          (repo name, lowercase — SignBank → signbank)
-#   IMAGE_TAG=test              (branch tag: test, main, or sha-abc123)
+#   IMAGE_TAG=main              (tag published when PRs merge into main)
 #
 # Make GHCR packages public, or configure a registry token in Dockploy.
 #
@@ -16,7 +16,7 @@ networks:
 
 services:
   backend:
-    image: ghcr.io/${GHCR_OWNER:-upf-gti}/${GHCR_REPO:-signbank}/backend:${IMAGE_TAG:-test}
+    image: ghcr.io/${GHCR_OWNER:-upf-gti}/${GHCR_REPO:-signbank}/backend:${IMAGE_TAG:-main}
     pull_policy: always
     container_name: signbank-backend
     environment:
@@ -44,7 +44,7 @@ services:
         condition: service_healthy
 
   frontend:
-    image: ghcr.io/${GHCR_OWNER:-upf-gti}/${GHCR_REPO:-signbank}/frontend:${IMAGE_TAG:-test}
+    image: ghcr.io/${GHCR_OWNER:-upf-gti}/${GHCR_REPO:-signbank}/frontend:${IMAGE_TAG:-main}
     pull_policy: always
     container_name: signbank-frontend
     environment:

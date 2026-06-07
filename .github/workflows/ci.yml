@@ -1,10 +1,13 @@
 name: CI
 
+# PRs targeting main: compile only (pre-merge check).
+# Push to main (includes merged PRs): compile + publish images to GHCR.
+
 on:
   push:
-    branches: [main, test]
+    branches: [main]
   pull_request:
-    branches: [main, test]
+    branches: [main]
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -68,7 +71,7 @@ jobs:
   docker:
     name: Docker (${{ matrix.service }})
     needs: [backend, frontend]
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
