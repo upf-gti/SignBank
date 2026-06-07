@@ -20,6 +20,9 @@ jobs:
   backend:
     name: Backend build & test
     runs-on: ubuntu-latest
+    env:
+      # Prisma CLI requires DATABASE_URL at parse time; no DB connection is made in CI.
+      DATABASE_URL: postgresql://ci:ci@localhost:5432/signbank_ci?schema=public
     defaults:
       run:
         working-directory: backend
