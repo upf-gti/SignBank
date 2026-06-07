@@ -35,8 +35,8 @@ Workflow: `.github/workflows/ci.yml`
 
 | Event | What runs |
 |-------|-----------|
-| Pull request **into** `main` | Backend + frontend compile (no image push) |
-| **Merge** into `main` (push to `main`) | Compile + push Docker images to GHCR |
+| Pull request **into** `main` | Prisma validate, backend unit tests, backend + frontend compile |
+| **Merge** into `main` (push to `main`) | Same checks + push Docker images to GHCR |
 
 Direct pushes to `main` also publish images. Feature work on other branches is validated via PR before merge.
 

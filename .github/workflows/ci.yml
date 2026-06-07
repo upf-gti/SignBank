@@ -1,7 +1,7 @@
 name: CI
 
-# PRs targeting main: compile only (pre-merge check).
-# Push to main (includes merged PRs): compile + publish images to GHCR.
+# PRs targeting main: compile + run tests (pre-merge check).
+# Push to main (includes merged PRs): tests + compile + publish images to GHCR.
 
 on:
   push:
@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   backend:
-    name: Backend build
+    name: Backend build & test
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -36,8 +36,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Validate Prisma schema
+        run: npx prisma validate
+
       - name: Generate Prisma client
         run: npx prisma generate
+
+      - name: Run unit tests
+        run: npm test -- --ci --passWithNoTests
 
       - name: Compile
         run: npx nest build
