@@ -2,8 +2,34 @@ import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import * as Typesense from 'typesense';
 import { VIDEOS_COLLECTION_NAME, videosSchema } from './typesense.config';
-import { VideoIndex } from './types/video-index.type';
-import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType, MovementDirection, GlossStatus, SignVideo, GlossData, VideoData } from '@prisma/client';
+import { GlossIndex } from './types/gloss-index.type';
+import {
+  GlossStatus,
+  Hand,
+  Prisma,
+} from '@prisma/client';
+
+const glossIndexInclude = {
+  senses: {
+    include: {
+      definitions: {
+        orderBy: { priority: 'asc' as const },
+      },
+    },
+    orderBy: { priority: 'asc' as const },
+  },
+  glossVideos: {
+    include: {
+      videos: { orderBy: { priority: 'asc' as const } },
+      videoData: true,
+    },
+    orderBy: { priority: 'asc' as const },
+  },
+} satisfies Prisma.GlossDataInclude;
+
+type GlossDataForIndex = Prisma.GlossDataGetPayload<{
+  include: typeof glossIndexInclude;
+}>;
 
 @Injectable()
 export class TypesenseService implements OnModuleInit {
@@ -15,131 +41,233 @@ export class TypesenseService implements OnModuleInit {
       nodes: [{
         host: process.env.TYPESENSE_HOST || 'typesense',
         port: parseInt(process.env.TYPESENSE_PORT || '8108'),
-        protocol: 'http'
+        protocol: 'http',
       }],
       apiKey: process.env.TYPESENSE_API_KEY || 'xyz',
-      connectionTimeoutSeconds: 2
+      connectionTimeoutSeconds: 2,
     });
   }
 
-  async onModuleInit() {
-    try {
-      this.logger.log('Initializing Typesense service...');      
+  onModuleInit() {
+    this.logger.log('Initializing Typesense service...');
+    void this.bootstrapTypesense();
+  }
 
-      // First, initialize the collection
-      await this.initializeCollection();
-      
-      // Then sync all videos
-      await this.syncAllVideos();
-      this.logger.log('Initial sync completed');
+  private async bootstrapTypesense() {
+    try {
+      await this.ensureCollectionExists();
+      const result = await this.syncAllVideos();
+      this.logger.log(
+        `Initial Typesense sync completed: ${result.count} documents indexed`,
+      );
     } catch (error) {
-      this.logger.error('Error during Typesense initialization:', error.stack);
-      throw error;
+      this.logger.error(
+        'Typesense bootstrap failed — app will continue without search index sync',
+        error.stack,
+      );
     }
   }
 
   async deleteDocument(documentId: string) {
     try {
-      await this.client.collections(VIDEOS_COLLECTION_NAME).documents(documentId).delete();
+      await this.client
+        .collections(VIDEOS_COLLECTION_NAME)
+        .documents(documentId)
+        .delete();
     } catch (error) {
+      if (error.httpStatus === 404) {
+        return;
+      }
       this.logger.error(`Failed to delete document ${documentId}:`, error.stack);
       throw error;
     }
   }
 
-  async deleteDocumentsByGlossId(glossId: string) {
+  async deleteDocumentsByGlossId(glossDataId: string) {
+    await this.removeGlossFromIndex(glossDataId);
+  }
+
+  async removeGlossFromIndex(glossDataId: string) {
     try {
-      // Search for all documents with the specific glossId
-      const searchResults = await this.client.collections(VIDEOS_COLLECTION_NAME).documents().search({
-        q: '*',
-        filter_by: `glossId:=${glossId}`,
-        per_page: 250 // Maximum documents per page
-      });
+      await this.deleteDocument(glossDataId);
 
-      // Delete each document found
-      const deletePromises = searchResults.hits.map(hit => 
-        this.deleteDocument((hit.document as any).id)
+      const searchResults = await this.client
+        .collections(VIDEOS_COLLECTION_NAME)
+        .documents()
+        .search({
+          q: '*',
+          filter_by: `glossId:=${glossDataId}`,
+          per_page: 250,
+        });
+
+      await Promise.all(
+        searchResults.hits.map((hit) =>
+          this.deleteDocument((hit.document as { id: string }).id),
+        ),
       );
-
-      await Promise.all(deletePromises);
-      this.logger.log(`Deleted ${searchResults.hits.length} documents for gloss ${glossId}`);
     } catch (error) {
-      this.logger.error(`Failed to delete documents for gloss ${glossId}:`, error.stack);
+      this.logger.error(
+        `Failed to remove gloss ${glossDataId} from index:`,
+        error.stack,
+      );
       throw error;
     }
   }
 
-  async upsertDocument(document: VideoIndex) {
+  async upsertDocument(document: GlossIndex) {
     try {
-      await this.client.collections(VIDEOS_COLLECTION_NAME).documents().upsert(document);
+      await this.client
+        .collections(VIDEOS_COLLECTION_NAME)
+        .documents()
+        .upsert(document);
     } catch (error) {
       this.logger.error(`Failed to upsert document ${document.id}:`, error.stack);
       throw error;
     }
   }
 
-  async findSignVideo(signVideoId: string) {
+  buildGlossDocument(glossData: GlossDataForIndex): GlossIndex | null {
+    if (!glossData.glossVideos.length) {
+      return null;
+    }
+
+    const primarySignVideo = glossData.glossVideos[0];
+    const primaryVideo = primarySignVideo.videos[0];
+    const primarySense = glossData.senses[0];
+
+    let description = '';
+    if (primarySense?.definitions.length) {
+      description = primarySense.definitions[0].definition;
+    }
+
+    const videoData = primarySignVideo.videoData;
+
+    return {
+      id: glossData.id,
+      glossId: glossData.id,
+      gloss: glossData.gloss,
+      url: primaryVideo?.url ?? '',
+      signVideoTitle: primarySignVideo.title,
+      senseId: primarySense?.id ?? '',
+      senseTitle: primarySense?.senseTitle ?? '',
+      lexicalCategory: primarySense?.lexicalCategory ?? '',
+      description,
+      hands: videoData?.hands ?? Hand.RIGHT,
+      configuration: videoData?.configuration ?? '',
+      configurationChanges: videoData?.configurationChanges ?? '',
+      relationBetweenArticulators: videoData?.relationBetweenArticulators ?? '',
+      location: videoData?.location ?? '',
+      movementRelatedOrientation: videoData?.movementRelatedOrientation ?? '',
+      orientationRelatedToLocation: videoData?.orientationRelatedToLocation ?? '',
+      orientationChange: videoData?.orientationChange ?? '',
+      contactType: videoData?.contactType ?? '',
+      movementType: videoData?.movementType ?? '',
+      movementDirection: videoData?.movementDirection ?? '',
+      vocalization: videoData?.vocalization ?? '',
+      nonManualComponent: videoData?.nonManualComponent ?? '',
+      inicialization: videoData?.inicialization ?? '',
+      repeatedMovement: videoData?.repeatedMovement ?? false,
+    };
+  }
+
+  /** @deprecated Use buildGlossDocument */
+  createVideoDocument(
+    signVideo: GlossDataForIndex['glossVideos'][number],
+    glossData: GlossDataForIndex,
+  ): GlossIndex | null {
+    return this.buildGlossDocument({
+      ...glossData,
+      glossVideos: [signVideo],
+    });
+  }
+
+  async syncPublishedGloss(glossDataId: string) {
+    const entry = await this.prisma.dictionaryEntry.findUnique({
+      where: { glossDataId },
+      include: {
+        glossData: { include: glossIndexInclude },
+      },
+    });
+
+    if (!entry || entry.status !== GlossStatus.PUBLISHED) {
+      await this.removeGlossFromIndex(glossDataId);
+      return { success: true, action: 'removed' as const };
+    }
+
+    const document = this.buildGlossDocument(entry.glossData);
+    if (!document) {
+      await this.removeGlossFromIndex(glossDataId);
+      return { success: true, action: 'removed' as const };
+    }
+
+    await this.upsertDocument(document);
+    return { success: true, action: 'upserted' as const };
+  }
+
+  async ensureCollectionExists() {
     try {
-      return await this.prisma.signVideo.findUnique({
-        where: { id: signVideoId },
-        include: {
-          videos: true,
-          videoData: true,
-          glossData: {
-            include: {
-              senses: {
-                include: {
-                  definitions: {
-                    orderBy: {
-                      priority: 'asc'
-                    }
-                  }
-                },
-                orderBy: {
-                  priority: 'asc'
-                }
-              }
-            }
-          }
-        }
-      });
+      await this.client.collections(VIDEOS_COLLECTION_NAME).retrieve();
+      return {
+        success: true,
+        created: false,
+        message: 'Collection already exists',
+      };
     } catch (error) {
-      this.logger.error(`Failed to find SignVideo ${signVideoId}:`, error.stack);
+      if (error.httpStatus !== 404) {
+        this.logger.error('Error checking Typesense collection:', error.stack);
+        throw error;
+      }
+
+      await this.client.collections().create(videosSchema);
+      this.logger.log('Typesense collection created');
+      return {
+        success: true,
+        created: true,
+        message: 'Collection created successfully',
+      };
+    }
+  }
+
+  async recreateCollection() {
+    try {
+      try {
+        await this.client.collections(VIDEOS_COLLECTION_NAME).delete();
+      } catch (error) {
+        if (error.httpStatus !== 404) {
+          throw error;
+        }
+      }
+
+      await this.client.collections().create(videosSchema);
+      this.logger.warn('Typesense collection recreated (all documents removed)');
+      return { success: true, message: 'Collection recreated successfully' };
+    } catch (error) {
+      this.logger.error('Error recreating Typesense collection:', error.stack);
       throw error;
     }
   }
 
   async initializeCollection() {
-    try {
-      try {
-        await this.client.collections(VIDEOS_COLLECTION_NAME).delete();
-      } catch (error) {
-        // Collection didn't exist, continue
-      }
-
-      await this.client.collections().create(videosSchema);
-      return { success: true, message: 'Collection initialized successfully' };
-    } catch (error) {
-      this.logger.error('Error initializing Typesense collection:', error.stack);
-      throw error;
-    }
+    return this.ensureCollectionExists();
   }
 
   async getCollectionStatus() {
     try {
-      const collection = await this.client.collections(VIDEOS_COLLECTION_NAME).retrieve();
-      const stats = await this.client.collections(VIDEOS_COLLECTION_NAME).documents().search({ 
-        q: '*',
-        filter_by: '' // Empty string means no filtering
-      });
-      
+      const collection = await this.client
+        .collections(VIDEOS_COLLECTION_NAME)
+        .retrieve();
+      const stats = await this.client
+        .collections(VIDEOS_COLLECTION_NAME)
+        .documents()
+        .search({ q: '*', filter_by: '' });
+
       return {
         name: collection.name,
         numberOfDocuments: collection.num_documents,
         numberOfFields: collection.fields.length,
         fields: collection.fields,
         lastUpdated: collection.created_at,
-        totalHits: stats.found
+        totalHits: stats.found,
       };
     } catch (error) {
       this.logger.error('Error getting collection status:', error.stack);
@@ -147,226 +275,44 @@ export class TypesenseService implements OnModuleInit {
     }
   }
 
-  private async importDocuments(documents: VideoIndex[]) {
-    try {
-      const results = [];
-      // Process documents one by one
-      for (const document of documents) {
-        try {
-          // Use upsert which will create or update the document
-          const result = await this.client.collections(VIDEOS_COLLECTION_NAME).documents().upsert(document);
-          this.logger.debug(`Successfully upserted document ${document.id}`);
-        } catch (error) {
-          this.logger.error(`Failed to process document ${document.id}:`, {
-            error: error.message,
-            document: JSON.stringify(document, null, 2)
-          });
-          results.push({ success: false, error: error.message });
-        }
-      }      
-      return results;
-    } catch (error) {
-      this.logger.error('Import error:', {
-        message: error.message,
-        stack: error.stack,
-        details: error.importResults ? JSON.stringify(error.importResults, null, 2) : 'No import results available'
-      });
-      throw error;
-    }
-  }
-
-  createVideoDocument(
-    signVideo: {
-      id: string;
-      title: string;
-      videos: { url: string }[];
-      videoData: VideoData;
-    },
-    glossData: GlossData & {
-      senses?: {
-        id: string;
-        priority: number;
-        definitions: {
-          id: string;
-          definition: string;
-          priority: number;
-        }[];
-      }[];
-    }
-  ): VideoIndex {
-    // Get the first description of the first sense
-    let description = '';
-    if (glossData.senses && glossData.senses.length > 0) {
-      // Sort senses by priority (ascending) and get the first one
-      const firstSense = glossData.senses.sort((a, b) => a.priority - b.priority)[0];
-      if (firstSense.definitions && firstSense.definitions.length > 0) {
-        // Sort definitions by priority (ascending) and get the first one
-        const firstDefinition = firstSense.definitions.sort((a, b) => a.priority - b.priority)[0];
-        description = firstDefinition.definition;
+  private async importDocuments(documents: GlossIndex[]) {
+    for (const document of documents) {
+      try {
+        await this.upsertDocument(document);
+      } catch (error) {
+        this.logger.error(`Failed to process document ${document.id}:`, {
+          error: error.message,
+          document: JSON.stringify(document, null, 2),
+        });
       }
-    }
-
-    const document: VideoIndex = {
-      id: signVideo.id,
-      url: signVideo.videos[0]?.url || '',
-      signVideoTitle: signVideo.title || '',
-      hands: signVideo.videoData?.hands || Hand.RIGHT,
-      configuration: signVideo.videoData?.configuration || '',
-      configurationChanges: signVideo.videoData?.configurationChanges || '',
-      relationBetweenArticulators: signVideo.videoData?.relationBetweenArticulators || '',
-      location: signVideo.videoData?.location || '',
-      movementRelatedOrientation: signVideo.videoData?.movementRelatedOrientation || '',
-      orientationRelatedToLocation: signVideo.videoData?.orientationRelatedToLocation || '',
-      orientationChange: signVideo.videoData?.orientationChange || '',
-      contactType: signVideo.videoData?.contactType || '',
-      movementType: signVideo.videoData?.movementType || '',
-      movementDirection: signVideo.videoData?.movementDirection || '',
-      vocalization: signVideo.videoData?.vocalization || '',
-      nonManualComponent: signVideo.videoData?.nonManualComponent || '',
-      inicialization: signVideo.videoData?.inicialization || '',
-      repeatedMovement: signVideo.videoData?.repeatedMovement || false,
-      glossId: glossData.id,
-      gloss: glossData.gloss || '',
-      description: description
-    };
-
-    // Log the document for debugging
-    this.logger.debug('Created document:', JSON.stringify(document, null, 2));
-
-    return document;
-  }
-
-  async updateTypesense(lastSyncTime: Date) {
-    this.logger.log('Starting incremental Typesense update...');
-    try {
-      const updatedEntries = await this.prisma.dictionaryEntry.findMany({
-        where: {
-          updatedAt: {
-            gt: lastSyncTime
-          }
-        },
-        include: {
-          glossData: {
-            include: {
-              senses: {
-                include: {
-                  definitions: {
-                    orderBy: {
-                      priority: 'asc'
-                    }
-                  }
-                },
-                orderBy: {
-                  priority: 'asc'
-                }
-              },
-              glossVideos: {
-                include: {
-                  videos: true,
-                  videoData: true
-                },
-                orderBy: {
-                  priority: 'desc'
-                }
-              }
-            }
-          }
-        }
-      });
-
-      let totalDocuments = 0;
-      const BATCH_SIZE = 100;
-      const documents: VideoIndex[] = [];
-
-      for (const entry of updatedEntries) {
-        const glossData = entry.glossData;
-        
-          if (glossData.glossVideos.length > 0) {
-            const highestPrioritySignVideo = glossData.glossVideos.sort((a, b) => a.priority - b.priority)[0];
-            const document = this.createVideoDocument(highestPrioritySignVideo, glossData);
-            documents.push(document);
-            totalDocuments++;
-
-            if (documents.length >= BATCH_SIZE) {
-              await this.importDocuments(documents);
-              documents.length = 0;
-            }
-          }
-      }
-
-      if (documents.length > 0) {
-        await this.importDocuments(documents);
-      }
-
-      this.logger.log(`Incremental update completed: ${totalDocuments} documents processed`);
-      return { success: true, count: totalDocuments };
-    } catch (error) {
-      this.logger.error('Error updating Typesense:', error);
-      throw error;
     }
   }
 
   async syncAllVideos() {
-    this.logger.log('Starting video sync...');
+    this.logger.log('Starting gloss search sync...');
     try {
       const dictionaryEntries = await this.prisma.dictionaryEntry.findMany({
-        where: {
-          status: GlossStatus.PUBLISHED
-        },
+        where: { status: GlossStatus.PUBLISHED },
         include: {
-          glossData: {
-            include: {
-              senses: {
-                include: {
-                  definitions: {
-                    orderBy: {
-                      priority: 'asc'
-                    }
-                  }
-                },
-                orderBy: {
-                  priority: 'asc'
-                }
-              },
-              glossVideos: {
-                include: {
-                  videos: true,
-                  videoData: true
-                },
-                orderBy: {
-                  priority: 'desc'
-                }
-              }
-            }
-          }
-        }
+          glossData: { include: glossIndexInclude },
+        },
       });
 
-      let totalDocuments = 0;
-      const BATCH_SIZE = 100;
-      const documents: VideoIndex[] = [];
-
+      const documents: GlossIndex[] = [];
       for (const entry of dictionaryEntries) {
-        const glossData = entry.glossData;
-        if (glossData.glossVideos.length > 0) {
-          const highestPrioritySignVideo = glossData.glossVideos.sort((a, b) => a.priority - b.priority)[0];
-          const document = this.createVideoDocument(highestPrioritySignVideo, glossData);
+        const document = this.buildGlossDocument(entry.glossData);
+        if (document) {
           documents.push(document);
-          totalDocuments++;
-
-          if (documents.length >= BATCH_SIZE) {
-            await this.importDocuments(documents);
-            documents.length = 0;
-          }
         }
       }
 
-      if (documents.length > 0) {
-        await this.importDocuments(documents);
+      const BATCH_SIZE = 100;
+      for (let i = 0; i < documents.length; i += BATCH_SIZE) {
+        await this.importDocuments(documents.slice(i, i + BATCH_SIZE));
       }
 
-      this.logger.log(`Sync completed: ${totalDocuments} documents processed`);
-      return { success: true, count: totalDocuments };
+      this.logger.log(`Sync completed: ${documents.length} glosses indexed`);
+      return { success: true, count: documents.length };
     } catch (error) {
       this.logger.error('Error syncing to Typesense:', error);
       throw error;
@@ -384,33 +330,20 @@ export class TypesenseService implements OnModuleInit {
     sort_by?: string;
   }) {
     try {
-      const phonologyFields = [
-        'configuration',
-        'configurationChanges', 
-        'relationBetweenArticulators',
-        'location',
-        'movementRelatedOrientation',
-        'orientationRelatedToLocation',
-        'orientationChange',
-        'contactType',
-        'movementType',
-        'movementDirection',
-        'hands',
-        'repeatedMovement'
-      ];
-      
       const defaultParams = {
         q: searchParameters.q || '*',
-        query_by: searchParameters.query_by || 'gloss,signVideoTitle,description,configuration,location,hands,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection',
+        query_by:
+          searchParameters.query_by ||
+          'gloss,signVideoTitle,description,configuration,location,hands,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection',
         filter_by: searchParameters.filter_by || '',
-        facet_by: searchParameters.facet_by || 'configuration,location,hands,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection,repeatedMovement,description,gloss,signVideoTitle',
+        facet_by:
+          searchParameters.facet_by ||
+          'lexicalCategory,configuration,location,hands,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection,repeatedMovement,description,gloss,signVideoTitle',
         max_hits: searchParameters.max_hits || 100,
         page: searchParameters.page || 1,
         per_page: searchParameters.per_page || 20,
         sort_by: searchParameters.sort_by || 'gloss:asc',
-        // Add typo tolerance for phonology fields - allows 2 typos for better matching
         typo_tolerance_threshold: 0,
-        // Allow prefix matching for better partial matches
         prefix: true,
       };
 
@@ -423,4 +356,4 @@ export class TypesenseService implements OnModuleInit {
       throw error;
     }
   }
-} 
+}

@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateGlossRequestDto } from './dto/create-gloss-request.dto';
 import { AcceptGlossRequestDto } from './dto/accept-gloss-request.dto';
@@ -6,10 +7,14 @@ import { DeclineGlossRequestDto } from './dto/decline-gloss-request.dto';
 import { GlossStatus, RequestStatus } from '@prisma/client';
 import { UpdateSenseDto, ReorderSenseDto } from './dto/update-sense.dto';
 import { validateGlossRequest } from '../utils/gloss-validation';
+import { GLOSS_SEARCH_SYNC_EVENT } from '../typesense/types/gloss-index.type';
 
 @Injectable()
 export class GlossRequestsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private eventEmitter: EventEmitter2,
+  ) {}
 
   async getAllPendingRequests() {
     return this.prisma.glossRequest.findMany({
@@ -189,6 +194,11 @@ export class GlossRequestsService {
         },
       });
 
+      return dictionaryEntry;
+    }).then((dictionaryEntry) => {
+      this.eventEmitter.emit(GLOSS_SEARCH_SYNC_EVENT, {
+        glossDataId: dictionaryEntry.glossDataId,
+      });
       return dictionaryEntry;
     });
   }

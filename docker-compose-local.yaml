@@ -16,6 +16,9 @@ services:
       - DUFS_URL=${DUFS_URL}
       - TYPESENSE_HOST=${TYPESENSE_HOST}
       - TYPESENSE_PORT=${TYPESENSE_PORT}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=${JWT_EXPIRATION:-24h}
+      - SEED_DB=true
     ports:
       - 9229:9229
     cap_add:
@@ -24,11 +27,24 @@ services:
       - signbank
     volumes:
       - ./backend:/app
-      - /app/node_modules #Exclude node_modules directory
+      - /app/node_modules
     depends_on:
-      - typesense
-      - postgres
-    
+      postgres:
+        condition: service_healthy
+      typesense:
+        condition: service_started
+    command: >
+      sh -c "set -e &&
+      echo 'Running database migrations...' &&
+      npx prisma migrate deploy &&
+      echo 'Generating Prisma Client...' &&
+      npx prisma generate &&
+      if [ \"$$SEED_DB\" = \"true\" ]; then
+        echo 'Seeding database...' &&
+        npx prisma db seed;
+      fi &&
+      exec npm run start:docker:dev"
+
   frontend:
     build:
       context: ./frontend
@@ -37,10 +53,10 @@ services:
     environment:
       - BASE_URL=${BASE_URL}
     networks:
-      - signbank    
+      - signbank
     volumes:
       - ./frontend:/app
-      - /app/node_modules #Exclude node_modules directory
+      - /app/node_modules
 
   postgres:
     image: postgres:16
@@ -49,6 +65,11 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       POSTGRES_DB: ${POSTGRES_DB:-signbank}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
     networks:
       - signbank
     volumes:
@@ -68,6 +89,7 @@ services:
     volumes:
       - ./typesense/typesense_data:/data
     command: '--data-dir /data --api-key=${TYPESENSE_API_KEY} --enable-cors'
+
   dufs:
     image: sigoden/dufs
     volumes:
@@ -90,6 +112,7 @@ services:
       - signbank
     depends_on:
       - backend
+
   db-backup:
     image: kartoza/pg-backup:17-3.5
     container_name: db-backup
@@ -98,12 +121,13 @@ services:
       - POSTGRES_PASS=${POSTGRES_PASSWORD:-postgres}
       - POSTGRES_PORT=5432
       - POSTGRES_HOST=postgres
-      - DBLIST=${POSTGRES_DB:-signbank}   # databases to back up
-      - REMOVE_BEFORE=30                  # keep backups for 30 days
+      - DBLIST=${POSTGRES_DB:-signbank}
+      - REMOVE_BEFORE=30
     volumes:
       - ./backend/backups:/backups
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     networks:
       - signbank
 

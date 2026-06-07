@@ -1,7 +1,12 @@
-   #!/bin/sh
-   # set -e
-   # Run migrations
-   npx prisma migrate dev
+#!/bin/sh
+set -e
 
-   # Start the app
-   exec "$@"
+echo "Running database migrations..."
+npx prisma migrate deploy
+
+if [ "$SEED_DB" = "true" ]; then
+  echo "Seeding database..."
+  npx prisma db seed
+fi
+
+exec "$@"
