@@ -33,12 +33,19 @@ Makefile shortcuts: `make bootstrap-prod`, `make deploy-prod`, `make deploy-dock
 
 Workflow: `.github/workflows/ci.yml`
 
-| Event | What runs |
-|-------|-----------|
-| Pull request **into** `main` | Prisma validate, backend unit tests, backend + frontend compile |
-| **Merge** into `main` (push to `main`) | Same checks + push Docker images to GHCR |
+Two workflows:
 
-Direct pushes to `main` also publish images. Feature work on other branches is validated via PR before merge.
+| Workflow | When | What it does |
+|----------|------|--------------|
+| **CI** | PR into `main`, or push to `main` | Tests + compile only — **no image publish** |
+| **Publish** | After CI succeeds on **push to `main`** only | Builds and pushes images to GHCR |
+
+Pull requests run **CI** only. **Publish** is skipped because the triggering CI event is `pull_request`, not `push`. Images are published once when a PR is **merged** into `main`.
+
+| Event | CI | Publish |
+|-------|----|---------|
+| Pull request into `main` | Runs | Skipped |
+| Merge into `main` | Runs | Runs after CI passes |
 
 **Images published:**
 - `ghcr.io/<owner>/<repo>/backend:main`, `:latest`, `:sha-abc123`
