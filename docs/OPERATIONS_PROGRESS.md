@@ -41,7 +41,7 @@ Update this file after each completed task.
 | ID | Task | Status | Notes |
 |----|------|--------|-------|
 | 2A.1 | Audit migration status on test DB | pending | when Dockploy live |
-| 3B.5 | GitHub Actions build + push | pending | optional |
+| 3B.5 | GitHub Actions build + push | done | .github/workflows/ci.yml + docker-compose.ghcr.yaml |
 
 ---
 
@@ -50,12 +50,12 @@ Update this file after each completed task.
 | Date | Done |
 |------|------|
 | 2026-06-07 | Phase 1, 2, 3A |
-| 2026-06-07 | **Phase 3B complete** — deploy scripts, nginx template, prod compose fixes |
+| 2026-06-07 | **Phase 3B.5** — GitHub Actions CI + GHCR images |
 
 ---
 
 ## Current focus
 
-**Optional next:** GitHub Actions CI (3B.5) or Dockploy test deploy verification (2A.1)
+**Optional next:** Dockploy test deploy verification (2A.1)
 
 **After any deploy with Phase 2 search:** Admin `POST /typesense/sync/recreate` once

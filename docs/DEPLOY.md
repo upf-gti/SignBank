@@ -29,6 +29,36 @@ Makefile shortcuts: `make bootstrap-prod`, `make deploy-prod`, `make deploy-dock
 
 ---
 
+## GitHub Actions (CI)
+
+Workflow: `.github/workflows/ci.yml`
+
+| Event | What runs |
+|-------|-----------|
+| Pull request → `main` / `test` | Backend + frontend compile (no image push) |
+| Push → `main` / `test` | Compile + push Docker images to GHCR |
+
+**Images published:**
+- `ghcr.io/<owner>/<repo>/backend:<branch>` (e.g. `:test`, `:main`, `:sha-abc123`)
+- `ghcr.io/<owner>/<repo>/frontend:<branch>`
+
+**One-time GitHub setup:**
+
+1. **Repository variable** `BASE_URL` — your test/prod hostname (used when building frontend images), e.g. `test.signbank.example.com`
+2. **GHCR visibility** — after first push, open GitHub → Packages → each package → **Change visibility** to Public (or add a GHCR read token in Dockploy)
+3. **Dockploy** — use `docker-compose.ghcr.yaml` instead of `docker-compose.dockploy.yaml` and set:
+   - `GHCR_OWNER` / `GHCR_REPO` (lowercase)
+   - `IMAGE_TAG=test` (match the branch CI builds from)
+
+**Local pull-based deploy:**
+```bash
+export GHCR_OWNER=upf-gti GHCR_REPO=signbank IMAGE_TAG=test
+docker compose -f docker-compose.ghcr.yaml pull
+docker compose -f docker-compose.ghcr.yaml up -d
+```
+
+---
+
 ## First-time deploy checklist
 
 ### 1. Prerequisites

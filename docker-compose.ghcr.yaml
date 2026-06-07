@@ -1,0 +1,107 @@
+# SignBank — pull pre-built images from GitHub Container Registry
+# Use after CI pushes images on push to main/test.
+#
+# Set in Dockploy / .env:
+#   GHCR_OWNER=upf-gti          (GitHub org or user, lowercase)
+#   GHCR_REPO=signbank          (repo name, lowercase — SignBank → signbank)
+#   IMAGE_TAG=test              (branch tag: test, main, or sha-abc123)
+#
+# Make GHCR packages public, or configure a registry token in Dockploy.
+#
+# Same routing as docker-compose.dockploy.yaml (Traefik handles SSL).
+
+networks:
+  signbank:
+    driver: bridge
+
+services:
+  backend:
+    image: ghcr.io/${GHCR_OWNER:-upf-gti}/${GHCR_REPO:-signbank}/backend:${IMAGE_TAG:-test}
+    pull_policy: always
+    container_name: signbank-backend
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-signbank}?schema=public
+      - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}
+      - TYPESENSE_HOST=typesense
+      - TYPESENSE_PORT=8108
+      - DUFS_URL=http://dufs:5000
+      - BASE_URL=${BASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=${JWT_EXPIRATION:-24h}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - BACKUP_ENABLED=false
+      - SEED_DB=${SEED_DB:-false}
+    networks:
+      - signbank
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      typesense:
+        condition: service_healthy
+
+  frontend:
+    image: ghcr.io/${GHCR_OWNER:-upf-gti}/${GHCR_REPO:-signbank}/frontend:${IMAGE_TAG:-test}
+    pull_policy: always
+    container_name: signbank-frontend
+    environment:
+      - VITE_BASE_URL=${BASE_URL}
+    networks:
+      - signbank
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16
+    container_name: signbank-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-signbank}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB:-signbank}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - signbank
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  typesense:
+    image: typesense/typesense:27.1
+    container_name: signbank-typesense
+    environment:
+      - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}
+      - TYPESENSE_DATA_DIR=/data
+    networks:
+      - signbank
+    volumes:
+      - typesense_data:/data
+    command: '--data-dir /data --api-key=${TYPESENSE_API_KEY} --enable-cors'
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8108/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  dufs:
+    image: sigoden/dufs
+    container_name: signbank-dufs
+    volumes:
+      - fileserver_data:/data
+    command: /data -A
+    networks:
+      - signbank
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  typesense_data:
+  fileserver_data:
