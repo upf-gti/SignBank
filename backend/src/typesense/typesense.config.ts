@@ -10,8 +10,6 @@ export const videosSchema: CollectionCreateSchema = {
     { name: 'gloss', type: 'string', facet: true, sort: true },
     { name: 'url', type: 'string' },
     { name: 'signVideoTitle', type: 'string', facet: true, sort: true },
-    { name: 'senseId', type: 'string' },
-    { name: 'senseTitle', type: 'string', facet: true },
     { name: 'lexicalCategory', type: 'string', facet: true },
     { name: 'description', type: 'string', facet: true },
     { name: 'hands', type: 'string', facet: true },

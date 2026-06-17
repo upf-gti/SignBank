@@ -4,7 +4,6 @@ import { JwtGuard } from '../auth/guard/jwt.guard';
 import { RolesGuard } from '../auth/guard/roles.guard';
 import { Roles } from '../auth/decorator/roles.decorator';
 import { Role, Language } from '@prisma/client';
-import { UpdateSenseDto, ReorderSenseDto } from './dto/update-sense.dto';
 import { UpdateDefinitionDto, UpdateDefinitionTranslationDto } from './dto/update-definition.dto';
 
 @Controller('gloss-data')
@@ -19,10 +18,7 @@ export class GlossDataController {
 
   @Patch(':id/gloss')
   @Roles(Role.ADMIN)
-  async updateGloss(
-    @Param('id') id: string,
-    @Body() data: { gloss: string }
-  ) {
+  async updateGloss(@Param('id') id: string, @Body() data: { gloss: string }) {
     return this.glossDataService.updateGloss(id, data.gloss);
   }
 
@@ -38,95 +34,53 @@ export class GlossDataController {
     return this.glossDataService.unarchiveGloss(id);
   }
 
-  // Sense management
-  @Post(':id/senses')
-  async addSense(
-    @Param('id') id: string,
-    @Body() updateSenseDto: UpdateSenseDto,
-  ) {
-    return this.glossDataService.addSense(id, updateSenseDto);
-  }
-
-  @Patch(':id/senses/:senseId')
-  async updateSense(
-    @Param('id') id: string,
-    @Param('senseId') senseId: string,
-    @Body() updateSenseDto: UpdateSenseDto,
-  ) {
-    return this.glossDataService.updateSense(id, senseId, updateSenseDto);
-  }
-
-  @Patch(':id/senses/reorder')
-  async updateSensePriority(
-    @Param('id') id: string,
-    @Body() reorderSenseDto: ReorderSenseDto,
-  ) {
-    return this.glossDataService.updateSensePriority(id, reorderSenseDto);
-  }
-
-  @Delete(':id/senses/:senseId')
-  async deleteSense(
-    @Param('id') id: string,
-    @Param('senseId') senseId: string,
-  ) {
-    return this.glossDataService.deleteSense(id, senseId);
-  }
-
-  // Example deletion
   @Delete('examples/:id')
   @Roles(Role.ADMIN)
   async deleteExample(@Param('id') id: string) {
     return this.glossDataService.deleteExample(id);
   }
 
-  // SignVideo deletion
   @Delete('sign-videos/:id')
   @Roles(Role.ADMIN)
   async deleteSignVideo(@Param('id') id: string) {
     return this.glossDataService.deleteSignVideo(id);
   }
 
-  // Video deletion (individual video angles)
   @Delete('videos/:id')
   @Roles(Role.ADMIN)
   async deleteVideo(@Param('id') id: string) {
     return this.glossDataService.deleteVideo(id);
   }
 
-  // VideoData deletion
   @Delete('video-data/:id')
   @Roles(Role.ADMIN)
   async deleteVideoData(@Param('id') id: string) {
     return this.glossDataService.deleteVideoData(id);
   }
 
-  // SenseTranslation deletion
-  @Delete('sense-translations/:id')
+  @Delete('gloss-translations/:id')
   @Roles(Role.ADMIN)
-  async deleteSenseTranslation(@Param('id') id: string) {
-    return this.glossDataService.deleteSenseTranslation(id);
+  async deleteGlossTranslation(@Param('id') id: string) {
+    return this.glossDataService.deleteGlossTranslation(id);
   }
 
-  // DefinitionTranslation deletion
   @Delete('definition-translations/:id')
   @Roles(Role.ADMIN)
   async deleteDefinitionTranslation(@Param('id') id: string) {
     return this.glossDataService.deleteDefinitionTranslation(id);
   }
 
-  // ExampleTranslation deletion
   @Delete('example-translations/:id')
   @Roles(Role.ADMIN)
   async deleteExampleTranslation(@Param('id') id: string) {
     return this.glossDataService.deleteExampleTranslation(id);
   }
 
-  // Related Glosses Management
   @Post(':id/relations')
   @Roles(Role.ADMIN)
   async createRelation(
     @Param('id') glossId: string,
-    @Body() data: { targetGlossId: string, relationType: string }
+    @Body() data: { targetGlossId: string; relationType: string },
   ) {
     return this.glossDataService.createRelation(glossId, data.targetGlossId, data.relationType);
   }
@@ -135,24 +89,22 @@ export class GlossDataController {
   @Roles(Role.ADMIN)
   async updateRelation(
     @Param('relationId') relationId: string,
-    @Body() data: { relationType: string }
+    @Body() data: { relationType: string },
   ) {
     return this.glossDataService.updateRelation(relationId, data.relationType);
   }
 
-  // Related Gloss deletion
   @Delete('relations/:relationId')
   @Roles(Role.ADMIN)
   async deleteRelatedGloss(@Param('relationId') relationId: string) {
     return this.glossDataService.deleteRelatedGloss(relationId);
   }
 
-  // Minimal Pairs Management
   @Post(':id/minimal-pairs')
   @Roles(Role.ADMIN)
   async createMinimalPair(
     @Param('id') glossId: string,
-    @Body() data: { targetGlossId: string, distinction: string }
+    @Body() data: { targetGlossId: string; distinction: string },
   ) {
     return this.glossDataService.createMinimalPair(glossId, data.targetGlossId, data.distinction);
   }
@@ -161,44 +113,43 @@ export class GlossDataController {
   @Roles(Role.ADMIN)
   async updateMinimalPair(
     @Param('pairId') pairId: string,
-    @Body() data: { distinction: string }
+    @Body() data: { distinction: string },
   ) {
     return this.glossDataService.updateMinimalPair(pairId, data.distinction);
   }
 
-  // Minimal Pair deletion
   @Delete('minimal-pairs/:pairId')
   @Roles(Role.ADMIN)
   async deleteMinimalPair(@Param('pairId') pairId: string) {
     return this.glossDataService.deleteMinimalPair(pairId);
   }
 
-  @Post('senses/:senseId/definitions')
+  @Post(':glossDataId/definitions')
   @Roles(Role.ADMIN)
   async createDefinition(
-    @Param('senseId') senseId: string,
-    @Body() data: UpdateDefinitionDto
+    @Param('glossDataId') glossDataId: string,
+    @Body() data: UpdateDefinitionDto,
   ) {
-    return this.glossDataService.createDefinition(senseId, data);
+    return this.glossDataService.createDefinition(glossDataId, data);
   }
 
-  @Patch('senses/:senseId/definitions/:definitionId')
+  @Patch(':glossDataId/definitions/:definitionId')
   @Roles(Role.ADMIN)
   async updateDefinition(
-    @Param('senseId') senseId: string,
+    @Param('glossDataId') glossDataId: string,
     @Param('definitionId') definitionId: string,
-    @Body() data: UpdateDefinitionDto
+    @Body() data: UpdateDefinitionDto,
   ) {
-    return this.glossDataService.updateDefinition(senseId, definitionId, data);
+    return this.glossDataService.updateDefinition(glossDataId, definitionId, data);
   }
 
-  @Delete('senses/:senseId/definitions/:definitionId')
+  @Delete(':glossDataId/definitions/:definitionId')
   @Roles(Role.ADMIN)
   async deleteDefinition(
-    @Param('senseId') senseId: string,
+    @Param('glossDataId') glossDataId: string,
     @Param('definitionId') definitionId: string,
   ) {
-    return this.glossDataService.deleteDefinition(senseId, definitionId);
+    return this.glossDataService.deleteDefinition(glossDataId, definitionId);
   }
 
   @Patch('definitions/:definitionId/translations/:translationId')
@@ -206,43 +157,43 @@ export class GlossDataController {
   async updateDefinitionTranslation(
     @Param('definitionId') definitionId: string,
     @Param('translationId') translationId: string,
-    @Body() data: UpdateDefinitionTranslationDto
+    @Body() data: UpdateDefinitionTranslationDto,
   ) {
     return this.glossDataService.updateDefinitionTranslation(definitionId, translationId, data);
   }
 
-  @Post('senses/:senseId/translations')
+  @Post(':glossDataId/translations')
   @Roles(Role.ADMIN)
-  async createSenseTranslation(
-    @Param('senseId') senseId: string,
-    @Body() data: { translation: string, language: Language }
+  async createGlossTranslation(
+    @Param('glossDataId') glossDataId: string,
+    @Body() data: { translation: string; language: Language },
   ) {
-    return this.glossDataService.createSenseTranslation(senseId, data);
+    return this.glossDataService.createGlossTranslation(glossDataId, data);
   }
 
-  @Patch('sense-translations/:id')
+  @Patch('gloss-translations/:id')
   @Roles(Role.ADMIN)
-  async updateSenseTranslation(
+  async updateGlossTranslation(
     @Param('id') id: string,
-    @Body() data: { translation: string, language: Language }
+    @Body() data: { translation: string; language: Language },
   ) {
-    return this.glossDataService.updateSenseTranslation(id, data);
+    return this.glossDataService.updateGlossTranslation(id, data);
   }
 
-  @Post('senses/:senseId/examples')
+  @Post(':glossDataId/examples')
   @Roles(Role.ADMIN)
   async createExample(
-    @Param('senseId') senseId: string,
-    @Body() data: { example: string, exampleVideoURL: string }
+    @Param('glossDataId') glossDataId: string,
+    @Body() data: { example: string; exampleVideoURL: string },
   ) {
-    return this.glossDataService.createExample(senseId, data);
+    return this.glossDataService.createExample(glossDataId, data);
   }
 
   @Patch('examples/:id')
   @Roles(Role.ADMIN)
   async updateExample(
     @Param('id') id: string,
-    @Body() data: { example: string, exampleVideoURL: string }
+    @Body() data: { example: string; exampleVideoURL: string },
   ) {
     return this.glossDataService.updateExample(id, data);
   }
@@ -251,7 +202,7 @@ export class GlossDataController {
   @Roles(Role.ADMIN)
   async createExampleTranslation(
     @Param('exampleId') exampleId: string,
-    @Body() data: { translation: string, language: Language }
+    @Body() data: { translation: string; language: Language },
   ) {
     return this.glossDataService.createExampleTranslation(exampleId, data);
   }
@@ -260,36 +211,34 @@ export class GlossDataController {
   @Roles(Role.ADMIN)
   async updateExampleTranslation(
     @Param('id') id: string,
-    @Body() data: { translation: string, language: Language }
+    @Body() data: { translation: string; language: Language },
   ) {
     return this.glossDataService.updateExampleTranslation(id, data);
   }
 
-  // SignVideo priority management
   @Patch('sign-videos/:signVideoId/priority')
   @Roles(Role.ADMIN)
   async updateSignVideoPriority(
     @Param('signVideoId') signVideoId: string,
-    @Body() data: { priority: number }
+    @Body() data: { priority: number },
   ) {
     return this.glossDataService.updateSignVideoPriority(signVideoId, data.priority);
   }
 
-  @Post('senses/:senseId/sign-videos/reorder')
+  @Post(':glossDataId/sign-videos/reorder')
   @Roles(Role.ADMIN)
   async reorderSignVideos(
-    @Param('senseId') senseId: string,
-    @Body() data: { signVideoIds: string[] }
+    @Param('glossDataId') glossDataId: string,
+    @Body() data: { signVideoIds: string[] },
   ) {
-    return this.glossDataService.reorderSignVideos(senseId, data.signVideoIds);
+    return this.glossDataService.reorderSignVideos(glossDataId, data.signVideoIds);
   }
 
-  // Video priority management
   @Patch('videos/:videoId/priority')
   @Roles(Role.ADMIN)
   async updateVideoPriority(
     @Param('videoId') videoId: string,
-    @Body() data: { priority: number }
+    @Body() data: { priority: number },
   ) {
     return this.glossDataService.updateVideoPriority(videoId, data.priority);
   }
@@ -298,9 +247,8 @@ export class GlossDataController {
   @Roles(Role.ADMIN)
   async reorderVideos(
     @Param('signVideoId') signVideoId: string,
-    @Body() data: { videoIds: string[] }
+    @Body() data: { videoIds: string[] },
   ) {
     return this.glossDataService.reorderVideos(signVideoId, data.videoIds);
   }
-
-} 
+}

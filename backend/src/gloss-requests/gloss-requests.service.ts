@@ -2,12 +2,47 @@ import { Injectable, NotFoundException, ForbiddenException, BadRequestException 
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateGlossRequestDto } from './dto/create-gloss-request.dto';
-import { AcceptGlossRequestDto } from './dto/accept-gloss-request.dto';
 import { DeclineGlossRequestDto } from './dto/decline-gloss-request.dto';
 import { GlossStatus, RequestStatus } from '@prisma/client';
-import { UpdateSenseDto, ReorderSenseDto } from './dto/update-sense.dto';
 import { validateGlossRequest } from '../utils/gloss-validation';
 import { GLOSS_SEARCH_SYNC_EVENT } from '../typesense/types/gloss-index.type';
+
+const requestedGlossDataInclude = {
+  definitions: {
+    orderBy: { priority: 'asc' as const },
+    include: {
+      definitionTranslations: true,
+    },
+  },
+  examples: {
+    include: {
+      exampleTranslations: true,
+    },
+  },
+  glossTranslations: true,
+  glossVideos: {
+    include: {
+      videos: true,
+      videoData: true,
+    },
+  },
+  minimalPairsAsSource: {
+    include: {
+      sourceGloss: { include: { glossVideos: true } },
+      targetGloss: { include: { glossVideos: true } },
+    },
+  },
+  relationsAsSource: {
+    include: {
+      targetGloss: { include: { glossVideos: true } },
+    },
+  },
+  relationsAsTarget: {
+    include: {
+      sourceGloss: { include: { glossVideos: true } },
+    },
+  },
+};
 
 @Injectable()
 export class GlossRequestsService {
@@ -18,62 +53,33 @@ export class GlossRequestsService {
 
   async getAllPendingRequests() {
     return this.prisma.glossRequest.findMany({
-      where: {
-        status: RequestStatus.WAITING_FOR_APPROVAL,
-      },
-      include: {
-        creator: true,
-        requestedGlossData: true,
-      },
+      where: { status: RequestStatus.WAITING_FOR_APPROVAL },
+      include: { creator: true, requestedGlossData: true },
     });
   }
 
   async getUserRequests(userId: string) {
     return this.prisma.glossRequest.findMany({
-      where: {
-        creatorId: userId,
-      },
+      where: { creatorId: userId },
       include: {
         creator: {
-          select: {
-            id: true,
-            username: true,
-            email: true,
-            name: true,
-            lastName: true,
-          },
+          select: { id: true, username: true, email: true, name: true, lastName: true },
         },
         acceptedBy: {
-          select: {
-            id: true,
-            username: true,
-            name: true,
-            lastName: true,
-          },
+          select: { id: true, username: true, name: true, lastName: true },
         },
         deniedBy: {
-          select: {
-            id: true,
-            username: true,
-            name: true,
-            lastName: true,
-          },
+          select: { id: true, username: true, name: true, lastName: true },
         },
         requestedGlossData: {
           include: {
-            senses: {
-              include: {
-                definitions: true,
-                examples: true,
-              },
-            },
+            definitions: true,
+            examples: true,
             glossVideos: true,
           },
         },
       },
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy: { createdAt: 'desc' },
     });
   }
 
@@ -84,72 +90,12 @@ export class GlossRequestsService {
         creator: true,
         acceptedBy: true,
         deniedBy: true,
-        requestedGlossData: {
-          include: {
-            senses: {
-              orderBy: {
-                priority: 'asc',
-              },
-              include: {
-                definitions: {
-                  include: {
-                    definitionTranslations: true,
-                  },
-                },
-                examples: {
-                  include: {
-                    exampleTranslations: true,
-                  },
-                },
-                senseTranslations: true,
-              },
-            },
-            glossVideos: {
-              include: {
-                videos: true,
-                videoData: true,
-              },
-            },
-            minimalPairsAsSource: {
-              include: {
-                sourceGloss: {
-                  include: {
-                    glossVideos: true,
-                  },
-                },
-                targetGloss: {
-                  include: {
-                    glossVideos: true,
-                  },
-                },
-              },
-            },
-            relationsAsSource: {
-              include: {
-                targetGloss: {
-                  include: {
-                    glossVideos: true,
-                  },
-                },
-              },
-            },
-            relationsAsTarget: {
-              include: {
-                sourceGloss: {
-                  include: {
-                    glossVideos: true,
-                  },
-                },
-              },
-            },
-          },
-        },
+        requestedGlossData: { include: requestedGlossDataInclude },
       },
     });
   }
 
   async createGlossRequest(userId: string, createGlossRequestDto: CreateGlossRequestDto) {
-    // Create GlossData first
     const glossData = await this.prisma.glossData.create({
       data: {
         gloss: createGlossRequestDto.gloss,
@@ -157,27 +103,18 @@ export class GlossRequestsService {
       },
     });
 
-    // Create GlossRequest
     return this.prisma.glossRequest.create({
       data: {
         creatorId: userId,
         requestedGlossDataId: glossData.id,
         status: RequestStatus.NOT_COMPLETED,
       },
-      include: {
-        creator: true,
-        requestedGlossData: true,
-      },
+      include: { creator: true, requestedGlossData: true },
     });
   }
 
-  async acceptGlossRequest(
-    id: string,
-    userId: string,
-    // acceptGlossRequestDto: AcceptGlossRequestDto,
-  ) {
+  async acceptGlossRequest(id: string, userId: string) {
     return this.prisma.$transaction(async (prisma) => {
-      // Update the request status
       const updatedRequest = await prisma.glossRequest.update({
         where: { id },
         data: {
@@ -186,15 +123,13 @@ export class GlossRequestsService {
         },
       });
 
-      const dictionaryEntry = await prisma.dictionaryEntry.create({
+      return prisma.dictionaryEntry.create({
         data: {
           glossDataId: updatedRequest.requestedGlossDataId,
           isCreatedFromRequest: true,
           status: GlossStatus.PUBLISHED,
         },
       });
-
-      return dictionaryEntry;
     }).then((dictionaryEntry) => {
       this.eventEmitter.emit(GLOSS_SEARCH_SYNC_EVENT, {
         glossDataId: dictionaryEntry.glossDataId,
@@ -216,67 +151,24 @@ export class GlossRequestsService {
         denyReason: declineGlossRequestDto.denyReason,
       },
       include: {
-        creator: {
-          select: {
-            id: true,
-            username: true,
-            email: true,
-          },
-        },
-        deniedBy: {
-          select: {
-            id: true,
-            username: true,
-          },
-        },
+        creator: { select: { id: true, username: true, email: true } },
+        deniedBy: { select: { id: true, username: true } },
         requestedGlossData: {
           include: {
             glossVideos: true,
-            senses: {
-              include: {
-                definitions: true,
-                examples: true,
-              },
-            },
+            definitions: true,
+            examples: true,
           },
         },
       },
     });
   }
 
-  async submitGlossRequest(
-    id: string,
-    userId: string,
-  ) {
-    // First get the full gloss request with all nested data for validation
+  async submitGlossRequest(id: string, userId: string) {
     const glossRequest = await this.prisma.glossRequest.findUnique({
       where: { id },
       include: {
-        requestedGlossData: {
-          include: {
-            glossVideos: {
-              include: {
-                videos: true,
-                videoData: true,
-              },
-            },
-            senses: {
-              include: {
-                definitions: {
-                  include: {
-                    definitionTranslations: true,
-                  },
-                },
-                examples: {
-                  include: {
-                    exampleTranslations: true,
-                  },
-                },
-                senseTranslations: true,
-              },
-            },
-          },
-        },
+        requestedGlossData: { include: requestedGlossDataInclude },
       },
     });
 
@@ -284,206 +176,29 @@ export class GlossRequestsService {
       throw new NotFoundException('Gloss request not found');
     }
 
-    // Check if the user is the creator of the request
     if (glossRequest.creatorId !== userId) {
       throw new ForbiddenException('You can only submit your own requests');
     }
 
-    // Check if the request is in NOT_COMPLETED status
     if (glossRequest.status !== RequestStatus.NOT_COMPLETED) {
       throw new BadRequestException('Request can only be submitted when it is not completed');
     }
 
-    // Validate the gloss request data
     const validationErrors = validateGlossRequest(glossRequest);
-    
     if (validationErrors.length > 0) {
       throw new BadRequestException({
         message: 'Gloss request validation failed',
-        errors: validationErrors.map(error => error.message)
+        errors: validationErrors.map((error) => error.message),
       });
     }
 
     return this.prisma.glossRequest.update({
       where: { id },
-      data: {
-        status: RequestStatus.WAITING_FOR_APPROVAL,
-      },
+      data: { status: RequestStatus.WAITING_FOR_APPROVAL },
       include: {
-        creator: {
-          select: {
-            id: true,
-            username: true,
-            email: true,
-          },
-        },
-        requestedGlossData: {
-          include: {
-            glossVideos: true,
-            senses: {
-              include: {
-                definitions: {
-                  include: {
-                    definitionTranslations: true,
-                  },
-                },
-                examples: {
-                  include: {
-                    exampleTranslations: true,
-                  },
-                },
-                senseTranslations: true,
-              },
-            },
-          },
-        },
+        creator: { select: { id: true, username: true, email: true } },
+        requestedGlossData: { include: requestedGlossDataInclude },
       },
     });
   }
-
-  async addSense(requestId: string, data: UpdateSenseDto) {
-    const request = await this.prisma.glossRequest.findUnique({
-      where: { id: requestId },
-      include: { requestedGlossData: true }
-    });
-
-    if (!request) {
-      throw new NotFoundException('Gloss request not found');
-    }
-
-    const senseCount = await this.prisma.sense.count({
-      where: { glossDataId: request.requestedGlossDataId }
-    });
-
-    const newSense = await this.prisma.sense.create({
-      data: {
-        senseTitle: data.senseTitle,
-        lexicalCategory: data.lexicalCategory,
-        priority: senseCount,
-        glossDataId: request.requestedGlossDataId
-      }
-    });
-
-    return this.getGlossRequest(requestId);
-  }
-
-  async updateSense(requestId: string, senseId: string, data: UpdateSenseDto) {
-    const request = await this.prisma.glossRequest.findUnique({
-      where: { id: requestId },
-      include: { requestedGlossData: { include: { senses: true } } }
-    });
-
-    if (!request) {
-      throw new NotFoundException('Gloss request not found');
-    }
-
-    const sense = request.requestedGlossData.senses.find(s => s.id === senseId);
-    if (!sense) {
-      throw new NotFoundException('Sense not found');
-    }
-
-    await this.prisma.sense.update({
-      where: { id: senseId },
-      data: {
-        senseTitle: data.senseTitle,
-        lexicalCategory: data.lexicalCategory
-      }
-    });
-
-    return this.getGlossRequest(requestId);
-  }
-
-  async updateSensePriority(requestId: string, data: ReorderSenseDto) {
-    const request = await this.prisma.glossRequest.findUnique({
-      where: { id: requestId },
-      include: { requestedGlossData: { include: { senses: true } } }
-    });
-
-    if (!request) {
-      throw new NotFoundException('Gloss request not found');
-    }
-
-    const sense = request.requestedGlossData.senses.find(s => s.id === data.senseId);
-    if (!sense) {
-      throw new NotFoundException('Sense not found');
-    }
-
-    // Update priorities for all affected senses
-    const senses = request.requestedGlossData.senses.sort((a, b) => a.priority - b.priority);
-    const oldIndex = senses.findIndex(s => s.id === data.senseId);
-    const newIndex = data.newPriority;
-
-    if (oldIndex === newIndex) {
-      return this.getGlossRequest(requestId);
-    }
-
-    const start = Math.min(oldIndex, newIndex);
-    const end = Math.max(oldIndex, newIndex);
-    const movingUp = oldIndex > newIndex;
-
-    await this.prisma.$transaction(
-      senses.slice(start, end + 1).map((sense, i) => {
-        const actualIndex = start + i;
-        let newPriority = actualIndex;
-
-        if (movingUp && actualIndex === start) {
-          newPriority = start; // The moved item
-        } else if (movingUp) {
-          newPriority = actualIndex + 1; // Shift others down
-        } else if (!movingUp && actualIndex === end) {
-          newPriority = end; // The moved item
-        } else {
-          newPriority = actualIndex - 1; // Shift others up
-        }
-
-        return this.prisma.sense.update({
-          where: { id: sense.id },
-          data: { priority: newPriority }
-        });
-      })
-    );
-
-    return this.getGlossRequest(requestId);
-  }
-
-  async deleteSense(requestId: string, senseId: string) {
-    const request = await this.prisma.glossRequest.findUnique({
-      where: { id: requestId },
-      include: { requestedGlossData: { include: { senses: true } } }
-    });
-
-    if (!request) {
-      throw new NotFoundException('Gloss request not found');
-    }
-
-    const sense = request.requestedGlossData.senses.find(s => s.id === senseId);
-    if (!sense) {
-      throw new NotFoundException('Sense not found');
-    }
-
-    // Don't allow deleting the last sense
-    if (request.requestedGlossData.senses.length <= 1) {
-      throw new BadRequestException('Cannot delete the last sense');
-    }
-
-    await this.prisma.sense.delete({
-      where: { id: senseId }
-    });
-
-    // Update priorities for remaining senses
-    const remainingSenses = request.requestedGlossData.senses
-      .filter(s => s.id !== senseId)
-      .sort((a, b) => a.priority - b.priority);
-
-    await this.prisma.$transaction(
-      remainingSenses.map((sense, index) =>
-        this.prisma.sense.update({
-          where: { id: sense.id },
-          data: { priority: index }
-        })
-      )
-    );
-
-    return this.getGlossRequest(requestId);
-  }
-} 
+}

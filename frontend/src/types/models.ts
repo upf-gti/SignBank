@@ -38,11 +38,11 @@ export interface ExampleTranslation {
   isNew?: boolean;
 }
 
-export interface SenseTranslation {
+export interface GlossTranslation {
   id?: string;
   translation: string;
   language: string;
-  senseId: string;
+  glossDataId: string;
   isNew?: boolean;
 }
 
@@ -50,7 +50,7 @@ export interface Example {
   id?: string;
   example: string;
   exampleVideoURL: string;
-  senseId: string;
+  glossDataId: string;
   exampleTranslations: ExampleTranslation[];
   isNew?: boolean;
 }
@@ -64,9 +64,10 @@ export interface Definition {
   id?: string;
   title: string;
   definition: string;
+  lexicalCategory: string;
   videoDefinitionUrl?: string;
   priority: number;
-  senseId: string;
+  glossDataId: string;
   definitionTranslations: DefinitionTranslation[];
   isNew?: boolean;
   isEditing?: boolean;
@@ -107,21 +108,7 @@ export interface MinimalPairGlossData {
   currentVersion: number;
   isCreatedFromRequest: boolean;
   isCreatedFromEdit: boolean;
-  senses: {
-    id?: string;
-    senseTitle: string;
-    priority: number;
-    lexicalCategory: string;
-    glossDataId: string;
-    signVideos: {
-      id?: string;
-      title: string;
-      url: string;
-      priority: number;
-      videoDataId: string;
-      senseId: string;
-    }[];
-  }[];
+  glossVideos: SignVideo[];
 }
 
 export interface RelatedGlossData {
@@ -133,21 +120,7 @@ export interface RelatedGlossData {
   currentVersion: number;
   isCreatedFromRequest: boolean;
   isCreatedFromEdit: boolean;
-  senses: {
-    id?: string;
-    senseTitle: string;
-    priority: number;
-    lexicalCategory: string;
-    glossDataId: string;
-    signVideos: {
-      id?: string;
-      title: string;
-      url: string;
-      priority: number;
-      videoDataId: string;
-      senseId: string;
-    }[];
-  }[];
+  glossVideos: SignVideo[];
 }
 
 export interface SignVideo {
@@ -162,18 +135,6 @@ export interface SignVideo {
   isNew?: boolean;
 }
 
-export interface Sense {
-  id?: string;
-  senseTitle: string;
-  priority: number;
-  lexicalCategory: string;
-  glossDataId: string;
-  definitions: Definition[];
-  signVideos: SignVideo[];
-  examples: Example[];
-  senseTranslations: SenseTranslation[];
-}
-
 export interface GlossData {
   id?: string;
   gloss: string;
@@ -183,7 +144,9 @@ export interface GlossData {
   currentVersion: number;
   isCreatedFromRequest: boolean;
   isCreatedFromEdit: boolean;
-  senses: Sense[];
+  definitions: Definition[];
+  examples: Example[];
+  glossTranslations: GlossTranslation[];
   relationsAsSource: RelatedGloss[];
   relationsAsTarget: RelatedGloss[];
   minimalPairsAsSource: MinimalPair[];

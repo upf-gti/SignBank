@@ -1,53 +1,54 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { GlossDataService } from '../gloss-data/gloss-data.service';
-import { VideosService } from '../videos/videos.service';
 import { CreateDefinitionDto, UpdateDefinitionDto, UpdateDefinitionTranslationDto, CreateDefinitionTranslationDto } from './dto/definition.dto';
+import { LexicalCategory } from '@prisma/client';
 
 @Injectable()
 export class DefinitionsService {
   constructor(
     private prisma: PrismaService,
     private glossDataService: GlossDataService,
-    private videosService: VideosService
   ) {}
 
-  async createDefinition(senseId: string, data: CreateDefinitionDto) {
-    const sense = await this.prisma.sense.findUnique({
-      where: { id: senseId }
+  async createDefinition(glossDataId: string, data: CreateDefinitionDto) {
+    const glossData = await this.prisma.glossData.findUnique({
+      where: { id: glossDataId },
     });
 
-    if (!sense) {
-      throw new NotFoundException('Sense not found');
+    if (!glossData) {
+      throw new NotFoundException('GlossData not found');
     }
+
+    const definitionCount = await this.prisma.definition.count({
+      where: { glossDataId },
+    });
 
     await this.prisma.definition.create({
       data: {
         title: data.title || '',
         definition: data.definition,
         videoDefinitionUrl: data.videoDefinitionUrl,
-        priority: data.priority || 99,
-        senseId: senseId
+        lexicalCategory: data.lexicalCategory ?? LexicalCategory.NOUN,
+        priority: data.priority ?? definitionCount,
+        glossDataId,
       },
-      include: {
-        definitionTranslations: true,
-      }
     });
 
-    return this.glossDataService.getGlossData(sense.glossDataId);
+    return this.glossDataService.getGlossData(glossDataId);
   }
 
-  async updateDefinition(senseId: string, definitionId: string, data: UpdateDefinitionDto) {
-    const sense = await this.prisma.sense.findUnique({
-      where: { id: senseId },
-      include: { definitions: true }
+  async updateDefinition(glossDataId: string, definitionId: string, data: UpdateDefinitionDto) {
+    const glossData = await this.prisma.glossData.findUnique({
+      where: { id: glossDataId },
+      include: { definitions: true },
     });
 
-    if (!sense) {
-      throw new NotFoundException('Sense not found');
+    if (!glossData) {
+      throw new NotFoundException('GlossData not found');
     }
 
-    const definition = sense.definitions.find(d => d.id === definitionId);
+    const definition = glossData.definitions.find((d) => d.id === definitionId);
     if (!definition) {
       throw new NotFoundException('Definition not found');
     }
@@ -58,170 +59,122 @@ export class DefinitionsService {
         title: data.title,
         definition: data.definition,
         videoDefinitionUrl: data.videoDefinitionUrl,
+        ...(data.lexicalCategory !== undefined && { lexicalCategory: data.lexicalCategory }),
         ...(data.priority !== undefined && { priority: data.priority }),
       },
-      include: {
-        definitionTranslations: true,
-      }
     });
 
-    return this.glossDataService.getGlossData(sense.glossDataId);
+    return this.glossDataService.getGlossData(glossDataId);
   }
 
-  async deleteDefinition(senseId: string, definitionId: string) {
-    const sense = await this.prisma.sense.findUnique({
-      where: { id: senseId },
-      include: { definitions: true }
+  async deleteDefinition(glossDataId: string, definitionId: string) {
+    const glossData = await this.prisma.glossData.findUnique({
+      where: { id: glossDataId },
+      include: { definitions: true },
     });
 
-    if (!sense) {
-      throw new NotFoundException('Sense not found');
+    if (!glossData) {
+      throw new NotFoundException('GlossData not found');
     }
 
-    const definition = sense.definitions.find(d => d.id === definitionId);
+    const definition = glossData.definitions.find((d) => d.id === definitionId);
     if (!definition) {
       throw new NotFoundException('Definition not found');
-    }
-
-    // Delete the associated video file if it exists
-    if (definition.videoDefinitionUrl) {
-      try {
-        await this.videosService.deleteVideo(definition.videoDefinitionUrl);
-      } catch (error) {
-        // Log the error but don't fail the deletion if video deletion fails
-        console.error('Failed to delete video file:', error);
-      }
     }
 
     await this.prisma.definition.delete({
-      where: { id: definitionId }
+      where: { id: definitionId },
     });
 
-    return this.glossDataService.getGlossData(sense.glossDataId);
+    return this.glossDataService.getGlossData(glossDataId);
   }
 
-  async deleteDefinitionVideo(senseId: string, definitionId: string) {
-    const sense = await this.prisma.sense.findUnique({
-      where: { id: senseId },
-      include: { definitions: true }
+  async deleteDefinitionVideo(glossDataId: string, definitionId: string) {
+    const glossData = await this.prisma.glossData.findUnique({
+      where: { id: glossDataId },
+      include: { definitions: true },
     });
 
-    if (!sense) {
-      throw new NotFoundException('Sense not found');
+    if (!glossData) {
+      throw new NotFoundException('GlossData not found');
     }
 
-    const definition = sense.definitions.find(d => d.id === definitionId);
+    const definition = glossData.definitions.find((d) => d.id === definitionId);
     if (!definition) {
       throw new NotFoundException('Definition not found');
     }
 
-    // Delete the video file if it exists
-    if (definition.videoDefinitionUrl) {
-      try {
-        await this.videosService.deleteVideo(definition.videoDefinitionUrl);
-      } catch (error) {
-        throw new NotFoundException('Failed to delete video file');
-      }
-    }
-
-    // Update the definition to remove the video URL
     await this.prisma.definition.update({
       where: { id: definitionId },
-      data: {
-        videoDefinitionUrl: ''
-      }
+      data: { videoDefinitionUrl: null },
     });
 
-    return this.glossDataService.getGlossData(sense.glossDataId);
+    return this.glossDataService.getGlossData(glossDataId);
   }
 
   async createDefinitionTranslation(definitionId: string, data: CreateDefinitionTranslationDto) {
     const definition = await this.prisma.definition.findUnique({
       where: { id: definitionId },
-      include: { definitionTranslations: true }
     });
 
     if (!definition) {
       throw new NotFoundException('Definition not found');
     }
 
-    const createdTranslation = await this.prisma.definitionTranslation.create({
+    await this.prisma.definitionTranslation.create({
       data: {
         translation: data.translation,
         language: data.language,
-        definitionId: definitionId
+        definitionId,
       },
-      include: {
-        definition: {
-          include: {
-            sense: true
-          }
-        }
-      }
     });
 
-    return this.glossDataService.getGlossData(createdTranslation.definition.sense.glossDataId);
+    return this.glossDataService.getGlossData(definition.glossDataId);
   }
 
-  async updateDefinitionTranslation(definitionId: string, translationId: string, data: UpdateDefinitionTranslationDto) {
+  async updateDefinitionTranslation(
+    definitionId: string,
+    translationId: string,
+    data: UpdateDefinitionTranslationDto,
+  ) {
     const definition = await this.prisma.definition.findUnique({
       where: { id: definitionId },
-      include: { definitionTranslations: true }
+      include: { definitionTranslations: true },
     });
 
     if (!definition) {
       throw new NotFoundException('Definition not found');
     }
 
-    const translation = definition.definitionTranslations.find(t => t.id === translationId);
+    const translation = definition.definitionTranslations.find((t) => t.id === translationId);
     if (!translation) {
       throw new NotFoundException('Translation not found');
     }
 
-    const updatedTranslation = await this.prisma.definitionTranslation.update({
+    await this.prisma.definitionTranslation.update({
       where: { id: translationId },
       data: {
         translation: data.translation,
-        language: data.language
+        language: data.language,
       },
-      include: {
-        definition: {
-          include: {
-            sense: true
-          }
-        }
-      }
     });
 
-    return this.glossDataService.getGlossData(updatedTranslation.definition.sense.glossDataId);
+    return this.glossDataService.getGlossData(definition.glossDataId);
   }
 
   async deleteDefinitionTranslation(definitionId: string, translationId: string) {
     const definition = await this.prisma.definition.findUnique({
       where: { id: definitionId },
-      include: { definitionTranslations: true }
     });
 
     if (!definition) {
       throw new NotFoundException('Definition not found');
     }
 
-    const translation = definition.definitionTranslations.find(t => t.id === translationId);
-    if (!translation) {
-      throw new NotFoundException('Translation not found');
-    }
-
-    const deletedTranslation = await this.prisma.definitionTranslation.delete({
+    await this.prisma.definitionTranslation.delete({
       where: { id: translationId },
-      include: {
-        definition: {
-          include: {
-            sense: true
-          }
-        }
-      }
     });
 
-    return this.glossDataService.getGlossData(deletedTranslation.definition.sense.glossDataId);
+    return this.glossDataService.getGlossData(definition.glossDataId);
   }
-} 
+}

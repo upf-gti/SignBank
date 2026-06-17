@@ -555,22 +555,24 @@ model DictionaryEntry {
 }
 
 model GlossData {
-    id                   String           @id @default(uuid())
+    id                   String             @id @default(uuid())
     gloss                String
-    createdAt            DateTime         @default(now())
-    updatedAt            DateTime         @updatedAt
+    createdAt            DateTime           @default(now())
+    updatedAt            DateTime           @updatedAt
     editComment          String?
-    currentVersion       Int              @default(1)
-    isCreatedFromRequest Boolean          @default(false)
-    isCreatedFromEdit    Boolean          @default(false)
+    currentVersion       Int                @default(1)
+    isCreatedFromRequest Boolean            @default(false)
+    isCreatedFromEdit    Boolean            @default(false)
     dictionaryEntry      DictionaryEntry?
     glossRequest         GlossRequest?
     glossVideos          SignVideo[]
-    senses               Sense[]
-    relationsAsSource    RelatedGloss[]   @relation("RelationSource")
-    relationsAsTarget    RelatedGloss[]   @relation("RelationTarget")
-    minimalPairsAsSource MinimalPair[]    @relation("MinimalPairSource")
-    minimalPairsAsTarget MinimalPair[]    @relation("MinimalPairTarget")
+    definitions          Definition[]
+    examples             Example[]
+    glossTranslations    GlossTranslation[]
+    relationsAsSource    RelatedGloss[]     @relation("RelationSource")
+    relationsAsTarget    RelatedGloss[]     @relation("RelationTarget")
+    minimalPairsAsSource MinimalPair[]      @relation("MinimalPairSource")
+    minimalPairsAsTarget MinimalPair[]      @relation("MinimalPairTarget")
 }
 
 model RelatedGloss {
@@ -584,34 +586,23 @@ model RelatedGloss {
     @@unique([sourceGlossId, targetGlossId])
 }
 
-model Sense {
-    id                String             @id @default(uuid())
-    senseTitle        String
-    priority          Int                @default(0)
-    definitions       Definition[]
-    lexicalCategory   LexicalCategory    @default(NOUN)
-    glossDataId       String
-    glossData         GlossData          @relation(fields: [glossDataId], references: [id], onDelete: Cascade)
-    examples          Example[]
-    senseTranslations SenseTranslation[]
-}
-
-model SenseTranslation {
-    id          String   @id @default(uuid())
+model GlossTranslation {
+    id          String    @id @default(uuid())
     translation String
     language    Language
-    sense       Sense    @relation(fields: [senseId], references: [id], onDelete: Cascade)
-    senseId     String
+    glossData   GlossData @relation(fields: [glossDataId], references: [id], onDelete: Cascade)
+    glossDataId String
 }
 
 model Definition {
     id                     String                  @id @default(uuid())
     title                  String?
     definition             String
+    lexicalCategory        LexicalCategory         @default(NOUN)
     definitionTranslations DefinitionTranslation[]
     videoDefinitionUrl     String?
-    sense                  Sense                   @relation(fields: [senseId], references: [id], onDelete: Cascade)
-    senseId                String
+    glossData              GlossData               @relation(fields: [glossDataId], references: [id], onDelete: Cascade)
+    glossDataId            String
     priority               Int                     @default(0)
 }
 
@@ -619,8 +610,8 @@ model Example {
     id                  String               @id @default(uuid())
     example             String
     exampleVideoURL     String
-    sense               Sense                @relation(fields: [senseId], references: [id], onDelete: Cascade)
-    senseId             String
+    glossData           GlossData            @relation(fields: [glossDataId], references: [id], onDelete: Cascade)
+    glossDataId         String
     exampleTranslations ExampleTranslation[]
 }
 

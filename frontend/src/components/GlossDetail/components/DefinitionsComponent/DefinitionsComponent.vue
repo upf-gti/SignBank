@@ -56,9 +56,8 @@
     </q-list>
     <!-- Translations of the sense -->
     <div class="column">
-      <SenseTranslationsComponent
-        :sense="sense"
-        :allow-edit="allowEdit"
+      <GlossTranslationsComponent
+        :gloss-data="glossData"
         :edit-mode="editMode"
         @update:gloss-data="emit('update:glossData', $event)"
       />
@@ -128,21 +127,21 @@
   </q-dialog>
 
   <!-- Create Definition Dialog -->
-  <CreateDefinitionDialog
-    v-model="showCreateDefinitionDialog"
-    :sense-id="sense?.id || ''"
-    @definition-created="handleDefinitionCreated"
-  />
+    <CreateDefinitionDialog
+      v-model="showCreateDefinitionDialog"
+      :gloss-data-id="glossData?.id || ''"
+      @definition-created="handleDefinitionCreated"
+    />
 </template>
 
 <script setup lang="ts">
-import { Sense, Definition, GlossData, DefinitionTranslation } from 'src/types/models';
+import { Definition, GlossData, DefinitionTranslation } from 'src/types/models';
 import translate from 'src/utils/translate';
 import VideoPlayerPopup from 'src/components/VideoPlayerPopup.vue';
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { api } from 'src/services/api';
 import { useQuasar } from 'quasar';
-import SenseTranslationsComponent from '../SenseTranslationsComponent.vue';
+import GlossTranslationsComponent from '../GlossTranslationsComponent.vue';
 import DefinitionCardDesktop from './DefinitionCardDesktop.vue';
 import DefinitionCardMobile from './DefinitionCardMobile.vue';
 import CreateDefinitionDialog from './CreateDefinitionDialog.vue';
@@ -174,21 +173,21 @@ onUnmounted(() => {
 const props = defineProps<{
   allowEdit: boolean;
   editMode: boolean;
-  sense: Sense;
+  glossData: GlossData;
 }>();
 
 const emit = defineEmits<{
   (e: 'update:glossData', glossData: GlossData): void;
 }>();
 
-const definitions = computed(() => props.sense?.definitions || []);
+const definitions = computed(() => props.glossData?.definitions || []);
 
 const addDefinition = () => {
   showCreateDefinitionDialog.value = true;
 }
 
 const handleDefinitionCreated = async (definition: Definition) => {
-  if (!props.sense?.id) return;
+  if (!props.glossData?.id) return;
 
   try {
     loading.value = true;
@@ -202,7 +201,7 @@ const handleDefinitionCreated = async (definition: Definition) => {
       createData.videoDefinitionUrl = definition.videoDefinitionUrl;
     }
 
-    const response = await api.definitions.create(props.sense.id, createData);
+    const response = await api.definitions.create(props.glossData.id, createData);
 
     if (response.data && isGlossData(response.data)) {
       emit('update:glossData', response.data);
@@ -224,11 +223,11 @@ const isGlossData = (data: any): data is GlossData => {
     'gloss' in data &&
     'createdAt' in data &&
     'updatedAt' in data &&
-    'senses' in data;
+    'definitions' in data;
 }
 
 const saveDefinition = async (definition: Definition) => {
-  if (!props.sense?.id) return;
+  if (!props.glossData?.id) return;
 
   try {
     loading.value = true;
@@ -242,7 +241,7 @@ const saveDefinition = async (definition: Definition) => {
       updateData.videoDefinitionUrl = definition.videoDefinitionUrl;
     }
     
-    const response = await api.definitions.update(props.sense.id, definition.id || '', updateData);
+    const response = await api.definitions.update(props.glossData.id, definition.id || '', updateData);
 
     if (response.data && isGlossData(response.data)) {
       emit('update:glossData', response.data);
@@ -266,11 +265,11 @@ const saveDefinition = async (definition: Definition) => {
 
 
 const deleteDefinition = async (definition: Definition) => {
-  if (!props.sense?.id) return;
+  if (!props.glossData?.id) return;
 
   try {
     loading.value = true;
-    const response = await api.definitions.delete(props.sense.id, definition.id || '');
+    const response = await api.definitions.delete(props.glossData.id, definition.id || '');
     emit('update:glossData', response.data);
 
     $q.notify({
@@ -317,9 +316,8 @@ const openVideo = (definition: Definition) => {
 
 const deleteDefinitionVideo = async (definition: Definition) => {
   try {
-    if (definition.id && props.sense?.id) {
-      // Use the dedicated endpoint to delete only the video
-      const response = await api.definitions.deleteVideo(props.sense.id, definition.id);
+    if (definition.id && props.glossData?.id) {
+      const response = await api.definitions.deleteVideo(props.glossData.id, definition.id);
       if (response.data) {
         emit('update:glossData', response.data);
         $q.notify({
@@ -382,8 +380,8 @@ const saveSortDefinitions = async () => {
   try {
     loading.value = true
     
-    if (!props.sense?.id) {
-      throw new Error('Sense ID is required')
+    if (!props.glossData?.id) {
+      throw new Error('Gloss ID is required')
     }
     
     // Update each definition with their new priority based on position
@@ -398,7 +396,7 @@ const saveSortDefinitions = async () => {
         updateData.videoDefinitionUrl = definition.videoDefinitionUrl
       }
       
-      return api.definitions.update(props.sense!.id!, definition.id!, updateData)
+      return api.definitions.update(props.glossData!.id!, definition.id!, updateData)
     })
     
     if (updatePromises.length === 0) {

@@ -11,7 +11,6 @@ import { SearchModule } from './search/search.module';
 import { TypesenseModule } from './typesense/typesense.module';
 import { GlossRequestsModule } from './gloss-requests/gloss-requests.module';
 import { SignVideosModule } from './sign-videos/sign-videos.module';
-import { SensesModule } from './senses/senses.module';
 import { ExamplesModule } from './examples/examples.module';
 import { TranslationsModule } from './translations/translations.module';
 import { DefinitionsModule } from './definitions/definitions.module';
@@ -31,7 +30,6 @@ import { BackupModule } from './backup/backup.module';
     SearchModule,
     TypesenseModule,
     SignVideosModule,
-    SensesModule,
     ExamplesModule,
     TranslationsModule,
     DefinitionsModule,

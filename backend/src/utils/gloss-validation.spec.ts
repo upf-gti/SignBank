@@ -1,38 +1,28 @@
 import { validateGlossRequest } from './gloss-validation';
 
 describe('validateGlossRequest', () => {
-  it('requires a gloss name', () => {
+  it('requires gloss', () => {
     const errors = validateGlossRequest({
-      requestedGlossData: { gloss: '  ', senses: [{ definitions: [{}] }] },
+      requestedGlossData: { gloss: '  ', definitions: [{ definition: 'x' }] },
     });
-
-    expect(errors).toContainEqual({ message: 'Gloss is required' });
+    expect(errors.some((e) => e.message === 'Gloss is required')).toBe(true);
   });
 
-  it('requires at least one sense', () => {
+  it('requires at least one definition', () => {
     const errors = validateGlossRequest({
-      requestedGlossData: { gloss: 'CASA', senses: [] },
+      requestedGlossData: { gloss: 'CASA', definitions: [] },
     });
-
-    expect(errors).toContainEqual({ message: 'At least one sense is required' });
+    expect(errors.some((e) => e.message === 'At least one definition is required')).toBe(true);
   });
 
-  it('requires at least one sign video', () => {
+  it('requires video', () => {
     const errors = validateGlossRequest({
       requestedGlossData: {
         gloss: 'CASA',
-        senses: [
-          {
-            senseTitle: 'Home',
-            lexicalCategory: 'NOUN',
-            definitions: [{ definition: 'A dwelling' }],
-            senseTranslations: [{ translation: 'casa', language: 'SPANISH' }],
-          },
-        ],
+        definitions: [{ definition: 'house' }],
         glossVideos: [],
       },
     });
-
-    expect(errors).toContainEqual({ message: 'Video is required' });
+    expect(errors.some((e) => e.message === 'Video is required')).toBe(true);
   });
 });

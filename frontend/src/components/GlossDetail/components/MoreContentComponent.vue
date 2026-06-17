@@ -7,7 +7,6 @@
       indicator-color="primary"
       align="justify"
       narrow-indicator
-      @update:model-value="handleTabChange"
     >
       <q-tab
         name="definitions"
@@ -33,7 +32,7 @@
     >
       <q-tab-panel name="definitions">
         <DefinitionsComponent
-          v-model:sense="sense"
+          :gloss-data="localGlossData"
           :edit-mode="editMode"
           :allow-edit="editMode"
           @update:gloss-data="updateGlossData"
@@ -50,7 +49,7 @@
 
       <q-tab-panel name="examples">
         <ExamplesComponent
-          :sense="sense"
+          :gloss-data="localGlossData"
           :edit-mode="editMode"
           @update:gloss-data="updateGlossData"
         />
@@ -72,7 +71,6 @@
 <script setup lang="ts">
 import translate from 'src/utils/translate';
 import { ref, watch } from 'vue';
-import { Sense } from 'src/types/models';
 import type { GlossData } from 'src/types/models';
 import ExamplesComponent from './ExamplesComponent/ExamplesComponent.vue';
 import VideosComponent from './VideosComponent.vue';
@@ -80,7 +78,6 @@ import RelatedGlosses from './RelatedGlosses.vue';
 import DefinitionsComponent from './DefinitionsComponent/DefinitionsComponent.vue';
 
 const selectedContent = ref<string>('definitions')
-const sense = defineModel<Sense>({ required: true })
 const emit = defineEmits<{
   (e: 'update:glossData', glossData: GlossData): void
 }>();
@@ -90,19 +87,14 @@ const { glossData, editMode } = defineProps<{
   editMode: boolean;
 }>();
 
+const localGlossData = ref<GlossData>(glossData);
+
 watch(() => glossData, (newGlossData) => {
   localGlossData.value = newGlossData;
 }, { deep: true });
 
-const localGlossData = ref<GlossData>(glossData);
-
-const updateGlossData = (glossData: GlossData) => {
-  emit('update:glossData', glossData);
-}
-
-const handleTabChange = () => {
-  setTimeout(() => {
-    
-  }, 100);
+const updateGlossData = (updated: GlossData) => {
+  localGlossData.value = updated;
+  emit('update:glossData', updated);
 }
 </script>

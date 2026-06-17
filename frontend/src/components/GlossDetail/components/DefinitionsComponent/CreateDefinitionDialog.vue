@@ -101,7 +101,8 @@ const definition = ref<Definition>({
   definition: '',
   videoDefinitionUrl: '',
   priority: 99,
-  senseId: '',
+  glossDataId: '',
+  lexicalCategory: 'NOUN',
   definitionTranslations: [],
   isEditing: true,
   isNew: true,
@@ -109,7 +110,7 @@ const definition = ref<Definition>({
 
 const props = defineProps<{
   modelValue: boolean;
-  senseId: string;
+  glossDataId: string;
 }>();
 
 const emit = defineEmits<{
@@ -133,7 +134,7 @@ const resetForm = () => {
     definition: '',
     videoDefinitionUrl: '',
     priority: 99,
-    senseId: props.senseId,
+    glossDataId: props.glossDataId,
     definitionTranslations: [],
     isEditing: true,
     isNew: true,
@@ -158,7 +159,7 @@ const createDefinition = async () => {
       definition: definition.value.definition.trim(),
       videoDefinitionUrl: definition.value.videoDefinitionUrl || '',
       priority: 0,
-      senseId: props.senseId,
+      glossDataId: props.glossDataId,
       definitionTranslations: [],
       isEditing: false,
       isNew: true,

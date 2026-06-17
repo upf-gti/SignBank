@@ -1,0 +1,137 @@
+{
+  "id": "1420_02_bessons-1d",
+  "name": "BESSONS-1d",
+  "tr_en": "TWINS",
+  "tr_es": "GEMELOS",
+  "tr_ca": "",
+  "alt_glosses": [
+    "GERMÀ+Conf 2"
+  ],
+  "definitions": [
+    "Adj- Nat d’un mateix part, amb un altre o altres"
+  ],
+  "definition": "Adj- Nat d’un mateix part, amb un altre o altres",
+  "corpus_forms": [
+    "NOMÉS APAREIX ALS MATERIALS"
+  ],
+  "lexical_category": "Adjectiu",
+  "phonology": {
+    "nombre_mans": "2n COMP: 1",
+    "configuracio": "2n COMP: 2 (beak2_open_srpead)",
+    "configuracio_ma_dominant": "2n COMP: 2 (beak2_open_srpead)",
+    "configuracio_ma_no_dominant": null,
+    "canvi_configuracio": null,
+    "relacio_articuladors": null,
+    "relacio_articuladors_ma_dominant": null,
+    "relacio_articuladors_ma_no_dominant": null,
+    "localitzacio": "2n COMP: Espai neutre",
+    "orientacio_moviment": null,
+    "orientacio_localitzacio": "2n COMP: Inclinació",
+    "canvi_orientacio": null,
+    "tipus_contacte": null,
+    "forma_moviment": "2n COMP: No",
+    "direccio_moviment": null,
+    "moviment_repetit": null,
+    "vocalitzacio": null,
+    "component_no_manual": null
+  },
+  "morfologia_sequencial": {
+    "compost_1": "GERMÀ",
+    "compost_2": "SEGON",
+    "compost_3": null
+  },
+  "morfologia_simultania": [],
+  "morfologia_abreujada": [
+    {
+      "glossa_abreujada": null,
+      "rol_en_aquest_signe": null
+    }
+  ],
+  "minimal_pairs": [],
+  "iconicity": "Sí",
+  "entitat_amb_nom": null,
+  "camp_semantic": "Família",
+  "valencia": "",
+  "signes_claus": [],
+  "related_signs": {
+    "HOMÒNIM": [],
+    "SINÒNIM": [],
+    "VARIANT": [
+      "BESSONS-T_antiga"
+    ],
+    "ANTÒNIM": [],
+    "HIPÒNIM": [],
+    "HIPERÒNIM": [],
+    "VEURE TAMBÉ": []
+  },
+  "relacio_signes_forasters": {
+    "prestec": null,
+    "llengua_relacionada": null,
+    "glossa_llengua_relacionada": null
+  },
+  "categories": [
+    "Família"
+  ],
+  "occ_general": [
+    "MARTÍN & ALVARADO",
+    "PERELLÓ & FRÍGOLA",
+    "FERRERONS",
+    "DILSCAT",
+    "MIRA QUÈ DIC",
+    "VOCABULARI BÀSIC",
+    "MATERIAL FESOCA"
+  ],
+  "occ_learning": [
+    "A1 JUAN VALENZUELA",
+    "A1",
+    "A2",
+    "APRENEM 1",
+    "APRENEM 2"
+  ],
+  "occ_specific": [
+    "MEDICINES",
+    "ÀREES MEDI NATURAL",
+    "ÀREES MEDI SOCIAL",
+    "ALIMENTS",
+    "ANIMALS",
+    "LÀMINES GENERALITAT",
+    "El GENÍS I LA SANITAT",
+    "EL GENÍS I L’EDUCACIÓ",
+    "RECULL TOPONÍMIC",
+    "53 MALES MANERES",
+    "HISTÒRIA FILOSOFIA",
+    "ÀGILS COMUNICACIÓ",
+    "SIGNAPP"
+  ],
+  "notes": "Observacions: Vist per Santi",
+  "video_url": "https://drive.google.com/file/d/1f8YqJU_Lne5Az0o8gyAR1CAPKE3CbA8x/view?usp=sharing",
+  "docx_path": "data/FITXES_ENTRADES/1420_02 BESSONS-1d.docx",
+  "is_compound": true,
+  "compound_signs": [
+    "GERMÀ",
+    "SEGON"
+  ],
+  "phonology_parts": {
+    "nombre_mans": {
+      "2": "1"
+    },
+    "configuracio": {
+      "2": "2 (beak2_open_srpead)"
+    },
+    "configuracio_ma_dominant": {
+      "2": "2 (beak2_open_srpead)"
+    },
+    "localitzacio": {
+      "2": "Espai neutre"
+    },
+    "orientacio_localitzacio": {
+      "2": "Inclinació"
+    },
+    "forma_moviment": {
+      "2": "No"
+    }
+  },
+  "vocab_warnings": {
+    "orientacio_localitzacio": "2n COMP: Inclinació"
+  }
+}

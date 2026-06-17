@@ -6,24 +6,24 @@ import { CreateTranslationDto, UpdateTranslationDto } from './dto/translation.dt
 export class TranslationsController {
   constructor(private readonly translationsService: TranslationsService) {}
 
-  @Post('sense/:senseId')
-  async createSenseTranslation(
-    @Param('senseId') senseId: string,
-    @Body() data: CreateTranslationDto
+  @Post('gloss/:glossDataId')
+  async createGlossTranslation(
+    @Param('glossDataId') glossDataId: string,
+    @Body() data: CreateTranslationDto,
   ) {
-    return this.translationsService.createSenseTranslation(senseId, data);
+    return this.translationsService.createGlossTranslation(glossDataId, data);
   }
 
-  @Put('sense/:id')
-  async updateSenseTranslation(
+  @Put(':id')
+  async updateGlossTranslation(
     @Param('id') id: string,
-    @Body() data: UpdateTranslationDto
+    @Body() data: UpdateTranslationDto,
   ) {
-    return this.translationsService.updateSenseTranslation(id, data);
+    return this.translationsService.updateGlossTranslation(id, data);
   }
 
-  @Delete('sense/:id')
-  async deleteSenseTranslation(@Param('id') id: string) {
-    return this.translationsService.deleteSenseTranslation(id);
+  @Delete(':id')
+  async deleteGlossTranslation(@Param('id') id: string) {
+    return this.translationsService.deleteGlossTranslation(id);
   }
-} 
+}

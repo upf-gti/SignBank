@@ -9,33 +9,33 @@ export class ExamplesService {
   constructor(
     private prisma: PrismaService,
     private glossDataService: GlossDataService,
-    private videosService: VideosService
+    private videosService: VideosService,
   ) {}
 
-  async createExample(senseId: string, data: CreateExampleDto) {
-    const sense = await this.prisma.sense.findUnique({
-      where: { id: senseId }
+  async createExample(glossDataId: string, data: CreateExampleDto) {
+    const glossData = await this.prisma.glossData.findUnique({
+      where: { id: glossDataId },
     });
 
-    if (!sense) {
-      throw new NotFoundException('Sense not found');
+    if (!glossData) {
+      throw new NotFoundException('GlossData not found');
     }
 
     await this.prisma.example.create({
       data: {
         example: data.example,
         exampleVideoURL: data.exampleVideoURL,
-        senseId: senseId
-      }
+        glossDataId,
+      },
     });
 
-    return this.glossDataService.getGlossData(sense.glossDataId);
+    return this.glossDataService.getGlossData(glossDataId);
   }
 
   async updateExample(id: string, data: UpdateExampleDto) {
     const example = await this.prisma.example.findUnique({
       where: { id },
-      include: { sense: true }
+      include: { glossData: true },
     });
 
     if (!example) {
@@ -46,67 +46,61 @@ export class ExamplesService {
       where: { id },
       data: {
         example: data.example,
-        exampleVideoURL: data.exampleVideoURL
-      }
+        exampleVideoURL: data.exampleVideoURL,
+      },
     });
 
-    return this.glossDataService.getGlossData(example.sense.glossDataId);
+    return this.glossDataService.getGlossData(example.glossDataId);
   }
 
   async deleteExample(id: string) {
     const example = await this.prisma.example.findUnique({
       where: { id },
-      include: { sense: true }
+      include: { glossData: true },
     });
 
     if (!example) {
       throw new NotFoundException('Example not found');
     }
 
-    // Delete the associated video file if it exists
     if (example.exampleVideoURL) {
       try {
         await this.videosService.deleteVideo(example.exampleVideoURL);
       } catch (error) {
-        // Log the error but don't fail the deletion if video deletion fails
         console.error('Failed to delete video file:', error);
       }
     }
 
     await this.prisma.example.delete({
-      where: { id }
+      where: { id },
     });
 
-    return this.glossDataService.getGlossData(example.sense.glossDataId);
+    return this.glossDataService.getGlossData(example.glossDataId);
   }
 
   async deleteExampleVideo(id: string) {
     const example = await this.prisma.example.findUnique({
       where: { id },
-      include: { sense: true }
+      include: { glossData: true },
     });
 
     if (!example) {
       throw new NotFoundException('Example not found');
     }
 
-    // Delete the video file if it exists
     if (example.exampleVideoURL) {
       try {
         await this.videosService.deleteVideo(example.exampleVideoURL);
-      } catch (error) {
+      } catch {
         throw new NotFoundException('Failed to delete video file');
       }
     }
 
-    // Update the example to remove the video URL
     await this.prisma.example.update({
       where: { id },
-      data: {
-        exampleVideoURL: ''
-      }
+      data: { exampleVideoURL: '' },
     });
 
-    return this.glossDataService.getGlossData(example.sense.glossDataId);
+    return this.glossDataService.getGlossData(example.glossDataId);
   }
-} 
+}
