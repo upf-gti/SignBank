@@ -1,32 +1,17 @@
 <template>
-  <q-expansion-item 
+  <div
     v-if="translations.length > 0 || allowEdit"
-    :label="translate('translations')"
+    class="example-translations"
   >
-    <template #header>
-      <div class="text-subtitle1 q-mb-sm">
-        {{ translate('translations') }}
-      </div>
-    </template>
     <div
-      v-for="(translation, index) in translations.sort((a, b) => {
-        // First sort by isNew (new items first)
-        if (a.isNew && !b.isNew) return -1;
-        if (!a.isNew && b.isNew) return 1;
-        
-        // Then sort by language: Catalan, Spanish, English
-        const languageOrder: Record<string, number> = { 'CATALAN': 1, 'SPANISH': 2, 'ENGLISH': 3 };
-        const aOrder = languageOrder[a.language] || 999;
-        const bOrder = languageOrder[b.language] || 999;
-        return aOrder - bOrder;
-      })"
+      v-for="(translation, index) in sortedTranslations"
       :key="translation.id || index"
       class="q-mb-sm"
     >
       <EditableModule
         :allow-edit="allowEdit"
-        :initial-edit-state="translation.isNew || false" 
-        :show-delete="true"
+        :initial-edit-state="translation.isNew || false"
+        :show-delete="allowEdit"
         :custom-edit-label="translate('editTranslation')"
         :custom-delete-label="translate('deleteTranslation')"
         @save="() => saveTranslation(translation)"
@@ -35,7 +20,7 @@
       >
         <template #default="{ isEditing }">
           <div class="q-mx-md">
-            <div class="row items-center q-gutter-sm ">
+            <div class="row items-center q-gutter-sm">
               <LanguageSelector
                 v-if="isEditing"
                 v-model="translation.language"
@@ -43,6 +28,7 @@
               />
               <q-chip
                 v-else
+                dense
               >
                 {{ translate(translation.language) }}
               </q-chip>
@@ -58,7 +44,7 @@
             />
             <div
               v-else
-              class="text-body1"
+              class="text-body1 q-mt-xs"
             >
               {{ translation.translation }}
             </div>
@@ -67,7 +53,6 @@
       </EditableModule>
     </div>
 
-    <!-- Add Translation Button -->
     <q-btn
       v-if="allowEdit"
       flat
@@ -76,7 +61,7 @@
       class="q-mt-sm"
       @click="addTranslation"
     />
-  </q-expansion-item>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -101,13 +86,25 @@ const $q = useQuasar();
 
 const translations = computed(() => props.example.exampleTranslations || []);
 
+const sortedTranslations = computed(() => {
+  return [...translations.value].sort((a, b) => {
+    if (a.isNew && !b.isNew) return -1;
+    if (!a.isNew && b.isNew) return 1;
+
+    const languageOrder: Record<string, number> = { CATALAN: 1, SPANISH: 2, ENGLISH: 3 };
+    const aOrder = languageOrder[a.language] || 999;
+    const bOrder = languageOrder[b.language] || 999;
+    return aOrder - bOrder;
+  });
+});
+
 const addTranslation = () => {
   translations.value.push({
     id: '',
     translation: '',
     language: 'CATALAN',
     exampleId: props.example.id || '',
-    isNew: true
+    isNew: true,
   });
 };
 
@@ -117,12 +114,12 @@ const saveTranslation = async (translation: ExampleTranslation) => {
     if (translation.id) {
       response = await api.exampleTranslations.updateExampleTranslation(translation.id, {
         translation: translation.translation,
-        language: translation.language as Language
+        language: translation.language as Language,
       });
     } else {
       response = await api.exampleTranslations.createExampleTranslation(props.example.id || '', {
         translation: translation.translation,
-        language: translation.language as Language
+        language: translation.language as Language,
       });
     }
 
@@ -130,14 +127,14 @@ const saveTranslation = async (translation: ExampleTranslation) => {
       emit('update:glossData', response.data);
       $q.notify({
         type: 'positive',
-        message: translate(translation.id ? 'translationUpdatedSuccessfully' : 'translationCreatedSuccessfully')
+        message: translate(translation.id ? 'translationUpdatedSuccessfully' : 'translationCreatedSuccessfully'),
       });
     }
   } catch (error) {
     console.error('Error saving translation:', error);
     $q.notify({
       type: 'negative',
-      message: translate('errors.failedToSaveTranslation')
+      message: translate('errors.failedToSaveTranslation'),
     });
   }
 };
@@ -157,14 +154,14 @@ const deleteTranslation = async (translation: ExampleTranslation) => {
       emit('update:glossData', response.data);
       $q.notify({
         type: 'positive',
-        message: translate('translationDeletedSuccessfully')
+        message: translate('translationDeletedSuccessfully'),
       });
     }
   } catch (error) {
     console.error('Error deleting translation:', error);
     $q.notify({
       type: 'negative',
-      message: translate('errors.failedToDeleteTranslation')
+      message: translate('errors.failedToDeleteTranslation'),
     });
   }
 };
@@ -177,4 +174,10 @@ const cancelTranslation = (translation: ExampleTranslation) => {
     }
   }
 };
-</script> 
+</script>
+
+<style scoped>
+.example-translations {
+  margin-top: 4px;
+}
+</style>

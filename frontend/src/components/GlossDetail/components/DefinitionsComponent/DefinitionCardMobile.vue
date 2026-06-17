@@ -24,9 +24,9 @@
           {{ definition.title }}
         </div>
 
-        <!-- Definition Content - Stacked Layout for Mobile -->
+        <!-- Definition Content -->
         <div class="column q-gutter-md q-mb-lg">
-          <!-- Definition Text Section (First on Mobile) -->
+          <!-- Definition Text Section -->
           <div class="col">
             <q-input
               v-if="isEditing"
@@ -45,8 +45,11 @@
             </div>
           </div>
 
-          <!-- Definition Video Section (Second on Mobile) -->
-          <div class="col" v-if="definition.videoDefinitionUrl || isEditing">
+          <!-- Definition Video Section -->
+          <div
+            v-if="!hideDefinitionVideo && (definition.videoDefinitionUrl || isEditing)"
+            class="col"
+          >
             <UploadVideoComponent
               v-if="isEditing && !definition.videoDefinitionUrl"
               video-type="definition"
@@ -61,11 +64,10 @@
                 ref="videoPlayer"
                 controls
                 autoplay
-                class="rounded-borders shadow-2 full-width"
+                class="rounded-borders shadow-2 definition-video"
                 :src="getVideoUrl(definition.videoDefinitionUrl)"
                 muted
                 @error="$emit('videoError', $event)"
-                style="max-width: 100%; max-height: 200px; width: 100%; height: auto; object-fit: contain;"
               />
               <q-btn
                 v-if="isEditing"
@@ -105,6 +107,7 @@ const props = defineProps<{
   definition: Definition;
   allowEdit: boolean;
   inlineEdit?: boolean;
+  hideDefinitionVideo?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -118,4 +121,11 @@ const emit = defineEmits<{
 </script>
 
 <style scoped>
-</style> 
+.definition-video {
+  max-width: 100%;
+  max-height: 200px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+</style>

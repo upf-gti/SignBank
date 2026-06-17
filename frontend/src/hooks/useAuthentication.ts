@@ -38,6 +38,9 @@ export function useAuthentication() {
       isLoading.value = true
       error.value = null
       const { data } = await api.auth.login({ email, password })
+      if (!data?.access_token || !data?.refresh_token || !data?.user) {
+        throw new Error('Invalid credentials')
+      }
       userStore.setUserData(data)
       return data
     } catch (err: any) {

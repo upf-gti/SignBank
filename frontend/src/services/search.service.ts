@@ -27,6 +27,7 @@ export interface SearchResult {
   nonManualComponent: string | null;
   inicialization: string | null;
   lexicalCategory: string;
+  lexicalCategories?: string[];
   glossId: string;
   gloss: string;
   description: string;

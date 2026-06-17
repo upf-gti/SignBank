@@ -53,6 +53,8 @@ const translations: TranslateKeys = {
   login: 'Iniciar sesión',
   glossTranslations: 'Traducciones de glosa',
   seeExampleVideo: 'Ver vídeo de ejemplo',
+  seeOtherVideos: 'Ver otros vídeos',
+  backToMainVideo: 'Volver al vídeo principal',
   spanish: 'Español',
   english: 'Inglés',
   french: 'Francés',

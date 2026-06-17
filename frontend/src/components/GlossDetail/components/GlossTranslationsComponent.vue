@@ -1,7 +1,10 @@
 <template>
-  <q-card-section class="q-pt-none">
+  <q-card-section
+    class="gloss-translations"
+    :class="{ 'gloss-translations--compact q-px-none q-pb-none': compact }"
+  >
     <div
-      v-if="!inlineEdit"
+      v-if="!inlineEdit && !hideSectionTitle"
       class="text-h5 q-mb-md row justify-between items-center"
     >
       {{ translate('glossTranslations') }}
@@ -15,17 +18,41 @@
       />
     </div>
     <div
-      v-else
+      v-else-if="inlineEdit"
       class="text-subtitle1 text-weight-medium q-mb-md"
     >
       {{ translate('glossTranslations') }}
     </div>
 
-    <q-list class="row q-col-gutter-md">
+    <template v-if="compact && !editMode">
+      <div
+        v-for="(translation, index) in glossTranslations"
+        :key="translation.id || index"
+        class="gloss-translations__item q-mb-sm"
+      >
+        <q-chip
+          dense
+          outline
+          color="primary"
+          class="q-mb-xs"
+        >
+          {{ translate(translation.language) }}
+        </q-chip>
+        <div class="text-body1">
+          {{ translation.translation }}
+        </div>
+      </div>
+    </template>
+
+    <q-list
+      v-else
+      class="row q-col-gutter-md"
+    >
       <q-item
         v-for="(translation, index) in glossTranslations"
         :key="translation.id || index"
-        class="col-12 col-md-6 q-pa-none"
+        class="col-12 q-pa-none"
+        :class="{ 'col-md-6': !compact }"
         dense
       >
         <EditableModule
@@ -50,7 +77,10 @@
                   v-model="translation.language"
                   class="col"
                 />
-                <q-chip v-else dense>
+                <q-chip
+                  v-else
+                  dense
+                >
                   {{ translate(translation.language) }}
                 </q-chip>
               </div>
@@ -103,6 +133,8 @@ const props = defineProps<{
   glossData: GlossData;
   editMode: boolean;
   inlineEdit?: boolean;
+  hideSectionTitle?: boolean;
+  compact?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -243,3 +275,13 @@ const cancelTranslation = (translation: GlossTranslation) => {
   }
 };
 </script>
+
+<style scoped>
+.gloss-translations--compact {
+  padding-top: 12px;
+}
+
+.gloss-translations__item:last-child {
+  margin-bottom: 0;
+}
+</style>

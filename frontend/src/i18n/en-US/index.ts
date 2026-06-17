@@ -59,6 +59,8 @@ const translations: TranslateKeys = {
   login: 'Login',
   glossTranslations: 'Gloss translations',
   seeExampleVideo: 'See example video',
+  seeOtherVideos: 'See other videos',
+  backToMainVideo: 'Back to main video',
   spanish: 'Spanish',
   english: 'English',
   french: 'French',

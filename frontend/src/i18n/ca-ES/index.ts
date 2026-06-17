@@ -56,6 +56,8 @@ const translations: TranslateKeys = {
   login: 'Iniciar sessió',
   glossTranslations: 'Traduccions de glossa',
   seeExampleVideo: 'Veure vídeo d\'exemple',
+  seeOtherVideos: 'Veure altres vídeos',
+  backToMainVideo: 'Tornar al vídeo principal',
   spanish: 'Espanyol',
   english: 'Anglès',
   french: 'Francès',

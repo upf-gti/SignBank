@@ -26,10 +26,16 @@
           {{ definition.title }}
         </div>
 
-        <!-- Definition Content - Side by Side Layout -->
-        <div class="row q-gutter-md q-mb-lg q-items-start">
+        <!-- Definition Content -->
+        <div
+          class="q-mb-lg"
+          :class="hideDefinitionVideo ? 'column' : 'row q-gutter-md q-items-start'"
+        >
           <!-- Definition Video Section -->
-          <div class="col-auto" v-if="definition.videoDefinitionUrl || isEditing">
+          <div
+            v-if="!hideDefinitionVideo && (definition.videoDefinitionUrl || isEditing)"
+            class="col-auto"
+          >
             <UploadVideoComponent
               v-if="isEditing && !definition.videoDefinitionUrl"
               video-type="definition"
@@ -44,11 +50,10 @@
                 ref="videoPlayer"
                 controls
                 autoplay
-                class="rounded-borders shadow-2"
+                class="rounded-borders shadow-2 definition-video"
                 :src="getVideoUrl(definition.videoDefinitionUrl)"
                 muted
                 @error="$emit('videoError', $event)"
-                style="max-width: 100%; max-height: 250px; width: auto; height: auto;"
               />
               <q-btn
                 v-if="isEditing"
@@ -63,7 +68,7 @@
           </div>
 
           <!-- Definition Text Section -->
-          <div class="col">
+          <div :class="hideDefinitionVideo ? '' : 'col'">
             <q-input
               v-if="isEditing"
               v-model="definition.definition"
@@ -107,6 +112,7 @@ const props = defineProps<{
   definition: Definition;
   allowEdit: boolean;
   inlineEdit?: boolean;
+  hideDefinitionVideo?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -117,4 +123,14 @@ const emit = defineEmits<{
   (e: 'videoError', event: Event): void;
   (e: 'updateTranslations', definition: Definition, translations: DefinitionTranslation[]): void;
 }>();
-</script> 
+</script>
+
+<style scoped>
+.definition-video {
+  max-width: 100%;
+  max-height: 250px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+</style>

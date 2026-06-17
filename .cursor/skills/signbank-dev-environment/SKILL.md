@@ -86,7 +86,7 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 
 | Symptom | Check |
 |---------|-------|
-| 502 from nginx | `make logs`, ensure backend/frontend are healthy |
+| Frontend changes not hot-reloading (Windows/macOS) | Ensure `CHOKIDAR_USEPOLLING=true` in local compose; recreate frontend: `make rebuild s=frontend` |
 | DB connection errors | `DATABASE_URL_DOCKER` in backend env, postgres healthcheck |
 | Search empty/stale | Typesense init runs on backend boot; see `signbank-search-typesense` skill |
 | Videos 404 | Dufs volume `./FileServer`; nginx path `/lscassets` → dufs |

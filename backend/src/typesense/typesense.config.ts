@@ -11,6 +11,7 @@ export const videosSchema: CollectionCreateSchema = {
     { name: 'url', type: 'string' },
     { name: 'signVideoTitle', type: 'string', facet: true, sort: true },
     { name: 'lexicalCategory', type: 'string', facet: true },
+    { name: 'lexicalCategories', type: 'string[]', facet: true, optional: true },
     { name: 'description', type: 'string', facet: true },
     { name: 'hands', type: 'string', facet: true },
     { name: 'configuration', type: 'string', facet: true },

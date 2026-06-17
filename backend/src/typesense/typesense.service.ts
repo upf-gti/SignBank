@@ -140,6 +140,13 @@ export class TypesenseService implements OnModuleInit {
     }
 
     const videoData = primarySignVideo.videoData;
+    const lexicalCategories = [
+      ...new Set(
+        glossData.definitions
+          .map((definition) => definition.lexicalCategory)
+          .filter((category): category is NonNullable<typeof category> => Boolean(category)),
+      ),
+    ];
 
     return {
       id: glossData.id,
@@ -147,7 +154,8 @@ export class TypesenseService implements OnModuleInit {
       gloss: glossData.gloss,
       url: primaryVideo?.url ?? '',
       signVideoTitle: primarySignVideo.title,
-      lexicalCategory: primaryDefinition?.lexicalCategory ?? '',
+      lexicalCategory: primaryDefinition?.lexicalCategory ?? lexicalCategories[0] ?? '',
+      lexicalCategories,
       description,
       hands: videoData?.hands ?? Hand.RIGHT,
       configuration: videoData?.configuration ?? '',
@@ -201,13 +209,36 @@ export class TypesenseService implements OnModuleInit {
     return { success: true, action: 'upserted' as const };
   }
 
+  private getMissingSchemaFields(fields: { name: string }[]): string[] {
+    const actualFieldNames = new Set(fields.map((field) => field.name));
+    return videosSchema.fields
+      .map((field) => field.name)
+      .filter((name) => name !== 'id' && !actualFieldNames.has(name));
+  }
+
   async ensureCollectionExists() {
     try {
-      await this.client.collections(VIDEOS_COLLECTION_NAME).retrieve();
+      const collection = await this.client
+        .collections(VIDEOS_COLLECTION_NAME)
+        .retrieve();
+      const missingFields = this.getMissingSchemaFields(collection.fields);
+
+      if (missingFields.length === 0) {
+        return {
+          success: true,
+          created: false,
+          message: 'Collection already exists',
+        };
+      }
+
+      this.logger.warn(
+        `Typesense schema out of date (missing: ${missingFields.join(', ')}). Recreating collection...`,
+      );
+      await this.recreateCollection();
       return {
         success: true,
-        created: false,
-        message: 'Collection already exists',
+        created: true,
+        message: 'Collection recreated due to schema changes',
       };
     } catch (error) {
       if (error.httpStatus !== 404) {
@@ -285,6 +316,49 @@ export class TypesenseService implements OnModuleInit {
     }
   }
 
+  private async listIndexedDocumentIds(): Promise<string[]> {
+    const ids: string[] = [];
+    const perPage = 250;
+    let page = 1;
+
+    while (true) {
+      const results = await this.client
+        .collections(VIDEOS_COLLECTION_NAME)
+        .documents()
+        .search({
+          q: '*',
+          query_by: 'gloss',
+          per_page: perPage,
+          page,
+        });
+
+      const hits = results.hits ?? [];
+      for (const hit of hits) {
+        ids.push((hit.document as { id: string }).id);
+      }
+
+      if (hits.length < perPage) {
+        break;
+      }
+      page++;
+    }
+
+    return ids;
+  }
+
+  private async removeOrphanedDocuments(validIds: Set<string>) {
+    const indexedIds = await this.listIndexedDocumentIds();
+    const orphanedIds = indexedIds.filter((id) => !validIds.has(id));
+
+    if (orphanedIds.length === 0) {
+      return 0;
+    }
+
+    await Promise.all(orphanedIds.map((id) => this.deleteDocument(id)));
+    this.logger.log(`Removed ${orphanedIds.length} stale documents from search index`);
+    return orphanedIds.length;
+  }
+
   async syncAllVideos() {
     this.logger.log('Starting gloss search sync...');
     try {
@@ -302,6 +376,9 @@ export class TypesenseService implements OnModuleInit {
           documents.push(document);
         }
       }
+
+      const validIds = new Set(documents.map((document) => document.id));
+      await this.removeOrphanedDocuments(validIds);
 
       const BATCH_SIZE = 100;
       for (let i = 0; i < documents.length; i += BATCH_SIZE) {

@@ -9,10 +9,16 @@
       @delete="() => $emit('delete', example)"
     >
       <template #default="{ isEditing }">
-        <!-- Example Content - Side by Side Layout -->
-        <div class="row q-gutter-md q-mb-lg q-items-start">
+        <!-- Example Content -->
+        <div
+          class="q-mb-lg"
+          :class="hideExampleVideo ? 'column' : 'row q-gutter-md q-items-start'"
+        >
           <!-- Example Video Section -->
-          <div class="col-auto" v-if="example.exampleVideoURL || isEditing">
+          <div
+            v-if="!hideExampleVideo && (example.exampleVideoURL || isEditing)"
+            class="col-auto"
+          >
             <UploadVideoComponent
               v-if="isEditing && !example.exampleVideoURL"
               video-type="example"
@@ -46,7 +52,7 @@
           </div>
 
           <!-- Example Text Section -->
-          <div class="col">
+          <div :class="hideExampleVideo ? '' : 'col'">
             <q-input
               v-if="isEditing"
               v-model="example.example"
@@ -89,6 +95,7 @@ const props = defineProps<{
   example: Example;
   allowEdit: boolean;
   inlineEdit?: boolean;
+  hideExampleVideo?: boolean;
 }>();
 
 const emit = defineEmits<{

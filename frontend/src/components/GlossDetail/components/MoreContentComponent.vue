@@ -129,8 +129,8 @@
       </q-step>
     </q-stepper>
 
-    <!-- Published / read-only: tabbed layout -->
-    <template v-else>
+    <!-- Published edit mode: tabbed layout for admin editing -->
+    <template v-else-if="editMode">
       <q-tabs
         v-model="selectedContent"
         class="text-primary"

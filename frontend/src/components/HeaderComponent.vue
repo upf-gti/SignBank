@@ -1,7 +1,7 @@
 <template>
   <q-header
     class="bg-secondary text-black app-header"
-    elevated
+    bordered
   >
     <loginComponent v-model="isLoginDialogOpen" />
 
@@ -13,22 +13,6 @@
       overlay
       class="bg-secondary"
     >
-      <q-toolbar class="q-px-md">
-        <q-toolbar-title class="text-subtitle1 text-weight-bold">
-          {{ translate('signBank') }}
-        </q-toolbar-title>
-        <q-btn
-          flat
-          dense
-          round
-          icon="close"
-          :aria-label="translate('closeMenu')"
-          @click="isSidebarOpen = false"
-        />
-      </q-toolbar>
-
-      <q-separator />
-
       <q-list padding>
         <q-item-label
           header
@@ -149,12 +133,6 @@
           alt="UPF"
           @click="navigateTo('/')"
         />
-        <span
-          class="app-title cursor-pointer gt-xs"
-          @click="navigateTo('/')"
-        >
-          {{ translate('signBank') }}
-        </span>
       </q-toolbar-title>
 
       <q-btn
@@ -198,6 +176,7 @@ const isActive = (path: string) => route.path === path || route.path.startsWith(
 <style scoped>
 .app-header {
   min-height: 64px;
+  box-shadow: none;
 }
 
 .header-logo {
@@ -206,13 +185,6 @@ const isActive = (path: string) => route.path === path || route.path.startsWith(
 
 .header-logo:hover {
   transform: scale(1.05);
-}
-
-.app-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  user-select: none;
 }
 
 .nav-item-active {

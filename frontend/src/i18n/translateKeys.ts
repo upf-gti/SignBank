@@ -524,6 +524,8 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   reason: string;
   glossTranslations: string;
   seeExampleVideo: string;
+  seeOtherVideos: string;
+  backToMainVideo: string;
   spanish: string;
   english: string;
   french: string;

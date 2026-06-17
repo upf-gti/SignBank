@@ -30,8 +30,11 @@
             </div>
           </div>
 
-          <!-- Example Video Section (Second on Mobile) -->
-          <div class="col" v-if="example.exampleVideoURL || isEditing">
+          <!-- Example Video Section -->
+          <div
+            v-if="!hideExampleVideo && (example.exampleVideoURL || isEditing)"
+            class="col"
+          >
             <UploadVideoComponent
               v-if="isEditing && !example.exampleVideoURL"
               video-type="example"
@@ -89,6 +92,7 @@ const props = defineProps<{
   example: Example;
   allowEdit: boolean;
   inlineEdit?: boolean;
+  hideExampleVideo?: boolean;
 }>();
 
 const emit = defineEmits<{

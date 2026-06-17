@@ -21,6 +21,7 @@ export interface GlossIndex {
   url: string;
   signVideoTitle: string;
   lexicalCategory: LexicalCategory | string;
+  lexicalCategories: (LexicalCategory | string)[];
   description: string;
   hands: Hand;
   configuration: HandConfiguration | '';

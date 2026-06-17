@@ -71,7 +71,16 @@ export default defineConfig(() => {
       // polyfillModulePreload: true,
       // distDir
 
-      // extendViteConf (viteConf) {},
+      extendViteConf (viteConf) {
+        if (process.env.CHOKIDAR_USEPOLLING === 'true') {
+          viteConf.server = viteConf.server ?? {};
+          viteConf.server.watch = {
+            ...viteConf.server.watch,
+            usePolling: true,
+            interval: Number(process.env.CHOKIDAR_INTERVAL) || 1000,
+          };
+        }
+      },
       // viteVuePluginOptions: {},
 
       vitePlugins: [

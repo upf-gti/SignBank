@@ -1,13 +1,15 @@
 <template>
   <div class="videos-component q-pa-sm">
     <div
-      v-if="!inlineEdit"
+      v-if="!inlineEdit && !hideSectionTitle"
       class="text-h5 q-mb-md"
     >
       {{ translate('videos') }}
     </div>
 
-    <div class="row q-col-gutter-md no-wrap overflow-auto">
+    <div
+      :class="videosRowClass"
+    >
       <!-- Add video button - visible when editMode is true and not creating a video -->
       <div
         v-if="editMode && !isCreatingVideo"
@@ -34,7 +36,7 @@
       <div
         v-for="(video, index) in sortedVideos"
         :key="video.id || index"
-        class="col-12 col-sm-6 col-md-4"
+        :class="videoItemClass"
       >
         <EditableModule
           :allow-edit="editMode"
@@ -125,10 +127,25 @@ const glossData = defineModel<GlossData>({ required: true });
 const emit = defineEmits<{
   (e: 'update:glossData', glossData: GlossData): void
 }>();
-const { editMode, inlineEdit = false } = defineProps<{
+const { editMode, inlineEdit = false, hideSectionTitle = false, stacked = false, horizontalScroll = false } = defineProps<{
   editMode: boolean;
   inlineEdit?: boolean;
+  hideSectionTitle?: boolean;
+  stacked?: boolean;
+  horizontalScroll?: boolean;
 }>();
+
+const videosRowClass = computed(() => {
+  if (stacked) return 'column q-gutter-md';
+  if (horizontalScroll) return 'row q-col-gutter-md no-wrap videos-row--horizontal-scroll';
+  return 'row q-col-gutter-md no-wrap overflow-auto';
+});
+
+const videoItemClass = computed(() => {
+  if (stacked) return 'col-12';
+  if (horizontalScroll) return 'videos-row__item';
+  return 'col-12 col-sm-6 col-md-4';
+});
 
 const $q = useQuasar();
 
@@ -453,6 +470,19 @@ function validateVideo(video: SignVideo): { isValid: boolean; errors: string[] }
 <style scoped>
 .videos-component {
   width: 100%;
+}
+
+.videos-row--horizontal-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 8px;
+  width: 100%;
+}
+
+.videos-row__item {
+  flex: 0 0 420px;
+  width: 420px;
+  max-width: 420px;
 }
 
 .overflow-auto {

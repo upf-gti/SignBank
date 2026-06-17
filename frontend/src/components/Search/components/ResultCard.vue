@@ -9,10 +9,6 @@
     @click="emitViewDetails"
     @keydown.enter="emitViewDetails"
     @keydown.space.prevent="emitViewDetails"
-    @mouseenter="playVideo"
-    @mouseleave="pauseVideo"
-    @focus="playVideo"
-    @blur="pauseVideo"
   >
     <q-card-section
       v-if="document.url"
@@ -25,6 +21,7 @@
           :src="getVideoUrl(document.url)"
           preload="metadata"
           loop
+          autoplay
           muted
           playsinline
           @error="handleVideoError"
@@ -43,17 +40,6 @@
           <q-spinner
             color="primary"
             size="2em"
-          />
-        </div>
-        <div
-          v-if="!isLoading && !hasVideoError"
-          class="play-hint absolute-bottom-right q-ma-sm"
-        >
-          <q-icon
-            name="play_circle"
-            color="white"
-            size="sm"
-            style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));"
           />
         </div>
       </div>
@@ -84,15 +70,21 @@
         {{ document.description }}
       </div>
 
-      <q-chip
-        v-if="document.lexicalCategory"
-        dense
-        color="primary"
-        text-color="white"
-        size="sm"
+      <div
+        v-if="lexicalCategories.length"
+        class="lexical-categories row q-gutter-xs"
       >
-        {{ translate(document.lexicalCategory) }}
-      </q-chip>
+        <q-chip
+          v-for="category in lexicalCategories"
+          :key="category"
+          dense
+          color="primary"
+          text-color="white"
+          size="sm"
+        >
+          {{ translate(category) }}
+        </q-chip>
+      </div>
     </q-card-section>
   </q-card>
 </template>
@@ -101,11 +93,10 @@
 import translate from 'src/utils/translate';
 import { getVideoUrl } from 'src/utils/videoUrl';
 import type { SearchResult } from 'src/services/search.service';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const t = (key: string) => translate(key);
 const isLoading = ref(true);
-const hasVideoError = ref(false);
 const videoRef = ref<HTMLVideoElement | null>(null);
 
 const props = defineProps<{
@@ -121,24 +112,27 @@ const emitViewDetails = () => {
   emit('view-details', props.document.glossId);
 };
 
-const playVideo = () => {
-  videoRef.value?.play().catch(() => {});
-};
+const lexicalCategories = computed(() => {
+  const { lexicalCategories: categories, lexicalCategory } = props.document;
 
-const pauseVideo = () => {
-  if (videoRef.value) {
-    videoRef.value.pause();
-    videoRef.value.currentTime = 0;
+  if (categories?.length) {
+    return categories;
   }
-};
+
+  if (lexicalCategory) {
+    return [lexicalCategory];
+  }
+
+  return [];
+});
 
 const handleVideoError = () => {
-  hasVideoError.value = true;
   isLoading.value = false;
 };
 
 const handleVideoLoaded = () => {
   isLoading.value = false;
+  videoRef.value?.play().catch(() => {});
 };
 </script>
 
@@ -169,16 +163,6 @@ const handleVideoLoaded = () => {
   object-fit: contain;
 }
 
-.play-hint {
-  opacity: 0.7;
-  pointer-events: none;
-}
-
-.result-card:hover .play-hint,
-.result-card:focus-visible .play-hint {
-  opacity: 0;
-}
-
 .content-section {
   flex: 1;
   display: flex;
@@ -196,6 +180,15 @@ const handleVideoLoaded = () => {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.lexical-categories {
+  flex-wrap: wrap;
+}
+
+.lexical-categories :deep(.q-chip) {
+  width: fit-content;
+  max-width: 100%;
 }
 
 @media (max-width: 599px) {

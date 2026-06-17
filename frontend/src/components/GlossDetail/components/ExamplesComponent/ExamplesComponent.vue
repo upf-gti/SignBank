@@ -1,7 +1,7 @@
 <template>
   <q-card-section>
     <div
-      v-if="!inlineEdit"
+      v-if="!inlineEdit && !hideSectionTitle"
       class="text-h5 q-mb-md row justify-between items-center"
     >
       {{ translate('examples') }}
@@ -15,7 +15,7 @@
       />
     </div>
     <div
-      v-else
+      v-else-if="inlineEdit"
       class="row justify-between items-center q-mb-md"
     >
       <span class="text-body2 text-grey-7">{{ translate('optional') }}</span>
@@ -44,6 +44,7 @@
           :example="example"
           :allow-edit="editMode"
           :inline-edit="inlineEdit"
+          :hide-example-video="hideExampleVideo"
           @save="saveExample"
           @delete="deleteExample"
           @upload-video="uploadVideo"
@@ -57,6 +58,7 @@
           :example="example"
           :allow-edit="editMode"
           :inline-edit="inlineEdit"
+          :hide-example-video="hideExampleVideo"
           @save="saveExample"
           @delete="deleteExample"
           @upload-video="uploadVideo"
@@ -96,6 +98,8 @@ const props = defineProps<{
   glossData: GlossData;
   editMode: boolean;
   inlineEdit?: boolean;
+  hideSectionTitle?: boolean;
+  hideExampleVideo?: boolean;
 }>();
 
 const emit = defineEmits<{

@@ -1,7 +1,7 @@
 <template>
   <q-card-section class="column">
     <div
-      v-if="!inlineEdit"
+      v-if="!inlineEdit && !hideSectionTitle"
       class="text-h5 q-mb-md row justify-between items-center"
     >
       {{ translate('definitions') }}
@@ -62,6 +62,7 @@
           :definition="definition"
           :allow-edit="allowEdit"
           :inline-edit="inlineEdit"
+          :hide-definition-video="hideDefinitionVideo"
           @save="saveDefinition"
           @delete="deleteDefinition"
           @upload-video="uploadVideo"
@@ -78,6 +79,7 @@
         :definition="definition"
         :allow-edit="allowEdit"
         :inline-edit="inlineEdit"
+        :hide-definition-video="hideDefinitionVideo"
         @save="saveDefinition"
         @delete="deleteDefinition"
         @upload-video="uploadVideo"
@@ -86,8 +88,11 @@
         @update-translations="updateDefinitionTranslations"
       />
     </q-list>
-    <!-- Translations of the sense -->
-    <div class="column">
+    <!-- Sense-level gloss translations -->
+    <div
+      v-if="!hideGlossTranslations"
+      class="column"
+    >
       <q-btn
         v-if="inlineEdit && allowEdit && definitions.length > 0"
         flat
@@ -103,6 +108,7 @@
         :gloss-data="glossData"
         :edit-mode="editMode"
         :inline-edit="inlineEdit"
+        :hide-section-title="hideSectionTitle"
         @update:gloss-data="emit('update:glossData', $event)"
       />
     </div>
@@ -220,6 +226,9 @@ const props = defineProps<{
   editMode: boolean;
   glossData: GlossData;
   inlineEdit?: boolean;
+  hideSectionTitle?: boolean;
+  hideGlossTranslations?: boolean;
+  hideDefinitionVideo?: boolean;
 }>();
 
 const inlineDefinition = ref({

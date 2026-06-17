@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page class="gloss-page column">
     <LoadingComponent
       v-if="loading"
       :loading="loading"
@@ -35,21 +35,16 @@
       </div>
     </div>
 
-    <div
-      v-else
-      class="column full-width justify-center items-center"
-      style="height: fit-content"
-    >
-      <GlossDetailComponent
-        v-if="glossData"
-        v-model:edit-mode="editMode"
-        class="col full-width"
-        :gloss-data="glossData"
-        :allow-edit="true"
-        @save-gloss="saveGloss"
-        @update:gloss-data="updateGlossData"
-      />
-    </div>
+    <GlossDetailComponent
+      v-else-if="glossData"
+      v-model:edit-mode="editMode"
+      class="gloss-page__detail col column"
+      :gloss-data="glossData"
+      :allow-edit="true"
+      :constrained-layout="!editMode"
+      @save-gloss="saveGloss"
+      @update:gloss-data="updateGlossData"
+    />
   </q-page>
 </template>
 
@@ -65,7 +60,6 @@ import type { GlossData } from 'src/types/models'
 const route = useRoute()
 const router = useRouter()
 
-// State
 const loading = ref(true)
 const error = ref<string | null>(null)
 const editMode = ref(false)
@@ -116,3 +110,20 @@ const updateGlossData = (updatedGlossData: GlossData) => {
   glossData.value = updatedGlossData
 }
 </script>
+
+<style scoped>
+.gloss-page {
+  height: calc(100vh - 64px);
+  max-height: calc(100vh - 64px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.gloss-page__detail {
+  flex: 1 1 0;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+</style>

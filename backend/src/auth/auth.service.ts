@@ -14,10 +14,20 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.users.findByEmail(email);
-    if (!user) return null;
-    const isPasswordValid = await argon2.verify(user.password, password);
-    if (!isPasswordValid) return null;
+    if (!email?.trim() || password == null || password === '') {
+      return null;
+    }
+
+    const user = await this.users.findByEmail(email.trim());
+    if (!user?.password) return null;
+
+    try {
+      const isPasswordValid = await argon2.verify(user.password, password);
+      if (!isPasswordValid) return null;
+    } catch {
+      return null;
+    }
+
     const { password: _, ...result } = user;
     return result;
   }

@@ -2,6 +2,7 @@
   <q-card
     flat
     class="gloss-detail-card"
+    :class="{ 'gloss-detail-card--constrained': constrainedLayout }"
   >
     <GlossRequestProgress
       v-if="isDraft"
@@ -26,10 +27,12 @@
 
     <MainContent
       v-if="!contentEditable"
+      class="gloss-detail-card__main"
       :gloss-data="glossData"
     />
 
     <MoreContentComponent
+      v-if="contentEditable || isDraft"
       :gloss-data="glossData"
       :edit-mode="contentEditable"
       :is-draft="isDraft"
@@ -59,13 +62,14 @@ const emit = defineEmits<{
   (e: 'submitRequest'): void
 }>()
 
-const { glossData, editMode, allowEdit = true, isConfirmRequestPage = false, requestStatus, submitting = false } = defineProps<{
+const { glossData, editMode, allowEdit = true, isConfirmRequestPage = false, requestStatus, submitting = false, constrainedLayout = false } = defineProps<{
   glossData: GlossData,
   editMode: boolean,
   allowEdit: boolean,
   isConfirmRequestPage?: boolean | undefined,
   requestStatus?: RequestStatus | undefined,
-  submitting?: boolean | undefined
+  submitting?: boolean | undefined,
+  constrainedLayout?: boolean | undefined,
 }>()
 
 const isDraft = computed(() =>
@@ -128,5 +132,27 @@ const handleGlossDataUpdate = (updatedGlossData: GlossData) => {
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
+}
+
+.gloss-detail-card--constrained {
+  flex: 1 1 0;
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.gloss-detail-card--constrained > :not(.gloss-detail-card__main) {
+  flex: 0 0 auto;
+}
+
+.gloss-detail-card--constrained .gloss-detail-card__main {
+  flex: 1 1 0;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 </style>
