@@ -33,6 +33,7 @@
 
     <MoreContentComponent
       v-if="contentEditable || isDraft"
+      class="gloss-detail-card__edit"
       :gloss-data="glossData"
       :edit-mode="contentEditable"
       :is-draft="isDraft"
@@ -154,5 +155,9 @@ const handleGlossDataUpdate = (updatedGlossData: GlossData) => {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+
+.gloss-detail-card__edit {
+  width: 100%;
 }
 </style>

@@ -68,6 +68,7 @@
           @upload-video="uploadVideo"
           @delete-video="deleteDefinitionVideo"
           @video-error="handleVideoError"
+          @show-video="openVideo"
           @update-translations="updateDefinitionTranslations"
         />
       </q-list>
@@ -85,6 +86,7 @@
         @upload-video="uploadVideo"
         @delete-video="deleteDefinitionVideo"
         @video-error="handleVideoError"
+        @show-video="openVideo"
         @update-translations="updateDefinitionTranslations"
       />
     </q-list>

@@ -19,9 +19,22 @@
         />
         <div
           v-else
-          class="q-mb-sm text-subtitle1 text-weight-medium text-primary"
+          class="row items-center justify-between q-mb-sm"
         >
-          {{ definition.title }}
+          <div class="text-subtitle1 text-weight-medium text-primary">
+            {{ definition.title }}
+          </div>
+          <q-btn
+            v-if="hideDefinitionVideo && definition.videoDefinitionUrl"
+            flat
+            no-caps
+            dense
+            color="primary"
+            class="col-auto"
+            :label="translate('seeDefinitionVideo')"
+            icon="videocam"
+            @click="$emit('showVideo', definition)"
+          />
         </div>
 
         <!-- Definition Content -->
@@ -116,6 +129,7 @@ const emit = defineEmits<{
   (e: 'uploadVideo', definition: Definition, url: string): void;
   (e: 'deleteVideo', definition: Definition): void;
   (e: 'videoError', event: Event): void;
+  (e: 'showVideo', definition: Definition): void;
   (e: 'updateTranslations', definition: Definition, translations: DefinitionTranslation[]): void;
 }>();
 </script>

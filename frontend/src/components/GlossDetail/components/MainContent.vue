@@ -1,45 +1,14 @@
 <template>
   <q-card-section class="gloss-view-layout">
     <div
-      v-if="primaryDefinition"
-      class="row justify-start items-center q-mb-md gloss-view-layout__header"
-    >
-      <q-chip
-        outline
-        color="primary"
-      >
-        {{ translate(primaryDefinition.lexicalCategory) }}
-      </q-chip>
-      <span class="text-h6 q-ml-sm">
-        {{ primaryDefinition.title || glossData.gloss }}
-      </span>
-    </div>
-
-    <div
       class="gloss-view-layout__body"
       :class="{ 'gloss-view-layout__body--all-videos': showAllVideos }"
     >
       <template v-if="showAllVideos">
-        <div class="gloss-all-videos-view">
-          <q-btn
-            flat
-            no-caps
-            color="primary"
-            class="gloss-all-videos-back q-mb-sm"
-            :label="translate('backToMainVideo')"
-            icon="arrow_back"
-            @click="showAllVideos = false"
-          />
-
-          <div class="gloss-all-videos-scroll">
-            <VideosComponent
-              :model-value="glossData"
-              :edit-mode="false"
-              hide-section-title
-              horizontal-scroll
-            />
-          </div>
-        </div>
+        <SignVideosBrowseView
+          :gloss-data="glossData"
+          @back="showAllVideos = false"
+        />
       </template>
 
       <template v-else>
@@ -135,7 +104,7 @@
 import { computed, ref } from 'vue'
 import { GlossData } from 'src/types/models'
 import SignVideoAside from './SignVideoAside.vue'
-import VideosComponent from './VideosComponent.vue'
+import SignVideosBrowseView from './SignVideosBrowseView.vue'
 import DefinitionsComponent from './DefinitionsComponent/DefinitionsComponent.vue'
 import ExamplesComponent from './ExamplesComponent/ExamplesComponent.vue'
 import RelatedGlosses from './RelatedGlosses.vue'
@@ -147,10 +116,6 @@ const { glossData } = defineProps<{
 
 const selectedTab = ref('definitions')
 const showAllVideos = ref(false)
-
-const primaryDefinition = computed(() =>
-  [...(glossData.definitions || [])].sort((a, b) => a.priority - b.priority)[0]
-)
 
 const hasSignVideos = computed(() => (glossData.glossVideos?.length ?? 0) > 0)
 
@@ -170,10 +135,6 @@ const showSidebar = computed(() => hasSignVideos.value || hasGlossTranslations.v
   height: 100%;
   padding-top: 0;
   overflow: hidden;
-}
-
-.gloss-view-layout__header {
-  flex: 0 0 auto;
 }
 
 .gloss-view-layout__body {
@@ -202,31 +163,6 @@ const showSidebar = computed(() => hasSignVideos.value || hasGlossTranslations.v
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-}
-
-.gloss-all-videos-view {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 0;
-  min-width: 0;
-  min-height: 0;
-  width: 100%;
-  overflow: hidden;
-  align-items: flex-start;
-}
-
-.gloss-all-videos-back {
-  flex: 0 0 auto;
-}
-
-.gloss-all-videos-scroll {
-  flex: 1 1 0;
-  min-height: 0;
-  width: 100%;
-  align-self: stretch;
-  overflow-x: auto;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
 .gloss-content-tabs {

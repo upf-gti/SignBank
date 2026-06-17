@@ -1,35 +1,38 @@
 <template>
   <q-dialog
     v-model="showDialog"
-    persistent
-    transition-show="slide-up"
-    transition-hide="slide-down"
+    transition-show="fade"
+    transition-hide="fade"
   >
-    <q-card class="column">
-      <q-card-section class="row items-start q-pb-none no-wrap">
-        <q-space />
+    <q-card class="video-player-dialog">
+      <q-card-section class="video-player-dialog__header row items-center no-wrap q-pa-md">
+        <div class="text-subtitle1 text-weight-medium col ellipsis">
+          {{ title }}
+        </div>
         <q-btn
           v-close-popup
           icon="close"
           flat
           round
           dense
+          class="col-auto q-ml-sm"
+          :aria-label="translate('cancel')"
         />
       </q-card-section>
 
-      <q-card-section class="col q-pa-md flex flex-center">
-        <video
-          ref="videoPlayer"
-          controls
-          autoplay
-          loop
-          class="video-player"
-          :src="getVideoUrl(videoUrl)"
-          muted
-          @error="handleVideoError"
-        />
-        <div class="text-h6 q-mt-md">
-          {{ title }}
+      <q-card-section class="video-player-dialog__body q-pa-md">
+        <div class="video-player-dialog__frame">
+          <video
+            ref="videoPlayer"
+            controls
+            autoplay
+            loop
+            playsinline
+            class="video-player-dialog__video"
+            :src="getVideoUrl(videoUrl)"
+            muted
+            @error="handleVideoError"
+          />
         </div>
       </q-card-section>
     </q-card>
@@ -37,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, nextTick } from 'vue';
 import { useQuasar } from 'quasar';
 import translate from 'src/utils/translate';
 import { getVideoUrl } from 'src/utils/videoUrl'
@@ -57,14 +60,24 @@ const emit = defineEmits<{
 const showDialog = ref(props.showDialog);
 const videoPlayer = ref<HTMLVideoElement | null>(null);
 
-watch(() => props.showDialog, (newValue) => {
+watch(() => props.showDialog, async (newValue) => {
   showDialog.value = newValue;
+
+  if (newValue) {
+    await nextTick();
+    if (videoPlayer.value) {
+      videoPlayer.value.currentTime = 0;
+      void videoPlayer.value.play().catch(() => undefined);
+    }
+  }
 });
 
 watch(showDialog, (newValue) => {
   emit('update:show-dialog', newValue);
+
   if (!newValue && videoPlayer.value) {
     videoPlayer.value.pause();
+    videoPlayer.value.currentTime = 0;
   }
 });
 
@@ -77,15 +90,34 @@ const handleVideoError = () => {
 </script>
 
 <style scoped>
-.video-player {
-  max-width: 100%;
-  max-height: calc(100vh - 150px);
-  width: auto;
-  height: auto;
+.video-player-dialog {
+  width: min(92vw, 720px);
+  max-width: 92vw;
+  border-radius: var(--sb-card-radius, 12px);
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
 }
 
-.q-dialog__inner--maximized > div {
-  max-width: 1200px;
-  margin: 0 auto;
+.video-player-dialog__header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
-</style> 
+
+.video-player-dialog__body {
+  background: #f7f7f7;
+}
+
+.video-player-dialog__frame {
+  border-radius: calc(var(--sb-card-radius, 12px) - 2px);
+  overflow: hidden;
+  background: #000;
+  line-height: 0;
+}
+
+.video-player-dialog__video {
+  display: block;
+  width: 100%;
+  max-height: min(70vh, 480px);
+  object-fit: contain;
+  vertical-align: middle;
+}
+</style>

@@ -3,7 +3,6 @@
     <div
       v-if="hasAnyVideoUrl || editMode"
       class="video-angle-container"
-      :style="containerStyle"
     >
       <video
         v-for="video in sortedVideosWithUrl"
@@ -113,7 +112,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, nextTick, type ComponentPublicInstance, type StyleValue } from 'vue';
+import { ref, computed, watch, onMounted, nextTick, type ComponentPublicInstance } from 'vue';
 import { SignVideo } from 'src/types/models';
 import translate from 'src/utils/translate';
 import UploadVideoComponent from 'src/components/UploadVideoComponent.vue';
@@ -155,12 +154,6 @@ const hasAnyVideoUrl = computed(() => sortedVideosWithUrl.value.length > 0);
 const selectedVideoData = computed(() => {
   return sortedVideos.value.find((video) => video.id === selectedVideo.value) || sortedVideos.value[0];
 });
-
-const containerStyle = computed<StyleValue>(() => ({
-  height: props.compact ? '240px' : '40dvh',
-  maxHeight: props.compact ? '240px' : '40dvh',
-  width: '100%',
-}));
 
 function registerVideoRef(id: string, el: Element | ComponentPublicInstance | null) {
   if (el instanceof HTMLVideoElement) {
@@ -319,7 +312,8 @@ const moveVideoRight = async () => {
 .video-angle-container {
   position: relative;
   width: 100%;
-  background: transparent;
+  aspect-ratio: 16 / 9;
+  background: #000;
   border-radius: var(--sb-card-radius, 12px);
   overflow: hidden;
 }

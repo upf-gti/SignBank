@@ -1,5 +1,8 @@
 <template>
-  <q-page class="gloss-page column">
+  <q-page
+    class="column"
+    :class="{ 'gloss-page': !editMode }"
+  >
     <LoadingComponent
       v-if="loading"
       :loading="loading"
@@ -39,6 +42,7 @@
       v-else-if="glossData"
       v-model:edit-mode="editMode"
       class="gloss-page__detail col column"
+      :class="{ 'gloss-page__detail--editing': editMode }"
       :gloss-data="glossData"
       :allow-edit="true"
       :constrained-layout="!editMode"
@@ -125,5 +129,12 @@ const updateGlossData = (updatedGlossData: GlossData) => {
   min-height: 0;
   height: 100%;
   overflow: hidden;
+}
+
+.gloss-page__detail--editing {
+  flex: 1 1 auto;
+  min-height: auto;
+  height: auto;
+  overflow: visible;
 }
 </style>
