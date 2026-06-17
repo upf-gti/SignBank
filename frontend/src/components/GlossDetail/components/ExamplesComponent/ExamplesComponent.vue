@@ -124,7 +124,7 @@ const addExample = () => {
   });
 };
 
-const saveExample = async (example: Example) => {
+const saveExample = async (example: Example, silent = false) => {
   try {
     loading.value = true;
     let response;
@@ -143,21 +143,35 @@ const saveExample = async (example: Example) => {
 
     if (response.data) {
       emit('update:glossData', response.data);
-      $q.notify({
-        type: 'positive',
-        message: translate(example.id ? 'exampleUpdatedSuccessfully' : 'exampleCreatedSuccessfully'),
-      });
+      if (!silent) {
+        $q.notify({
+          type: 'positive',
+          message: translate(example.id ? 'exampleUpdatedSuccessfully' : 'exampleCreatedSuccessfully'),
+        });
+      }
     }
   } catch (error) {
     console.error('Error saving example:', error);
-    $q.notify({
-      type: 'negative',
-      message: translate('errors.failedToSaveExample'),
-    });
+    if (!silent) {
+      $q.notify({
+        type: 'negative',
+        message: translate('errors.failedToSaveExample'),
+      });
+    }
+    throw error;
   } finally {
     loading.value = false;
   }
 };
+
+async function saveAll(silent = false): Promise<void> {
+  for (const example of examples.value) {
+    if (!example.example?.trim()) continue;
+    await saveExample(example, silent);
+  }
+}
+
+defineExpose({ saveAll });
 
 const deleteExample = async (example: Example) => {
   if (!example.id) {

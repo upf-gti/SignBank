@@ -2,7 +2,7 @@
   <q-form
     class="editable-module"
     :class="{ editing: effectiveEditing, 'inline-mode': inlineEdit }"
-    @submit="saveEdit"
+    @submit.prevent="handleSubmit"
   >
     <div class="column no-wrap">
       <div class="row items-start justify-between q-mb-sm">
@@ -72,19 +72,6 @@
       />
     </div>
 
-    <div
-      v-else-if="inlineEdit && allowEdit"
-      class="row justify-end q-mt-sm"
-    >
-      <q-btn
-        dense
-        unelevated
-        color="primary"
-        icon="save"
-        :label="translate('save')"
-        type="submit"
-      />
-    </div>
   </q-form>
 </template>
 
@@ -120,6 +107,12 @@ const effectiveEditing = computed(() => props.inlineEdit || isEditing.value)
 
 function startEdit() {
   isEditing.value = true
+}
+
+function handleSubmit() {
+  if (!props.inlineEdit) {
+    saveEdit()
+  }
 }
 
 function saveEdit() {

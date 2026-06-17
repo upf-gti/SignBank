@@ -13,6 +13,7 @@
       :edit-mode="editMode"
       :allow-edit="allowEdit"
       :is-confirm-request-page="isConfirmRequestPage"
+      :is-draft="isDraft"
       :request-status="requestStatus"
       :submitting="submitting"
       @edit-gloss="editGloss"
@@ -32,7 +33,9 @@
       :gloss-data="glossData"
       :edit-mode="contentEditable"
       :is-draft="isDraft"
+      :submitting="submitting"
       @update:gloss-data="handleGlossDataUpdate"
+      @submit-request="submitRequest"
     />
   </q-card>
 </template>

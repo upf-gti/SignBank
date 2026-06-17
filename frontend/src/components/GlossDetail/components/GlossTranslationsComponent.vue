@@ -146,7 +146,7 @@ const addTranslation = () => {
   });
 };
 
-const saveTranslation = async (translation: GlossTranslation) => {
+const saveTranslation = async (translation: GlossTranslation, silent = false) => {
   try {
     loading.value = true;
     let response;
@@ -165,21 +165,43 @@ const saveTranslation = async (translation: GlossTranslation) => {
 
     if (response.data) {
       emit('update:glossData', response.data);
-      $q.notify({
-        type: 'positive',
-        message: translate(translation.id ? 'translationUpdatedSuccessfully' : 'translationCreatedSuccessfully'),
-      });
+      if (!silent) {
+        $q.notify({
+          type: 'positive',
+          message: translate(translation.id ? 'translationUpdatedSuccessfully' : 'translationCreatedSuccessfully'),
+        });
+      }
     }
   } catch (error) {
     console.error('Error saving translation:', error);
-    $q.notify({
-      type: 'negative',
-      message: translate('errors.failedToSaveTranslation'),
-    });
+    if (!silent) {
+      $q.notify({
+        type: 'negative',
+        message: translate('errors.failedToSaveTranslation'),
+      });
+    }
+    throw error;
   } finally {
     loading.value = false;
   }
 };
+
+async function saveAll(silent = false): Promise<void> {
+  for (const translation of glossTranslations.value) {
+    if (!translation.translation?.trim()) continue;
+    await saveTranslation(translation, silent);
+  }
+}
+
+function getStepValidationErrors(): string[] {
+  const hasTranslation = glossTranslations.value.some(t => t.translation?.trim());
+  if (!hasTranslation) {
+    return [translate('validation.senseTranslationRequired', { senseTitle: localGlossData.value.gloss })];
+  }
+  return [];
+}
+
+defineExpose({ saveAll, getStepValidationErrors });
 
 const deleteTranslation = async (translation: GlossTranslation) => {
   if (!translation.id) {

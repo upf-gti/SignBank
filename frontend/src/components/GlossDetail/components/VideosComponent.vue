@@ -233,7 +233,7 @@ const removeVideo = async (index: number) => {
   }
 }
 
-const updateSignVideo = async (video: SignVideo, index: number) => {
+const updateSignVideo = async (video: SignVideo, index: number, silent = false) => {
   try {
     const currentVideo = glossData.value.glossVideos[index];
     if (!currentVideo) return;
@@ -281,18 +281,56 @@ const updateSignVideo = async (video: SignVideo, index: number) => {
       isCreatingVideo.value = false;
     }
 
-    $q.notify({
-      type: 'positive',
-      message: currentVideo.id ? translate('videoUpdated') : translate('videoCreated')
-    });
+    if (!silent) {
+      $q.notify({
+        type: 'positive',
+        message: currentVideo.id ? translate('videoUpdated') : translate('videoCreated')
+      });
+    }
   } catch (error) {
     console.error('Error saving video:', error);
-    $q.notify({
-      type: 'negative',
-      message: translate('errorSavingVideo')
-    });
+    if (!silent) {
+      $q.notify({
+        type: 'negative',
+        message: translate('errorSavingVideo')
+      });
+    }
+    throw error;
   }
 }
+
+function getStepValidationErrors(): string[] {
+  const errors: string[] = []
+  const videos = glossData.value.glossVideos || []
+
+  if (!videos.length) {
+    errors.push(translate('validation.videoRequired'))
+    return errors
+  }
+
+  for (const video of videos) {
+    const { isValid, errors: videoErrors } = validateVideo(video)
+    if (!isValid) {
+      errors.push(...videoErrors)
+    }
+  }
+
+  return errors
+}
+
+async function saveAll(silent = false): Promise<boolean> {
+  const list = [...glossData.value.glossVideos]
+  for (let index = 0; index < list.length; index++) {
+    const video = glossData.value.glossVideos[index]
+    if (!video) continue
+    const hasContent = video.videos?.some(v => v.url?.trim())
+    if (!hasContent && !video.id) continue
+    await updateSignVideo(video, index, silent)
+  }
+  return true
+}
+
+defineExpose({ saveAll, getStepValidationErrors })
 
 const updateVideoData = (index: number, videoData: PhonologyData) => {
   if (glossData.value.glossVideos[index]) {

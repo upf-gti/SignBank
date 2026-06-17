@@ -77,9 +77,9 @@
         :label="translate('exitEditMode')"
         @click="emit('cancelGloss')"
       />
-      <!-- Send Request Button - shown when request is not completed -->
+      <!-- Send Request — only outside the draft stepper (submit lives on last step) -->
       <q-btn
-        v-if="requestStatus === 'NOT_COMPLETED'"
+        v-if="requestStatus === 'NOT_COMPLETED' && !isDraft"
         color="primary"
         icon="send"
         :label="translate('sendRequest')"
@@ -138,6 +138,7 @@ const props = defineProps<{
   glossData: GlossData,
   editMode: boolean,
   isConfirmRequestPage?: boolean,
+  isDraft?: boolean,
   requestStatus?: RequestStatus | undefined,
   submitting?: boolean | undefined,
   allowEdit: boolean

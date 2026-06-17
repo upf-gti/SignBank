@@ -52,17 +52,6 @@
         class="q-mb-md"
         :rules="[val => !!val || translate('required')]"
       />
-      <div class="row justify-end">
-        <q-btn
-          color="primary"
-          unelevated
-          icon="save"
-          :label="translate('save')"
-          :loading="loading"
-          :disable="!inlineDefinition.definition.trim()"
-          @click="saveInlineDefinition"
-        />
-      </div>
     </q-card>
 
     <q-list v-if="!isMobile">
@@ -110,6 +99,7 @@
         @click="addDefinition"
       />
       <GlossTranslationsComponent
+        ref="glossTranslationsRef"
         :gloss-data="glossData"
         :edit-mode="editMode"
         :inline-edit="inlineEdit"
@@ -202,6 +192,7 @@ import CreateDefinitionDialog from './CreateDefinitionDialog.vue';
 
 const $q = useQuasar()
 const loading = ref(false)
+const glossTranslationsRef = ref<InstanceType<typeof GlossTranslationsComponent> | null>(null)
 const showCreateDefinitionDialog = ref(false)
 const showVideoDialog = ref(false)
 const selectedVideoUrl = ref('')
@@ -307,7 +298,7 @@ const isGlossData = (data: any): data is GlossData => {
     'definitions' in data;
 }
 
-const saveDefinition = async (definition: Definition) => {
+const saveDefinition = async (definition: Definition, silent = false) => {
   if (!props.glossData?.id) return;
 
   try {
@@ -327,10 +318,12 @@ const saveDefinition = async (definition: Definition) => {
     if (response.data && isGlossData(response.data)) {
       emit('update:glossData', response.data);
 
-      $q.notify({
-        type: 'positive',
-        message: translate('definitionSavedSuccessfully')
-      });
+      if (!silent) {
+        $q.notify({
+          type: 'positive',
+          message: translate('definitionSavedSuccessfully')
+        });
+      }
     }
   } catch (error) {
     console.error('Error saving definition:', error);
@@ -511,6 +504,83 @@ const saveSortDefinitions = async () => {
     loading.value = false
   }
 }
+
+async function saveDefinitionTranslations(definition: Definition, silent = false) {
+  if (!definition.id) return
+
+  for (const dt of definition.definitionTranslations || []) {
+    if (!dt.translation?.trim()) continue
+
+    try {
+      if (dt.id) {
+        await api.definitions.updateTranslation(definition.id, dt.id, {
+          translation: dt.translation,
+          language: dt.language,
+        })
+      } else {
+        await api.definitions.createTranslation(definition.id, {
+          translation: dt.translation,
+          language: dt.language,
+        })
+      }
+    } catch (error) {
+      console.error('Error saving definition translation:', error)
+      if (!silent) {
+        $q.notify({
+          type: 'negative',
+          message: translate('errors.failedToSaveTranslation'),
+        })
+      }
+      throw error
+    }
+  }
+}
+
+function getStepValidationErrors(): string[] {
+  const errors: string[] = []
+  const hasDefinition = definitions.value.some(d => d.definition?.trim())
+    || inlineDefinition.value.definition.trim()
+
+  if (!hasDefinition) {
+    errors.push(translate('validation.definitionRequired', { senseTitle: props.glossData.gloss }))
+  }
+
+  errors.push(...(glossTranslationsRef.value?.getStepValidationErrors() ?? []))
+
+  return errors
+}
+
+async function saveAll(silent = false): Promise<boolean> {
+  try {
+    loading.value = true
+
+    if (definitions.value.length === 0) {
+      if (!inlineDefinition.value.definition.trim()) return false
+      await saveInlineDefinition()
+    } else {
+      for (const definition of definitions.value) {
+        await saveDefinition(definition, silent)
+        await saveDefinitionTranslations(definition, silent)
+      }
+    }
+
+    await glossTranslationsRef.value?.saveAll(silent)
+    return true
+  } catch (error) {
+    console.error('Error saving definitions step:', error)
+    if (!silent) {
+      $q.notify({
+        type: 'negative',
+        message: translate('errors.failedToSaveDefinition'),
+      })
+    }
+    return false
+  } finally {
+    loading.value = false
+  }
+}
+
+defineExpose({ saveAll, getStepValidationErrors })
 </script>
 
 <style scoped>
