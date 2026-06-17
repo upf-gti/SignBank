@@ -8,18 +8,24 @@
     </q-inner-loading>
 
     <div
-      v-if="!hasResults && !loading"
-      class="text-center q-mt-xl"
+      v-if="hasResults && !loading"
+      class="row items-center justify-between q-mb-sm"
     >
-      <p class="text-h6">
-        {{ t('noResults') }}
-      </p>
+      <span class="text-caption text-grey-7">
+        {{ totalResults }} {{ t('resultsFound').toLowerCase() }}
+      </span>
     </div>
+
+    <EmptyState
+      v-if="!hasResults && !loading"
+      icon="search_off"
+      :title="t('noResults')"
+      :subtitle="t('searchEmptyHint')"
+    />
 
     <div
       v-else-if="hasResults"
-      class="search-results-grid" 
-      :style="{ overflowY: 'auto'}"
+      class="search-results-grid"
     >
       <div
         v-for="hit in results?.hits"
@@ -35,14 +41,16 @@
     </div>
 
     <div
-      v-if="totalResults > perPage" 
-      class="flex flex-center q-mt-sm"
+      v-if="totalResults > perPage"
+      class="flex flex-center q-mt-md q-pb-sm"
     >
       <q-pagination
         :model-value="page"
         :max="Math.ceil(totalResults / perPage)"
         :max-pages="6"
         boundary-numbers
+        direction-links
+        color="primary"
         @update:model-value="$emit('update:page', $event)"
       />
     </div>
@@ -54,6 +62,7 @@ import { computed } from 'vue';
 import translate from 'src/utils/translate';
 import type { SearchResponse } from 'src/services/search.service';
 import ResultCard from './components/ResultCard.vue';
+import EmptyState from 'src/components/Shared/EmptyState.vue';
 
 const t = (key: string) => translate(key);
 
@@ -69,7 +78,6 @@ defineEmits<{
   (e: 'update:page', value: number): void;
   (e: 'update:showDetails', value: boolean): void;
   (e: 'view-details', glossId: string): void;
-  (e: 'page-change', page: number): void;
 }>();
 
 const hasResults = computed(() => {
@@ -86,37 +94,34 @@ const totalResults = computed(() => {
   display: grid;
   gap: 16px;
   width: 100%;
+  overflow-y: auto;
 }
 
 .result-item {
   width: 100%;
 }
 
-/* Mobile: 1 column */
 @media (max-width: 599px) {
   .search-results-grid {
     grid-template-columns: 1fr;
   }
 }
 
-/* Tablet: 2 columns */
 @media (min-width: 600px) and (max-width: 1023px) {
   .search-results-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* Desktop: 3 columns */
 @media (min-width: 1024px) and (max-width: 1899px) {
   .search-results-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-/* Large Desktop: 4 columns */
 @media (min-width: 1900px) {
   .search-results-grid {
     grid-template-columns: repeat(4, 1fr);
   }
 }
-</style> 
+</style>

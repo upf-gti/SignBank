@@ -1,15 +1,32 @@
 <template>
-  <q-card flat class="result-card" @click="$emit('view-details', document.glossId)">
-    <!-- Video Section -->
-    <q-card-section v-if="document.url" class="video-section">
-      <div class="video-container">
+  <q-card
+    flat
+    bordered
+    class="result-card sb-card-interactive"
+    role="button"
+    tabindex="0"
+    :aria-label="`${document.gloss}${document.description ? ': ' + document.description : ''}`"
+    @click="emitViewDetails"
+    @keydown.enter="emitViewDetails"
+    @keydown.space.prevent="emitViewDetails"
+    @mouseenter="playVideo"
+    @mouseleave="pauseVideo"
+    @focus="playVideo"
+    @blur="pauseVideo"
+  >
+    <q-card-section
+      v-if="document.url"
+      class="video-section q-pb-none"
+    >
+      <div class="video-container bg-grey-2">
         <video
+          ref="videoRef"
           class="video-player"
           :src="getVideoUrl(document.url)"
           preload="metadata"
           loop
-          :autoplay="true"
           muted
+          playsinline
           @error="handleVideoError"
           @loadeddata="handleVideoLoaded"
         >
@@ -21,35 +38,58 @@
         </video>
         <div
           v-if="isLoading"
-          class="absolute-center"
+          class="absolute-full flex flex-center bg-grey-2"
         >
           <q-spinner
             color="primary"
-            size="1.5em"
+            size="2em"
+          />
+        </div>
+        <div
+          v-if="!isLoading && !hasVideoError"
+          class="play-hint absolute-bottom-right q-ma-sm"
+        >
+          <q-icon
+            name="play_circle"
+            color="white"
+            size="sm"
+            style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));"
           />
         </div>
       </div>
     </q-card-section>
 
-    <!-- Content Section -->
+    <q-card-section
+      v-else
+      class="video-section q-pb-none"
+    >
+      <div class="video-container bg-grey-2 flex flex-center">
+        <q-icon
+          name="videocam_off"
+          size="2.5em"
+          color="grey-5"
+        />
+      </div>
+    </q-card-section>
+
     <q-card-section class="content-section">
-      <!-- Gloss -->
-      <div class="text-h6 text-truncate q-mb-sm">
+      <div class="text-h6 text-truncate q-mb-xs gloss-title">
         {{ document.gloss }}
       </div>
-      
-      <!-- Definition -->
-      <div v-if="document.description" class="text-body2 text-grey-7 q-mb-sm description-text">
+
+      <div
+        v-if="document.description"
+        class="text-body2 text-grey-7 q-mb-sm description-text"
+      >
         {{ document.description }}
       </div>
-      
-      <!-- Lexical Category -->
+
       <q-chip
         v-if="document.lexicalCategory"
         dense
         color="primary"
         text-color="white"
-        class="q-mb-md"
+        size="sm"
       >
         {{ translate(document.lexicalCategory) }}
       </q-chip>
@@ -65,88 +105,102 @@ import { ref } from 'vue';
 
 const t = (key: string) => translate(key);
 const isLoading = ref(true);
+const hasVideoError = ref(false);
+const videoRef = ref<HTMLVideoElement | null>(null);
 
-const handleVideoError = (error: Event) => {
-  console.error('Video loading error:', error);
+const props = defineProps<{
+  document: SearchResult;
+  showDetails: boolean;
+}>();
+
+const emit = defineEmits<{
+  (e: 'view-details', glossId: string): void;
+}>();
+
+const emitViewDetails = () => {
+  emit('view-details', props.document.glossId);
+};
+
+const playVideo = () => {
+  videoRef.value?.play().catch(() => {});
+};
+
+const pauseVideo = () => {
+  if (videoRef.value) {
+    videoRef.value.pause();
+    videoRef.value.currentTime = 0;
+  }
+};
+
+const handleVideoError = () => {
+  hasVideoError.value = true;
   isLoading.value = false;
 };
 
 const handleVideoLoaded = () => {
   isLoading.value = false;
 };
-
-defineProps<{
-  document: SearchResult;
-  showDetails: boolean;
-}>();
-
-defineEmits<{
-  (e: 'view-details', glossId: string): void;
-}>();
 </script>
 
 <style scoped>
 .result-card {
   height: 100%;
-  transition: all 0.3s ease;
-  cursor: pointer;
   display: flex;
   flex-direction: column;
-}
-
-.result-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: var(--sb-card-radius);
+  overflow: hidden;
 }
 
 .video-section {
-  padding-bottom: 8px;
+  padding: 12px 12px 0;
 }
 
 .video-container {
   position: relative;
   width: 100%;
-  height: 200px; /* Fixed height for consistent sizing */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
+  height: 180px;
+  border-radius: 8px;
   overflow: hidden;
 }
 
 .video-player {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain; /* This will center and maintain aspect ratio */
-  width: auto;
-  height: auto;
-  border-radius: 6px;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.play-hint {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.result-card:hover .play-hint,
+.result-card:focus-visible .play-hint {
+  opacity: 0;
 }
 
 .content-section {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding-top: 8px;
+  padding: 12px;
+}
+
+.gloss-title {
+  line-height: 1.3;
 }
 
 .description-text {
   line-height: 1.4;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-/* Mobile responsive adjustments */
-@media (max-width: 768px) {
-  .result-card {
-    margin-bottom: 8px;
-  }
-  
+@media (max-width: 599px) {
   .video-container {
-    height: 150px; /* Slightly smaller on mobile */
+    height: 150px;
   }
 }
-</style> 
+</style>

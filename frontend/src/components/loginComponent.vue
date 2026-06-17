@@ -6,7 +6,7 @@
     <q-card class="login-card">
       <q-card-section class="row items-center q-pb-none">
         <div class="text-h6">
-          Login
+          {{ translate('login') }}
         </div>
         <q-space />
         <q-btn
@@ -15,6 +15,7 @@
           flat
           round
           dense
+          :aria-label="translate('cancel')"
         />
       </q-card-section>
 
@@ -26,8 +27,9 @@
           <q-input
             v-model="email"
             type="email"
+            autocomplete="email"
             :label="translate('email')"
-            :rules="[val => !!val || 'Email is required']"
+            :rules="[val => !!val || translate('emailRequired')]"
             filled
           >
             <template #prepend>
@@ -38,8 +40,9 @@
           <q-input
             v-model="password"
             :type="isPwd ? 'password' : 'text'"
+            autocomplete="current-password"
             :label="translate('password')"
-            :rules="[val => !!val || 'Password is required']"
+            :rules="[val => !!val || translate('passwordRequired')]"
             filled
           >
             <template #prepend>
@@ -49,6 +52,7 @@
               <q-icon
                 :name="isPwd ? 'visibility_off' : 'visibility'"
                 class="cursor-pointer"
+                :aria-label="translate('password')"
                 @click="isPwd = !isPwd"
               />
             </template>
@@ -60,18 +64,18 @@
               dense
               color="primary"
               :label="translate('forgotPassword')"
+              tabindex="-1"
             />
           </div>
 
-          <div class="row q-mt-md">
-            <q-btn
-              type="submit"
-              color="primary"              
-              :label="translate('login')"
-              class="full-width"
-              :loading="isLoading"
-            />
-          </div>
+          <q-btn
+            type="submit"
+            color="primary"
+            :label="translate('login')"
+            class="full-width q-mt-sm"
+            unelevated
+            :loading="isLoading"
+          />
         </q-form>
       </q-card-section>
     </q-card>
@@ -84,7 +88,6 @@ import { Notify } from 'quasar'
 import { useAuthentication } from '../hooks/useAuthentication'
 import translate from '../utils/translate'
 
-// Props
 const props = defineProps({
   modelValue: {
     type: Boolean,
@@ -92,16 +95,12 @@ const props = defineProps({
   }
 })
 
-// Emits
 const emit = defineEmits(['update:modelValue'])
 
-// Reactive references
 const email = ref('')
 const password = ref('')
 const isPwd = ref(true)
-const rememberMe = ref(false)
 
-// Computed
 const isOpen = computed({
   get: () => props.modelValue,
   set: (value: boolean) => emit('update:modelValue', value)
@@ -109,28 +108,21 @@ const isOpen = computed({
 
 const { login, isLoading, error } = useAuthentication()
 
-// Methods
 const handleLogin = async () => {
   try {
     await login(email.value, password.value)
     Notify.create({
       type: 'positive',
-      message: 'Login successful'
+      message: translate('loginSuccessful')
     })
 
-    // Close dialog
     isOpen.value = false
-    
-    // Reset form
     email.value = ''
     password.value = ''
-    rememberMe.value = false
-
-    window.location.reload()
   } catch {
     Notify.create({
       type: 'negative',
-      message: error.value || 'Login failed. Please check your credentials.'
+      message: error.value || translate('loginFailed')
     })
   }
 }
@@ -138,12 +130,13 @@ const handleLogin = async () => {
 
 <style scoped>
 .login-card {
-  min-width: 400px;
+  width: 100%;
+  max-width: 400px;
 }
 
 @media (max-width: 450px) {
   .login-card {
-    min-width: 300px;
+    max-width: calc(100vw - 32px);
   }
 }
 </style>

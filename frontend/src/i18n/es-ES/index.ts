@@ -331,6 +331,21 @@ const translations: TranslateKeys = {
   errorChangingPassword: 'Error al cambiar contraseña',
   // Additional missing keys
   confirmDelete: 'Confirmar Eliminación',
+  goBack: 'Volver',
+  pageNotFound: 'Página no encontrada',
+  pageNotFoundDescription: 'La página que buscas no existe o ha sido movida.',
+  goHome: 'Ir al inicio',
+  loginSuccessful: 'Sesión iniciada correctamente',
+  loginFailed: 'Error de inicio de sesión. Comprueba tus credenciales.',
+  openMenu: 'Abrir menú',
+  closeMenu: 'Cerrar menú',
+  navigation: 'Navegación',
+  noRequestsInTab: 'No hay solicitudes en esta categoría',
+  noPendingRequests: 'No hay solicitudes pendientes de revisión',
+  createFirstRequest: 'Crear la primera solicitud',
+  retry: 'Reintentar',
+  searchEmptyHint: 'Prueba con otros términos o ajusta los filtros de fonología',
+  signBank: 'SignBank',
 };
 
 export default translations; 

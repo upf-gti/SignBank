@@ -7,17 +7,32 @@
 
     <div
       v-else-if="error"
-      class="text-center q-pa-md"
+      class="column items-center q-pa-xl"
     >
-      <div class="text-negative text-h6">
+      <q-icon
+        name="error_outline"
+        size="48px"
+        color="negative"
+        class="q-mb-md"
+      />
+      <div class="text-negative text-h6 text-center q-mb-md">
         {{ error }}
       </div>
-      <q-btn
-        color="primary"
-        :label="translate('common.goBack')"
-        class="q-mt-md"
-        @click="router.go(-1)"
-      />
+      <div class="row q-gutter-sm">
+        <q-btn
+          color="primary"
+          outline
+          icon="refresh"
+          :label="translate('retry')"
+          @click="getGlossData"
+        />
+        <q-btn
+          flat
+          icon="arrow_back"
+          :label="translate('goBack')"
+          @click="router.go(-1)"
+        />
+      </div>
     </div>
 
     <div
@@ -67,13 +82,15 @@ watch(() => route.fullPath, () => {
 })
 
 function getGlossData() {
-  if(route.params.gloss) {
+  if (route.params.gloss) {
+    loading.value = true
+    error.value = null
     api.glosses.get(route.params.gloss as string)
       .then((response) => {
         glossData.value = response.data
       })
-      .catch((error) => {
-        console.error(error)
+      .catch((err) => {
+        console.error(err)
         error.value = translate('errors.failedToLoadGloss')
       }).finally(() => {
         loading.value = false

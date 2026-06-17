@@ -14,7 +14,7 @@
       </div>
       <q-btn
         color="primary"
-        :label="translate('common.goBack')"
+        :label="translate('goBack')"
         class="q-mt-md"
         @click="router.go(-1)"
       />
@@ -89,7 +89,7 @@ const acceptRequest = async () => {
     })
     
     // Redirect to pending requests page
-    router.push('/pending-requests').catch((err) => {
+    router.push('/confirm-requests').catch((err) => {
       console.error(err)
     })
   } catch (err) {
@@ -119,7 +119,7 @@ const declineRequest = async () => {
     })
     
     // Redirect to pending requests page
-    router.push('/pending-requests').catch((err) => {
+    router.push('/confirm-requests').catch((err) => {
       console.error(err)
     })
   } catch (err) {

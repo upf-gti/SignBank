@@ -399,6 +399,21 @@ const translations: TranslateKeys = {
   errorChangingPassword: 'Error en canviar la contrasenya',
   delete: 'Eliminar',
   create: 'Crear',
+  goBack: 'Tornar',
+  pageNotFound: 'Pàgina no trobada',
+  pageNotFoundDescription: 'La pàgina que cerqueu no existeix o s\'ha mogut.',
+  goHome: 'Anar a l\'inici',
+  loginSuccessful: 'Sessió iniciada correctament',
+  loginFailed: 'Error d\'inici de sessió. Comproveu les credencials.',
+  openMenu: 'Obrir menú',
+  closeMenu: 'Tancar menú',
+  navigation: 'Navegació',
+  noRequestsInTab: 'No hi ha sol·licituds en aquesta categoria',
+  noPendingRequests: 'No hi ha sol·licituds pendents de revisió',
+  createFirstRequest: 'Crear la primera sol·licitud',
+  retry: 'Tornar a intentar',
+  searchEmptyHint: 'Proveu amb altres termes o ajusteu els filtres de fonologia',
+  signBank: 'SignBank',
 };
 
 export default translations; 

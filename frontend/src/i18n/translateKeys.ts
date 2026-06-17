@@ -847,6 +847,21 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   passwordsDoNotMatch: string;
   passwordChanged: string;
   errorChangingPassword: string;
+  goBack: string;
+  pageNotFound: string;
+  pageNotFoundDescription: string;
+  goHome: string;
+  loginSuccessful: string;
+  loginFailed: string;
+  openMenu: string;
+  closeMenu: string;
+  navigation: string;
+  noRequestsInTab: string;
+  noPendingRequests: string;
+  createFirstRequest: string;
+  retry: string;
+  searchEmptyHint: string;
+  signBank: string;
 }
 
 export default TranslateKeys;

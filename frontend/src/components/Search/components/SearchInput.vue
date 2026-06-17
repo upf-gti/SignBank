@@ -1,28 +1,38 @@
 <template>
-  <div class="row q-col-gutter-sm">
+  <div class="row q-col-gutter-sm items-center">
     <div class="col">
       <q-input
         :model-value="modelValue"
         outlined
         dense
         clearable
-        :placeholder="t('search')"
+        :placeholder="t('enterAWord')"
+        :aria-label="t('search')"
         @update:model-value="(val) => $emit('update:model-value', String(val || ''))"
         @keyup.enter="$emit('search')"
       >
+        <template #prepend>
+          <q-icon name="search" color="grey-6" />
+        </template>
         <template #append>
-          <q-icon
-            name="search"
-            class="cursor-pointer"
+          <q-btn
+            flat
+            dense
+            round
+            icon="search"
+            color="primary"
+            :aria-label="t('search')"
             @click="$emit('search')"
           />
         </template>
       </q-input>
     </div>
-    <div class="col-auto">
+    <div class="col-auto gt-xs">
       <q-btn
         color="primary"
+        unelevated
         :label="t('search')"
+        icon="search"
         @click="$emit('search')"
       />
     </div>
@@ -42,4 +52,4 @@ defineEmits<{
   (e: 'update:model-value', value: string): void;
   (e: 'search'): void;
 }>();
-</script> 
+</script>

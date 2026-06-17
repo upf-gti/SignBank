@@ -1,19 +1,27 @@
 <template>
   <div
     v-if="loading"
-    class="q-pa-xl row col fit justify-center items-center"
+    class="loading-container column justify-center items-center"
   >
     <q-spinner
       size="3em"
       color="primary"
     />
-    <span class="q-ml-sm">{{ translate('common.loading') }}</span>
+    <span class="q-mt-md text-grey-7">{{ translate('loading') }}</span>
   </div>
 </template>
 
 <script setup lang="ts">
 import translate from 'src/utils/translate';
-const { loading } = defineProps<{
+
+defineProps<{
   loading: boolean;
 }>();
 </script>
+
+<style scoped>
+.loading-container {
+  min-height: 300px;
+  width: 100%;
+}
+</style>
