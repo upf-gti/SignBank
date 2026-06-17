@@ -6,12 +6,12 @@ import { CreateExampleDto, UpdateExampleDto } from './dto/example.dto';
 export class ExamplesController {
   constructor(private readonly examplesService: ExamplesService) {}
 
-  @Post('sense/:senseId')
+  @Post('gloss/:glossDataId')
   async createExample(
-    @Param('senseId') senseId: string,
+    @Param('glossDataId') glossDataId: string,
     @Body() data: CreateExampleDto
   ) {
-    return this.examplesService.createExample(senseId, data);
+    return this.examplesService.createExample(glossDataId, data);
   }
 
   @Put(':id')

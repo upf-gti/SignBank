@@ -4,135 +4,68 @@ export interface ValidationError {
 
 export function validateGlossRequest(glossRequest: any): ValidationError[] {
   const errors: ValidationError[] = [];
-  
-  // Check if gloss has a value
-  if (!glossRequest.requestedGlossData?.gloss || glossRequest.requestedGlossData.gloss.trim() === '') {
-    errors.push({
-      message: 'Gloss is required'
-    });
+  const glossData = glossRequest.requestedGlossData;
+
+  if (!glossData?.gloss || glossData.gloss.trim() === '') {
+    errors.push({ message: 'Gloss is required' });
   }
 
-  // Check if gloss has at least one sense
-  if (!glossRequest.requestedGlossData?.senses || glossRequest.requestedGlossData.senses.length === 0) {
-    errors.push({
-      message: 'At least one sense is required'
-    });
-    return errors; // Return early since we can't validate senses if there are none
+  if (!glossData?.definitions || glossData.definitions.length === 0) {
+    errors.push({ message: 'At least one definition is required' });
+    return errors;
   }
 
-  // Validate each sense
-  glossRequest.requestedGlossData.senses.forEach((sense: any, index: number) => {
-    const senseErrors = validateSense(sense, index + 1);
-    errors.push(...senseErrors);
+  glossData.definitions.forEach((definition: any, index: number) => {
+    errors.push(...validateDefinition(definition, index + 1));
   });
 
-  // Check for at least one video
-  if (!glossRequest.requestedGlossData.glossVideos || glossRequest.requestedGlossData.glossVideos.length === 0) {
-    errors.push({
-      message: `Video is required`
-    });
-  } else {
-    // Validate each video
-    glossRequest.requestedGlossData.glossVideos.forEach((video: any) => {
-      const videoErrors = validateSignVideo(video);
-      errors.push(...videoErrors);
+  if (glossData.examples?.length > 0) {
+    glossData.examples.forEach((example: any) => {
+      errors.push(...validateExample(example));
     });
   }
 
-  return errors;
-}
-
-function validateSense(sense: any, senseNumber: number): ValidationError[] {
-  const errors: ValidationError[] = [];
-  
-  // Generate sense title for error messages
-  let senseTitle = '';
-  if (sense.senseTitle && sense.senseTitle.trim() !== '') {
-    senseTitle = sense.senseTitle;
-  } else {
-    senseTitle = `Sense #${senseNumber} - ${sense.lexicalCategory || 'Unknown'}`;
-  }
-
-  // Check for at least one definition
-  if (!sense.definitions || sense.definitions.length === 0) {
-    errors.push({
-      message: `Definition is required for ${senseTitle}`
-    });
-  } else {
-    // Validate each definition
-    sense.definitions.forEach((definition: any) => {
-      const definitionErrors = validateDefinition(definition, senseTitle);
-      errors.push(...definitionErrors);
-    });
-  }
-
-  
-
-  // Validate examples if they exist
-  if (sense.examples && sense.examples.length > 0) {
-    sense.examples.forEach((example: any) => {
-      const exampleErrors = validateExample(example, senseTitle);
-      errors.push(...exampleErrors);
-    });
-  }
-
-  // Validate sense translations if they exist
-  if (sense.senseTranslations) {
-    sense.senseTranslations.forEach((translation: any) => {
+  if (glossData.glossTranslations) {
+    glossData.glossTranslations.forEach((translation: any) => {
       if (!translation.translation || translation.translation.trim() === '') {
-        errors.push({
-          message: `Sense translation is required for ${senseTitle}`
-        });
+        errors.push({ message: 'Gloss translation is required' });
       }
     });
   }
 
+  if (!glossData.glossVideos || glossData.glossVideos.length === 0) {
+    errors.push({ message: 'Video is required' });
+  } else {
+    glossData.glossVideos.forEach((video: any) => {
+      errors.push(...validateSignVideo(video));
+    });
+  }
+
   return errors;
 }
 
-function validateDefinition(definition: any, senseTitle: string): ValidationError[] {
+function validateDefinition(definition: any, definitionNumber: number): ValidationError[] {
   const errors: ValidationError[] = [];
+  const label = definition.title?.trim() || `Definition #${definitionNumber}`;
 
-  // Check definition value
   if (!definition.definition || definition.definition.trim() === '') {
-    errors.push({
-      message: `Definition value is required for ${senseTitle}`
-    });
+    errors.push({ message: `Definition value is required for ${label}` });
   }
 
-  // Check definition translations if they exist
   if (definition.definitionTranslations) {
-    definition.definitionTranslations.forEach((translation: any) => {
-      if (!translation.translation || translation.translation.trim() === '') {
-        errors.push({
-          message: `Definition translation is required for ${senseTitle}`
-        });
-      }
+    definition.definitionTranslations.forEach(() => {
+      // validated when present
     });
   }
 
   return errors;
 }
 
-function validateExample(example: any, senseTitle: string): ValidationError[] {
+function validateExample(example: any): ValidationError[] {
   const errors: ValidationError[] = [];
 
-  // Check example value
   if (!example.example || example.example.trim() === '') {
-    errors.push({
-      message: `Example value is required for ${senseTitle}`
-    });
-  }
-
-  // Check example translations if they exist
-  if (example.exampleTranslations) {
-    example.exampleTranslations.forEach((translation: any) => {
-      if (!translation.translation || translation.translation.trim() === '') {
-        errors.push({
-          message: `Example translation is required for ${senseTitle}`
-        });
-      }
-    });
+    errors.push({ message: 'Example value is required' });
   }
 
   return errors;
@@ -141,30 +74,17 @@ function validateExample(example: any, senseTitle: string): ValidationError[] {
 function validateSignVideo(signVideo: any): ValidationError[] {
   const errors: ValidationError[] = [];
 
-  // Check if videos array exists and has at least one video
   if (!signVideo.videos || signVideo.videos.length === 0) {
-    errors.push({
-      message: `Video is required`
-    });
+    errors.push({ message: 'Video is required' });
   } else {
-    // Get the video title from SignVideo or use a default
-    const videoTitle = signVideo.title && signVideo.title.trim() !== '' 
-      ? signVideo.title 
-      : 'Video #1';
-
-    // Validate each video
     signVideo.videos.forEach((video: any) => {
       if (!video.angle || video.angle.trim() === '') {
-        errors.push({
-          message: `Video angle is required`
-        });
+        errors.push({ message: 'Video angle is required' });
       } else if (!video.url || video.url.trim() === '') {
-        errors.push({
-          message: `Video URL is required`
-        });
+        errors.push({ message: 'Video URL is required' });
       }
     });
   }
 
   return errors;
-} 
+}

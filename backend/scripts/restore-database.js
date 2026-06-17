@@ -53,13 +53,12 @@ async function restoreFromJson(backupPath) {
         console.log('🗑️  Clearing existing data...')
         await prisma.exampleTranslation.deleteMany()
         await prisma.definitionTranslation.deleteMany()
-        await prisma.senseTranslation.deleteMany()
+        await prisma.glossTranslation.deleteMany()
         await prisma.video.deleteMany()
         await prisma.signVideo.deleteMany()
         await prisma.videoData.deleteMany()
         await prisma.example.deleteMany()
         await prisma.definition.deleteMany()
-        await prisma.sense.deleteMany()
         await prisma.relatedGloss.deleteMany()
         await prisma.minimalPair.deleteMany()
         await prisma.glossRequest.deleteMany()
@@ -86,8 +85,7 @@ async function restoreFromJson(backupPath) {
         }
 
         if (backupData.senses) {
-            console.log('  - Restoring senses...')
-            await prisma.sense.createMany({ data: backupData.senses })
+            console.log('  - Skipping legacy senses backup (removed from schema)')
         }
 
         if (backupData.videoData) {
@@ -115,9 +113,9 @@ async function restoreFromJson(backupPath) {
             await prisma.example.createMany({ data: backupData.examples })
         }
 
-        if (backupData.senseTranslations) {
-            console.log('  - Restoring sense translations...')
-            await prisma.senseTranslation.createMany({ data: backupData.senseTranslations })
+        if (backupData.glossTranslations) {
+            console.log('  - Restoring gloss translations...')
+            await prisma.glossTranslation.createMany({ data: backupData.glossTranslations })
         }
 
         if (backupData.definitionTranslations) {

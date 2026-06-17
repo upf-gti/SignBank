@@ -20,8 +20,6 @@ export interface GlossIndex {
   gloss: string;
   url: string;
   signVideoTitle: string;
-  senseId: string;
-  senseTitle: string;
   lexicalCategory: LexicalCategory | string;
   description: string;
   hands: Hand;

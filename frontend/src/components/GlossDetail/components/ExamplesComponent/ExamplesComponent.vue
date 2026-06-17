@@ -21,7 +21,6 @@
         :key="example.id || index"
         class="col-12 q-pa-none"
       >
-        <!-- Desktop Version -->
         <ExampleCardDesktop
           v-if="$q.screen.gt.sm"
           :example="example"
@@ -34,7 +33,6 @@
           @update-gloss-data="(data) => emit('update:glossData', data)"
         />
 
-        <!-- Mobile Version -->
         <ExampleCardMobile
           v-else
           :example="example"
@@ -59,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { Sense, Example, GlossData } from 'src/types/models';
+import { Example, GlossData } from 'src/types/models';
 import translate from 'src/utils/translate';
 import { api } from 'src/services/api';
 import { useQuasar } from 'quasar';
@@ -75,7 +73,7 @@ const selectedVideoUrl = ref('');
 const selectedExample = ref<Example | null>(null);
 
 const props = defineProps<{
-  sense: Sense;
+  glossData: GlossData;
   editMode: boolean;
 }>();
 
@@ -83,27 +81,25 @@ const emit = defineEmits<{
   (e: 'update:glossData', glossData: GlossData): void;
 }>();
 
-// Create a local copy of the sense data
-const localSense = ref<Sense>({ ...props.sense });
+const localGlossData = ref<GlossData>({ ...props.glossData });
 
-// Watch for changes in the prop and update local copy
-watch(() => props.sense, (newSense) => {
-  localSense.value = { ...newSense };
+watch(() => props.glossData, (newGlossData) => {
+  localGlossData.value = { ...newGlossData };
 }, { deep: true });
 
-const examples = computed(() => localSense.value?.examples || []);
+const examples = computed(() => localGlossData.value?.examples || []);
 
 const addExample = () => {
-  if (!localSense.value.examples) {
-    localSense.value.examples = [];
+  if (!localGlossData.value.examples) {
+    localGlossData.value.examples = [];
   }
-  localSense.value.examples.push({
+  localGlossData.value.examples.push({
     id: '',
     example: '',
     exampleVideoURL: '',
-    senseId: localSense.value.id || '',
+    glossDataId: localGlossData.value.id || '',
     exampleTranslations: [],
-    isNew: true
+    isNew: true,
   });
 };
 
@@ -115,12 +111,12 @@ const saveExample = async (example: Example) => {
     if (example.id) {
       response = await api.examples.update(example.id, {
         example: example.example,
-        exampleVideoURL: example.exampleVideoURL
+        exampleVideoURL: example.exampleVideoURL,
       });
     } else {
-      response = await api.examples.create(localSense.value.id || '', {
+      response = await api.examples.create(localGlossData.value.id || '', {
         example: example.example,
-        exampleVideoURL: example.exampleVideoURL
+        exampleVideoURL: example.exampleVideoURL,
       });
     }
 
@@ -128,14 +124,14 @@ const saveExample = async (example: Example) => {
       emit('update:glossData', response.data);
       $q.notify({
         type: 'positive',
-        message: translate(example.id ? 'exampleUpdatedSuccessfully' : 'exampleCreatedSuccessfully')
+        message: translate(example.id ? 'exampleUpdatedSuccessfully' : 'exampleCreatedSuccessfully'),
       });
     }
   } catch (error) {
     console.error('Error saving example:', error);
     $q.notify({
       type: 'negative',
-      message: translate('errors.failedToSaveExample')
+      message: translate('errors.failedToSaveExample'),
     });
   } finally {
     loading.value = false;
@@ -144,9 +140,9 @@ const saveExample = async (example: Example) => {
 
 const deleteExample = async (example: Example) => {
   if (!example.id) {
-    const index = localSense.value.examples.findIndex(e => e === example);
+    const index = localGlossData.value.examples.findIndex((e) => e === example);
     if (index !== -1) {
-      localSense.value.examples.splice(index, 1);
+      localGlossData.value.examples.splice(index, 1);
     }
     return;
   }
@@ -154,19 +150,18 @@ const deleteExample = async (example: Example) => {
   try {
     loading.value = true;
     const response = await api.examples.delete(example.id);
-    
     if (response.data) {
       emit('update:glossData', response.data);
       $q.notify({
         type: 'positive',
-        message: translate('exampleDeletedSuccessfully')
+        message: translate('exampleDeletedSuccessfully'),
       });
     }
   } catch (error) {
     console.error('Error deleting example:', error);
     $q.notify({
       type: 'negative',
-      message: translate('errors.failedToDeleteExample')
+      message: translate('errors.failedToDeleteExample'),
     });
   } finally {
     loading.value = false;
@@ -175,7 +170,6 @@ const deleteExample = async (example: Example) => {
 
 const uploadVideo = async (example: Example, url: string) => {
   try {
-    // Delete the old video if it exists and is different from the new one
     if (example.exampleVideoURL && example.exampleVideoURL !== url) {
       await api.videos.delete(example.exampleVideoURL);
     }
@@ -187,7 +181,7 @@ const uploadVideo = async (example: Example, url: string) => {
     console.error('Error uploading video:', error);
     $q.notify({
       type: 'negative',
-      message: translate('errors.failedToUploadVideo')
+      message: translate('errors.failedToUploadVideo'),
     });
   }
 };
@@ -195,24 +189,22 @@ const uploadVideo = async (example: Example, url: string) => {
 const deleteExampleVideo = async (example: Example) => {
   try {
     if (example.id) {
-      // Use the dedicated endpoint to delete only the video
       const response = await api.examples.deleteVideo(example.id);
       if (response.data) {
         emit('update:glossData', response.data);
         $q.notify({
           type: 'positive',
-          message: translate('videoDeleted')
+          message: translate('videoDeleted'),
         });
       }
     } else {
-      // For new examples that haven't been saved yet, just clear the URL
       example.exampleVideoURL = '';
     }
   } catch (error) {
     console.error('Error deleting video:', error);
     $q.notify({
       type: 'negative',
-      message: translate('errors.failedToDeleteVideo')
+      message: translate('errors.failedToDeleteVideo'),
     });
   }
 };
@@ -221,7 +213,7 @@ const handleVideoError = (event: Event) => {
   console.error('Error playing video:', event);
   $q.notify({
     type: 'negative',
-    message: translate('errors.failedToPlayVideo')
+    message: translate('errors.failedToPlayVideo'),
   });
 };
-</script> 
+</script>

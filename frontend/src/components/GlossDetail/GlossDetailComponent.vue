@@ -16,22 +16,12 @@
       @accept-request="acceptRequest"
       @decline-request="declineRequest"
       @submit-request="submitRequest"
-    />    
-    <MainContent
-      v-if="!editMode && selectedSense"
-      :selected-sense="selectedSense"
-      :gloss-data="glossData"
     />
-    <SenseSelector
-      v-model="selectedSenseId"
-      :senses="glossData.senses"
-      :edit-mode="editMode"
+    <MainContent
+      v-if="!editMode"
       :gloss-data="glossData"
-      @update:gloss-data="handleGlossDataUpdate"
     />
     <MoreContentComponent
-      v-if="glossData.senses.length > 0"
-      v-model="selectedSense"
       :gloss-data="glossData"
       :edit-mode="editMode"
       @update:gloss-data="handleGlossDataUpdate"
@@ -40,10 +30,8 @@
 </template>
 
 <script setup lang="ts">
-import { GlossData, Sense, RequestStatus } from 'src/types/models'
+import { GlossData, RequestStatus } from 'src/types/models'
 import GlossHeader from './components/GlossHeader.vue'
-import { ref, computed } from 'vue'
-import SenseSelector from './components/SenseSelector.vue';
 import MainContent from './components/MainContent.vue';
 import MoreContentComponent from './components/MoreContentComponent.vue';
 import { validateGloss } from 'src/utils/glossValidation';
@@ -67,8 +55,6 @@ const { glossData, editMode, allowEdit = true, isConfirmRequestPage = false, req
   submitting?: boolean | undefined
 }>()
 
-const selectedSenseId = ref<string>(glossData.senses[0]?.id as string)
-const selectedSense = computed<Sense>(() => glossData.senses.find((sense) => sense.id === selectedSenseId.value) as Sense) 
 const $q = useQuasar()
 
 const editGloss = () => {
@@ -82,12 +68,9 @@ const cancelGloss = () => {
 }
 
 const acceptRequest = () => {
-
-  // Validate the gloss data
   const validationErrors = validateGloss(glossData)
 
   if (validationErrors.length > 0) {
-    // Show validation errors to the user
     $q.dialog({
       title: translate('validationErrors'),
       message: `
@@ -105,7 +88,7 @@ const acceptRequest = () => {
     })
     return
   }
-  emit('acceptRequest', glossData )
+  emit('acceptRequest', glossData)
 }
 
 const declineRequest = () => {
@@ -117,9 +100,6 @@ const submitRequest = () => {
 }
 
 const handleGlossDataUpdate = (updatedGlossData: GlossData) => {
-  // Emit the update to the parent component
   emit('update:glossData', updatedGlossData)
 }
-
-
 </script>

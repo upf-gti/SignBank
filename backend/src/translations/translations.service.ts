@@ -7,64 +7,64 @@ import { CreateTranslationDto, UpdateTranslationDto } from './dto/translation.dt
 export class TranslationsService {
   constructor(
     private prisma: PrismaService,
-    private glossDataService: GlossDataService
+    private glossDataService: GlossDataService,
   ) {}
 
-  async createSenseTranslation(senseId: string, data: CreateTranslationDto) {
-    const sense = await this.prisma.sense.findUnique({
-      where: { id: senseId }
+  async createGlossTranslation(glossDataId: string, data: CreateTranslationDto) {
+    const glossData = await this.prisma.glossData.findUnique({
+      where: { id: glossDataId },
     });
 
-    if (!sense) {
-      throw new NotFoundException('Sense not found');
+    if (!glossData) {
+      throw new NotFoundException('GlossData not found');
     }
 
-    await this.prisma.senseTranslation.create({
+    await this.prisma.glossTranslation.create({
       data: {
         translation: data.translation,
         language: data.language,
-        senseId: senseId
-      }
+        glossDataId,
+      },
     });
 
-    return this.glossDataService.getGlossData(sense.glossDataId);
+    return this.glossDataService.getGlossData(glossDataId);
   }
 
-  async updateSenseTranslation(id: string, data: UpdateTranslationDto) {
-    const translation = await this.prisma.senseTranslation.findUnique({
+  async updateGlossTranslation(id: string, data: UpdateTranslationDto) {
+    const translation = await this.prisma.glossTranslation.findUnique({
       where: { id },
-      include: { sense: true }
+      include: { glossData: true },
     });
 
     if (!translation) {
       throw new NotFoundException('Translation not found');
     }
 
-    await this.prisma.senseTranslation.update({
+    await this.prisma.glossTranslation.update({
       where: { id },
       data: {
         translation: data.translation,
-        language: data.language
-      }
+        language: data.language,
+      },
     });
 
-    return this.glossDataService.getGlossData(translation.sense.glossDataId);
+    return this.glossDataService.getGlossData(translation.glossDataId);
   }
 
-  async deleteSenseTranslation(id: string) {
-    const translation = await this.prisma.senseTranslation.findUnique({
+  async deleteGlossTranslation(id: string) {
+    const translation = await this.prisma.glossTranslation.findUnique({
       where: { id },
-      include: { sense: true }
+      include: { glossData: true },
     });
 
     if (!translation) {
       throw new NotFoundException('Translation not found');
     }
 
-    await this.prisma.senseTranslation.delete({
-      where: { id }
+    await this.prisma.glossTranslation.delete({
+      where: { id },
     });
 
-    return this.glossDataService.getGlossData(translation.sense.glossDataId);
+    return this.glossDataService.getGlossData(translation.glossDataId);
   }
-} 
+}

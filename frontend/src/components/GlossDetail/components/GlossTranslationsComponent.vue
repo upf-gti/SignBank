@@ -14,13 +14,13 @@
 
     <q-list class="row q-col-gutter-md">
       <q-item
-        v-for="(translation, index) in senseTranslations"
+        v-for="(translation, index) in glossTranslations"
         :key="translation.id || index"
         class="col-12 col-md-6 q-pa-none"
         style="min-width: 300px"
         dense
       >
-        <EditableModule        
+        <EditableModule
           :allow-edit="editMode"
           :initial-edit-state="translation.isNew as boolean"
           :show-delete="true"
@@ -72,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { Sense, SenseTranslation, GlossData, Language } from 'src/types/models';
+import { GlossData, GlossTranslation, Language } from 'src/types/models';
 import translate from 'src/utils/translate';
 import { api } from 'src/services/api';
 import { useQuasar } from 'quasar';
@@ -84,7 +84,7 @@ const $q = useQuasar();
 const loading = ref(false);
 
 const props = defineProps<{
-  sense: Sense;
+  glossData: GlossData;
   editMode: boolean;
 }>();
 
@@ -92,61 +92,51 @@ const emit = defineEmits<{
   (e: 'update:glossData', glossData: GlossData): void;
 }>();
 
-// Create a local copy of the sense data
-const localSense = ref<Sense>({ ...props.sense });
+const localGlossData = ref<GlossData>({ ...props.glossData });
 
-// Watch for changes in the prop and update local copy
-watch(() => props.sense, (newSense) => {
-  localSense.value = { ...newSense };
+watch(() => props.glossData, (newGlossData) => {
+  localGlossData.value = { ...newGlossData };
 }, { deep: true });
 
-const senseTranslations = computed(() => {
-  const translations = localSense.value.senseTranslations || [];
-  
-  // Sort translations: Catalan first, then Spanish, then English, then others
+const glossTranslations = computed(() => {
+  const translations = localGlossData.value.glossTranslations || [];
+
   return translations.sort((a, b) => {
-    const languageOrder = {
-      'CATALAN': 1,
-      'SPANISH': 2,
-      'ENGLISH': 3
-    };
-    
+    const languageOrder = { CATALAN: 1, SPANISH: 2, ENGLISH: 3 };
     const orderA = languageOrder[a.language as keyof typeof languageOrder] || 4;
     const orderB = languageOrder[b.language as keyof typeof languageOrder] || 4;
-    
     return orderA - orderB;
   });
 });
 
 const addTranslation = () => {
-  // Initialize senseTranslations array if it doesn't exist
-  if (!localSense.value.senseTranslations) {
-    localSense.value.senseTranslations = [];
+  if (!localGlossData.value.glossTranslations) {
+    localGlossData.value.glossTranslations = [];
   }
-  
-  localSense.value.senseTranslations.push({
+
+  localGlossData.value.glossTranslations.push({
     id: '',
     translation: '',
     language: 'CATALAN',
-    senseId: localSense.value.id || '',
-    isNew: true
+    glossDataId: localGlossData.value.id || '',
+    isNew: true,
   });
 };
 
-const saveTranslation = async (translation: SenseTranslation) => {
+const saveTranslation = async (translation: GlossTranslation) => {
   try {
     loading.value = true;
     let response;
 
     if (translation.id) {
-      response = await api.translations.updateSenseTranslation(translation.id, {
+      response = await api.translations.updateGlossTranslation(translation.id, {
         translation: translation.translation,
-        language: translation.language as Language
+        language: translation.language as Language,
       });
     } else {
-      response = await api.translations.createSenseTranslation(localSense.value.id || '', {
+      response = await api.translations.createGlossTranslation(localGlossData.value.id || '', {
         translation: translation.translation,
-        language: translation.language as Language
+        language: translation.language as Language,
       });
     }
 
@@ -154,67 +144,57 @@ const saveTranslation = async (translation: SenseTranslation) => {
       emit('update:glossData', response.data);
       $q.notify({
         type: 'positive',
-        message: translate(translation.id ? 'translationUpdatedSuccessfully' : 'translationCreatedSuccessfully')
+        message: translate(translation.id ? 'translationUpdatedSuccessfully' : 'translationCreatedSuccessfully'),
       });
     }
   } catch (error) {
     console.error('Error saving translation:', error);
     $q.notify({
       type: 'negative',
-      message: translate('errors.failedToSaveTranslation')
+      message: translate('errors.failedToSaveTranslation'),
     });
   } finally {
     loading.value = false;
   }
 };
 
-const deleteTranslation = async (translation: SenseTranslation) => {
+const deleteTranslation = async (translation: GlossTranslation) => {
   if (!translation.id) {
-    // Initialize senseTranslations array if it doesn't exist
-    if (!localSense.value.senseTranslations) {
-      localSense.value.senseTranslations = [];
-    }
-    
-    const index = localSense.value.senseTranslations.findIndex(t => t === translation);
+    const index = localGlossData.value.glossTranslations?.findIndex((t) => t === translation) ?? -1;
     if (index !== -1) {
-      localSense.value.senseTranslations.splice(index, 1);
+      localGlossData.value.glossTranslations!.splice(index, 1);
     }
     return;
   }
 
   try {
     loading.value = true;
-    const response = await api.translations.deleteSenseTranslation(translation.id);
-    
+    const response = await api.translations.deleteGlossTranslation(translation.id);
+
     if (response.data) {
       emit('update:glossData', response.data);
       $q.notify({
         type: 'positive',
-        message: translate('translationDeletedSuccessfully')
+        message: translate('translationDeletedSuccessfully'),
       });
     }
   } catch (error) {
     console.error('Error deleting translation:', error);
     $q.notify({
       type: 'negative',
-      message: translate('errors.failedToDeleteTranslation')
+      message: translate('errors.failedToDeleteTranslation'),
     });
   } finally {
     loading.value = false;
   }
 };
 
-const cancelTranslation = (translation: SenseTranslation) => {
+const cancelTranslation = (translation: GlossTranslation) => {
   if (!translation.id) {
-    // Initialize senseTranslations array if it doesn't exist
-    if (!localSense.value.senseTranslations) {
-      localSense.value.senseTranslations = [];
-    }
-    
-    const index = localSense.value.senseTranslations.findIndex(t => t === translation);
+    const index = localGlossData.value.glossTranslations?.findIndex((t) => t === translation) ?? -1;
     if (index !== -1) {
-      localSense.value.senseTranslations.splice(index, 1);
+      localGlossData.value.glossTranslations!.splice(index, 1);
     }
   }
 };
-</script> 
+</script>

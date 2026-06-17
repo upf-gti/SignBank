@@ -1,4 +1,4 @@
-import type { GlossData, Sense, Definition, Example, SignVideo} from 'src/types/models';
+import type { GlossData, Definition, Example, SignVideo } from 'src/types/models';
 import translate from 'src/utils/translate';
 
 export interface ValidationError {
@@ -7,83 +7,38 @@ export interface ValidationError {
 
 export function validateGloss(glossData: GlossData): ValidationError[] {
   const errors: ValidationError[] = [];
-  // Check if gloss has a value
+
   if (!glossData.gloss || glossData.gloss.trim() === '') {
-    errors.push({
-      message: translate('validation.glossRequired')
-    });
+    errors.push({ message: translate('validation.glossRequired') });
   }
 
-  // Check if gloss has at least one sense
-  if (!glossData.senses || glossData.senses.length === 0) {
-    errors.push({
-      message: translate('validation.senseRequired')
-    });
-    return errors; // Return early since we can't validate senses if there are none
+  if (!glossData.definitions || glossData.definitions.length === 0) {
+    errors.push({ message: translate('validation.definitionRequired', { senseTitle: glossData.gloss }) });
+    return errors;
   }
 
-  // Validate each sense
-  glossData.senses.forEach((sense, index) => {
-    const senseErrors = validateSense(sense, index + 1);
-    errors.push(...senseErrors);
+  glossData.definitions.forEach((definition, index) => {
+    errors.push(...validateDefinition(definition, index + 1));
   });
 
-  // Check for at least one video
   if (!glossData.glossVideos || glossData.glossVideos.length === 0) {
-    errors.push({
-      message: translate('validation.videoRequired')
-    });
+    errors.push({ message: translate('validation.videoRequired') });
   } else {
-    // Validate each video
     glossData.glossVideos.forEach((video) => {
-      const videoErrors = validateSignVideo(video);
-      errors.push(...videoErrors);
-    });
-  }
-  return errors;
-}
-
-function validateSense(sense: Sense, senseNumber: number): ValidationError[] {
-  const errors: ValidationError[] = [];
-  
-  // If sense has a title, use it. If not, use the lexical category. If neither exists, use the number.
-  let senseTitle = '';
-  if (sense.senseTitle && sense.senseTitle.trim() !== '') {
-    senseTitle = sense.senseTitle;
-  } else {
-    senseTitle = `#${senseNumber} - ${translate(sense.lexicalCategory)}`;
-  }
-
-  // Check for at least one definition
-  if (!sense.definitions || sense.definitions.length === 0) {
-    errors.push({
-      message: translate('validation.definitionRequired', { senseTitle })
-    });
-  } else {
-    // Validate each definition
-    sense.definitions.forEach((definition) => {
-      const definitionErrors = validateDefinition(definition, senseTitle);
-      errors.push(...definitionErrors);
+      errors.push(...validateSignVideo(video));
     });
   }
 
-  
-
-  // Validate examples if they exist
-  if (sense.examples && sense.examples.length > 0) {
-    sense.examples.forEach((example) => {
-      const exampleErrors = validateExample(example, senseTitle);
-      errors.push(...exampleErrors);
+  if (glossData.examples?.length) {
+    glossData.examples.forEach((example) => {
+      errors.push(...validateExample(example));
     });
   }
 
-  // Validate sense translations if they exist
-  if (sense.senseTranslations) {
-    sense.senseTranslations.forEach((translation) => {
+  if (glossData.glossTranslations) {
+    glossData.glossTranslations.forEach((translation) => {
       if (!translation.translation || translation.translation.trim() === '') {
-        errors.push({
-          message: translate('validation.senseTranslationRequired', { senseTitle })
-        });
+        errors.push({ message: translate('validation.senseTranslationRequired', { senseTitle: glossData.gloss }) });
       }
     });
   }
@@ -91,49 +46,28 @@ function validateSense(sense: Sense, senseNumber: number): ValidationError[] {
   return errors;
 }
 
-function validateDefinition(definition: Definition, senseTitle: string): ValidationError[] {
+function validateDefinition(definition: Definition, definitionNumber: number): ValidationError[] {
   const errors: ValidationError[] = [];
+  const label = definition.title?.trim() || `#${definitionNumber}`;
 
-  // Check definition value
   if (!definition.definition || definition.definition.trim() === '') {
-    errors.push({
-        message: translate('validation.definitionValueRequired', { senseTitle })
-    });
+    errors.push({ message: translate('validation.definitionValueRequired', { senseTitle: label }) });
   }
 
-  // Check definition translations if they exist
   if (definition.definitionTranslations) {
-    definition.definitionTranslations.forEach((translation) => {
-      if (!translation.translation || translation.translation.trim() === '') {
-        errors.push({
-          message: translate('validation.definitionTranslationRequired', { senseTitle })
-        });
-      }
+    definition.definitionTranslations.forEach(() => {
+      // optional nested validation
     });
   }
 
   return errors;
 }
 
-function validateExample(example: Example, senseTitle: string): ValidationError[] {
+function validateExample(example: Example): ValidationError[] {
   const errors: ValidationError[] = [];
 
-  // Check example value
   if (!example.example || example.example.trim() === '') {
-    errors.push({
-      message: translate('validation.exampleValueRequired', { senseTitle })
-    });
-  }
-
-  // Check example translations if they exist
-  if (example.exampleTranslations) {
-    example.exampleTranslations.forEach((translation) => {
-      if (!translation.translation || translation.translation.trim() === '') {
-        errors.push({
-          message: translate('validation.exampleTranslationRequired', { senseTitle })
-        });
-      }
-    });
+    errors.push({ message: translate('validation.exampleValueRequired', { senseTitle: '' }) });
   }
 
   return errors;
@@ -142,31 +76,19 @@ function validateExample(example: Example, senseTitle: string): ValidationError[
 function validateSignVideo(signVideo: SignVideo): ValidationError[] {
   const errors: ValidationError[] = [];
 
-  // Check if videos array exists and has at least one video
   if (!signVideo.videos || signVideo.videos.length === 0) {
-    errors.push({
-      message: translate('validation.videoRequired')
-    });
+    errors.push({ message: translate('validation.videoRequired') });
   } else {
-    // Get the video title from SignVideo or use a default
-    const videoTitle = signVideo.title && signVideo.title.trim() !== '' 
-      ? signVideo.title 
-      : `${translate('video')} #1`;
+    const videoTitle = signVideo.title?.trim() || `${translate('video')} #1`;
 
-    // Validate each video
     signVideo.videos.forEach((video) => {
       if (!video.angle || video.angle.trim() === '') {
-        errors.push({
-          message: translate('validation.videoAngleRequiredForVideo', { videoTitle })
-        });
+        errors.push({ message: translate('validation.videoAngleRequiredForVideo', { videoTitle }) });
       } else if (!video.url || video.url.trim() === '') {
-        errors.push({
-          message: translate('validation.videoUrlRequiredForAngleAndVideo', { angle: video.angle, videoTitle })
-        });
+        errors.push({ message: translate('validation.videoUrlRequiredForAngleAndVideo', { angle: video.angle, videoTitle }) });
       }
     });
   }
 
-  // VideoData (fonology) is not strictly necessary, so we don't validate it
   return errors;
-} 
+}

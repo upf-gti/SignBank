@@ -26,8 +26,6 @@ export interface SearchResult {
   vocalization: string | null;
   nonManualComponent: string | null;
   inicialization: string | null;
-  senseId: string;
-  senseTitle: string;
   lexicalCategory: string;
   glossId: string;
   gloss: string;

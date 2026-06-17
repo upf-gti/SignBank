@@ -1,4 +1,4 @@
-import { Language } from '@prisma/client'
+import { Language, LexicalCategory } from '@prisma/client'
 import { IsString, IsNotEmpty, IsOptional, IsEnum, IsNumber } from 'class-validator';
 
 export class CreateDefinitionDto {
@@ -13,6 +13,10 @@ export class CreateDefinitionDto {
   @IsString()
   @IsOptional()
   videoDefinitionUrl?: string;
+
+  @IsEnum(LexicalCategory)
+  @IsOptional()
+  lexicalCategory?: LexicalCategory;
 
   @IsNumber()
   @IsOptional()
@@ -31,6 +35,10 @@ export class UpdateDefinitionDto {
   @IsString()
   @IsOptional()
   videoDefinitionUrl?: string;
+
+  @IsEnum(LexicalCategory)
+  @IsOptional()
+  lexicalCategory?: LexicalCategory;
 
   @IsNumber()
   @IsOptional()

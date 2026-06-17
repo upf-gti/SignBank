@@ -43,11 +43,6 @@
         {{ document.description }}
       </div>
       
-      <!-- Sense Title -->
-      <div class="text-subtitle2 text-truncate q-mb-sm">
-        {{ document.senseTitle }}
-      </div>
-      
       <!-- Lexical Category -->
       <q-chip
         v-if="document.lexicalCategory"

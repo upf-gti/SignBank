@@ -1,5 +1,5 @@
-import { IsString, IsNotEmpty, IsOptional, IsEnum } from 'class-validator';
-import { Language } from '@prisma/client';
+import { IsString, IsNotEmpty, IsOptional, IsEnum, IsNumber } from 'class-validator';
+import { Language, LexicalCategory } from '@prisma/client';
 
 export class UpdateDefinitionDto {
   @IsString()
@@ -13,6 +13,14 @@ export class UpdateDefinitionDto {
   @IsString()
   @IsOptional()
   videoDefinitionId?: string;
+
+  @IsEnum(LexicalCategory)
+  @IsOptional()
+  lexicalCategory?: LexicalCategory;
+
+  @IsNumber()
+  @IsOptional()
+  priority?: number;
 }
 
 export class UpdateDefinitionTranslationDto {

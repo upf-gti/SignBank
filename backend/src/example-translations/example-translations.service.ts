@@ -7,13 +7,13 @@ import { CreateExampleTranslationDto, UpdateExampleTranslationDto } from './dto/
 export class ExampleTranslationsService {
   constructor(
     private prisma: PrismaService,
-    private glossDataService: GlossDataService
+    private glossDataService: GlossDataService,
   ) {}
 
   async createExampleTranslation(exampleId: string, data: CreateExampleTranslationDto) {
     const example = await this.prisma.example.findUnique({
       where: { id: exampleId },
-      include: { sense: true }
+      include: { glossData: true },
     });
 
     if (!example) {
@@ -24,17 +24,17 @@ export class ExampleTranslationsService {
       data: {
         translation: data.translation,
         language: data.language,
-        exampleId: exampleId
-      }
+        exampleId,
+      },
     });
 
-    return this.glossDataService.getGlossData(example.sense.glossDataId);
+    return this.glossDataService.getGlossData(example.glossDataId);
   }
 
   async updateExampleTranslation(id: string, data: UpdateExampleTranslationDto) {
     const translation = await this.prisma.exampleTranslation.findUnique({
       where: { id },
-      include: { Example: { include: { sense: true } } }
+      include: { Example: { include: { glossData: true } } },
     });
 
     if (!translation) {
@@ -45,17 +45,17 @@ export class ExampleTranslationsService {
       where: { id },
       data: {
         translation: data.translation,
-        language: data.language
-      }
+        language: data.language,
+      },
     });
 
-    return this.glossDataService.getGlossData(translation.Example.sense.glossDataId);
+    return this.glossDataService.getGlossData(translation.Example!.glossDataId);
   }
 
   async deleteExampleTranslation(id: string) {
     const translation = await this.prisma.exampleTranslation.findUnique({
       where: { id },
-      include: { Example: { include: { sense: true } } }
+      include: { Example: { include: { glossData: true } } },
     });
 
     if (!translation) {
@@ -63,9 +63,9 @@ export class ExampleTranslationsService {
     }
 
     await this.prisma.exampleTranslation.delete({
-      where: { id }
+      where: { id },
     });
 
-    return this.glossDataService.getGlossData(translation.Example.sense.glossDataId);
+    return this.glossDataService.getGlossData(translation.Example!.glossDataId);
   }
-} 
+}

@@ -61,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { DefinitionTranslation, Language, Sense, Definition } from 'src/types/models';
+import { DefinitionTranslation, Language, Definition } from 'src/types/models';
 import translate from 'src/utils/translate';
 import LanguageSelector from '../LanguageSelector.vue'
 import EditableModule from 'src/components/Shared/EditableModule.vue'
@@ -121,11 +121,9 @@ const saveDefinitionTranslation = async (definitionTranslation: DefinitionTransl
       );
     }
     
-    if (response.data && 'senses' in response.data) {
-      // Find the updated translation in the response
+    if (response.data && 'definitions' in response.data) {
       const updatedGlossData = response.data;
-      const updatedDefinition = updatedGlossData.senses
-        .flatMap((sense: Sense) => sense.definitions)
+      const updatedDefinition = updatedGlossData.definitions
         .find((def: Definition) => def.id === props.definitionId);
       
       if (updatedDefinition) {
@@ -159,11 +157,9 @@ const deleteDefinitionTranslation = async (definitionTranslation: DefinitionTran
     loading.value = true;
     const response = await api.definitions.deleteTranslation(props.definitionId, definitionTranslation.id);
     
-    if (response.data && 'senses' in response.data) {
-      // Find the updated translations in the response
+    if (response.data && 'definitions' in response.data) {
       const updatedGlossData = response.data;
-      const updatedDefinition = updatedGlossData.senses
-        .flatMap((sense: Sense) => sense.definitions)
+      const updatedDefinition = updatedGlossData.definitions
         .find((def: Definition) => def.id === props.definitionId);
       
       if (updatedDefinition) {

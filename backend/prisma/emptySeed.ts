@@ -7,7 +7,7 @@ async function main() {
   // Delete all existing data
   await prisma.$transaction([
     prisma.exampleTranslation.deleteMany(),
-    prisma.senseTranslation.deleteMany(),
+    prisma.glossTranslation.deleteMany(),
     prisma.example.deleteMany(),
     prisma.definitionTranslation.deleteMany(),
     prisma.definition.deleteMany(),
@@ -16,7 +16,6 @@ async function main() {
     prisma.signVideo.deleteMany(),
     prisma.dictionaryEntry.deleteMany(),
     prisma.relatedGloss.deleteMany(),
-    prisma.sense.deleteMany(),
     prisma.glossRequest.deleteMany(),
     prisma.glossData.deleteMany(),
     prisma.user.deleteMany(),

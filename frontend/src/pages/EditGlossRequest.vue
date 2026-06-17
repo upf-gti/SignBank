@@ -75,7 +75,9 @@ const glossData = ref<GlossData>({
   relationsAsSource: [],
   minimalPairsAsTarget: [],
   relationsAsTarget: [],
-  senses: [],
+  definitions: [],
+  examples: [],
+  glossTranslations: [],
   glossRequest: null,
   isCreatedFromEdit: false,
   glossVideos: []

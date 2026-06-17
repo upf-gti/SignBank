@@ -6,7 +6,6 @@ import type {
   CreateGlossRequestDto,
   GlossRequestResponse,
   GlossRequestDetailResponse,
-  UpdateSenseDto,
 } from 'src/types/api'
 
 // Create API service object
@@ -29,24 +28,9 @@ export const api = {
     unarchiveGloss: (glossDataId: string) =>
       apiClient.patch<GlossData>(`/gloss-data/${glossDataId}/unarchive`),
   },
-  // Senses endpoints
-  senses: {
-    create: (glossDataId: string, data: { senseTitle: string, lexicalCategory: string }) =>
-      apiClient.post<GlossData>(`/senses/${glossDataId}`, data),
-
-    update: (glossDataId: string, senseId: string, data: UpdateSenseDto) =>
-      apiClient.put<GlossData>(`/senses/${glossDataId}/${senseId}`, data),
-
-    reorder: (glossDataId: string, data: { senseId: string, newPriority: number }) =>
-      apiClient.put<GlossData>(`/senses/${glossDataId}/reorder`, data),
-
-    delete: (glossDataId: string, senseId: string) =>
-      apiClient.delete<GlossData>(`/senses/${glossDataId}/${senseId}`),
-  },
-  // Examples endpoints
   examples: {
-    create: (senseId: string, data: { example: string, exampleVideoURL: string }) =>
-      apiClient.post<GlossData>(`/examples/sense/${senseId}`, data),
+    create: (glossDataId: string, data: { example: string, exampleVideoURL: string }) =>
+      apiClient.post<GlossData>(`/examples/gloss/${glossDataId}`, data),
 
     update: (id: string, data: { example: string, exampleVideoURL: string }) =>
       apiClient.put<GlossData>(`/examples/${id}`, data),
@@ -59,15 +43,14 @@ export const api = {
   },
   // Translations endpoints
   translations: {
-    // Sense translations
-    createSenseTranslation: (senseId: string, data: { translation: string, language: Language }) =>
-      apiClient.post<GlossData>(`/translations/sense/${senseId}`, data),
+    createGlossTranslation: (glossDataId: string, data: { translation: string, language: Language }) =>
+      apiClient.post<GlossData>(`/translations/gloss/${glossDataId}`, data),
 
-    updateSenseTranslation: (id: string, data: { translation: string, language: Language }) =>
-      apiClient.put<GlossData>(`/translations/sense/${id}`, data),
+    updateGlossTranslation: (id: string, data: { translation: string, language: Language }) =>
+      apiClient.put<GlossData>(`/translations/${id}`, data),
 
-    deleteSenseTranslation: (id: string) =>
-      apiClient.delete<GlossData>(`/translations/sense/${id}`),
+    deleteGlossTranslation: (id: string) =>
+      apiClient.delete<GlossData>(`/translations/${id}`),
   },
   // Example translations endpoints
   exampleTranslations: {
@@ -158,17 +141,17 @@ export const api = {
   },
   // Definitions endpoints
   definitions: {
-    create: (senseId: string, data: { title?: string, definition: string, videoDefinitionUrl?: string, priority?: number }) =>
-      apiClient.post<GlossData>(`/definitions/sense/${senseId}`, data),
+    create: (glossDataId: string, data: { title?: string, definition: string, lexicalCategory?: string, videoDefinitionUrl?: string, priority?: number }) =>
+      apiClient.post<GlossData>(`/definitions/gloss/${glossDataId}`, data),
 
-    update: (senseId: string, definitionId: string, data: { title?: string, definition?: string, videoDefinitionUrl?: string, priority?: number }) =>
-      apiClient.put<GlossData>(`/definitions/sense/${senseId}/${definitionId}`, data),
+    update: (glossDataId: string, definitionId: string, data: { title?: string, definition?: string, lexicalCategory?: string, videoDefinitionUrl?: string, priority?: number }) =>
+      apiClient.put<GlossData>(`/definitions/gloss/${glossDataId}/${definitionId}`, data),
 
-    delete: (senseId: string, definitionId: string) =>
-      apiClient.delete<GlossData>(`/definitions/sense/${senseId}/${definitionId}`),
+    delete: (glossDataId: string, definitionId: string) =>
+      apiClient.delete<GlossData>(`/definitions/gloss/${glossDataId}/${definitionId}`),
 
-    deleteVideo: (senseId: string, definitionId: string) =>
-      apiClient.delete<GlossData>(`/definitions/sense/${senseId}/${definitionId}/video`),
+    deleteVideo: (glossDataId: string, definitionId: string) =>
+      apiClient.delete<GlossData>(`/definitions/gloss/${glossDataId}/${definitionId}/video`),
 
     createTranslation: (definitionId: string, data: { translation: string, language: Language }) =>
       apiClient.post<GlossData>(`/definitions/${definitionId}/translations`, data),
@@ -206,8 +189,8 @@ export const api = {
     update: (signVideoId: string, data: { priority: number }) =>
       apiClient.patch<GlossData>(`/gloss-data/sign-videos/${signVideoId}/priority`, data),
 
-    reorder: (senseId: string, data: { signVideoIds: string[] }) =>
-      apiClient.post<GlossData>(`/gloss-data/senses/${senseId}/sign-videos/reorder`, data),
+    reorder: (glossDataId: string, data: { signVideoIds: string[] }) =>
+      apiClient.post<GlossData>(`/gloss-data/${glossDataId}/sign-videos/reorder`, data),
   },
   // Video priority endpoints  
   videoPriority: {

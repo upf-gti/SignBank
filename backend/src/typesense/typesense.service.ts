@@ -10,14 +10,13 @@ import {
 } from '@prisma/client';
 
 const glossIndexInclude = {
-  senses: {
+  definitions: {
     include: {
-      definitions: {
-        orderBy: { priority: 'asc' as const },
-      },
+      definitionTranslations: true,
     },
     orderBy: { priority: 'asc' as const },
   },
+  glossTranslations: true,
   glossVideos: {
     include: {
       videos: { orderBy: { priority: 'asc' as const } },
@@ -133,11 +132,11 @@ export class TypesenseService implements OnModuleInit {
 
     const primarySignVideo = glossData.glossVideos[0];
     const primaryVideo = primarySignVideo.videos[0];
-    const primarySense = glossData.senses[0];
+    const primaryDefinition = glossData.definitions[0];
 
     let description = '';
-    if (primarySense?.definitions.length) {
-      description = primarySense.definitions[0].definition;
+    if (primaryDefinition) {
+      description = primaryDefinition.definition;
     }
 
     const videoData = primarySignVideo.videoData;
@@ -148,9 +147,7 @@ export class TypesenseService implements OnModuleInit {
       gloss: glossData.gloss,
       url: primaryVideo?.url ?? '',
       signVideoTitle: primarySignVideo.title,
-      senseId: primarySense?.id ?? '',
-      senseTitle: primarySense?.senseTitle ?? '',
-      lexicalCategory: primarySense?.lexicalCategory ?? '',
+      lexicalCategory: primaryDefinition?.lexicalCategory ?? '',
       description,
       hands: videoData?.hands ?? Hand.RIGHT,
       configuration: videoData?.configuration ?? '',

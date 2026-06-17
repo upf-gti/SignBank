@@ -10,21 +10,18 @@ export class GlossesService {
     const gloss = await this.prisma.glossData.findUnique({
       where: { id },
       include: {
-        senses: {
+        definitions: {
+          orderBy: { priority: 'asc' },
           include: {
-            definitions: {
-              include: {
-                definitionTranslations: true,
-              },
-            },
-            examples: {
-              include: {
-                exampleTranslations: true,
-              },
-            },
-            senseTranslations: true,
+            definitionTranslations: true,
           },
         },
+        examples: {
+          include: {
+            exampleTranslations: true,
+          },
+        },
+        glossTranslations: true,
         glossVideos: {
           include: {
             videos: true,
