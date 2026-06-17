@@ -862,6 +862,16 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   retry: string;
   searchEmptyHint: string;
   signBank: string;
+  stepCore: string;
+  stepVideo: string;
+  stepOptional: string;
+  creationProgress: string;
+  next: string;
+  back: string;
+  advancedPhonology: string;
+  createGlossHint: string;
+  requestAlreadyAccepted: string;
+  requestAlreadyReviewed: string;
 }
 
 export default TranslateKeys;

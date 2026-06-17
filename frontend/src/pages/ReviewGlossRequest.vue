@@ -25,11 +25,10 @@
       </div>
 
       <template v-else>
-        <!-- Admin Review Header -->
         <div class="q-pa-md full-width">
           <div class="row items-center justify-between">
             <div class="text-h5">
-              {{ translate('reviewRequest') }}
+              {{ isPendingReview ? translate('reviewRequest') : translate('details') }}
             </div>
             <q-btn
               flat
@@ -39,18 +38,43 @@
             />
           </div>
           <div class="text-body2 text-grey-6 q-mt-sm">
-            {{ translate('requestedBy') }}: {{ glossRequest?.creator?.username }} 
+            {{ translate('requestedBy') }}: {{ glossRequest?.creator?.username }}
             ({{ new Date(glossRequest?.createdAt || '').toLocaleDateString() }})
           </div>
+
+          <q-banner
+            v-if="!isPendingReview"
+            class="q-mt-md"
+            rounded
+            :class="glossRequest?.status === 'ACCEPTED' ? 'bg-positive text-white' : 'bg-grey-3'"
+          >
+            <template #avatar>
+              <q-icon
+                :name="glossRequest?.status === 'ACCEPTED' ? 'check_circle' : 'info'"
+                :color="glossRequest?.status === 'ACCEPTED' ? 'white' : 'grey-7'"
+              />
+            </template>
+            {{ glossRequest?.status === 'ACCEPTED' ? translate('requestAlreadyAccepted') : translate('requestAlreadyReviewed') }}
+            <template
+              v-if="glossRequest?.glossId"
+              #action
+            >
+              <q-btn
+                flat
+                :color="glossRequest?.status === 'ACCEPTED' ? 'white' : 'primary'"
+                :label="translate('viewGloss')"
+                :to="`/gloss/${glossRequest.glossId}`"
+              />
+            </template>
+          </q-banner>
         </div>
 
-        <!-- Gloss Detail Component -->
         <GlossDetailComponent
-          v-model:edit-mode="editMode"
           class="col full-width"
           :gloss-data="glossData"
+          :edit-mode="false"
           :allow-edit="false"
-          :is-confirm-request-page="true"
+          :is-confirm-request-page="isPendingReview"
           :request-status="glossRequest?.status"
           @accept-request="acceptRequest"
           @decline-request="declineRequest"
@@ -61,9 +85,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import GlossDetailComponent from 'src/components/GlossDetail/GlossDetailComponent.vue';
-import { GlossData, GlossRequest } from 'src/types/models';
+import { GlossData, GlossRequest, RequestStatus } from 'src/types/models';
 import api from 'src/services/api';
 import useUserStore from 'src/stores/user.store';
 import { useRouter, useRoute } from 'vue-router';
@@ -77,7 +101,6 @@ const $q = useQuasar();
 
 const loading = ref(true);
 const error = ref<string | null>(null);
-const editMode = ref(true);
 const glossRequest = ref<GlossRequest | null>(null);
 const glossData = ref<GlossData>({
   id: '',
@@ -96,13 +119,18 @@ const glossData = ref<GlossData>({
   glossTranslations: [],
   glossRequest: null,
   isCreatedFromEdit: false,
+  glossVideos: [],
 });
+
+const isPendingReview = computed(() =>
+  glossRequest.value?.status === RequestStatus.WAITING_FOR_APPROVAL
+);
 
 const fetchGlossRequest = async () => {
   try {
     const requestId = route.params.id as string;
     const response = await api.glossRequests.get(requestId);
-    glossRequest.value = response.data as any as GlossRequest;
+    glossRequest.value = response.data as GlossRequest;
     glossData.value = response.data.requestedGlossData;
   } catch (err) {
     console.error('Error fetching gloss request:', err);
@@ -113,21 +141,21 @@ const fetchGlossRequest = async () => {
 };
 
 const acceptRequest = async () => {
+  if (!isPendingReview.value) return;
+
   try {
     loading.value = true;
     const requestId = route.params.id as string;
     await api.glossRequests.accept(requestId);
-    
-    // Show success notification
+
     $q.notify({
       type: 'positive',
       message: translate('requestAcceptedSuccessfully')
     });
-    
-    // Redirect to pending requests page
+
     router.push('/confirm-requests').catch((err) => {
-      console.error(err)
-    })
+      console.error(err);
+    });
   } catch (err) {
     console.error('Error accepting request:', err);
     $q.notify({
@@ -139,71 +167,59 @@ const acceptRequest = async () => {
   }
 };
 
-const declineRequest =  () => {
-  try {
-    // Show dialog to get decline reason
-    $q.dialog({
-      title: translate('declineRequest'),
-      message: translate('enterDeclineReason'),
-      prompt: {
-        model: '',
-        type: 'text'
-      },
-      cancel: true,
-      persistent: true
-    }).onOk( (reason: string) => {
-      if (!reason.trim()) {
-        $q.notify({
-          type: 'negative',
-          message: translate('declineReasonRequired')
-        });
-        return;
-      }
-      
-      try {
-        loading.value = true;
-        const requestId = route.params.id as string;
-        api.glossRequests.decline(requestId, { denyReason: reason }).catch((err) => {
-          console.error('Error declining request:', err);
-          $q.notify({
-            type: 'negative',
-            message: translate('errors.failedToDeclineRequest')
-          });
-        });
-        
-        // Show success notification
-        $q.notify({
-          type: 'positive',
-          message: translate('requestDeclinedSuccessfully')
-        });
-        
-        // Redirect to pending requests page
-        router.push('/confirm-requests').catch((err) => {
-          console.error(err)
-        })
-      } catch (err) {
-        console.error('Error declining request:', err);
-        $q.notify({
-          type: 'negative',
-          message: translate('errors.failedToDeclineRequest')
-        });
-      } finally {
-        loading.value = false;
-      }
-    });
-  } catch (err) {
-    console.error('Error in decline dialog:', err);
-  }
+const declineRequest = () => {
+  if (!isPendingReview.value) return;
+
+  $q.dialog({
+    title: translate('declineRequest'),
+    message: translate('enterDeclineReason'),
+    prompt: {
+      model: '',
+      type: 'text'
+    },
+    cancel: true,
+    persistent: true
+  }).onOk(async (reason: string) => {
+    if (!reason.trim()) {
+      $q.notify({
+        type: 'negative',
+        message: translate('declineReasonRequired')
+      });
+      return;
+    }
+
+    try {
+      loading.value = true;
+      const requestId = route.params.id as string;
+      await api.glossRequests.decline(requestId, { denyReason: reason });
+
+      $q.notify({
+        type: 'positive',
+        message: translate('requestDeclinedSuccessfully')
+      });
+
+      router.push('/confirm-requests').catch((err) => {
+        console.error(err);
+      });
+    } catch (err) {
+      console.error('Error declining request:', err);
+      $q.notify({
+        type: 'negative',
+        message: translate('errors.failedToDeclineRequest')
+      });
+    } finally {
+      loading.value = false;
+    }
+  });
 };
 
 onMounted(async () => {
-  // Check if user is admin
   if (!userStore.isAdmin) {
     router.push('/').catch((err) => {
-      console.error(err)
-    })
+      console.error(err);
+    });
     return;
   }
   await fetchGlossRequest();
 });
-</script> 
+</script>

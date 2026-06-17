@@ -2,9 +2,9 @@
   <q-item class="q-mb-lg q-pa-md q-hover:bg-grey-1 q-transition-all q-rounded-borders column full-width">
     <EditableModule
       :allow-edit="allowEdit"
-      :show-delete="true"
-      :custom-edit-label="translate('editExample')"
-      :custom-delete-label="translate('deleteExample')"
+      :inline-edit="inlineEdit"
+      :initial-edit-state="example.isNew"
+      :show-delete="!inlineEdit || Boolean(example.id) || example.isNew"
       @save="() => $emit('save', example)"
       @delete="() => $emit('delete', example)"
     >
@@ -88,6 +88,7 @@ import { getVideoUrl } from 'src/utils/videoUrl';
 const props = defineProps<{
   example: Example;
   allowEdit: boolean;
+  inlineEdit?: boolean;
 }>();
 
 const emit = defineEmits<{

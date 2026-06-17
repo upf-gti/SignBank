@@ -102,12 +102,9 @@ const fetchGlossRequest = async () => {
 
 const saveGloss = async (updatedGlossData: GlossData) => {
   try {
-    loading.value = true
     const response = await api.glossData.editGloss(updatedGlossData.id || '', updatedGlossData)
     glossData.value = response.data
-    editMode.value = false
-    
-    // Show success notification
+
     $q.notify({
       type: 'positive',
       message: translate('glossSavedSuccessfully')
@@ -115,14 +112,11 @@ const saveGloss = async (updatedGlossData: GlossData) => {
   } catch (err) {
     console.error(err)
     error.value = translate('errors.failedToSaveGloss')
-    
-    // Show error notification
+
     $q.notify({
       type: 'negative',
       message: translate('errors.failedToSaveGloss')
     })
-  } finally {
-    loading.value = false
   }
 }
 

@@ -2,12 +2,15 @@
   <q-card-section class="row justify-between items-center">
     <div class="column">
       <div class="row justify-between items-center">
-        <div class="text-h4" v-if="!editMode">
+        <div
+          v-if="!editMode || !allowEdit"
+          class="text-h4"
+        >
           {{ localGlossData.gloss }}
         </div>
-      
+
         <q-input
-          v-else
+          v-else-if="editMode && allowEdit"
           v-model="localGlossData.gloss"
           :label="translate('gloss')"
           outlined
@@ -85,7 +88,7 @@
         @click="submitRequest"
       />
 
-      <template v-if="isConfirmRequestPage">
+      <template v-if="isConfirmRequestPage && requestStatus === RequestStatus.WAITING_FOR_APPROVAL">
         <q-btn
           icon="check"
           color="positive"

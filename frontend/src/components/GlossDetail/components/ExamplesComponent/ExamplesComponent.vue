@@ -1,12 +1,30 @@
 <template>
   <q-card-section>
-    <div class="text-h5 q-mb-md row justify-between items-center">
+    <div
+      v-if="!inlineEdit"
+      class="text-h5 q-mb-md row justify-between items-center"
+    >
       {{ translate('examples') }}
       <q-btn
         v-if="editMode"
         flat
         round
         icon="add"
+        :label="translate('addExample')"
+        @click="addExample"
+      />
+    </div>
+    <div
+      v-else
+      class="row justify-between items-center q-mb-md"
+    >
+      <span class="text-body2 text-grey-7">{{ translate('optional') }}</span>
+      <q-btn
+        v-if="editMode"
+        flat
+        dense
+        icon="add"
+        color="primary"
         :label="translate('addExample')"
         @click="addExample"
       />
@@ -25,6 +43,7 @@
           v-if="$q.screen.gt.sm"
           :example="example"
           :allow-edit="editMode"
+          :inline-edit="inlineEdit"
           @save="saveExample"
           @delete="deleteExample"
           @upload-video="uploadVideo"
@@ -37,6 +56,7 @@
           v-else
           :example="example"
           :allow-edit="editMode"
+          :inline-edit="inlineEdit"
           @save="saveExample"
           @delete="deleteExample"
           @upload-video="uploadVideo"
@@ -75,6 +95,7 @@ const selectedExample = ref<Example | null>(null);
 const props = defineProps<{
   glossData: GlossData;
   editMode: boolean;
+  inlineEdit?: boolean;
 }>();
 
 const emit = defineEmits<{

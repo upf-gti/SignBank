@@ -1,6 +1,9 @@
 <template>
   <q-card-section class="column">
-    <div class="text-h5 q-mb-md row justify-between items-center">
+    <div
+      v-if="!inlineEdit"
+      class="text-h5 q-mb-md row justify-between items-center"
+    >
       {{ translate('definitions') }}
       <div class="row q-gutter-sm">
         <q-btn
@@ -22,15 +25,54 @@
         />
       </div>
     </div>
-    <q-list 
-      v-if="!isMobile"
-      >
+
+    <!-- Inline first definition form for draft creation -->
+    <q-card
+      v-if="inlineEdit && definitions.length === 0"
+      flat
+      bordered
+      class="q-pa-md q-mb-md"
+    >
+      <div class="text-subtitle1 text-weight-medium q-mb-md">
+        {{ translate('firstSense') }}
+      </div>
+      <q-input
+        v-model="inlineDefinition.title"
+        :label="translate('definitionTitle')"
+        outlined
+        dense
+        class="q-mb-sm"
+      />
+      <q-input
+        v-model="inlineDefinition.definition"
+        :label="translate('definition')"
+        outlined
+        type="textarea"
+        rows="3"
+        class="q-mb-md"
+        :rules="[val => !!val || translate('required')]"
+      />
+      <div class="row justify-end">
+        <q-btn
+          color="primary"
+          unelevated
+          icon="save"
+          :label="translate('save')"
+          :loading="loading"
+          :disable="!inlineDefinition.definition.trim()"
+          @click="saveInlineDefinition"
+        />
+      </div>
+    </q-card>
+
+    <q-list v-if="!isMobile">
       <!-- Desktop -->
         <DefinitionCardDesktop
           v-for="(definition, index) in definitions.sort((a, b) => a.priority - b.priority)"
           :key="definition.id || index"
           :definition="definition"
           :allow-edit="allowEdit"
+          :inline-edit="inlineEdit"
           @save="saveDefinition"
           @delete="deleteDefinition"
           @upload-video="uploadVideo"
@@ -46,6 +88,7 @@
         :key="definition.id || index"
         :definition="definition"
         :allow-edit="allowEdit"
+        :inline-edit="inlineEdit"
         @save="saveDefinition"
         @delete="deleteDefinition"
         @upload-video="uploadVideo"
@@ -56,9 +99,20 @@
     </q-list>
     <!-- Translations of the sense -->
     <div class="column">
+      <q-btn
+        v-if="inlineEdit && allowEdit && definitions.length > 0"
+        flat
+        dense
+        icon="add"
+        color="primary"
+        :label="translate('addDefinition')"
+        class="q-mb-md self-start"
+        @click="addDefinition"
+      />
       <GlossTranslationsComponent
         :gloss-data="glossData"
         :edit-mode="editMode"
+        :inline-edit="inlineEdit"
         @update:gloss-data="emit('update:glossData', $event)"
       />
     </div>
@@ -174,7 +228,13 @@ const props = defineProps<{
   allowEdit: boolean;
   editMode: boolean;
   glossData: GlossData;
+  inlineEdit?: boolean;
 }>();
+
+const inlineDefinition = ref({
+  title: '',
+  definition: '',
+});
 
 const emit = defineEmits<{
   (e: 'update:glossData', glossData: GlossData): void;
@@ -183,7 +243,28 @@ const emit = defineEmits<{
 const definitions = computed(() => props.glossData?.definitions || []);
 
 const addDefinition = () => {
+  if (props.inlineEdit && definitions.value.length === 0) {
+    return;
+  }
   showCreateDefinitionDialog.value = true;
+}
+
+const saveInlineDefinition = async () => {
+  if (!props.glossData?.id || !inlineDefinition.value.definition.trim()) return;
+
+  await handleDefinitionCreated({
+    id: '',
+    title: inlineDefinition.value.title.trim(),
+    definition: inlineDefinition.value.definition.trim(),
+    videoDefinitionUrl: '',
+    priority: 0,
+    glossDataId: props.glossData.id,
+    lexicalCategory: 'NOUN',
+    definitionTranslations: [],
+    isNew: true,
+  } as Definition);
+
+  inlineDefinition.value = { title: '', definition: '' };
 }
 
 const handleDefinitionCreated = async (definition: Definition) => {

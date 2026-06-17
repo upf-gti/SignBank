@@ -79,7 +79,10 @@
       </div>
 
       <!-- Configuration Changes -->
-      <div class="col-12 col-sm-6 col-md-4">
+      <div
+        v-if="!compact"
+        class="col-12 col-sm-6 col-md-4"
+      >
         <q-item-label
           v-if="!isEditable"
           caption
@@ -130,7 +133,10 @@
       </div>
 
       <!-- Relation Between Articulators -->
-      <div class="col-12 col-sm-6 col-md-4">
+      <div
+        v-if="!compact"
+        class="col-12 col-sm-6 col-md-4"
+      >
         <q-item-label
           v-if="!isEditable"
           caption
@@ -204,7 +210,10 @@
       </div>
 
       <!-- Movement Related Orientation -->
-      <div class="col-12 col-sm-6 col-md-4">
+      <div
+        v-if="!compact"
+        class="col-12 col-sm-6 col-md-4"
+      >
         <q-item-label
           v-if="!isEditable"
           caption
@@ -241,7 +250,10 @@
       </div>
 
       <!-- Orientation Related To Location -->
-      <div class="col-12 col-sm-6 col-md-4">
+      <div
+        v-if="!compact"
+        class="col-12 col-sm-6 col-md-4"
+      >
         <q-item-label
           v-if="!isEditable"
           caption
@@ -278,7 +290,10 @@
       </div>
 
       <!-- Orientation Change -->
-      <div class="col-12 col-sm-6 col-md-4">
+      <div
+        v-if="!compact"
+        class="col-12 col-sm-6 col-md-4"
+      >
         <q-item-label
           v-if="!isEditable"
           caption
@@ -315,7 +330,10 @@
       </div>
 
       <!-- Contact Type -->
-      <div class="col-12 col-sm-6 col-md-4">
+      <div
+        v-if="!compact"
+        class="col-12 col-sm-6 col-md-4"
+      >
         <q-item-label
           v-if="!isEditable"
           caption
@@ -389,7 +407,10 @@
       </div>
 
       <!-- Movement Direction -->
-      <div class="col-12 col-sm-6 col-md-4">
+      <div
+        v-if="!compact"
+        class="col-12 col-sm-6 col-md-4"
+      >
         <q-item-label
           v-if="!isEditable"
           caption
@@ -426,7 +447,10 @@
       </div>
 
       <!-- Vocalization -->
-      <div class="col-12 col-sm-6 col-md-4">
+      <div
+        v-if="!compact"
+        class="col-12 col-sm-6 col-md-4"
+      >
         <q-item-label
           v-if="!isEditable"
           caption
@@ -458,7 +482,10 @@
       </div>
 
       <!-- Non Manual Component -->
-      <div class="col-12 col-sm-6 col-md-4">
+      <div
+        v-if="!compact"
+        class="col-12 col-sm-6 col-md-4"
+      >
         <q-item-label
           v-if="!isEditable"
           caption
@@ -490,7 +517,10 @@
       </div>
 
       <!-- Inicialization -->
-      <div class="col-12 col-sm-6 col-md-4">
+      <div
+        v-if="!compact"
+        class="col-12 col-sm-6 col-md-4"
+      >
         <q-item-label
           v-if="!isEditable"
           caption
@@ -522,7 +552,10 @@
       </div>
 
       <!-- Repeated Movement -->
-      <div class="col-12 col-sm-6 col-md-4">
+      <div
+        v-if="!compact"
+        class="col-12 col-sm-6 col-md-4"
+      >
         <q-item-label
           caption
         >
@@ -559,6 +592,189 @@
           @update:model-value="updateBooleanField('repeatedMovement', $event)"
         />
       </div>
+
+      <!-- Advanced phonology (compact creation mode) -->
+      <div
+        v-if="compact && isEditable"
+        class="col-12"
+      >
+        <q-expansion-item
+          expand-separator
+          icon="tune"
+          :label="translate('advancedPhonology')"
+          header-class="text-subtitle2"
+        >
+          <div class="column q-col-gutter-md q-pt-sm">
+            <!-- Configuration Changes -->
+            <div class="col-12 col-sm-6">
+              <q-select
+                v-model="localData.configurationChanges"
+                :options="filteredOptions.configurationChanges"
+                :label="translate('configurationChanges')"
+                clearable
+                emit-value
+                map-options
+                options-dense
+                outlined
+                dense
+                use-input
+                input-debounce="300"
+                @filter="(val, update) => filterFn(val, update, phonologyOptions.configurationChangeOptions, 'configurationChanges')"
+                @update:model-value="updateField('configurationChanges', $event)"
+              />
+            </div>
+            <div class="col-12 col-sm-6">
+              <q-select
+                v-model="localData.relationBetweenArticulators"
+                :options="filteredOptions.relationBetweenArticulators"
+                :label="translate('relationBetweenArticulators')"
+                clearable
+                emit-value
+                map-options
+                options-dense
+                outlined
+                dense
+                use-input
+                input-debounce="300"
+                @filter="(val, update) => filterFn(val, update, phonologyOptions.relationBetweenArticulatorsOptions, 'relationBetweenArticulators')"
+                @update:model-value="updateField('relationBetweenArticulators', $event)"
+              />
+            </div>
+            <div class="col-12 col-sm-6">
+              <q-select
+                v-model="localData.movementRelatedOrientation"
+                :options="filteredOptions.movementRelatedOrientation"
+                :label="translate('movementRelatedOrientation')"
+                clearable
+                emit-value
+                map-options
+                options-dense
+                outlined
+                dense
+                use-input
+                input-debounce="300"
+                @filter="(val, update) => filterFn(val, update, phonologyOptions.movementRelatedOrientationOptions, 'movementRelatedOrientation')"
+                @update:model-value="updateField('movementRelatedOrientation', $event)"
+              />
+            </div>
+            <div class="col-12 col-sm-6">
+              <q-select
+                v-model="localData.orientationRelatedToLocation"
+                :options="filteredOptions.orientationRelatedToLocation"
+                :label="translate('orientationRelatedToLocation')"
+                clearable
+                emit-value
+                map-options
+                options-dense
+                outlined
+                dense
+                use-input
+                input-debounce="300"
+                @filter="(val, update) => filterFn(val, update, phonologyOptions.orientationRelatedToLocationOptions, 'orientationRelatedToLocation')"
+                @update:model-value="updateField('orientationRelatedToLocation', $event)"
+              />
+            </div>
+            <div class="col-12 col-sm-6">
+              <q-select
+                v-model="localData.orientationChange"
+                :options="filteredOptions.orientationChange"
+                :label="translate('orientationChange')"
+                clearable
+                emit-value
+                map-options
+                options-dense
+                outlined
+                dense
+                use-input
+                input-debounce="300"
+                @filter="(val, update) => filterFn(val, update, phonologyOptions.orientationChangeOptions, 'orientationChange')"
+                @update:model-value="updateField('orientationChange', $event)"
+              />
+            </div>
+            <div class="col-12 col-sm-6">
+              <q-select
+                v-model="localData.contactType"
+                :options="filteredOptions.contactType"
+                :label="translate('contactType')"
+                clearable
+                emit-value
+                map-options
+                options-dense
+                outlined
+                dense
+                use-input
+                input-debounce="300"
+                @filter="(val, update) => filterFn(val, update, phonologyOptions.contactTypeOptions, 'contactType')"
+                @update:model-value="updateField('contactType', $event)"
+              />
+            </div>
+            <div class="col-12 col-sm-6">
+              <q-select
+                v-model="localData.movementDirection"
+                :options="filteredOptions.movementDirection"
+                :label="translate('movementDirection')"
+                clearable
+                emit-value
+                map-options
+                options-dense
+                outlined
+                dense
+                use-input
+                input-debounce="300"
+                @filter="(val, update) => filterFn(val, update, phonologyOptions.movementDirectionOptions, 'movementDirection')"
+                @update:model-value="updateField('movementDirection', $event)"
+              />
+            </div>
+            <div class="col-12 col-sm-6">
+              <q-input
+                v-model="localData.vocalization"
+                :label="translate('vocalization')"
+                clearable
+                outlined
+                dense
+                @update:model-value="updateField('vocalization', $event)"
+              />
+            </div>
+            <div class="col-12 col-sm-6">
+              <q-input
+                v-model="localData.nonManualComponent"
+                :label="translate('nonManualComponent')"
+                clearable
+                outlined
+                dense
+                @update:model-value="updateField('nonManualComponent', $event)"
+              />
+            </div>
+            <div class="col-12 col-sm-6">
+              <q-input
+                v-model="localData.inicialization"
+                :label="translate('inicialization')"
+                clearable
+                outlined
+                dense
+                @update:model-value="updateField('inicialization', $event)"
+              />
+            </div>
+            <div class="col-12 col-sm-6">
+              <q-btn-toggle
+                v-model="localData.repeatedMovement"
+                :options="[
+                  { label: translate('yes'), value: true },
+                  { label: translate('no'), value: false }
+                ]"
+                spread
+                no-caps
+                unelevated
+                toggle-color="primary"
+                color="grey-3"
+                text-color="grey-8"
+                class="full-width"
+                @update:model-value="updateBooleanField('repeatedMovement', $event)"
+              />
+            </div>
+          </div>
+        </q-expansion-item>
+      </div>
     </div>
   </div>
 </template>
@@ -581,6 +797,7 @@ interface SelectOption {
 const props = defineProps<{
   phonologyData: PhonologyData;
   isEditable?: boolean;
+  compact?: boolean;
 }>();
 
 const emit = defineEmits<{

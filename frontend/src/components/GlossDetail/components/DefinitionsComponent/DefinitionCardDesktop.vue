@@ -2,7 +2,8 @@
   <q-item class="q-mb-lg q-pa-md q-hover:bg-grey-1 q-transition-all q-rounded-borders column">
     <EditableModule
       :allow-edit="allowEdit"
-      :show-delete="true"
+      :inline-edit="inlineEdit"
+      :show-delete="!inlineEdit || Boolean(definition.id)"
       :custom-edit-label="translate('editDefinition')"
       :custom-delete-label="translate('deleteDefinition')"
       @save="() => $emit('save', definition)"
@@ -84,6 +85,7 @@
         <!-- Definition Translations -->
         <DefinitionTranslationsComponent
           :allow-edit="allowEdit"
+          :inline-edit="inlineEdit"
           :definition-id="definition.id || ''"
           :translations="definition.definitionTranslations"
           @update:translations="(translations: DefinitionTranslation[]) => $emit('updateTranslations', definition, translations)"
@@ -104,6 +106,7 @@ import { getVideoUrl } from 'src/utils/videoUrl';
 const props = defineProps<{
   definition: Definition;
   allowEdit: boolean;
+  inlineEdit?: boolean;
 }>();
 
 const emit = defineEmits<{

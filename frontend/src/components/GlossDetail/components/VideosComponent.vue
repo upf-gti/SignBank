@@ -1,6 +1,9 @@
 <template>
   <div class="videos-component q-pa-sm">
-    <div class="text-h5 q-mb-md">
+    <div
+      v-if="!inlineEdit"
+      class="text-h5 q-mb-md"
+    >
       {{ translate('videos') }}
     </div>
 
@@ -35,6 +38,7 @@
       >
         <EditableModule
           :allow-edit="editMode"
+          :inline-edit="inlineEdit"
           :initial-edit-state="video.isNew ?? false"
           :show-delete="Boolean(video.id)"
           :validate-before-save="() => validateVideo(video)"
@@ -48,7 +52,7 @@
                 {{ video.title }}
               </div>
               <div
-                v-if="editMode && !video.isNew"
+                v-if="editMode && !video.isNew && !inlineEdit"
                 class="row"
               >
                 <q-btn
@@ -95,6 +99,7 @@
               <SignFonologyComponent
                 :video-data="video.videoData"
                 :edit-mode="isEditing"
+                :compact="inlineEdit"
                 @update:video-data="updateVideoData(index, $event)"
               />
             </div>
@@ -111,7 +116,7 @@ import translate from 'src/utils/translate';
 import GlossVideoComponent from './GlossVideoComponent.vue';
 import SignFonologyComponent from './SignFonologyComponent.vue';
 import EditableModule from 'src/components/Shared/EditableModule.vue';
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
 import api from 'src/services/api';
 import { Hand, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType, MovementDirection } from 'src/types/enums';
@@ -120,8 +125,9 @@ const glossData = defineModel<GlossData>({ required: true });
 const emit = defineEmits<{
   (e: 'update:glossData', glossData: GlossData): void
 }>();
-const { editMode } = defineProps<{
+const { editMode, inlineEdit = false } = defineProps<{
   editMode: boolean;
+  inlineEdit?: boolean;
 }>();
 
 const $q = useQuasar();
@@ -145,6 +151,12 @@ const sortedVideos = computed(() => {
 watch(() => glossData.value.glossVideos, (newVideos) => {
   videosBackup.value = JSON.parse(JSON.stringify(newVideos));
 }, { deep: true });
+
+onMounted(() => {
+  if (inlineEdit && editMode && videos.value.length === 0) {
+    addVideo();
+  }
+});
 
 const updateLocalVideo = (newVideo: SignVideo, index: number) => {
   glossData.value.glossVideos[index] = newVideo;

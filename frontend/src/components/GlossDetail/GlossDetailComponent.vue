@@ -1,8 +1,13 @@
 <template>
   <q-card
     flat
-    style="max-width: 1200px"
+    class="gloss-detail-card"
   >
+    <GlossRequestProgress
+      v-if="isDraft"
+      :gloss-data="glossData"
+    />
+
     <GlossHeader
       :gloss-data="glossData"
       :edit-mode="editMode"
@@ -17,25 +22,30 @@
       @decline-request="declineRequest"
       @submit-request="submitRequest"
     />
+
     <MainContent
-      v-if="!editMode"
+      v-if="!contentEditable"
       :gloss-data="glossData"
     />
+
     <MoreContentComponent
       :gloss-data="glossData"
-      :edit-mode="editMode"
+      :edit-mode="contentEditable"
+      :is-draft="isDraft"
       @update:gloss-data="handleGlossDataUpdate"
     />
   </q-card>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { GlossData, RequestStatus } from 'src/types/models'
 import GlossHeader from './components/GlossHeader.vue'
-import MainContent from './components/MainContent.vue';
-import MoreContentComponent from './components/MoreContentComponent.vue';
-import { validateGloss } from 'src/utils/glossValidation';
-import { useQuasar } from 'quasar';
+import MainContent from './components/MainContent.vue'
+import MoreContentComponent from './components/MoreContentComponent.vue'
+import GlossRequestProgress from './components/GlossRequestProgress.vue'
+import { validateGloss } from 'src/utils/glossValidation'
+import { useQuasar } from 'quasar'
 import translate from 'src/utils/translate'
 
 const emit = defineEmits<{
@@ -54,6 +64,12 @@ const { glossData, editMode, allowEdit = true, isConfirmRequestPage = false, req
   requestStatus?: RequestStatus | undefined,
   submitting?: boolean | undefined
 }>()
+
+const isDraft = computed(() =>
+  editMode && allowEdit && requestStatus === RequestStatus.NOT_COMPLETED
+)
+
+const contentEditable = computed(() => allowEdit && editMode)
 
 const $q = useQuasar()
 
@@ -103,3 +119,11 @@ const handleGlossDataUpdate = (updatedGlossData: GlossData) => {
   emit('update:glossData', updatedGlossData)
 }
 </script>
+
+<style scoped>
+.gloss-detail-card {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+</style>

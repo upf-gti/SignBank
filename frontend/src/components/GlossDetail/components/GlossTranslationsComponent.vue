@@ -1,15 +1,24 @@
 <template>
-  <q-card-section>
-    <div class="text-h5 q-mb-md row justify-between items-center">
+  <q-card-section class="q-pt-none">
+    <div
+      v-if="!inlineEdit"
+      class="text-h5 q-mb-md row justify-between items-center"
+    >
       {{ translate('glossTranslations') }}
       <q-btn
         v-if="editMode"
         flat
-        round
+        dense
         icon="add"
         :label="translate('addSenseTranslation')"
         @click="addTranslation"
       />
+    </div>
+    <div
+      v-else
+      class="text-subtitle1 text-weight-medium q-mb-md"
+    >
+      {{ translate('glossTranslations') }}
     </div>
 
     <q-list class="row q-col-gutter-md">
@@ -17,16 +26,14 @@
         v-for="(translation, index) in glossTranslations"
         :key="translation.id || index"
         class="col-12 col-md-6 q-pa-none"
-        style="min-width: 300px"
         dense
       >
         <EditableModule
           :allow-edit="editMode"
+          :inline-edit="inlineEdit"
           :initial-edit-state="translation.isNew as boolean"
-          :show-delete="true"
-          :custom-edit-label="translate('editTranslation')"
-          :custom-delete-label="translate('deleteTranslation')"
-          class="full-width q-pa-none"
+          :show-delete="Boolean(translation.id) || glossTranslations.length > 1"
+          class="full-width"
           @save="() => saveTranslation(translation)"
           @cancel="() => cancelTranslation(translation)"
           @delete="() => deleteTranslation(translation)"
@@ -36,7 +43,6 @@
               bordered
               flat
               class="full-width q-pa-md"
-              style="min-height: 120px"
             >
               <div class="row justify-between items-center q-mb-sm">
                 <LanguageSelector
@@ -44,7 +50,7 @@
                   v-model="translation.language"
                   class="col"
                 />
-                <q-chip>
+                <q-chip v-else dense>
                   {{ translate(translation.language) }}
                 </q-chip>
               </div>
@@ -55,7 +61,6 @@
                 :label="translate('translation')"
                 outlined
                 dense
-                class="col-12"
               />
               <div
                 v-else
@@ -68,6 +73,17 @@
         </EditableModule>
       </q-item>
     </q-list>
+
+    <q-btn
+      v-if="inlineEdit && editMode && glossTranslations.length > 0"
+      flat
+      dense
+      icon="add"
+      color="primary"
+      :label="translate('addSenseTranslation')"
+      class="q-mt-sm"
+      @click="addTranslation"
+    />
   </q-card-section>
 </template>
 
@@ -78,7 +94,7 @@ import { api } from 'src/services/api';
 import { useQuasar } from 'quasar';
 import LanguageSelector from './LanguageSelector.vue';
 import EditableModule from 'src/components/Shared/EditableModule.vue';
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 
 const $q = useQuasar();
 const loading = ref(false);
@@ -86,6 +102,7 @@ const loading = ref(false);
 const props = defineProps<{
   glossData: GlossData;
   editMode: boolean;
+  inlineEdit?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -107,6 +124,12 @@ const glossTranslations = computed(() => {
     const orderB = languageOrder[b.language as keyof typeof languageOrder] || 4;
     return orderA - orderB;
   });
+});
+
+onMounted(() => {
+  if (props.inlineEdit && props.editMode && glossTranslations.value.length === 0) {
+    addTranslation();
+  }
 });
 
 const addTranslation = () => {

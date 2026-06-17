@@ -346,6 +346,16 @@ const translations: TranslateKeys = {
   retry: 'Reintentar',
   searchEmptyHint: 'Prueba con otros términos o ajusta los filtros de fonología',
   signBank: 'SignBank',
+  stepCore: 'Definición y traducción',
+  stepVideo: 'Vídeo y fonología',
+  stepOptional: 'Información adicional',
+  creationProgress: 'Progreso de la solicitud',
+  next: 'Siguiente',
+  back: 'Atrás',
+  advancedPhonology: 'Fonología avanzada',
+  createGlossHint: 'Después crearás la definición, el vídeo y la traducción en un proceso guiado paso a paso.',
+  requestAlreadyAccepted: 'Esta solicitud ya ha sido aceptada. El contenido es solo de lectura.',
+  requestAlreadyReviewed: 'Esta solicitud ya ha sido revisada. El contenido es solo de lectura.',
 };
 
 export default translations; 

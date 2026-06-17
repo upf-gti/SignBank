@@ -1,19 +1,15 @@
 <template>
-  <q-card-section
-    :style="{
-      maxHeight: '30dvh',
-      overflow: 'auto',
-    }"
-  >
-    <span class="text-bold">
+  <div class="sign-phonology q-mt-sm">
+    <div class="text-subtitle2 text-weight-medium q-mb-sm">
       {{ translate('signFonology') }}
-    </span>
+    </div>
     <PhonologyFilters
       :phonology-data="videoData"
       :is-editable="editMode"
+      :compact="compact"
       @update:phonology-data="$emit('update:video-data', $event)"
     />
-  </q-card-section>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -21,9 +17,10 @@ import { PhonologyData } from 'src/types/models';
 import translate from 'src/utils/translate';
 import PhonologyFilters from 'src/components/Shared/PhonologyFilters.vue';
 
-const { videoData, editMode } = defineProps<{
+defineProps<{
   videoData: PhonologyData;
   editMode: boolean;
+  compact?: boolean;
 }>();
 
 defineEmits<{

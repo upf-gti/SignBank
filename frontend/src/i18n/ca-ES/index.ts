@@ -414,6 +414,16 @@ const translations: TranslateKeys = {
   retry: 'Tornar a intentar',
   searchEmptyHint: 'Proveu amb altres termes o ajusteu els filtres de fonologia',
   signBank: 'SignBank',
+  stepCore: 'Definició i traducció',
+  stepVideo: 'Vídeo i fonologia',
+  stepOptional: 'Informació addicional',
+  creationProgress: 'Progrés de la sol·licitud',
+  next: 'Següent',
+  back: 'Enrere',
+  advancedPhonology: 'Fonologia avançada',
+  createGlossHint: 'Després creareu la definició, el vídeo i la traducció en un procés guiat pas a pas.',
+  requestAlreadyAccepted: 'Aquesta sol·licitud ja ha estat acceptada. El contingut és només de lectura.',
+  requestAlreadyReviewed: 'Aquesta sol·licitud ja ha estat revisada. El contingut és només de lectura.',
 };
 
 export default translations; 
