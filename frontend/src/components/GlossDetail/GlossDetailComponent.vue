@@ -5,7 +5,7 @@
     :class="{ 'gloss-detail-card--constrained': constrainedLayout }"
   >
     <GlossRequestProgress
-      v-if="isDraft"
+      v-if="editMode"
       :gloss-data="glossData"
     />
 
@@ -32,7 +32,7 @@
     />
 
     <MoreContentComponent
-      v-if="contentEditable || isDraft"
+      v-if="contentEditable"
       class="gloss-detail-card__edit"
       :gloss-data="glossData"
       :edit-mode="contentEditable"
@@ -40,6 +40,7 @@
       :submitting="submitting"
       @update:gloss-data="handleGlossDataUpdate"
       @submit-request="submitRequest"
+      @finish-edit="finishEdit"
     />
   </q-card>
 </template>
@@ -121,6 +122,14 @@ const declineRequest = () => {
 
 const submitRequest = () => {
   emit('submitRequest')
+}
+
+const finishEdit = () => {
+  $q.notify({
+    type: 'positive',
+    message: translate('glossSavedSuccessfully'),
+  })
+  emit('update:editMode', false)
 }
 
 const handleGlossDataUpdate = (updatedGlossData: GlossData) => {

@@ -1,8 +1,7 @@
 <template>
   <div>
-    <!-- Draft creation: guided stepper -->
     <q-stepper
-      v-if="isDraft"
+      v-if="editMode"
       v-model="step"
       color="primary"
       animated
@@ -120,83 +119,14 @@
           <q-btn
             color="primary"
             unelevated
-            icon="send"
-            :label="translate('sendRequest')"
+            :icon="isDraft ? 'send' : 'check'"
+            :label="isDraft ? translate('sendRequest') : translate('save')"
             :loading="stepLoading || submitting"
-            @click="handleSend"
+            @click="handleFinish"
           />
         </q-stepper-navigation>
       </q-step>
     </q-stepper>
-
-    <!-- Published edit mode: tabbed layout for admin editing -->
-    <template v-else-if="editMode">
-      <q-tabs
-        v-model="selectedContent"
-        class="text-primary"
-        active-color="primary"
-        indicator-color="primary"
-        align="justify"
-        narrow-indicator
-      >
-        <q-tab
-          name="definitions"
-          :label="translate('definitions')"
-        />
-        <q-tab
-          name="videos"
-          :label="translate('videos')"
-        />
-        <q-tab
-          name="examples"
-          :label="translate('examples')"
-        />
-        <q-tab
-          name="related"
-          :label="translate('relatedGlosses')"
-        />
-      </q-tabs>
-
-      <q-tab-panels
-        v-model="selectedContent"
-        animated
-      >
-        <q-tab-panel name="definitions">
-          <DefinitionsComponent
-            :gloss-data="localGlossData"
-            :edit-mode="editMode"
-            :allow-edit="editMode"
-            @update:gloss-data="updateGlossData"
-          />
-        </q-tab-panel>
-
-        <q-tab-panel name="videos">
-          <VideosComponent
-            v-model="localGlossData"
-            :edit-mode="editMode"
-            @update:gloss-data="updateGlossData"
-          />
-        </q-tab-panel>
-
-        <q-tab-panel name="examples">
-          <ExamplesComponent
-            :gloss-data="localGlossData"
-            :edit-mode="editMode"
-            @update:gloss-data="updateGlossData"
-          />
-        </q-tab-panel>
-
-        <q-tab-panel name="related">
-          <RelatedGlosses
-            :related-glosses="localGlossData.relationsAsSource || []"
-            :minimal-pairs="localGlossData.minimalPairsAsSource || []"
-            :edit-mode="editMode"
-            :gloss-id="localGlossData.id || ''"
-            @update:gloss-data="updateGlossData"
-          />
-        </q-tab-panel>
-      </q-tab-panels>
-    </template>
   </div>
 </template>
 
@@ -211,7 +141,6 @@ import RelatedGlosses from './RelatedGlosses.vue';
 import DefinitionsComponent from './DefinitionsComponent/DefinitionsComponent.vue';
 
 const $q = useQuasar()
-const selectedContent = ref<string>('definitions')
 const step = ref(1)
 const stepLoading = ref(false)
 
@@ -222,6 +151,7 @@ const examplesRef = ref<InstanceType<typeof ExamplesComponent> | null>(null)
 const emit = defineEmits<{
   (e: 'update:glossData', glossData: GlossData): void
   (e: 'submitRequest'): void
+  (e: 'finishEdit'): void
 }>();
 
 const { glossData, editMode, isDraft = false, submitting = false } = defineProps<{
@@ -236,6 +166,12 @@ const localGlossData = ref<GlossData>(glossData);
 watch(() => glossData, (newGlossData) => {
   localGlossData.value = newGlossData;
 }, { deep: true });
+
+watch(() => editMode, (isEditing) => {
+  if (isEditing) {
+    step.value = 1
+  }
+});
 
 const updateGlossData = (updated: GlossData) => {
   localGlossData.value = updated;
@@ -288,11 +224,16 @@ async function goToStep(targetStep: number) {
   }
 }
 
-async function handleSend() {
+async function handleFinish() {
   stepLoading.value = true
   try {
     await examplesRef.value?.saveAll(true)
-    emit('submitRequest')
+
+    if (isDraft) {
+      emit('submitRequest')
+    } else {
+      emit('finishEdit')
+    }
   } finally {
     stepLoading.value = false
   }

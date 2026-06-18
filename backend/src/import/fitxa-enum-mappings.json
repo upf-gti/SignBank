@@ -1,0 +1,3448 @@
+{
+  "meta": {
+    "generatedAt": "2026-06-18T15:52:24.429Z",
+    "sourceFile": "Traducció etiquetes-Taules.xlsx",
+    "description": "Maps fitxa/scraper labels (CA/EN) to SignBank Prisma enum IDs. Lookup: normalize input, match aliases[]."
+  },
+  "fields": {
+    "handedness": {
+      "note": "JSON field phonology.nombre_mans. SignBank Hand (RIGHT/LEFT/BOTH) is a different concept — store handedness code separately or extend schema.",
+      "entries": [
+        {
+          "code": "1",
+          "labelCa": 1,
+          "labelEn": "One-handed sign",
+          "aliases": [
+            "1"
+          ]
+        },
+        {
+          "code": "2a",
+          "labelCa": "2a",
+          "labelEn": "Two-handed asymmetrical sing: the weak hand is the location in the sign",
+          "aliases": [
+            "2a"
+          ]
+        },
+        {
+          "code": "2n",
+          "labelCa": "2n",
+          "labelEn": "Two-handed sign in which both hands move but the hands are not mirrored in the sagittal plane. Their handshapes may differ",
+          "aliases": [
+            "2n"
+          ]
+        },
+        {
+          "code": "2s",
+          "labelCa": "2s",
+          "labelEn": "Two-handed symmetrical sing: both hands move and have the same handshape (note: the location may occasionally be non-identical)",
+          "aliases": [
+            "2s"
+          ]
+        },
+        {
+          "code": "x",
+          "labelCa": "x",
+          "labelEn": "Handedness not applicable",
+          "aliases": [
+            "x"
+          ]
+        }
+      ]
+    },
+    "configuration": {
+      "enum": "HandConfiguration",
+      "jsonField": "phonology.configuracio",
+      "alsoMaps": [
+        "configuracio_ma_dominant",
+        "configuracio_ma_no_dominant"
+      ],
+      "entries": [
+        {
+          "signbankId": "CONF_1",
+          "aliases": [
+            "(baby_o)",
+            "baby_o",
+            "baby_o ()"
+          ]
+        },
+        {
+          "signbankId": "CONF_10",
+          "aliases": [
+            "4",
+            "4 (4)"
+          ]
+        },
+        {
+          "signbankId": "CONF_11",
+          "aliases": [
+            "4_curved",
+            "4_curved (4d)",
+            "4d",
+            "4d (4_curved)"
+          ]
+        },
+        {
+          "signbankId": "CONF_12",
+          "aliases": [
+            "5",
+            "5 (5)"
+          ]
+        },
+        {
+          "signbankId": "CONF_13",
+          "aliases": [
+            "5d",
+            "5d (c_spread)",
+            "c_spread",
+            "c_spread (5d)"
+          ]
+        },
+        {
+          "signbankId": "CONF_14",
+          "aliases": [
+            "6",
+            "6 (a)",
+            "a",
+            "a (6)"
+          ]
+        },
+        {
+          "signbankId": "CONF_15",
+          "aliases": [
+            "6d",
+            "6d (6d)"
+          ]
+        },
+        {
+          "signbankId": "CONF_16",
+          "aliases": [
+            "7",
+            "7 (baby_beak_open)",
+            "baby_beak_open",
+            "baby_beak_open (7)"
+          ]
+        },
+        {
+          "signbankId": "CONF_18",
+          "aliases": [
+            "8",
+            "8 (w)",
+            "w",
+            "w (8)"
+          ]
+        },
+        {
+          "signbankId": "CONF_19",
+          "aliases": [
+            "8d",
+            "8d (v_curved)",
+            "v_curved",
+            "v_curved (8d)"
+          ]
+        },
+        {
+          "signbankId": "CONF_1D82E",
+          "aliases": [
+            "8t",
+            "8t (l2)",
+            "l2",
+            "l2 (8t)"
+          ]
+        },
+        {
+          "signbankId": "CONF_1D834",
+          "aliases": [
+            "2t",
+            "2t (beak2_open)",
+            "beak2_open",
+            "beak2_open (2t)"
+          ]
+        },
+        {
+          "signbankId": "CONF_1D86C",
+          "aliases": [
+            "7d",
+            "7d (baby_c)",
+            "baby_c",
+            "baby_c (7d)"
+          ]
+        },
+        {
+          "signbankId": "CONF_1D87D",
+          "aliases": [
+            "beak_open",
+            "beak_open (ce)",
+            "ce",
+            "ce (beak_open)"
+          ]
+        },
+        {
+          "signbankId": "CONF_1D88E",
+          "aliases": [
+            "9",
+            "9 (9)"
+          ]
+        },
+        {
+          "signbankId": "CONF_1D8A7",
+          "aliases": [
+            "5r",
+            "5r (5r)"
+          ]
+        },
+        {
+          "signbankId": "CONF_1D8B",
+          "aliases": [
+            "5r_closed",
+            "5r_closed (5r_tancat)",
+            "5r_tancat",
+            "5r_tancat (5r_closed)"
+          ]
+        },
+        {
+          "signbankId": "CONF_1D8BA",
+          "aliases": [
+            "ily",
+            "ily (ily)"
+          ]
+        },
+        {
+          "signbankId": "CONF_1D8C3",
+          "aliases": [
+            "(cor_e)",
+            "cor_e",
+            "cor_e ()"
+          ]
+        },
+        {
+          "signbankId": "CONF_1D8C5",
+          "aliases": [
+            "5m",
+            "5m (cor)",
+            "cor",
+            "cor (5m)"
+          ]
+        },
+        {
+          "signbankId": "CONF_1D8C7",
+          "aliases": [
+            "cor-e",
+            "cor-e (middle finger)",
+            "middle finger",
+            "middle finger (cor-e)"
+          ]
+        },
+        {
+          "signbankId": "CONF_2",
+          "aliases": [
+            "0e",
+            "0e (baby_beak_closed)",
+            "baby_beak_closed",
+            "baby_beak_closed (0e)"
+          ]
+        },
+        {
+          "signbankId": "CONF_20",
+          "aliases": [
+            "a",
+            "a (e)",
+            "e",
+            "e (a)"
+          ]
+        },
+        {
+          "signbankId": "CONF_21",
+          "aliases": [
+            "b",
+            "b (b)"
+          ]
+        },
+        {
+          "signbankId": "CONF_22",
+          "aliases": [
+            "b_bent",
+            "b_bent (bd)",
+            "bd",
+            "bd (b_bent)"
+          ]
+        },
+        {
+          "signbankId": "CONF_23",
+          "aliases": [
+            "c",
+            "c (c)"
+          ]
+        },
+        {
+          "signbankId": "CONF_24",
+          "aliases": [
+            "d",
+            "d (p)",
+            "p",
+            "p (d)"
+          ]
+        },
+        {
+          "signbankId": "CONF_25",
+          "aliases": [
+            "c_spread",
+            "c_spread (e)",
+            "e",
+            "e (c_spread)"
+          ]
+        },
+        {
+          "signbankId": "CONF_26",
+          "aliases": [
+            "f",
+            "f (f)"
+          ]
+        },
+        {
+          "signbankId": "CONF_27",
+          "aliases": [
+            "baby_c_extended",
+            "baby_c_extended (g_ssi)",
+            "g_ssi",
+            "g_ssi (baby_c_extended)"
+          ]
+        },
+        {
+          "signbankId": "CONF_29",
+          "aliases": [
+            "(id)",
+            "id",
+            "id ()"
+          ]
+        },
+        {
+          "signbankId": "CONF_2A",
+          "aliases": [
+            "baby_beak",
+            "baby_beak (oe)",
+            "oe",
+            "oe (baby_beak)"
+          ]
+        },
+        {
+          "signbankId": "CONF_3",
+          "aliases": [
+            "0_ssi",
+            "0_ssi (o)",
+            "o",
+            "o (0_ssi)"
+          ]
+        },
+        {
+          "signbankId": "CONF_30",
+          "aliases": [
+            "i",
+            "i (i)"
+          ]
+        },
+        {
+          "signbankId": "CONF_31",
+          "aliases": [
+            "k",
+            "k (k)"
+          ]
+        },
+        {
+          "signbankId": "CONF_32",
+          "aliases": [
+            "o",
+            "o (t)",
+            "t",
+            "t (o)"
+          ]
+        },
+        {
+          "signbankId": "CONF_33",
+          "aliases": [
+            "beak",
+            "beak (q)",
+            "q",
+            "q (beak)"
+          ]
+        },
+        {
+          "signbankId": "CONF_34",
+          "aliases": [
+            "r",
+            "r (r)"
+          ]
+        },
+        {
+          "signbankId": "CONF_35",
+          "aliases": [
+            "(s)",
+            "s",
+            "s ()"
+          ]
+        },
+        {
+          "signbankId": "CONF_36",
+          "aliases": [
+            "(t)",
+            "t",
+            "t ()"
+          ]
+        },
+        {
+          "signbankId": "CONF_37",
+          "aliases": [
+            "money",
+            "money (t_antiga)",
+            "t_antiga",
+            "t_antiga (money)"
+          ]
+        },
+        {
+          "signbankId": "CONF_38",
+          "aliases": [
+            "homs",
+            "homs (u)",
+            "u",
+            "u (homs)"
+          ]
+        },
+        {
+          "signbankId": "CONF_39",
+          "aliases": [
+            "y",
+            "y (y_ssi)",
+            "y_ssi",
+            "y_ssi (y)"
+          ]
+        },
+        {
+          "signbankId": "CONF_4",
+          "aliases": [
+            "1",
+            "1 (1)"
+          ]
+        },
+        {
+          "signbankId": "CONF_40",
+          "aliases": [
+            "5m_closed",
+            "5m_closed (polze-cor)",
+            "polze-cor",
+            "polze-cor (5m_closed)"
+          ]
+        },
+        {
+          "signbankId": "CONF_42",
+          "aliases": [
+            "5m_closed",
+            "5m_closed (5m_tancat)",
+            "5m_tancat",
+            "5m_tancat (5m_closed)"
+          ]
+        },
+        {
+          "signbankId": "CONF_5",
+          "aliases": [
+            "1_curved",
+            "1_curved (1d)",
+            "1d",
+            "1d (1_curved)"
+          ]
+        },
+        {
+          "signbankId": "CONF_6",
+          "aliases": [
+            "2",
+            "2 (beak2_open_spread)",
+            "beak2_open_spread",
+            "beak2_open_spread (2)"
+          ]
+        },
+        {
+          "signbankId": "CONF_7",
+          "aliases": [
+            "2d",
+            "2d (c2_spread)",
+            "c2_spread",
+            "c2_spread (2d)"
+          ]
+        },
+        {
+          "signbankId": "CONF_8",
+          "aliases": [
+            "3",
+            "3 (3)"
+          ]
+        },
+        {
+          "signbankId": "CONF_9",
+          "aliases": [
+            "3_curved",
+            "3_curved (3d)",
+            "3d",
+            "3d (3_curved)"
+          ]
+        }
+      ],
+      "unmapped": [
+        {
+          "cat": "ASL_T",
+          "en": "ASL_T",
+          "ordre": "",
+          "idConfig": "https://drive.google.com/open?id=17n4SRrTfsRtPO0P-CwEFur-7LZvvhwl_",
+          "signbankId": null
+        },
+        {
+          "cat": "G",
+          "en": "G",
+          "ordre": "",
+          "idConfig": "https://drive.google.com/open?id=16jXwkZuLMjY9l0cpVc2RDtcOq1i9wbLy",
+          "signbankId": null
+        },
+        {
+          "cat": "8e",
+          "en": "Beak2",
+          "ordre": "",
+          "idConfig": "",
+          "signbankId": null
+        },
+        {
+          "cat": "anular-cor-e",
+          "en": "",
+          "ordre": "",
+          "idConfig": "",
+          "signbankId": null
+        },
+        {
+          "cat": "Ue",
+          "en": "",
+          "ordre": "",
+          "idConfig": "",
+          "signbankId": null
+        },
+        {
+          "cat": "5e",
+          "en": "Beak_open_spread",
+          "ordre": "",
+          "idConfig": "",
+          "signbankId": null
+        }
+      ]
+    },
+    "configurationChanges": {
+      "enum": "ConfigurationChange",
+      "sheet": "Canvi de configuració",
+      "entries": [
+        {
+          "signbankId": "BENDING",
+          "aliases": [
+            "bending",
+            "inclinacio"
+          ]
+        },
+        {
+          "signbankId": "CLOSING",
+          "aliases": [
+            "closing",
+            "tancament"
+          ]
+        },
+        {
+          "signbankId": "CLOSING_AND_RUBBING",
+          "aliases": [
+            "closing + rubbing",
+            "closing+rubbing",
+            "tancament + friccio"
+          ]
+        },
+        {
+          "signbankId": "CLOSING_AND_WIGGLING",
+          "aliases": [
+            "closing + wiggling",
+            "closing+wiggling",
+            "tancament + vibracio"
+          ]
+        },
+        {
+          "signbankId": "CLOSING_TO_OPENING",
+          "aliases": [
+            "closing > opening",
+            "closing>opening",
+            "tancament>obertura"
+          ]
+        },
+        {
+          "signbankId": "CONSECUTIVE_CLOSING",
+          "aliases": [
+            "consecutive closing",
+            "tancament consecutiu"
+          ]
+        },
+        {
+          "signbankId": "CURVING",
+          "aliases": [
+            "curving",
+            "encorbament"
+          ]
+        },
+        {
+          "signbankId": "NONE_TO_SPREADING",
+          "aliases": [
+            "none > spreading",
+            "none>spreading",
+            "res>extensio"
+          ]
+        },
+        {
+          "signbankId": "OPENING",
+          "aliases": [
+            "obertura",
+            "opening"
+          ]
+        },
+        {
+          "signbankId": "OPENING_AND_RUBBING",
+          "aliases": [
+            "obertura+friccio",
+            "opening + rubbing",
+            "opening+rubbing"
+          ]
+        },
+        {
+          "signbankId": "OPENING_AND_SPREADING",
+          "aliases": [
+            "obertura+extensio",
+            "opening + spreading",
+            "opening+spreading"
+          ]
+        },
+        {
+          "signbankId": "OPENING_AND_WIGGLING",
+          "aliases": [
+            "obertura+vibracio",
+            "opening + wiggling",
+            "opening+wiggling"
+          ]
+        },
+        {
+          "signbankId": "OPENING_TO_CLOSING",
+          "aliases": [
+            "obertura>tancament",
+            "opening > closing",
+            "opening>closing"
+          ]
+        },
+        {
+          "signbankId": "RUBBING",
+          "aliases": [
+            "friccio",
+            "rubbing"
+          ]
+        },
+        {
+          "signbankId": "SPREADING",
+          "aliases": [
+            "extensio",
+            "spreading"
+          ]
+        },
+        {
+          "signbankId": "UNBENDING",
+          "aliases": [
+            "estirament",
+            "unbending"
+          ]
+        },
+        {
+          "signbankId": "UNCURVING",
+          "aliases": [
+            "redrecament",
+            "uncurving"
+          ]
+        },
+        {
+          "signbankId": "UNSPREADING",
+          "aliases": [
+            "ajustament",
+            "unspreading"
+          ]
+        },
+        {
+          "signbankId": "WIGGLING",
+          "aliases": [
+            "vibracio",
+            "wiggling"
+          ]
+        }
+      ],
+      "unmapped": [
+        {
+          "sourceEn": ">",
+          "sourceCa": "",
+          "guessedId": "TO"
+        },
+        {
+          "sourceEn": "\"+\"",
+          "sourceCa": "",
+          "guessedId": "AND"
+        },
+        {
+          "sourceEn": "/",
+          "sourceCa": "",
+          "guessedId": "OR"
+        }
+      ],
+      "jsonField": "phonology.canvi_configuracio"
+    },
+    "relationBetweenArticulators": {
+      "enum": "RelationBetweenArticulators",
+      "sheet": "Relació entre articuladors",
+      "entries": [
+        {
+          "signbankId": "ABOVE",
+          "aliases": [
+            "above",
+            "damunt"
+          ]
+        },
+        {
+          "signbankId": "AROUND",
+          "aliases": [
+            "al voltant",
+            "around"
+          ]
+        },
+        {
+          "signbankId": "BACK",
+          "aliases": [
+            "back",
+            "darrere"
+          ]
+        },
+        {
+          "signbankId": "BELOW",
+          "aliases": [
+            "below",
+            "sota"
+          ]
+        },
+        {
+          "signbankId": "CROSS",
+          "aliases": [
+            "creuat",
+            "cross"
+          ]
+        },
+        {
+          "signbankId": "FRONT",
+          "aliases": [
+            "davant",
+            "front"
+          ]
+        },
+        {
+          "signbankId": "INSIDE",
+          "aliases": [
+            "dins",
+            "inside"
+          ]
+        },
+        {
+          "signbankId": "INTERWOVEN",
+          "aliases": [
+            "entrellacats",
+            "interwoven"
+          ]
+        },
+        {
+          "signbankId": "NEXT_TO",
+          "aliases": [
+            "al costat",
+            "next-to"
+          ]
+        }
+      ],
+      "unmapped": [
+        {
+          "sourceEn": "Above/below",
+          "sourceCa": "Damunt / Sota",
+          "guessedId": "ABOVE_OR_BELOW"
+        },
+        {
+          "sourceEn": "Front/back",
+          "sourceCa": "Davant / Darrere",
+          "guessedId": "FRONT_OR_BACK"
+        },
+        {
+          "sourceEn": ">",
+          "sourceCa": "canvi seqüencial",
+          "guessedId": "TO"
+        },
+        {
+          "sourceEn": "\"+\"",
+          "sourceCa": "valors simultanis",
+          "guessedId": "AND"
+        },
+        {
+          "sourceEn": "/",
+          "sourceCa": "Diferent valor per cada mà",
+          "guessedId": "OR"
+        }
+      ],
+      "jsonField": "phonology.relacio_articuladors"
+    },
+    "location": {
+      "enum": "Location",
+      "sheet": "Localitzacions",
+      "entries": [
+        {
+          "signbankId": "ARM",
+          "aliases": [
+            "arm",
+            "brac"
+          ]
+        },
+        {
+          "signbankId": "ARMPIT",
+          "aliases": [
+            "aixella",
+            "armpit"
+          ]
+        },
+        {
+          "signbankId": "ARMPIT_TO_NEUTRAL_SPACE",
+          "aliases": [
+            "aixella > espai neutre",
+            "armpit > neutral space"
+          ]
+        },
+        {
+          "signbankId": "BACK",
+          "aliases": [
+            "back",
+            "esquena"
+          ]
+        },
+        {
+          "signbankId": "BACK_OF_HEAD",
+          "aliases": [
+            "back of head",
+            "darrera del cap"
+          ]
+        },
+        {
+          "signbankId": "BELLY",
+          "aliases": [
+            "belly",
+            "panxa"
+          ]
+        },
+        {
+          "signbankId": "BELLY_AND_FOREHEAD",
+          "aliases": [
+            "belly + forehead",
+            "panxa + front"
+          ]
+        },
+        {
+          "signbankId": "BELLY_TO_CHEST",
+          "aliases": [
+            "belly > chest",
+            "belly>chest",
+            "panxa > pit"
+          ]
+        },
+        {
+          "signbankId": "BOTTOM_OR_CROTCH",
+          "aliases": [
+            "bottom / crotch",
+            "part inferior / entremig"
+          ]
+        },
+        {
+          "signbankId": "BREAST_CONTRA",
+          "aliases": [
+            "breast_contra",
+            "pit_contra"
+          ]
+        },
+        {
+          "signbankId": "BREAST_IPSI",
+          "aliases": [
+            "breast_ipsi",
+            "pit_ipsi"
+          ]
+        },
+        {
+          "signbankId": "BREASTS",
+          "aliases": [
+            "breasts",
+            "pit"
+          ]
+        },
+        {
+          "signbankId": "CHEEK",
+          "aliases": [
+            "cheek",
+            "galta"
+          ]
+        },
+        {
+          "signbankId": "CHEEK_CONTRA",
+          "aliases": [
+            "cheek contra",
+            "galta_contra"
+          ]
+        },
+        {
+          "signbankId": "CHEEK_TO_CHEEK",
+          "aliases": [
+            "cheek > cheek",
+            "galta > galta"
+          ]
+        },
+        {
+          "signbankId": "CHEEK_TO_CHIN",
+          "aliases": [
+            "cheek > chin",
+            "galta > barbeta"
+          ]
+        },
+        {
+          "signbankId": "CHEEKBONE",
+          "aliases": [
+            "cheekbone",
+            "pomul"
+          ]
+        },
+        {
+          "signbankId": "CHEST",
+          "aliases": [
+            "chest",
+            "torax"
+          ]
+        },
+        {
+          "signbankId": "CHEST_CONTRA",
+          "aliases": [
+            "chest contra",
+            "torax_contra"
+          ]
+        },
+        {
+          "signbankId": "CHEST_TO_CHIN",
+          "aliases": [
+            "chest > chin",
+            "torax > barbeta"
+          ]
+        },
+        {
+          "signbankId": "CHEST_TO_NEUTRAL_SPACE",
+          "aliases": [
+            "chest > neutral space",
+            "torax > espai neutre"
+          ]
+        },
+        {
+          "signbankId": "CHIN",
+          "aliases": [
+            "barbeta",
+            "chin"
+          ]
+        },
+        {
+          "signbankId": "CHIN_CONTRA",
+          "aliases": [
+            "barbeta_contra",
+            "chin contra"
+          ]
+        },
+        {
+          "signbankId": "CHIN_TO_CHEST",
+          "aliases": [
+            "barbeta > torax",
+            "chin > chest"
+          ]
+        },
+        {
+          "signbankId": "CHIN_TO_NEUTRAL_SPACE",
+          "aliases": [
+            "barbeta > espai neutre",
+            "chin > neutral space"
+          ]
+        },
+        {
+          "signbankId": "CHIN_TO_WEAK_HAND_PALM",
+          "aliases": [
+            "barbeta > ma no-dominant: palmell",
+            "chin > weak hand: palm"
+          ]
+        },
+        {
+          "signbankId": "CROTCH",
+          "aliases": [
+            "crotch",
+            "entrecuix"
+          ]
+        },
+        {
+          "signbankId": "EAR",
+          "aliases": [
+            "ear",
+            "orella"
+          ]
+        },
+        {
+          "signbankId": "EAR_TO_CHEEK",
+          "aliases": [
+            "ear > cheek",
+            "orella > galta"
+          ]
+        },
+        {
+          "signbankId": "EAR_TO_CHEST",
+          "aliases": [
+            "ear > chest",
+            "orella > torax"
+          ]
+        },
+        {
+          "signbankId": "EAR_TO_MOUTH",
+          "aliases": [
+            "ear > mouth",
+            "orella > boca"
+          ]
+        },
+        {
+          "signbankId": "EARLOBE",
+          "aliases": [
+            "earlobe",
+            "lobul"
+          ]
+        },
+        {
+          "signbankId": "EAST",
+          "aliases": [
+            "east",
+            "est"
+          ]
+        },
+        {
+          "signbankId": "ELBOW",
+          "aliases": [
+            "colze",
+            "elbow"
+          ]
+        },
+        {
+          "signbankId": "EYE",
+          "aliases": [
+            "eye",
+            "ull"
+          ]
+        },
+        {
+          "signbankId": "EYE_TO_NEUTRAL_SPACE",
+          "aliases": [
+            "eye > neutral space",
+            "ull > espai neutre"
+          ]
+        },
+        {
+          "signbankId": "EYEBROW",
+          "aliases": [
+            "cella",
+            "eyebrow"
+          ]
+        },
+        {
+          "signbankId": "FACE",
+          "aliases": [
+            "cara",
+            "face"
+          ]
+        },
+        {
+          "signbankId": "FACE_IPSI",
+          "aliases": [
+            "cara ipsi",
+            "face ipsi"
+          ]
+        },
+        {
+          "signbankId": "FACE_TO_HEAD",
+          "aliases": [
+            "cara > cap",
+            "face > head",
+            "face> head"
+          ]
+        },
+        {
+          "signbankId": "FACE_TO_NEUTRAL_SPACE",
+          "aliases": [
+            "cara > espai neutre",
+            "face > neutral space"
+          ]
+        },
+        {
+          "signbankId": "FLANK",
+          "aliases": [
+            "flank",
+            "templa"
+          ]
+        },
+        {
+          "signbankId": "FLANK_OR_HEAD",
+          "aliases": [
+            "flank/head",
+            "templa / cap"
+          ]
+        },
+        {
+          "signbankId": "FOREHEAD",
+          "aliases": [
+            "forehead",
+            "front"
+          ]
+        },
+        {
+          "signbankId": "FOREHEAD_CONTRA",
+          "aliases": [
+            "forehead contra",
+            "front_contra"
+          ]
+        },
+        {
+          "signbankId": "FOREHEAD_TO_CHEST",
+          "aliases": [
+            "forehead > chest",
+            "front > pit"
+          ]
+        },
+        {
+          "signbankId": "FOREHEAD_TO_CHIN",
+          "aliases": [
+            "forehead > chin",
+            "front > barebeta"
+          ]
+        },
+        {
+          "signbankId": "FOREHEAD_TO_NEUTRAL_SPACE",
+          "aliases": [
+            "forehead > neutral space",
+            "front > espai neutre"
+          ]
+        },
+        {
+          "signbankId": "FOREHEAD_TO_WEAK_HAND_PALM",
+          "aliases": [
+            "forehead > weak hand: palm",
+            "front > ma no-dominant: palmell"
+          ]
+        },
+        {
+          "signbankId": "HEAD",
+          "aliases": [
+            "cap",
+            "head"
+          ]
+        },
+        {
+          "signbankId": "HEAD_AND_NEUTRAL_SPACE",
+          "aliases": [
+            "cap + espai neutre",
+            "head + neutral space"
+          ]
+        },
+        {
+          "signbankId": "HEAD_CONTRA",
+          "aliases": [
+            "cap contra",
+            "head contra"
+          ]
+        },
+        {
+          "signbankId": "HEAD_IPSI",
+          "aliases": [
+            "cap ipsi",
+            "head ipsi"
+          ]
+        },
+        {
+          "signbankId": "HEAD_TO_CHEST",
+          "aliases": [
+            "cap > pit",
+            "head > chest"
+          ]
+        },
+        {
+          "signbankId": "HEAD_TO_CHEST_TO_SHOULDER",
+          "aliases": [
+            "cap > pit > espatlla",
+            "head > chest > shoulder"
+          ]
+        },
+        {
+          "signbankId": "HEAD_TO_NEUTRAL_SPACE",
+          "aliases": [
+            "cap > espai neutre",
+            "head > neutral space"
+          ]
+        },
+        {
+          "signbankId": "HEAD_TO_SHOULDER",
+          "aliases": [
+            "cap > espatlla",
+            "head > shoulder"
+          ]
+        },
+        {
+          "signbankId": "HEAD_TO_WEAK_HAND_PALM",
+          "aliases": [
+            "cap > ma no-dominant: palmell",
+            "head > weak hand: palm"
+          ]
+        },
+        {
+          "signbankId": "HIP",
+          "aliases": [
+            "hip",
+            "maluc"
+          ]
+        },
+        {
+          "signbankId": "HORIZONTAL_PLANE",
+          "aliases": [
+            "horizontal plane",
+            "pla horitzontal"
+          ]
+        },
+        {
+          "signbankId": "KNEE",
+          "aliases": [
+            "genoll",
+            "knee"
+          ]
+        },
+        {
+          "signbankId": "LEG",
+          "aliases": [
+            "cama",
+            "leg"
+          ]
+        },
+        {
+          "signbankId": "LEG_TO_WAIST",
+          "aliases": [
+            "cama > cintura",
+            "leg > waist"
+          ]
+        },
+        {
+          "signbankId": "LOWER_ARM",
+          "aliases": [
+            "avantbrac",
+            "lower arm"
+          ]
+        },
+        {
+          "signbankId": "LOWER_LIP",
+          "aliases": [
+            "llavi inferior",
+            "lower lip"
+          ]
+        },
+        {
+          "signbankId": "MOUTH",
+          "aliases": [
+            "boca",
+            "mouth"
+          ]
+        },
+        {
+          "signbankId": "MOUTH_CONTRA",
+          "aliases": [
+            "boca_contra",
+            "mouth contra"
+          ]
+        },
+        {
+          "signbankId": "MOUTH_IPSI",
+          "aliases": [
+            "boca_ipsi",
+            "mouth ipsi"
+          ]
+        },
+        {
+          "signbankId": "MOUTH_TO_CHEEK",
+          "aliases": [
+            "boca > galta",
+            "mouth > cheek"
+          ]
+        },
+        {
+          "signbankId": "MOUTH_TO_CHEST",
+          "aliases": [
+            "boca > pit",
+            "mouth > chest"
+          ]
+        },
+        {
+          "signbankId": "MOUTH_TO_CHIN",
+          "aliases": [
+            "boca > barbeta",
+            "mouth > chin"
+          ]
+        },
+        {
+          "signbankId": "MOUTH_TO_NEUTRAL_SPACE",
+          "aliases": [
+            "boca > espai neutre",
+            "mouth > neutral space"
+          ]
+        },
+        {
+          "signbankId": "MOUTH_TO_WEAK_HAND",
+          "aliases": [
+            "boca > ma no-dominant",
+            "mouth > weak hand"
+          ]
+        },
+        {
+          "signbankId": "MOUTH_TO_WEAK_HAND_PALM",
+          "aliases": [
+            "boca > ma no-dominant: palmell",
+            "mouth > weak hand: palm"
+          ]
+        },
+        {
+          "signbankId": "NECK",
+          "aliases": [
+            "coll",
+            "neck"
+          ]
+        },
+        {
+          "signbankId": "NECK_CONTRA",
+          "aliases": [
+            "coll_contra",
+            "neck contra"
+          ]
+        },
+        {
+          "signbankId": "NECK_TO_CHEST",
+          "aliases": [
+            "coll > pit",
+            "neck > chest"
+          ]
+        },
+        {
+          "signbankId": "NECK_TO_NEUTRAL_SPACE",
+          "aliases": [
+            "coll > espai neutre",
+            "neck > neutral space"
+          ]
+        },
+        {
+          "signbankId": "NEUTRAL_SPACE",
+          "aliases": [
+            "espai neutre",
+            "neutral space"
+          ]
+        },
+        {
+          "signbankId": "NEUTRAL_SPACE_OR_WEAK_HAND_FRONT",
+          "aliases": [
+            "espai neutre / ma no-dominant: davant",
+            "neutral space / weak hand: front"
+          ]
+        },
+        {
+          "signbankId": "NEUTRAL_SPACE_TO_CHEEK",
+          "aliases": [
+            "espai neutre > galta",
+            "neutral space > cheek"
+          ]
+        },
+        {
+          "signbankId": "NEUTRAL_SPACE_TO_HEAD",
+          "aliases": [
+            "espai neutre > cap",
+            "neutral space > head"
+          ]
+        },
+        {
+          "signbankId": "NEUTRAL_SPACE_TO_MOUTH",
+          "aliases": [
+            "espai neutre > boca",
+            "neutral space > mouth"
+          ]
+        },
+        {
+          "signbankId": "NEUTRAL_SPACE_TO_NOSE",
+          "aliases": [
+            "espai neutre > nas",
+            "neutral space > nose"
+          ]
+        },
+        {
+          "signbankId": "NEUTRAL_SPACE_TO_SHOULDER",
+          "aliases": [
+            "espai neutre > espatlla",
+            "neutral space > shoulder"
+          ]
+        },
+        {
+          "signbankId": "NEUTRAL_SPACE_TO_WEAK_HAND",
+          "aliases": [
+            "espai neutre > ma no-dominant",
+            "neutral space > weak hand"
+          ]
+        },
+        {
+          "signbankId": "NOSE",
+          "aliases": [
+            "nas",
+            "nose"
+          ]
+        },
+        {
+          "signbankId": "NOSE_TO_CHIN",
+          "aliases": [
+            "nas > barbeta",
+            "nose > chin"
+          ]
+        },
+        {
+          "signbankId": "NOSE_TO_NEUTRAL_SPACE",
+          "aliases": [
+            "nas > espai neutre",
+            "nose > neutral space"
+          ]
+        },
+        {
+          "signbankId": "NOSE_TO_WEAK_HAND",
+          "aliases": [
+            "nas > ma no-dominant",
+            "nose > weak hand"
+          ]
+        },
+        {
+          "signbankId": "PARALLEL_PLANE",
+          "aliases": [
+            "parallel plane",
+            "pla paral·lel"
+          ]
+        },
+        {
+          "signbankId": "R_LOC",
+          "aliases": [
+            "r-loc"
+          ]
+        },
+        {
+          "signbankId": "R_LOC_TO_R_LOC",
+          "aliases": [
+            "r-loc > r-loc"
+          ]
+        },
+        {
+          "signbankId": "SHOULDER",
+          "aliases": [
+            "espatlla",
+            "shoulder"
+          ]
+        },
+        {
+          "signbankId": "SHOULDER_CONTRA",
+          "aliases": [
+            "espatlla_contra",
+            "shoulder contra"
+          ]
+        },
+        {
+          "signbankId": "SHOULDER_TO_CHEST",
+          "aliases": [
+            "espatlla > pit",
+            "shoulder > chest"
+          ]
+        },
+        {
+          "signbankId": "SHOULDER_TO_HIT",
+          "aliases": [
+            "espatlla > cadera",
+            "shoulder > hit"
+          ]
+        },
+        {
+          "signbankId": "SHOULDER_TO_NEUTRAL_SPACE",
+          "aliases": [
+            "espatlla > espai neutre",
+            "shoulder > neutral space"
+          ]
+        },
+        {
+          "signbankId": "SHOULDER_TO_SHOULDER",
+          "aliases": [
+            "espatlla > espatlla",
+            "shoulder > shoulder"
+          ]
+        },
+        {
+          "signbankId": "SHOULDER_TO_WEAK_HAND_PALM",
+          "aliases": [
+            "espatlla > ma no-dominant: palmell",
+            "shoulder > weak hand: palm"
+          ]
+        },
+        {
+          "signbankId": "TEETH",
+          "aliases": [
+            "dents",
+            "teeth"
+          ]
+        },
+        {
+          "signbankId": "TEMPLE",
+          "aliases": [
+            "templa",
+            "temple"
+          ]
+        },
+        {
+          "signbankId": "TEMPLE_TO_CHEEK",
+          "aliases": [
+            "templa > galta",
+            "temple > cheek"
+          ]
+        },
+        {
+          "signbankId": "TEMPLE_TO_CHEST",
+          "aliases": [
+            "templa > pit",
+            "temple > chest"
+          ]
+        },
+        {
+          "signbankId": "TEMPLE_TO_NEUTRAL_SPACE",
+          "aliases": [
+            "templa > espai neutre",
+            "temple > neutral space"
+          ]
+        },
+        {
+          "signbankId": "TEMPLE_TO_SHOULDER",
+          "aliases": [
+            "templa > espatlla",
+            "temple > shoulder"
+          ]
+        },
+        {
+          "signbankId": "THUMB",
+          "aliases": [
+            "polze",
+            "thumb"
+          ]
+        },
+        {
+          "signbankId": "TONGUE",
+          "aliases": [
+            "llengua",
+            "tongue"
+          ]
+        },
+        {
+          "signbankId": "TRUNK",
+          "aliases": [
+            "tronc",
+            "trunk"
+          ]
+        },
+        {
+          "signbankId": "UPPER_ARM",
+          "aliases": [
+            "part alta brac",
+            "upper arm"
+          ]
+        },
+        {
+          "signbankId": "UPPER_LIP",
+          "aliases": [
+            "llavi superior",
+            "upper lip"
+          ]
+        },
+        {
+          "signbankId": "VARIABLE",
+          "aliases": [
+            "variable"
+          ]
+        },
+        {
+          "signbankId": "VIRTUAL_OBJECT",
+          "aliases": [
+            "objecte virtual",
+            "virtual object"
+          ]
+        },
+        {
+          "signbankId": "WAIST",
+          "aliases": [
+            "cintura",
+            "waist"
+          ]
+        },
+        {
+          "signbankId": "WEAK_HAND",
+          "aliases": [
+            "ma no-dominant",
+            "weak hand"
+          ]
+        },
+        {
+          "signbankId": "WEAK_HAND_BACK",
+          "aliases": [
+            "ma no-dominant: darrere",
+            "weak hand: back"
+          ]
+        },
+        {
+          "signbankId": "WEAK_HAND_BASE",
+          "aliases": [
+            "ma no-dominant: base",
+            "weak hand: base"
+          ]
+        },
+        {
+          "signbankId": "WEAK_HAND_FINGER",
+          "aliases": [
+            "ma no-dominant: dit",
+            "weak hand: finger"
+          ]
+        },
+        {
+          "signbankId": "WEAK_HAND_FINGER_TIPS",
+          "aliases": [
+            "ma no-dominant: punta dels dits",
+            "weak hand: finger tips"
+          ]
+        },
+        {
+          "signbankId": "WEAK_HAND_FRONT",
+          "aliases": [
+            "ma no-dominant: davant",
+            "weak hand: front"
+          ]
+        },
+        {
+          "signbankId": "WEAK_HAND_INDEX_FINGER",
+          "aliases": [
+            "ma no-dominant: dit index",
+            "weak hand: index finger"
+          ]
+        },
+        {
+          "signbankId": "WEAK_HAND_KNUCKLES",
+          "aliases": [
+            "ma no-dominant: artells",
+            "weak hand: knuckles"
+          ]
+        },
+        {
+          "signbankId": "WEAK_HAND_MIDDLE_FINGER",
+          "aliases": [
+            "ma no-dominant: dit mig",
+            "weak hand: middle finger"
+          ]
+        },
+        {
+          "signbankId": "WEAK_HAND_PALM",
+          "aliases": [
+            "ma no-dominant: palmell",
+            "weak hand: palm"
+          ]
+        },
+        {
+          "signbankId": "WEAK_HAND_PINKIE",
+          "aliases": [
+            "ma no-dominant: menovell",
+            "weak hand: pinkie"
+          ]
+        },
+        {
+          "signbankId": "WEAK_HAND_PINKIE_SIDE",
+          "aliases": [
+            "ma no-dominant: costat menovell",
+            "weak hand: pinkie side"
+          ]
+        },
+        {
+          "signbankId": "WEAK_HAND_RING_FINGER",
+          "aliases": [
+            "ma no-dominant: anular",
+            "weak hand: ring finger"
+          ]
+        },
+        {
+          "signbankId": "WEAK_HAND_THENAR",
+          "aliases": [
+            "ma no-dominant: tenar",
+            "weak hand: thenar"
+          ]
+        },
+        {
+          "signbankId": "WEAK_HAND_THUMB",
+          "aliases": [
+            "ma no-dominant: polze",
+            "weak hand: thumb"
+          ]
+        },
+        {
+          "signbankId": "WEAK_HAND_THUMB_SIDE",
+          "aliases": [
+            "ma no-dominant: costat polze",
+            "weak hand: thumb side"
+          ]
+        },
+        {
+          "signbankId": "WEAK_HAND_THUMB_SIDE_TO_ARM",
+          "aliases": [
+            "ma no-dominant: costat polze > brac",
+            "weak hand: thumb side > arm"
+          ]
+        },
+        {
+          "signbankId": "WEAK_HAND_TO_ARM",
+          "aliases": [
+            "ma no-dominant > brac",
+            "weak hand > arm"
+          ]
+        },
+        {
+          "signbankId": "WEAK_HAND_TO_NEUTRAL_SPACE",
+          "aliases": [
+            "ma no-dominant > espai neutre",
+            "weak hand > neutral space"
+          ]
+        },
+        {
+          "signbankId": "WEAK_HAND_WEB_SPACE",
+          "aliases": [
+            "ma no-dominant: espai web",
+            "weak hand: web space"
+          ]
+        },
+        {
+          "signbankId": "WEST",
+          "aliases": [
+            "oest",
+            "west"
+          ]
+        },
+        {
+          "signbankId": "WRIST",
+          "aliases": [
+            "canell",
+            "wrist"
+          ]
+        }
+      ],
+      "unmapped": [
+        {
+          "sourceEn": "Between fingers",
+          "sourceCa": "Entre dits",
+          "guessedId": "BETWEEN_FINGERS"
+        },
+        {
+          "sourceEn": "Between legs",
+          "sourceCa": "Entre cames",
+          "guessedId": "BETWEEN_LEGS"
+        },
+        {
+          "sourceEn": "Bridge of the nose",
+          "sourceCa": "Pont del nas",
+          "guessedId": "BRIDGE_OF_THE_NOSE"
+        },
+        {
+          "sourceEn": "Chest > trunk",
+          "sourceCa": "Tòrax > Tronc",
+          "guessedId": "CHEST_TO_TRUNK"
+        },
+        {
+          "sourceEn": "Chin > weak hand: index finger",
+          "sourceCa": "Barbeta > mà no-dominant: dit índex",
+          "guessedId": "CHIN_TO_WEAK_HAND_INDEX_FINGER"
+        },
+        {
+          "sourceEn": "Chin > weak hand: thumb side",
+          "sourceCa": "Barbeta > mà no-dominant: polze",
+          "guessedId": "CHIN_TO_WEAK_HAND_THUMB_SIDE"
+        },
+        {
+          "sourceEn": "Cheek > Neutral space",
+          "sourceCa": "Galta > Espai neutre",
+          "guessedId": "CHEEK_TO_NEUTRAL_SPACE"
+        },
+        {
+          "sourceEn": "arm contra",
+          "sourceCa": "Braç contra",
+          "guessedId": "ARM_CONTRA"
+        },
+        {
+          "sourceEn": "Neutral Espace > Chest",
+          "sourceCa": "Espai neutre > Tòrax",
+          "guessedId": "NEUTRAL_ESPACE_TO_CHEST"
+        },
+        {
+          "sourceEn": ">",
+          "sourceCa": "canvi seqüencial",
+          "guessedId": "TO"
+        },
+        {
+          "sourceEn": "\"+\"",
+          "sourceCa": "valors simultanis",
+          "guessedId": "AND"
+        },
+        {
+          "sourceEn": "/",
+          "sourceCa": "Diferent valor per cada mà",
+          "guessedId": "OR"
+        }
+      ],
+      "jsonField": "phonology.localitzacio"
+    },
+    "movementRelatedOrientation": {
+      "enum": "MovementRelatedOrientation",
+      "sheet": "Oirentació relativa_moviment",
+      "entries": [
+        {
+          "signbankId": "BACK",
+          "aliases": [
+            "back",
+            "darrere"
+          ]
+        },
+        {
+          "signbankId": "BACK_AND_BASE",
+          "aliases": [
+            "back + base",
+            "darrere + base"
+          ]
+        },
+        {
+          "signbankId": "BACK_AND_RADIAL",
+          "aliases": [
+            "back + radial",
+            "darrere + radial"
+          ]
+        },
+        {
+          "signbankId": "BACK_AND_ULNAR",
+          "aliases": [
+            "back + ulnar",
+            "darrere + cubital"
+          ]
+        },
+        {
+          "signbankId": "BACK_OR_BASE",
+          "aliases": [
+            "back / base",
+            "darrere / base"
+          ]
+        },
+        {
+          "signbankId": "BACK_OR_FINGER_TIPS",
+          "aliases": [
+            "back/finger tips",
+            "darrere / punta dels dits"
+          ]
+        },
+        {
+          "signbankId": "BACK_OR_PALM",
+          "aliases": [
+            "back/palm",
+            "darrere / palmell"
+          ]
+        },
+        {
+          "signbankId": "BACK_TO_FINGER_TIPS",
+          "aliases": [
+            "back > finger tips",
+            "darrere + punta dels dits"
+          ]
+        },
+        {
+          "signbankId": "BACK_TO_FRONT",
+          "aliases": [
+            "back > front",
+            "darrere > davant"
+          ]
+        },
+        {
+          "signbankId": "BACK_TO_PALM",
+          "aliases": [
+            "back > palm",
+            "darrere > palmell"
+          ]
+        },
+        {
+          "signbankId": "BACK_TO_RADIAL",
+          "aliases": [
+            "back > radial",
+            "darrere > radial"
+          ]
+        },
+        {
+          "signbankId": "BASE",
+          "aliases": [
+            "base"
+          ]
+        },
+        {
+          "signbankId": "BASE_AND_FRONT",
+          "aliases": [
+            "base + davant",
+            "base + front"
+          ]
+        },
+        {
+          "signbankId": "BASE_AND_PALM",
+          "aliases": [
+            "base + palm",
+            "base + palmell"
+          ]
+        },
+        {
+          "signbankId": "BASE_AND_ULNAR",
+          "aliases": [
+            "base + cubital",
+            "base + ulnar"
+          ]
+        },
+        {
+          "signbankId": "BASE_OR_FRONT",
+          "aliases": [
+            "base > davant",
+            "base/front"
+          ]
+        },
+        {
+          "signbankId": "BASE_TO_BACK",
+          "aliases": [
+            "base > back",
+            "base > darrere"
+          ]
+        },
+        {
+          "signbankId": "BASE_TO_BASE",
+          "aliases": [
+            "base > base"
+          ]
+        },
+        {
+          "signbankId": "BASE_TO_FRONT",
+          "aliases": [
+            "base > davant",
+            "base > front"
+          ]
+        },
+        {
+          "signbankId": "BASE_TO_PALM",
+          "aliases": [
+            "base > palm",
+            "base > palmell"
+          ]
+        },
+        {
+          "signbankId": "BASE_TO_ULNAR",
+          "aliases": [
+            "base > cubital",
+            "base > ulnar"
+          ]
+        },
+        {
+          "signbankId": "FINGER_TIPS",
+          "aliases": [
+            "finger tips",
+            "punta dels dits"
+          ]
+        },
+        {
+          "signbankId": "FINGER_TIPS_OR_BASE",
+          "aliases": [
+            "finger tips/base",
+            "punta dels dits / base"
+          ]
+        },
+        {
+          "signbankId": "FINGER_TIPS_OR_ULNAR",
+          "aliases": [
+            "finger tips/ulnar",
+            "punta dels dits / cubital"
+          ]
+        },
+        {
+          "signbankId": "FINGER_TIPS_TO_BACK",
+          "aliases": [
+            "finger tips > back",
+            "punta dels dits > darrere"
+          ]
+        },
+        {
+          "signbankId": "FINGER_TIPS_TO_BASE",
+          "aliases": [
+            "finger tips > base",
+            "punta dels dits > base"
+          ]
+        },
+        {
+          "signbankId": "FINGER_TIPS_TO_PALM",
+          "aliases": [
+            "finger tips > palm",
+            "punta dels dits > palmell"
+          ]
+        },
+        {
+          "signbankId": "FRONT",
+          "aliases": [
+            "davant",
+            "front"
+          ]
+        },
+        {
+          "signbankId": "FRONT_AND_ULNAR",
+          "aliases": [
+            "davant + cubital",
+            "front + ulnar"
+          ]
+        },
+        {
+          "signbankId": "FRONT_OR_PALM",
+          "aliases": [
+            "davant / palmell",
+            "front/palm"
+          ]
+        },
+        {
+          "signbankId": "FRONT_TO_BACK",
+          "aliases": [
+            "davant > darrere",
+            "front > back"
+          ]
+        },
+        {
+          "signbankId": "PALM",
+          "aliases": [
+            "palm",
+            "palmell"
+          ]
+        },
+        {
+          "signbankId": "PALM_AND_RADIAL",
+          "aliases": [
+            "palm + radial",
+            "palmell + radial"
+          ]
+        },
+        {
+          "signbankId": "PALM_AND_RADIAL_OR_ULNAR",
+          "aliases": [
+            "palm + radial/ulnar",
+            "palmell + radial/ cubital"
+          ]
+        },
+        {
+          "signbankId": "PALM_AND_ULNAR",
+          "aliases": [
+            "palm + ulnar",
+            "palmell + cubital"
+          ]
+        },
+        {
+          "signbankId": "PALM_TO_BACK",
+          "aliases": [
+            "palm > back",
+            "palmell > darrere"
+          ]
+        },
+        {
+          "signbankId": "PALM_TO_BASE",
+          "aliases": [
+            "palm > base",
+            "palmell > base"
+          ]
+        },
+        {
+          "signbankId": "RADIAL",
+          "aliases": [
+            "radial"
+          ]
+        },
+        {
+          "signbankId": "RADIAL_OR_ULNAR",
+          "aliases": [
+            "radial / cubital",
+            "radial/ulnar"
+          ]
+        },
+        {
+          "signbankId": "RADIAL_TO_ULNAR",
+          "aliases": [
+            "radial > cubital",
+            "radial > ulnar"
+          ]
+        },
+        {
+          "signbankId": "ULNAR",
+          "aliases": [
+            "cubital",
+            "ulnar"
+          ]
+        },
+        {
+          "signbankId": "ULNAR_TO_BASE",
+          "aliases": [
+            "cubital > base",
+            "ulnar > base"
+          ]
+        },
+        {
+          "signbankId": "ULNAR_TO_BASE_TO_RADIAL",
+          "aliases": [
+            "cubital > base > radial",
+            "ulnar > base > radial",
+            "ulnar > base >radial"
+          ]
+        },
+        {
+          "signbankId": "ULNAR_TO_FRONT",
+          "aliases": [
+            "cubital > davant",
+            "ulnar > front"
+          ]
+        },
+        {
+          "signbankId": "ULNAR_TO_PALM",
+          "aliases": [
+            "cubital > palmell",
+            "ulnar > palm"
+          ]
+        },
+        {
+          "signbankId": "ULNAR_TO_PALM_TO_RADIAL",
+          "aliases": [
+            "cubital > palmell > radial",
+            "ulnar > palm > radial"
+          ]
+        },
+        {
+          "signbankId": "ULNAR_TO_RADIAL",
+          "aliases": [
+            "cubital > radial",
+            "ulnar > radial"
+          ]
+        },
+        {
+          "signbankId": "VARIABLE",
+          "aliases": [
+            "variable"
+          ]
+        }
+      ],
+      "unmapped": [],
+      "jsonField": "phonology.orientacio_moviment"
+    },
+    "orientationRelatedToLocation": {
+      "enum": "OrientationRelatedToLocation",
+      "sheet": "Orientació relativa_localitzaci",
+      "entries": [
+        {
+          "signbankId": "AO_FINGERS_CONTRA",
+          "aliases": [
+            "ao: dits-contra",
+            "ao: fingers-contra"
+          ]
+        },
+        {
+          "signbankId": "AO_FINGERS_DOWN",
+          "aliases": [
+            "ao: dits-avall",
+            "ao: fingers-down"
+          ]
+        },
+        {
+          "signbankId": "AO_FINGERS_UP",
+          "aliases": [
+            "ao: dits-amunt",
+            "ao: fingers-up"
+          ]
+        },
+        {
+          "signbankId": "AO_PALM_BACKWARDS",
+          "aliases": [
+            "ao: palm-backwards",
+            "ao: palmell-enrere"
+          ]
+        },
+        {
+          "signbankId": "AO_PALM_DOWN",
+          "aliases": [
+            "ao: palm-down",
+            "ao: palmell-avall"
+          ]
+        },
+        {
+          "signbankId": "AO_PALM_FORWARDS",
+          "aliases": [
+            "ao: palm-forwards",
+            "ao: palmell-endavant"
+          ]
+        },
+        {
+          "signbankId": "AO_PALM_INWARDS",
+          "aliases": [
+            "ao: palm-inwards",
+            "ao: palmell-endins"
+          ]
+        },
+        {
+          "signbankId": "AO_PALM_OUTWARDS",
+          "aliases": [
+            "ao: palm-outwards",
+            "ao: palmell-enfora"
+          ]
+        },
+        {
+          "signbankId": "AO_PALM_UP",
+          "aliases": [
+            "ao: palm-up",
+            "ao: palmell-amunt"
+          ]
+        },
+        {
+          "signbankId": "AO_PALM_UP_OR_DOWN",
+          "aliases": [
+            "ao: palm-up/down",
+            "ao: palmell-amunt/avall"
+          ]
+        },
+        {
+          "signbankId": "BACK",
+          "aliases": [
+            "back",
+            "darrere"
+          ]
+        },
+        {
+          "signbankId": "BACK_OR_PALM",
+          "aliases": [
+            "back/palm",
+            "darrere / palmell"
+          ]
+        },
+        {
+          "signbankId": "BACK_OR_PALM_TO_PALM",
+          "aliases": [
+            "back/palm > palm",
+            "darrere / palmell > palmell"
+          ]
+        },
+        {
+          "signbankId": "BACK_TO_PALM",
+          "aliases": [
+            "back > palm",
+            "darrere > palmell"
+          ]
+        },
+        {
+          "signbankId": "BACK_TO_ULNAR",
+          "aliases": [
+            "back > ulnar",
+            "darrere > cubital"
+          ]
+        },
+        {
+          "signbankId": "BASE",
+          "aliases": [
+            "base"
+          ]
+        },
+        {
+          "signbankId": "COUNTING",
+          "aliases": [
+            "comptant",
+            "counting"
+          ]
+        },
+        {
+          "signbankId": "FINGER_TIPS",
+          "aliases": [
+            "finger tips",
+            "punta dels dits"
+          ]
+        },
+        {
+          "signbankId": "FINGER_TIPS_OR_BASE",
+          "aliases": [
+            "finger tips/base",
+            "punta dels dits / base"
+          ]
+        },
+        {
+          "signbankId": "FINGERSPELLING",
+          "aliases": [
+            "fingerspelling",
+            "lletreig"
+          ]
+        },
+        {
+          "signbankId": "FRONT",
+          "aliases": [
+            "davant",
+            "front"
+          ]
+        },
+        {
+          "signbankId": "PALM",
+          "aliases": [
+            "palm",
+            "palmell"
+          ]
+        },
+        {
+          "signbankId": "PALM_TO_ULNAR",
+          "aliases": [
+            "palm > ulnar",
+            "palmell > cubital"
+          ]
+        },
+        {
+          "signbankId": "RADIAL",
+          "aliases": [
+            "radial"
+          ]
+        },
+        {
+          "signbankId": "RADIAL_OR_ULNAR",
+          "aliases": [
+            "radial / cubital",
+            "radial /ulnar"
+          ]
+        },
+        {
+          "signbankId": "ULNAR",
+          "aliases": [
+            "cubital",
+            "ulnar"
+          ]
+        }
+      ],
+      "unmapped": [
+        {
+          "sourceEn": "AO: palm-down > palm-up",
+          "sourceCa": "AO: Palmell-avall > Palmell-amunt",
+          "guessedId": "AO_PALM_DOWN_TO_PALM_UP"
+        }
+      ],
+      "jsonField": "phonology.orientacio_localitzacio"
+    },
+    "orientationChange": {
+      "enum": "OrientationChange",
+      "sheet": "Canvi_orientació",
+      "entries": [
+        {
+          "signbankId": "EXTENSION",
+          "aliases": [
+            "extensio",
+            "extension"
+          ]
+        },
+        {
+          "signbankId": "EXTENSION_AND_PRONATION",
+          "aliases": [
+            "extensio + pronacio",
+            "extension + pronation"
+          ]
+        },
+        {
+          "signbankId": "EXTENSION_OR_FLEXION",
+          "aliases": [
+            "extensio / flexio",
+            "extension/flexion"
+          ]
+        },
+        {
+          "signbankId": "EXTENSION_TO_FLEXION",
+          "aliases": [
+            "extensio > flexio",
+            "extension > flexion"
+          ]
+        },
+        {
+          "signbankId": "FLEXION",
+          "aliases": [
+            "flexio",
+            "flexion"
+          ]
+        },
+        {
+          "signbankId": "FLEXION_TO_EXTENSION",
+          "aliases": [
+            "flexio > extensio",
+            "flexion > extension"
+          ]
+        },
+        {
+          "signbankId": "PRONATION",
+          "aliases": [
+            "pronacio",
+            "pronation"
+          ]
+        },
+        {
+          "signbankId": "PRONATION_OR_SUPINATION",
+          "aliases": [
+            "pronacio / supinacio",
+            "pronation/supination"
+          ]
+        },
+        {
+          "signbankId": "PRONATION_TO_FLEXION",
+          "aliases": [
+            "pronacio > flexio",
+            "pronation > flexion"
+          ]
+        },
+        {
+          "signbankId": "RADIAL_AND_ULNAR_FLEXION",
+          "aliases": [
+            "flexio radial i cubital",
+            "radial and ulnar flexion"
+          ]
+        },
+        {
+          "signbankId": "RADIAL_FLEXION",
+          "aliases": [
+            "flexio radial",
+            "radial flexion"
+          ]
+        },
+        {
+          "signbankId": "ROTATION",
+          "aliases": [
+            "rotacio",
+            "rotation"
+          ]
+        },
+        {
+          "signbankId": "SUPINATION",
+          "aliases": [
+            "supinacio",
+            "supination"
+          ]
+        },
+        {
+          "signbankId": "SUPINATION_TO_EXTENSION",
+          "aliases": [
+            "supinacio > extensio",
+            "supination > extension"
+          ]
+        },
+        {
+          "signbankId": "SUPINATION_TO_PRONATION",
+          "aliases": [
+            "supinacio > pronacio",
+            "supination > pronation"
+          ]
+        },
+        {
+          "signbankId": "ULNAR_FLEXION",
+          "aliases": [
+            "flexio cubital",
+            "ulnar flexion"
+          ]
+        }
+      ],
+      "unmapped": [
+        {
+          "sourceEn": ">",
+          "sourceCa": "canvi seqüencial",
+          "guessedId": "TO"
+        },
+        {
+          "sourceEn": "\"+\"",
+          "sourceCa": "valors simultanis",
+          "guessedId": "AND"
+        },
+        {
+          "sourceEn": "/",
+          "sourceCa": "Diferent valor per cada mà",
+          "guessedId": "OR"
+        }
+      ],
+      "jsonField": "phonology.canvi_orientacio"
+    },
+    "contactType": {
+      "enum": "ContactType",
+      "sheet": "Tipus_contacte",
+      "entries": [
+        {
+          "signbankId": "BRUSH",
+          "aliases": [
+            "brush",
+            "frec"
+          ]
+        },
+        {
+          "signbankId": "CONTINUOUS",
+          "aliases": [
+            "continu",
+            "continuous"
+          ]
+        },
+        {
+          "signbankId": "CONTINUOUS_TO_CONTINUOUS",
+          "aliases": [
+            "continu > continu",
+            "continuous > continuous"
+          ]
+        },
+        {
+          "signbankId": "CONTINUOUS_TO_FINAL",
+          "aliases": [
+            "continu > final",
+            "continuous > final"
+          ]
+        },
+        {
+          "signbankId": "CONTINUOUS_TO_NONE",
+          "aliases": [
+            "continu > res",
+            "continuous > none"
+          ]
+        },
+        {
+          "signbankId": "DOUBLE",
+          "aliases": [
+            "doble",
+            "double"
+          ]
+        },
+        {
+          "signbankId": "FINAL",
+          "aliases": [
+            "final"
+          ]
+        },
+        {
+          "signbankId": "FINAL_TO_CONTINUOUS",
+          "aliases": [
+            "final > continu",
+            "final > continuous"
+          ]
+        },
+        {
+          "signbankId": "FINAL_TO_NONE",
+          "aliases": [
+            "final > none",
+            "final > res"
+          ]
+        },
+        {
+          "signbankId": "INITIAL",
+          "aliases": [
+            "inicial",
+            "initial"
+          ]
+        },
+        {
+          "signbankId": "INITIAL_TO_FINAL",
+          "aliases": [
+            "inicial > final",
+            "initial > final"
+          ]
+        },
+        {
+          "signbankId": "NONE_TO_FINAL",
+          "aliases": [
+            "none > final",
+            "res > final"
+          ]
+        },
+        {
+          "signbankId": "NONE_TO_INITIAL",
+          "aliases": [
+            "none > initial",
+            "res > inicial"
+          ]
+        }
+      ],
+      "unmapped": [
+        {
+          "sourceEn": ">",
+          "sourceCa": "canvi seqüencial",
+          "guessedId": "TO"
+        },
+        {
+          "sourceEn": "\"+\"",
+          "sourceCa": "valors simultanis",
+          "guessedId": "AND"
+        },
+        {
+          "sourceEn": "/",
+          "sourceCa": "Diferent valor per cada mà",
+          "guessedId": "OR"
+        }
+      ],
+      "jsonField": "phonology.tipus_contacte"
+    },
+    "movementType": {
+      "enum": "MovementType",
+      "sheet": "Forma_moviment",
+      "entries": [
+        {
+          "signbankId": "ARC",
+          "aliases": [
+            "arc"
+          ]
+        },
+        {
+          "signbankId": "CIRCLE",
+          "aliases": [
+            "circle",
+            "circular"
+          ]
+        },
+        {
+          "signbankId": "CROSS",
+          "aliases": [
+            "creuat",
+            "cross"
+          ]
+        },
+        {
+          "signbankId": "MOTIVATED_SHAPE",
+          "aliases": [
+            "forma motivada",
+            "motivated shape"
+          ]
+        },
+        {
+          "signbankId": "SPIRAL",
+          "aliases": [
+            "espiral",
+            "spiral"
+          ]
+        },
+        {
+          "signbankId": "STRAIGHT",
+          "aliases": [
+            "recte",
+            "straight"
+          ]
+        },
+        {
+          "signbankId": "STRAIGHT_TO_CIRCLE",
+          "aliases": [
+            "recte > cercle",
+            "straight > circle"
+          ]
+        },
+        {
+          "signbankId": "ZIGZAG",
+          "aliases": [
+            "ziga-zaga",
+            "zigzag"
+          ]
+        }
+      ],
+      "unmapped": [
+        {
+          "sourceEn": "-----",
+          "sourceCa": "-----",
+          "guessedId": ""
+        }
+      ],
+      "jsonField": "phonology.forma_moviment"
+    },
+    "movementDirection": {
+      "enum": "MovementDirection",
+      "sheet": "Direcció_moviment",
+      "entries": [
+        {
+          "signbankId": "BACKWARDS",
+          "aliases": [
+            "backwards",
+            "enrere"
+          ]
+        },
+        {
+          "signbankId": "BACKWARDS_AND_CONTRALATERAL",
+          "aliases": [
+            "backwards + contralateral",
+            "enrere + contralateral"
+          ]
+        },
+        {
+          "signbankId": "BACKWARDS_AND_DOWNWARDS",
+          "aliases": [
+            "backwards + downwards",
+            "enrere + avall"
+          ]
+        },
+        {
+          "signbankId": "BACKWARDS_AND_IPSILATERAL",
+          "aliases": [
+            "backwards + ipsilateral",
+            "enrere + ipsilateral"
+          ]
+        },
+        {
+          "signbankId": "BACKWARDS_AND_UPWARDS",
+          "aliases": [
+            "backwards + upwards",
+            "enrere + amunt"
+          ]
+        },
+        {
+          "signbankId": "BACKWARDS_OR_FORWARDS",
+          "aliases": [
+            "backwards/forwards",
+            "enrere / endavant"
+          ]
+        },
+        {
+          "signbankId": "BACKWARDS_TO_DOWNWARDS",
+          "aliases": [
+            "backwards > downwards",
+            "enrere > avall"
+          ]
+        },
+        {
+          "signbankId": "BACKWARDS_TO_FORWARDS",
+          "aliases": [
+            "backwards > forwards",
+            "enrere > endavant"
+          ]
+        },
+        {
+          "signbankId": "CONTRALATERAL",
+          "aliases": [
+            "contralateral"
+          ]
+        },
+        {
+          "signbankId": "CONTRALATERAL_AND_DOWNWARDS",
+          "aliases": [
+            "contralateral + avall",
+            "contralateral + downwards"
+          ]
+        },
+        {
+          "signbankId": "CONTRALATERAL_AND_FORWARDS",
+          "aliases": [
+            "contralateral + endavant",
+            "contralateral + forwards"
+          ]
+        },
+        {
+          "signbankId": "CONTRALATERAL_AND_UPWARDS",
+          "aliases": [
+            "contralateral + amunt",
+            "contralateral + upwards"
+          ]
+        },
+        {
+          "signbankId": "CONTRALATERAL_TO_DOWNWARDS",
+          "aliases": [
+            "contralateral > avall",
+            "contralateral > downwards"
+          ]
+        },
+        {
+          "signbankId": "CONTRALATERAL_TO_FORWARDS",
+          "aliases": [
+            "contralateral > endavant",
+            "contralateral > forwards"
+          ]
+        },
+        {
+          "signbankId": "CONTRALATERAL_TO_IPSILATERAL",
+          "aliases": [
+            "contralateral > ipsilateral"
+          ]
+        },
+        {
+          "signbankId": "DISTAL",
+          "aliases": [
+            "distal"
+          ]
+        },
+        {
+          "signbankId": "DOWNWARDS",
+          "aliases": [
+            "avall",
+            "downwards"
+          ]
+        },
+        {
+          "signbankId": "DOWNWARDS_AND_CONTRALATERAL_OR_IPSILATERAL",
+          "aliases": [
+            "avall + contralateral / ipsilateral",
+            "downwards + contralateral/ipsilateral"
+          ]
+        },
+        {
+          "signbankId": "DOWNWARDS_AND_FORWARDS",
+          "aliases": [
+            "avall + endavant",
+            "downwards + forwards"
+          ]
+        },
+        {
+          "signbankId": "DOWNWARDS_AND_IPSILATERAL",
+          "aliases": [
+            "avall + ipsilateral",
+            "downwards + ipsilateral"
+          ]
+        },
+        {
+          "signbankId": "DOWNWARDS_AND_IPSILATERAL_TO_DOWNWARDS",
+          "aliases": [
+            "avall + ipsilateral > avall",
+            "downwards + ipsilateral > downwards"
+          ]
+        },
+        {
+          "signbankId": "DOWNWARDS_AND_TOWARDS",
+          "aliases": [
+            "avall + cap a",
+            "downwards + towards"
+          ]
+        },
+        {
+          "signbankId": "DOWNWARDS_OR_UPWARDS",
+          "aliases": [
+            "avall / amunt",
+            "downwards/upwards"
+          ]
+        },
+        {
+          "signbankId": "DOWNWARDS_OR_UPWARDS_AND_IPSILATERAL",
+          "aliases": [
+            "avall / amunt + ipsilateral",
+            "downwards/upwards + ipsilateral"
+          ]
+        },
+        {
+          "signbankId": "DOWNWARDS_TO_CONTRALATERAL",
+          "aliases": [
+            "avall > contralateral",
+            "downwards > contralateral"
+          ]
+        },
+        {
+          "signbankId": "DOWNWARDS_TO_CONTRALATERAL_TO_IPSILATERAL",
+          "aliases": [
+            "avall > contralateral > ipsilateral",
+            "downwards > contralateral > ipsilateral"
+          ]
+        },
+        {
+          "signbankId": "DOWNWARDS_TO_FORWARDS",
+          "aliases": [
+            "avall > endavant",
+            "downwards > forwards"
+          ]
+        },
+        {
+          "signbankId": "DOWNWARDS_TO_IPSILATERAL",
+          "aliases": [
+            "avall > ipsilateral",
+            "downwards > ipsilateral"
+          ]
+        },
+        {
+          "signbankId": "DOWNWARDS_TO_UPWARDS",
+          "aliases": [
+            "avall > amunt",
+            "downwards > upwards"
+          ]
+        },
+        {
+          "signbankId": "FORWARDS",
+          "aliases": [
+            "endavant",
+            "forwards"
+          ]
+        },
+        {
+          "signbankId": "FORWARDS_AND_IPSILATERAL",
+          "aliases": [
+            "endavant + ipsilateral",
+            "forwards + ipsilateral"
+          ]
+        },
+        {
+          "signbankId": "FORWARDS_AND_UPWARDS",
+          "aliases": [
+            "endavant + amunt",
+            "forwards + upwards"
+          ]
+        },
+        {
+          "signbankId": "FORWARDS_TO_BACKWARDS",
+          "aliases": [
+            "endavant > enrere",
+            "forwards > backwards"
+          ]
+        },
+        {
+          "signbankId": "FORWARDS_TO_CONTRALATERAL",
+          "aliases": [
+            "endavant > contralateral",
+            "forwards > contralateral"
+          ]
+        },
+        {
+          "signbankId": "FORWARDS_TO_DOWNWARDS",
+          "aliases": [
+            "endavant > avall",
+            "forwards > downwards"
+          ]
+        },
+        {
+          "signbankId": "FORWARDS_TO_IPSILATERAL",
+          "aliases": [
+            "endavant > ipsilateral",
+            "forwards > ipsilateral"
+          ]
+        },
+        {
+          "signbankId": "FORWARDS_TO_IPSILATERAL_TO_FORWARDS",
+          "aliases": [
+            "endavant > ipsilateral > endavant",
+            "forwards > ipsilateral > forwards"
+          ]
+        },
+        {
+          "signbankId": "FORWARDS_TO_UPWARDS",
+          "aliases": [
+            "endavant > amunt",
+            "forwards > upwards"
+          ]
+        },
+        {
+          "signbankId": "FROM_LOCATION",
+          "aliases": [
+            "des de la localitzacio",
+            "from location"
+          ]
+        },
+        {
+          "signbankId": "IPSILATERAL",
+          "aliases": [
+            "ipsilateral"
+          ]
+        },
+        {
+          "signbankId": "IPSILATERAL_AND_CONTRALATERAL",
+          "aliases": [
+            "ipsilateral and contralateral",
+            "ipsilateral i contralateral"
+          ]
+        },
+        {
+          "signbankId": "IPSILATERAL_AND_DOWNWARDS",
+          "aliases": [
+            "ipsilateral + downwards",
+            "ispilateral + avall"
+          ]
+        },
+        {
+          "signbankId": "IPSILATERAL_AND_UP_AND_DOWN",
+          "aliases": [
+            "ipsilateral + amunt i avall",
+            "ipsilateral + up and down"
+          ]
+        },
+        {
+          "signbankId": "IPSILATERAL_AND_UPWARDS",
+          "aliases": [
+            "ipsilateral + amunt",
+            "ipsilateral + upwards"
+          ]
+        },
+        {
+          "signbankId": "IPSILATERAL_OR_CONTRALATERAL",
+          "aliases": [
+            "ipsilateral / contralateral",
+            "ipsilateral/contralateral"
+          ]
+        },
+        {
+          "signbankId": "IPSILATERAL_TO_BACKWARDS_TO_CONTRALATERAL",
+          "aliases": [
+            "ipsilateral > backwards > contralateral",
+            "ipsilateral > enrere > contralateral"
+          ]
+        },
+        {
+          "signbankId": "IPSILATERAL_TO_CONTRALATERAL",
+          "aliases": [
+            "ipsilateral > contralateral"
+          ]
+        },
+        {
+          "signbankId": "IPSILATERAL_TO_DOWNWARDS",
+          "aliases": [
+            "ipsilateral > avall",
+            "ipsilateral > downwards"
+          ]
+        },
+        {
+          "signbankId": "IPSILATERAL_TO_DOWNWARDS_TO_CONTRALATERAL",
+          "aliases": [
+            "ipsilateral > avall > contralateral",
+            "ipsilateral > downwards > contralateral"
+          ]
+        },
+        {
+          "signbankId": "IPSILATERAL_TO_FORWARDS",
+          "aliases": [
+            "ipsilateral > endavant",
+            "ipsilateral > forwards"
+          ]
+        },
+        {
+          "signbankId": "IPSILATERAL_TO_UPWARDS",
+          "aliases": [
+            "ipsilateral > amunt",
+            "ipsilateral > upwards"
+          ]
+        },
+        {
+          "signbankId": "LATERAL",
+          "aliases": [
+            "lateral"
+          ]
+        },
+        {
+          "signbankId": "PROXIMAL",
+          "aliases": [
+            "proximal"
+          ]
+        },
+        {
+          "signbankId": "TO_AND_FRO",
+          "aliases": [
+            "to and fro",
+            "vaive"
+          ]
+        },
+        {
+          "signbankId": "TOWARDS_LOCATION",
+          "aliases": [
+            "cap a la localitzacio",
+            "towards location"
+          ]
+        },
+        {
+          "signbankId": "UP_AND_DOWN",
+          "aliases": [
+            "amunt i avall",
+            "up and down"
+          ]
+        },
+        {
+          "signbankId": "UPWARDS",
+          "aliases": [
+            "amunt",
+            "upwards"
+          ]
+        },
+        {
+          "signbankId": "UPWARDS_AND_FORWARDS",
+          "aliases": [
+            "amunt + endavant",
+            "upwards + forwards"
+          ]
+        },
+        {
+          "signbankId": "UPWARDS_TO_DOWNWARDS",
+          "aliases": [
+            "amunt > avall",
+            "upwards > downwards"
+          ]
+        },
+        {
+          "signbankId": "UPWARDS_TO_FORWARDS_TO_DOWNWARDS",
+          "aliases": [
+            "amunt > endavant > avall",
+            "upwards > forwards > downwards"
+          ]
+        },
+        {
+          "signbankId": "UPWARDS_TO_IPSILATERAL",
+          "aliases": [
+            "amunt > ipsilateral",
+            "upwards > ipsilateral"
+          ]
+        },
+        {
+          "signbankId": "VARIABLE",
+          "aliases": [
+            "variable"
+          ]
+        }
+      ],
+      "unmapped": [],
+      "jsonField": "phonology.direccio_moviment"
+    },
+    "lexicalCategory": {
+      "enum": "LexicalCategory",
+      "jsonField": "lexical_category",
+      "entries": [
+        {
+          "signbankId": "ADJECTIVE",
+          "aliases": [
+            "adjectiu",
+            "adjective"
+          ]
+        },
+        {
+          "signbankId": "ADJECTIVE_OR_ADVERB",
+          "aliases": [
+            "adjectiu o adverbi",
+            "adjective or adverb"
+          ]
+        },
+        {
+          "signbankId": "ADVERB",
+          "aliases": [
+            "adverb",
+            "adverbi"
+          ]
+        },
+        {
+          "signbankId": "ADVERB_OR_INTERJECTION",
+          "aliases": [
+            "adverb or interjection",
+            "adverbi o interjeccio"
+          ]
+        },
+        {
+          "signbankId": "INTERJECTION",
+          "aliases": [
+            "ineterjection",
+            "interjeccio"
+          ]
+        },
+        {
+          "signbankId": "NOUN",
+          "aliases": [
+            "nom",
+            "noun"
+          ]
+        },
+        {
+          "signbankId": "NOUN_ADJECTIVE_OR_ADVERB",
+          "aliases": [
+            "nom, adjectiu o adverbi",
+            "noun, adjective or adverb"
+          ]
+        },
+        {
+          "signbankId": "NOUN_ADJECTIVE_OR_PARTICLE",
+          "aliases": [
+            "nom, adjectiu o preposicio",
+            "noun, adjective or particle"
+          ]
+        },
+        {
+          "signbankId": "NOUN_ADJECTIVE_OR_VERB",
+          "aliases": [
+            "nom, adjectiu o verb",
+            "noun, adjective or verb"
+          ]
+        },
+        {
+          "signbankId": "NOUN_OR_ADJECTIVE",
+          "aliases": [
+            "nom o adjectiu",
+            "noun or adjective"
+          ]
+        },
+        {
+          "signbankId": "NOUN_OR_ADVERB",
+          "aliases": [
+            "nom o adverbi",
+            "noun or adverb"
+          ]
+        },
+        {
+          "signbankId": "NOUN_OR_INTERJECTION",
+          "aliases": [
+            "nom o interjeccio",
+            "noun or interjection"
+          ]
+        },
+        {
+          "signbankId": "NOUN_OR_PREPOSITION",
+          "aliases": [
+            "nom o preposicio",
+            "noun or preposition"
+          ]
+        },
+        {
+          "signbankId": "NOUN_OR_VERB",
+          "aliases": [
+            "nom o verb",
+            "noun or verb"
+          ]
+        },
+        {
+          "signbankId": "PARTICLE",
+          "aliases": [
+            "particle",
+            "particula"
+          ]
+        },
+        {
+          "signbankId": "PARTICLE_NOUN_OR_VERB",
+          "aliases": [
+            "particle, noun or verb",
+            "preposicio, nom o verb"
+          ]
+        },
+        {
+          "signbankId": "PARTICLE_OR_ADVERB",
+          "aliases": [
+            "particle or adverb",
+            "particula o adverbi"
+          ]
+        },
+        {
+          "signbankId": "PRONOUN",
+          "aliases": [
+            "pronom",
+            "pronoun"
+          ]
+        },
+        {
+          "signbankId": "VERB",
+          "aliases": [
+            "verb"
+          ]
+        },
+        {
+          "signbankId": "VERB_ADJECTIVE_OR_ADVERB",
+          "aliases": [
+            "verb, adjectiu o adverbi",
+            "verb, adjective or adverb"
+          ]
+        },
+        {
+          "signbankId": "VERB_ADJECTIVE_OR_PARTICLE",
+          "aliases": [
+            "verb, adjectiu o preposicio",
+            "verb, adjective or particle"
+          ]
+        },
+        {
+          "signbankId": "VERB_OR_ADJECTIVE",
+          "aliases": [
+            "verb o adjectiu",
+            "verb or adjective"
+          ]
+        },
+        {
+          "signbankId": "VERB_OR_ADVERB",
+          "aliases": [
+            "verb o adverbi",
+            "verb or adverb"
+          ]
+        },
+        {
+          "signbankId": "VERB_OR_INTERJECTION",
+          "aliases": [
+            "verb o interjeccio",
+            "verb or interjection"
+          ]
+        },
+        {
+          "signbankId": "VERB_OR_PARTICLE",
+          "aliases": [
+            "verb o preposicio",
+            "verb or particle"
+          ]
+        }
+      ],
+      "unmapped": [
+        {
+          "sourceEn": "Particle or adjectiuve",
+          "sourceCa": "Preposició o adjectiu",
+          "guessedId": "PARTICLE_OR_ADJECTIUVE"
+        },
+        {
+          "sourceEn": "Noun, verb o adverb",
+          "sourceCa": "Nom, verb o adverbi",
+          "guessedId": "NOUN_VERB_O_ADVERB"
+        }
+      ]
+    },
+    "relationType": {
+      "enum": "RelationType",
+      "jsonField": "related_signs",
+      "entries": [
+        {
+          "signbankId": "ANTONYM",
+          "aliases": [
+            "antonim",
+            "antonym"
+          ]
+        },
+        {
+          "signbankId": "ASSOCIATED_CONCEPT",
+          "aliases": [
+            "see also",
+            "veure tambe"
+          ]
+        },
+        {
+          "signbankId": "HOMONYM",
+          "aliases": [
+            "homonim",
+            "homonym"
+          ]
+        },
+        {
+          "signbankId": "HYPERNYM",
+          "aliases": [
+            "hiperonim",
+            "hypernym"
+          ]
+        },
+        {
+          "signbankId": "HYPONYM",
+          "aliases": [
+            "hiponim",
+            "hyponym"
+          ]
+        },
+        {
+          "signbankId": "SYNONYM",
+          "aliases": [
+            "sinonim",
+            "synonym"
+          ]
+        },
+        {
+          "signbankId": "VARIANT",
+          "aliases": [
+            "variant"
+          ]
+        }
+      ],
+      "unmapped": []
+    },
+    "repeatedMovement": {
+      "jsonField": "phonology.moviment_repetit",
+      "entries": [
+        {
+          "value": true,
+          "aliases": [
+            "sí",
+            "si",
+            "s",
+            "yes",
+            "true",
+            "1"
+          ]
+        },
+        {
+          "value": false,
+          "aliases": [
+            "no",
+            "n",
+            "false",
+            "0"
+          ]
+        }
+      ]
+    }
+  },
+  "summary": {
+    "handedness": {
+      "mapped": 5,
+      "aliasCount": 5,
+      "unmapped": 0
+    },
+    "configuration": {
+      "mapped": 51,
+      "aliasCount": 171,
+      "unmapped": 6
+    },
+    "configurationChanges": {
+      "mapped": 19,
+      "aliasCount": 46,
+      "unmapped": 3
+    },
+    "relationBetweenArticulators": {
+      "mapped": 9,
+      "aliasCount": 18,
+      "unmapped": 5
+    },
+    "location": {
+      "mapped": 136,
+      "aliasCount": 271,
+      "unmapped": 12
+    },
+    "movementRelatedOrientation": {
+      "mapped": 48,
+      "aliasCount": 93,
+      "unmapped": 0
+    },
+    "orientationRelatedToLocation": {
+      "mapped": 26,
+      "aliasCount": 50,
+      "unmapped": 1
+    },
+    "orientationChange": {
+      "mapped": 16,
+      "aliasCount": 32,
+      "unmapped": 3
+    },
+    "contactType": {
+      "mapped": 13,
+      "aliasCount": 25,
+      "unmapped": 3
+    },
+    "movementType": {
+      "mapped": 8,
+      "aliasCount": 15,
+      "unmapped": 1
+    },
+    "movementDirection": {
+      "mapped": 62,
+      "aliasCount": 116,
+      "unmapped": 0
+    },
+    "lexicalCategory": {
+      "mapped": 25,
+      "aliasCount": 49,
+      "unmapped": 2
+    },
+    "relationType": {
+      "mapped": 7,
+      "aliasCount": 13,
+      "unmapped": 0
+    },
+    "repeatedMovement": {
+      "mapped": 2,
+      "aliasCount": 10,
+      "unmapped": 0
+    }
+  }
+}

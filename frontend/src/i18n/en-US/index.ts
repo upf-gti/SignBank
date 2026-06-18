@@ -333,6 +333,13 @@ const translations: TranslateKeys = {
   glossUnarchivedSuccessfully: 'Gloss unarchived successfully',
   optional: 'Optional',
   create: 'Create',
+  stepCore: 'Definition and translation',
+  stepVideo: 'Video and phonology',
+  stepOptional: 'Additional information',
+  creationProgress: 'Progress',
+  next: 'Next',
+  back: 'Back',
+  exitEditMode: 'Exit edit mode',
 };
 
 export default translations; 

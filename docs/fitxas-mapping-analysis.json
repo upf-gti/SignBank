@@ -1,0 +1,666 @@
+{
+  "sheets": [
+    "Categoria lèxica",
+    "Tipus de morfema",
+    "Handedness-mans",
+    "Configuracions",
+    "Canvi de configuració",
+    "Relació entre articuladors",
+    "Localitzacions",
+    "Oirentació relativa_moviment",
+    "Orientació relativa_localitzaci",
+    "Canvi_orientació",
+    "Tipus_contacte",
+    "Forma_moviment",
+    "Direcció_moviment",
+    "Entitat_amb_nom_named_entity",
+    "València",
+    "Tipus_relació_altres_signes",
+    "Camp_semàntic",
+    "Etiquetes-Tags",
+    "Notes",
+    "Morfologia seqüencial"
+  ],
+  "comparisons": {
+    "HandConfiguration": {
+      "xlsxRows": 57,
+      "matched": 51,
+      "unmatchedSignbankId": [],
+      "noSignbankId": 6,
+      "prismaOnly": []
+    },
+    "Hand": {
+      "note": "XLSX uses 1/2a/2n/2s/x — SignBank uses RIGHT/LEFT/BOTH. Needs semantic mapping, not 1:1.",
+      "xlsxValues": [
+        {
+          "code": 1,
+          "cat": 1,
+          "en": "One-handed sign"
+        },
+        {
+          "code": "2a",
+          "cat": "2a",
+          "en": "Two-handed asymmetrical sing: the weak hand is the location in the sign"
+        },
+        {
+          "code": "2n",
+          "cat": "2n",
+          "en": "Two-handed sign in which both hands move but the hands are not mirrored in the sagittal plane. Their handshapes may differ"
+        },
+        {
+          "code": "2s",
+          "cat": "2s",
+          "en": "Two-handed symmetrical sing: both hands move and have the same handshape (note: the location may occasionally be non-identical)"
+        },
+        {
+          "code": "x",
+          "cat": "x",
+          "en": "Handedness not applicable"
+        }
+      ],
+      "signbankEnum": [
+        "RIGHT",
+        "LEFT",
+        "BOTH"
+      ]
+    },
+    "LexicalCategory": {
+      "rows": [
+        {
+          "sourceEn": "Adjective",
+          "sourceCat": "Adjectiu",
+          "guess": "ADJECTIVE",
+          "match": true
+        },
+        {
+          "sourceEn": "Ineterjection",
+          "sourceCat": "Interjecció",
+          "guess": "INETERJECTION",
+          "match": false
+        },
+        {
+          "sourceEn": "Noun",
+          "sourceCat": "Nom",
+          "guess": "NOUN",
+          "match": true
+        },
+        {
+          "sourceEn": "Noun or Verb",
+          "sourceCat": "Nom o verb",
+          "guess": "NOUN_OR_VERB",
+          "match": true
+        },
+        {
+          "sourceEn": "Noun or adjective",
+          "sourceCat": "Nom o adjectiu",
+          "guess": "NOUN_OR_ADJECTIVE",
+          "match": true
+        },
+        {
+          "sourceEn": "Noun, adjective or verb",
+          "sourceCat": "Nom, adjectiu o verb",
+          "guess": "NOUN_ADJECTIVE_OR_VERB",
+          "match": true
+        },
+        {
+          "sourceEn": "Verb or adjective",
+          "sourceCat": "Verb o adjectiu",
+          "guess": "VERB_OR_ADJECTIVE",
+          "match": true
+        },
+        {
+          "sourceEn": "Particle",
+          "sourceCat": "Partícula",
+          "guess": "PARTICLE",
+          "match": true
+        },
+        {
+          "sourceEn": "Verb",
+          "sourceCat": "Verb",
+          "guess": "VERB",
+          "match": true
+        },
+        {
+          "sourceEn": "Adverb",
+          "sourceCat": "Adverbi",
+          "guess": "ADVERB",
+          "match": true
+        },
+        {
+          "sourceEn": "Pronoun",
+          "sourceCat": "Pronom",
+          "guess": "PRONOUN",
+          "match": true
+        },
+        {
+          "sourceEn": "Noun, adjective or adverb",
+          "sourceCat": "Nom, adjectiu o adverbi",
+          "guess": "NOUN_ADJECTIVE_OR_ADVERB",
+          "match": true
+        },
+        {
+          "sourceEn": "Particle, Noun or Verb",
+          "sourceCat": "Preposició, nom o verb",
+          "guess": "PARTICLE_NOUN_OR_VERB",
+          "match": true
+        },
+        {
+          "sourceEn": "Noun or Adverb",
+          "sourceCat": "Nom o adverbi",
+          "guess": "NOUN_OR_ADVERB",
+          "match": true
+        },
+        {
+          "sourceEn": "Verb, adjective or adverb",
+          "sourceCat": "Verb, adjectiu o adverbi",
+          "guess": "VERB_ADJECTIVE_OR_ADVERB",
+          "match": true
+        },
+        {
+          "sourceEn": "Verb or interjection",
+          "sourceCat": "Verb o interjecció",
+          "guess": "VERB_OR_INTERJECTION",
+          "match": true
+        },
+        {
+          "sourceEn": "Adjective or Adverb",
+          "sourceCat": "Adjectiu o Adverbi",
+          "guess": "ADJECTIVE_OR_ADVERB",
+          "match": true
+        },
+        {
+          "sourceEn": "Verb, adjective or particle",
+          "sourceCat": "Verb, adjectiu o preposició",
+          "guess": "VERB_ADJECTIVE_OR_PARTICLE",
+          "match": true
+        },
+        {
+          "sourceEn": "Particle or adjectiuve",
+          "sourceCat": "Preposició o adjectiu",
+          "guess": "PARTICLE_OR_ADJECTIUVE",
+          "match": false
+        },
+        {
+          "sourceEn": "Noun, adjective or particle",
+          "sourceCat": "Nom, adjectiu o preposició",
+          "guess": "NOUN_ADJECTIVE_OR_PARTICLE",
+          "match": true
+        },
+        {
+          "sourceEn": "Verb or Adverb",
+          "sourceCat": "Verb o adverbi",
+          "guess": "VERB_OR_ADVERB",
+          "match": true
+        },
+        {
+          "sourceEn": "Particle or Adverb",
+          "sourceCat": "Partícula o adverbi",
+          "guess": "PARTICLE_OR_ADVERB",
+          "match": true
+        },
+        {
+          "sourceEn": "Noun, verb o adverb",
+          "sourceCat": "Nom, verb o adverbi",
+          "guess": "NOUN_VERB_O_ADVERB",
+          "match": false
+        },
+        {
+          "sourceEn": "Noun or interjection",
+          "sourceCat": "Nom o interjecció",
+          "guess": "NOUN_OR_INTERJECTION",
+          "match": true
+        },
+        {
+          "sourceEn": "Adverb or interjection",
+          "sourceCat": "Adverbi o interjecció",
+          "guess": "ADVERB_OR_INTERJECTION",
+          "match": true
+        },
+        {
+          "sourceEn": "Verb or particle",
+          "sourceCat": "Verb o preposició",
+          "guess": "VERB_OR_PARTICLE",
+          "match": true
+        },
+        {
+          "sourceEn": "Noun or preposition",
+          "sourceCat": "Nom o preposició",
+          "guess": "NOUN_OR_PREPOSITION",
+          "match": true
+        }
+      ],
+      "unmatched": [
+        {
+          "sourceEn": "Ineterjection",
+          "sourceCat": "Interjecció",
+          "guess": "INETERJECTION",
+          "match": false
+        },
+        {
+          "sourceEn": "Particle or adjectiuve",
+          "sourceCat": "Preposició o adjectiu",
+          "guess": "PARTICLE_OR_ADJECTIUVE",
+          "match": false
+        },
+        {
+          "sourceEn": "Noun, verb o adverb",
+          "sourceCat": "Nom, verb o adverbi",
+          "guess": "NOUN_VERB_O_ADVERB",
+          "match": false
+        }
+      ]
+    },
+    "RelationType": {
+      "xlsxRows": [
+        {
+          "ANGLÈS": "---",
+          "CATALÀ": "---",
+          "ESPANYOL": "---"
+        },
+        {
+          "ANGLÈS": "All",
+          "CATALÀ": "Tot",
+          "ESPANYOL": "Todo"
+        },
+        {
+          "ANGLÈS": "Homonym",
+          "CATALÀ": "Homònim",
+          "ESPANYOL": "Homónimo"
+        },
+        {
+          "ANGLÈS": "Synonym",
+          "CATALÀ": "Sinònim",
+          "ESPANYOL": "Sinónimo"
+        },
+        {
+          "ANGLÈS": "Variant",
+          "CATALÀ": "Variant",
+          "ESPANYOL": "Variante"
+        },
+        {
+          "ANGLÈS": "Antonym",
+          "CATALÀ": "Antònim",
+          "ESPANYOL": "Antónimo"
+        },
+        {
+          "ANGLÈS": "Hyponym",
+          "CATALÀ": "Hipònim",
+          "ESPANYOL": "Hipónimo"
+        },
+        {
+          "ANGLÈS": "Hypernym",
+          "CATALÀ": "Hiperònim",
+          "ESPANYOL": "Hiperónimo"
+        },
+        {
+          "ANGLÈS": "See Also",
+          "CATALÀ": "Veure també",
+          "ESPANYOL": "Ver también"
+        }
+      ],
+      "signbankEnum": [
+        "SYNONYM",
+        "REGIONAL_VARIANT",
+        "ASSOCIATED_CONCEPT",
+        "ANTONYM",
+        "HOMONYM",
+        "VARIANT",
+        "HYPERNYM",
+        "HYPONYM"
+      ]
+    },
+    "Location": {
+      "xlsxRows": 148,
+      "matched": 136,
+      "unmatchedSamples": [
+        {
+          "sourceEn": "Between fingers",
+          "sourceCat": "Entre dits",
+          "guess": "BETWEEN_FINGERS",
+          "match": false
+        },
+        {
+          "sourceEn": "Between legs",
+          "sourceCat": "Entre cames",
+          "guess": "BETWEEN_LEGS",
+          "match": false
+        },
+        {
+          "sourceEn": "Bridge of the nose",
+          "sourceCat": "Pont del nas",
+          "guess": "BRIDGE_OF_THE_NOSE",
+          "match": false
+        },
+        {
+          "sourceEn": "Chest > trunk",
+          "sourceCat": "Tòrax > Tronc",
+          "guess": "CHEST_TO_TRUNK",
+          "match": false
+        },
+        {
+          "sourceEn": "Chin > weak hand: index finger",
+          "sourceCat": "Barbeta > mà no-dominant: dit índex",
+          "guess": "CHIN_TO_WEAK_HAND_INDEX_FINGER",
+          "match": false
+        },
+        {
+          "sourceEn": "Chin > weak hand: thumb side",
+          "sourceCat": "Barbeta > mà no-dominant: polze",
+          "guess": "CHIN_TO_WEAK_HAND_THUMB_SIDE",
+          "match": false
+        },
+        {
+          "sourceEn": "Cheek > Neutral space",
+          "sourceCat": "Galta > Espai neutre",
+          "guess": "CHEEK_TO_NEUTRAL_SPACE",
+          "match": false
+        },
+        {
+          "sourceEn": "arm contra",
+          "sourceCat": "Braç contra",
+          "guess": "ARM_CONTRA",
+          "match": false
+        },
+        {
+          "sourceEn": "Neutral Espace > Chest",
+          "sourceCat": "Espai neutre > Tòrax",
+          "guess": "NEUTRAL_ESPACE_TO_CHEST",
+          "match": false
+        },
+        {
+          "sourceEn": ">",
+          "sourceCat": "canvi seqüencial",
+          "guess": "TO",
+          "match": false
+        },
+        {
+          "sourceEn": "\"+\"",
+          "sourceCat": "valors simultanis",
+          "guess": "AND",
+          "match": false
+        },
+        {
+          "sourceEn": "/",
+          "sourceCat": "Diferent valor per cada mà",
+          "guess": "OR",
+          "match": false
+        }
+      ],
+      "prismaOnlyCount": 4
+    },
+    "ConfigurationChange": {
+      "sheet": "Canvi de configuració",
+      "xlsxRows": 22,
+      "matched": 19,
+      "unmatchedSamples": [
+        {
+          "sourceEn": ">",
+          "sourceCat": "",
+          "guess": "TO",
+          "match": false
+        },
+        {
+          "sourceEn": "\"+\"",
+          "sourceCat": "",
+          "guess": "AND",
+          "match": false
+        },
+        {
+          "sourceEn": "/",
+          "sourceCat": "",
+          "guess": "",
+          "match": false
+        }
+      ],
+      "prismaOnlyCount": 0
+    },
+    "RelationBetweenArticulators": {
+      "sheet": "Relació entre articuladors",
+      "xlsxRows": 14,
+      "matched": 11,
+      "unmatchedSamples": [
+        {
+          "sourceEn": ">",
+          "sourceCat": "canvi seqüencial",
+          "guess": "TO",
+          "match": false
+        },
+        {
+          "sourceEn": "\"+\"",
+          "sourceCat": "valors simultanis",
+          "guess": "AND",
+          "match": false
+        },
+        {
+          "sourceEn": "/",
+          "sourceCat": "Diferent valor per cada mà",
+          "guess": "",
+          "match": false
+        }
+      ],
+      "prismaOnlyCount": 0
+    },
+    "MovementRelatedOrientation": {
+      "sheet": "Oirentació relativa_moviment",
+      "xlsxRows": 48,
+      "matched": 39,
+      "unmatchedSamples": [
+        {
+          "sourceEn": "Back / base",
+          "sourceCat": "Darrere / Base",
+          "guess": "BACK_BASE",
+          "match": false
+        },
+        {
+          "sourceEn": "Back/finger tips",
+          "sourceCat": "Darrere / Punta dels dits",
+          "guess": "BACK_FINGER_TIPS",
+          "match": false
+        },
+        {
+          "sourceEn": "Back/palm",
+          "sourceCat": "Darrere / Palmell",
+          "guess": "BACK_PALM",
+          "match": false
+        },
+        {
+          "sourceEn": "Base/front",
+          "sourceCat": "Base > Davant",
+          "guess": "BASE_FRONT",
+          "match": false
+        },
+        {
+          "sourceEn": "Finger tips/base",
+          "sourceCat": "Punta dels dits / Base",
+          "guess": "FINGER_TIPS_BASE",
+          "match": false
+        },
+        {
+          "sourceEn": "Finger tips/ulnar",
+          "sourceCat": "Punta dels dits / Cubital",
+          "guess": "FINGER_TIPS_ULNAR",
+          "match": false
+        },
+        {
+          "sourceEn": "Front/palm",
+          "sourceCat": "Davant / Palmell",
+          "guess": "FRONT_PALM",
+          "match": false
+        },
+        {
+          "sourceEn": "Palm + radial/ulnar",
+          "sourceCat": "Palmell + Radial/ Cubital",
+          "guess": "PALM_AND_RADIAL_ULNAR",
+          "match": false
+        },
+        {
+          "sourceEn": "Radial/ulnar",
+          "sourceCat": "Radial / Cubital",
+          "guess": "RADIAL_ULNAR",
+          "match": false
+        }
+      ],
+      "prismaOnlyCount": 9
+    },
+    "OrientationRelatedToLocation": {
+      "sheet": "Orientació relativa_localitzaci",
+      "xlsxRows": 27,
+      "matched": 21,
+      "unmatchedSamples": [
+        {
+          "sourceEn": "AO: palm-down > palm-up",
+          "sourceCat": "AO: Palmell-avall > Palmell-amunt",
+          "guess": "AO_PALM_DOWN_TO_PALM_UP",
+          "match": false
+        },
+        {
+          "sourceEn": "AO: palm-up/down",
+          "sourceCat": "AO: Palmell-amunt/avall",
+          "guess": "AO_PALM_UP_DOWN",
+          "match": false
+        },
+        {
+          "sourceEn": "Back/palm",
+          "sourceCat": "Darrere / Palmell",
+          "guess": "BACK_PALM",
+          "match": false
+        },
+        {
+          "sourceEn": "Back/palm > palm",
+          "sourceCat": "Darrere / Palmell > Palmell",
+          "guess": "BACK_PALM_TO_PALM",
+          "match": false
+        },
+        {
+          "sourceEn": "Finger tips/base",
+          "sourceCat": "Punta dels dits / Base",
+          "guess": "FINGER_TIPS_BASE",
+          "match": false
+        },
+        {
+          "sourceEn": "Radial /ulnar",
+          "sourceCat": "Radial / cubital",
+          "guess": "RADIAL_ULNAR",
+          "match": false
+        }
+      ],
+      "prismaOnlyCount": 6
+    },
+    "OrientationChange": {
+      "sheet": "Canvi_orientació",
+      "xlsxRows": 19,
+      "matched": 14,
+      "unmatchedSamples": [
+        {
+          "sourceEn": "Extension/flexion",
+          "sourceCat": "Extensió / Flexió",
+          "guess": "EXTENSION_FLEXION",
+          "match": false
+        },
+        {
+          "sourceEn": "Pronation/supination",
+          "sourceCat": "Pronació / Supinació",
+          "guess": "PRONATION_SUPINATION",
+          "match": false
+        },
+        {
+          "sourceEn": ">",
+          "sourceCat": "canvi seqüencial",
+          "guess": "TO",
+          "match": false
+        },
+        {
+          "sourceEn": "\"+\"",
+          "sourceCat": "valors simultanis",
+          "guess": "AND",
+          "match": false
+        },
+        {
+          "sourceEn": "/",
+          "sourceCat": "Diferent valor per cada mà",
+          "guess": "",
+          "match": false
+        }
+      ],
+      "prismaOnlyCount": 2
+    },
+    "ContactType": {
+      "sheet": "Tipus_contacte",
+      "xlsxRows": 16,
+      "matched": 13,
+      "unmatchedSamples": [
+        {
+          "sourceEn": ">",
+          "sourceCat": "canvi seqüencial",
+          "guess": "TO",
+          "match": false
+        },
+        {
+          "sourceEn": "\"+\"",
+          "sourceCat": "valors simultanis",
+          "guess": "AND",
+          "match": false
+        },
+        {
+          "sourceEn": "/",
+          "sourceCat": "Diferent valor per cada mà",
+          "guess": "",
+          "match": false
+        }
+      ],
+      "prismaOnlyCount": 0
+    },
+    "MovementType": {
+      "sheet": "Forma_moviment",
+      "xlsxRows": 9,
+      "matched": 8,
+      "unmatchedSamples": [
+        {
+          "sourceEn": "-----",
+          "sourceCat": "-----",
+          "guess": "",
+          "match": false
+        }
+      ],
+      "prismaOnlyCount": 0
+    },
+    "MovementDirection": {
+      "sheet": "Direcció_moviment",
+      "xlsxRows": 62,
+      "matched": 57,
+      "unmatchedSamples": [
+        {
+          "sourceEn": "Backwards/forwards",
+          "sourceCat": "Enrere / Endavant",
+          "guess": "BACKWARDS_FORWARDS",
+          "match": false
+        },
+        {
+          "sourceEn": "Downwards + contralateral/ipsilateral",
+          "sourceCat": "Avall + Contralateral / Ipsilateral",
+          "guess": "DOWNWARDS_AND_CONTRALATERAL_IPSILATERAL",
+          "match": false
+        },
+        {
+          "sourceEn": "Downwards/upwards",
+          "sourceCat": "Avall / Amunt",
+          "guess": "DOWNWARDS_UPWARDS",
+          "match": false
+        },
+        {
+          "sourceEn": "Downwards/upwards + ipsilateral",
+          "sourceCat": "Avall / Amunt + Ipsilateral",
+          "guess": "DOWNWARDS_UPWARDS_AND_IPSILATERAL",
+          "match": false
+        },
+        {
+          "sourceEn": "Ipsilateral/contralateral",
+          "sourceCat": "Ipsilateral / Contralateral",
+          "guess": "IPSILATERAL_CONTRALATERAL",
+          "match": false
+        }
+      ],
+      "prismaOnlyCount": 6
+    }
+  }
+}

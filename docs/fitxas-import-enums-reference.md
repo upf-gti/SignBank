@@ -1,0 +1,530 @@
+# SignBank — Referència d'ENUMs per a la importació
+
+Valors tancats definits a `backend/prisma/schema.prisma`. Les etiquetes en català són les que mostra l'aplicació avui (`frontend/src/i18n/ca-ES/`).
+
+**Generat:** 2026-06-17
+
+Per cada valor cal decidir a la reunió:
+- **A)** El JSON de les fitxes ja usa aquest vocabulari (o un de equivalent) → només cal una taula de correspondència.
+- **B)** El vocabulari de les fitxes és diferent → cal definir el mapatge fitxa → SignBank, o ampliar els ENUMs de SignBank.
+
+---
+
+## Language (4 valors)
+
+| SignBank ID | Etiqueta UI (ca) | Notes reunió |
+|-------------|------------------|-------------|
+| `CATALAN` | Català | |
+| `SPANISH` | Castellà | |
+| `ENGLISH` | Anglès | |
+| `OTHER` | Altre | |
+
+## LexicalCategory (27 valors)
+
+| SignBank ID | Etiqueta UI (ca) | Notes reunió |
+|-------------|------------------|-------------|
+| `ADJECTIVE` | Adjectiu | |
+| `INTERJECTION` | Interjecció | |
+| `NOUN` | Nom | |
+| `NOUN_OR_VERB` | Nom o Verb | |
+| `NOUN_OR_ADJECTIVE` | Nom o Adjectiu | |
+| `NOUN_ADJECTIVE_OR_VERB` | Nom, Adjectiu o Verb | |
+| `VERB_OR_ADJECTIVE` | Verb o Adjectiu | |
+| `PARTICLE` | Nom, Adjectiu o Partícula | |
+| `VERB` | Verb | |
+| `ADVERB` | Adverbi | |
+| `PRONOUN` | Pronom | |
+| `NOUN_ADJECTIVE_OR_ADVERB` | Nom, Adjectiu o Adverbi | |
+| `PARTICLE_NOUN_OR_VERB` | Partícula, Nom o Verb | |
+| `NOUN_OR_ADVERB` | Nom o Adverbi | |
+| `VERB_ADJECTIVE_OR_ADVERB` | Verb, Adjectiu o Adverbi | |
+| `VERB_OR_INTERJECTION` | Adverbi o Interjecció | |
+| `ADJECTIVE_OR_ADVERB` | Adjectiu o Adverbi | |
+| `VERB_ADJECTIVE_OR_PARTICLE` | Verb, Adjectiu o Partícula | |
+| `PARTICLE_OR_ADJECTIVE` | Partícula o Adjectiu | |
+| `NOUN_ADJECTIVE_OR_PARTICLE` | Nom, Adjectiu o Partícula | |
+| `VERB_OR_ADVERB` | Nom, Verb o Adverbi | |
+| `PARTICLE_OR_ADVERB` | Partícula o Adverbi | |
+| `NOUN_VERB_OR_ADVERB` | Nom, Verb o Adverbi | |
+| `NOUN_OR_INTERJECTION` | Nom o Interjecció | |
+| `ADVERB_OR_INTERJECTION` | Adverbi o Interjecció | |
+| `VERB_OR_PARTICLE` | Verb o Partícula | |
+| `NOUN_OR_PREPOSITION` | Nom o Preposició | |
+
+## RelationType (8 valors)
+
+| SignBank ID | Etiqueta UI (ca) | Notes reunió |
+|-------------|------------------|-------------|
+| `SYNONYM` | Sinònim | |
+| `REGIONAL_VARIANT` |  | |
+| `ASSOCIATED_CONCEPT` | Concepte associat | |
+| `ANTONYM` | Antònim | |
+| `HOMONYM` | Homònim | |
+| `VARIANT` | Variant | |
+| `HYPERNYM` |  | |
+| `HYPONYM` |  | |
+
+## Hand (3 valors)
+
+| SignBank ID | Etiqueta UI (ca) | Notes reunió |
+|-------------|------------------|-------------|
+| `RIGHT` | Mà dreta / dominant? | |
+| `LEFT` | Mà esquerra | |
+| `BOTH` | Ambdues mans | |
+
+## HandConfiguration (52 valors)
+
+| SignBank ID | Etiqueta UI (ca) | Notes reunió |
+|-------------|------------------|-------------|
+| `EMPTY` | ------- BUIT ------- | |
+| `CONF_1` | 0 | |
+| `CONF_2` | 0e | |
+| `CONF_3` | 0_SSI | |
+| `CONF_4` | 1 | |
+| `CONF_5` | 1d | |
+| `CONF_6` | 2 | |
+| `CONF_1D834` | 2t | |
+| `CONF_7` | 2d | |
+| `CONF_8` | 3 | |
+| `CONF_9` | 3d | |
+| `CONF_10` | 4 | |
+| `CONF_11` | 4d | |
+| `CONF_12` | 5 | |
+| `CONF_13` | 5d | |
+| `CONF_14` | 6 | |
+| `CONF_15` | 6d | |
+| `CONF_16` | 7 | |
+| `CONF_1D86C` | 7d | |
+| `CONF_18` | 8 | |
+| `CONF_1D82E` | 8t | |
+| `CONF_19` | 8d | |
+| `CONF_20` | A | |
+| `CONF_21` | B | |
+| `CONF_22` | Bd | |
+| `CONF_23` | C | |
+| `CONF_24` | D | |
+| `CONF_25` | E | |
+| `CONF_26` | F | |
+| `CONF_27` | G_SSI | |
+| `CONF_29` | Id | |
+| `CONF_30` | I | |
+| `CONF_31` | K | |
+| `CONF_32` | O | |
+| `CONF_33` | Q | |
+| `CONF_34` | R | |
+| `CONF_35` | S | |
+| `CONF_36` | T | |
+| `CONF_37` | T_antiga | |
+| `CONF_38` | U | |
+| `CONF_39` | Y_SSI | |
+| `CONF_40` | polze-cor | |
+| `CONF_1D8C3` | Cor_e | |
+| `CONF_42` | 5m_tancat | |
+| `CONF_1D87D` | Ce | |
+| `CONF_1D8C5` | Cor | |
+| `CONF_1D8A7` | 5r | |
+| `CONF_1D8B` | 5r_tancat | |
+| `CONF_1D88E` | 9 | |
+| `CONF_1D8BA` | ASL_T | |
+| `CONF_1D8C7` | Cor-E | |
+| `CONF_2A` | ILY | |
+
+## ConfigurationChange (20 valors)
+
+| SignBank ID | Etiqueta UI (ca) | Notes reunió |
+|-------------|------------------|-------------|
+| `EMPTY` | ------- BUIT ------- | |
+| `BENDING` | Flexió | |
+| `CLOSING` | Tancament | |
+| `CLOSING_AND_RUBBING` | Tancament + Fregament | |
+| `CLOSING_AND_WIGGLING` | Tancament + Vibració | |
+| `CLOSING_TO_OPENING` | Tancament > Obertura | |
+| `CONSECUTIVE_CLOSING` | Tancament consecutiu | |
+| `CURVING` | Corbat | |
+| `NONE_TO_SPREADING` | Cap a Extensió | |
+| `OPENING` | Obertura | |
+| `OPENING_AND_RUBBING` | Obertura + Fregament | |
+| `OPENING_AND_SPREADING` | Obertura + Extensió | |
+| `OPENING_AND_WIGGLING` | Obertura + Vibració | |
+| `OPENING_TO_CLOSING` | Obertura > Tancament | |
+| `RUBBING` | Fregament | |
+| `SPREADING` | Extensió | |
+| `UNBENDING` | Estirament | |
+| `UNCURVING` | Redreçament | |
+| `UNSPREADING` | Ajustament | |
+| `WIGGLING` | Vibració | |
+
+## RelationBetweenArticulators (12 valors)
+
+| SignBank ID | Etiqueta UI (ca) | Notes reunió |
+|-------------|------------------|-------------|
+| `EMPTY` | ------- BUIT ------- | |
+| `ABOVE` | A dalt | |
+| `ABOVE_BELOW` | A dalt i a baix | |
+| `AROUND` | Al voltant | |
+| `BACK` | Darrere | |
+| `BELOW` | A baix | |
+| `CROSS` | Creuat | |
+| `FRONT` | Davant | |
+| `FRONT_BACK` | Davant i darrere | |
+| `INSIDE` | Dins | |
+| `INTERWOVEN` | Entrellaçat | |
+| `NEXT_TO` | Al costat | |
+
+## Location (141 valors)
+
+| SignBank ID | Etiqueta UI (ca) | Notes reunió |
+|-------------|------------------|-------------|
+| `EMPTY` | ------------- | |
+| `ARM` | Braç | |
+| `ARMPIT` | Aixella | |
+| `BACK` | Esquena | |
+| `BACK_OF_HEAD` | Part posterior del cap | |
+| `BELLY` | Ventre | |
+| `BREASTS` | Pits | |
+| `BREAST_IPSI` | Pit ipsilateral | |
+| `BREAST_CONTRA` | Pit contralateral | |
+| `BRIDGE_OF_NOSE` | Pont del nas | |
+| `CHEEK` | Galta | |
+| `CHEEK_CONTRA` | Galta contralateral | |
+| `CHEEKBONE` | Pòmul | |
+| `CHEST` | Pit | |
+| `CHEST_CONTRA` | Pit contralateral | |
+| `CHIN` | Barbeta | |
+| `CHIN_CONTRA` | Barbeta contralateral | |
+| `CROTCH` | Entrecuix | |
+| `EAR` | Orella | |
+| `EARLOBE` | Lòbul de l'orella | |
+| `EAST` | Est | |
+| `ELBOW` | Colze | |
+| `EYE` | Ull | |
+| `EYEBROW` | Cella | |
+| `FACE` | Cara | |
+| `FACE_IPSI` | Cara ipsilateral | |
+| `FLANK` | Costat | |
+| `FOREHEAD` | Front | |
+| `FOREHEAD_CONTRA` | Front contralateral | |
+| `HEAD` | Cap | |
+| `HEAD_CONTRA` | Cap contralateral | |
+| `HEAD_IPSI` | Cap ipsilateral | |
+| `HIP` | Maluc | |
+| `HORIZONTAL_PLANE` | Pla horitzontal | |
+| `KNEE` | Genoll | |
+| `LEG` | Cama | |
+| `LOWER_ARM` | Avantbraç | |
+| `LOWER_LIP` | Llavi inferior | |
+| `MOUTH` | Boca | |
+| `MOUTH_CONTRA` | Boca contralateral | |
+| `MOUTH_IPSI` | Boca ipsilateral | |
+| `NECK` | Coll | |
+| `NECK_CONTRA` | Coll contralateral | |
+| `NEUTRAL_SPACE` | Espai neutral | |
+| `NOSE` | Nas | |
+| `PARALLEL_PLANE` | Pla paral·lel | |
+| `R_LOC` | Ubicació R | |
+| `SHOULDER` | Espatlla | |
+| `SHOULDER_CONTRA` | Espatlla contralateral | |
+| `TEETH` | Dents | |
+| `TEMPLE` | Templa | |
+| `THUMB` | Polze | |
+| `TONGUE` | Llengua | |
+| `TRUNK` | Tronc | |
+| `UPPER_ARM` | Braç superior | |
+| `UPPER_LIP` | Llavi superior | |
+| `VARIABLE` | Variable | |
+| `VIRTUAL_OBJECT` | Objecte virtual | |
+| `WAIST` | Cintura | |
+| `WEST` | Oest | |
+| `WRIST` | Canell | |
+| `WEAK_HAND` | Mà feble | |
+| `WEAK_HAND_BACK` | Dors de la mà feble | |
+| `WEAK_HAND_BASE` | Base de la mà feble | |
+| `WEAK_HAND_FINGER_TIPS` | Puntes dels dits de la mà feble | |
+| `WEAK_HAND_FINGER` | Dit de la mà feble | |
+| `WEAK_HAND_FRONT` | Front de la mà feble | |
+| `WEAK_HAND_INDEX_FINGER` | Dit índex de la mà feble | |
+| `WEAK_HAND_KNUCKLES` | Artells de la mà feble | |
+| `WEAK_HAND_MIDDLE_FINGER` | Dit del mig de la mà feble | |
+| `WEAK_HAND_PALM` | Palmell de la mà feble | |
+| `WEAK_HAND_PINKIE` | Dit petit de la mà feble | |
+| `WEAK_HAND_PINKIE_SIDE` | Costat del dit petit de la mà feble | |
+| `WEAK_HAND_RING_FINGER` | Dit anular de la mà feble | |
+| `WEAK_HAND_THENAR` | Tenar de la mà feble | |
+| `WEAK_HAND_THUMB` | Polze de la mà feble | |
+| `WEAK_HAND_THUMB_SIDE` | Costat del polze de la mà feble | |
+| `WEAK_HAND_WEB_SPACE` | Espai interdigital de la mà feble | |
+| `BELLY_TO_CHEST` | Ventre > pit | |
+| `CHEEK_TO_CHEEK` | Galta > galta | |
+| `CHEEK_TO_CHIN` | Galta > barbeta | |
+| `CHIN_TO_CHEST` | Barbeta > pit | |
+| `CHIN_TO_NEUTRAL_SPACE` | Barbeta > espai neutral | |
+| `CHIN_TO_WEAK_HAND_INDEX` | Barbeta > índex de mà feble | |
+| `CHIN_TO_WEAK_HAND_PALM` | Barbeta > palmell de mà feble | |
+| `CHIN_TO_WEAK_HAND_THUMB` | Barbeta > polze de mà feble | |
+| `EAR_TO_CHEEK` | Orella > galta | |
+| `EAR_TO_CHEST` | Orella > pit | |
+| `EAR_TO_MOUTH` | Orella > boca | |
+| `EYE_TO_NEUTRAL_SPACE` | Ull > espai neutral | |
+| `FACE_TO_HEAD` | Cara > cap | |
+| `FACE_TO_NEUTRAL_SPACE` | Cara > espai neutral | |
+| `FOREHEAD_TO_CHEST` | Front > pit | |
+| `FOREHEAD_TO_CHIN` | Front > barbeta | |
+| `FOREHEAD_TO_NEUTRAL_SPACE` | Front > espai neutral | |
+| `FOREHEAD_TO_WEAK_HAND_PALM` | Front > palmell de mà feble | |
+| `HEAD_TO_CHEST` | Cap > pit | |
+| `HEAD_TO_CHEST_TO_SHOULDER` | Cap > pit > espatlla | |
+| `HEAD_TO_NEUTRAL_SPACE` | Cap > espai neutral | |
+| `HEAD_TO_SHOULDER` | Cap > espatlla | |
+| `HEAD_TO_WEAK_HAND_PALM` | Cap > palmell de mà feble | |
+| `LEG_TO_WAIST` | Cama > cintura | |
+| `MOUTH_TO_CHEEK` | Boca > galta | |
+| `MOUTH_TO_CHEST` | Boca > pit | |
+| `MOUTH_TO_CHIN` | Boca > barbeta | |
+| `MOUTH_TO_NEUTRAL_SPACE` | Boca > espai neutral | |
+| `MOUTH_TO_WEAK_HAND` | Boca > mà feble | |
+| `MOUTH_TO_WEAK_HAND_PALM` | Boca > palmell de mà feble | |
+| `NECK_TO_CHEST` | Coll > pit | |
+| `NECK_TO_NEUTRAL_SPACE` | Coll > espai neutral | |
+| `NEUTRAL_SPACE_TO_HEAD` | Espai neutral > cap | |
+| `NEUTRAL_SPACE_TO_SHOULDER` | Espai neutral > espatlla | |
+| `NEUTRAL_SPACE_TO_NOSE` | Espai neutral > nas | |
+| `NEUTRAL_SPACE_TO_CHEEK` | Espai neutral > galta | |
+| `NEUTRAL_SPACE_TO_MOUTH` | Espai neutral > boca | |
+| `NEUTRAL_SPACE_TO_CHEST` | Espai neutral > pit | |
+| `NEUTRAL_SPACE_TO_WEAK_HAND` | Espai neutral > mà feble | |
+| `NOSE_TO_CHIN` | Nas > barbeta | |
+| `NOSE_TO_NEUTRAL_SPACE` | Nas > espai neutral | |
+| `NOSE_TO_WEAK_HAND` | Nas > mà feble | |
+| `R_LOC_TO_R_LOC` | Ubicació R > ubicació R | |
+| `SHOULDER_TO_CHEST` | Espatlla > pit | |
+| `SHOULDER_TO_SHOULDER` | Espatlla > espatlla | |
+| `SHOULDER_TO_WEAK_HAND_PALM` | Espatlla > palmell de mà feble | |
+| `SHOULDER_TO_NEUTRAL_SPACE` | Espatlla > espai neutral | |
+| `SHOULDER_TO_HIT` | Espatlla > cop | |
+| `TEMPLE_TO_CHEST` | Templa > pit | |
+| `TEMPLE_TO_CHEEK` | Templa > galta | |
+| `TEMPLE_TO_SHOULDER` | Templa > espatlla | |
+| `TEMPLE_TO_NEUTRAL_SPACE` | Templa > espai neutral | |
+| `WEAK_HAND_TO_ARM` | Mà feble > braç | |
+| `WEAK_HAND_TO_NEUTRAL_SPACE` | Mà feble > espai neutral | |
+| `WEAK_HAND_THUMB_SIDE_TO_ARM` | Costat del polze de la mà feble > braç | |
+| `ARMPIT_TO_NEUTRAL_SPACE` | Aixella > espai neutral | |
+| `CHEST_TO_CHIN` | Pit > barbeta | |
+| `CHEST_TO_NEUTRAL_SPACE` | Pit > espai neutral | |
+| `BELLY_AND_FOREHEAD` | Ventre + front | |
+| `HEAD_AND_NEUTRAL_SPACE` | Cap + espai neutral | |
+| `FLANK_OR_HEAD` | Costat \| cap | |
+| `NEUTRAL_SPACE_OR_WEAK_HAND_FRONT` | Espai neutral \| front de mà feble | |
+| `BOTTOM_OR_CROTCH` | Cul \| entrecuix | |
+
+## MovementRelatedOrientation (49 valors)
+
+| SignBank ID | Etiqueta UI (ca) | Notes reunió |
+|-------------|------------------|-------------|
+| `EMPTY` | ------- BUIT ------- | |
+| `BACK` | Darrere | |
+| `BASE` | Base | |
+| `FINGER_TIPS` | Puntes dels dits | |
+| `FRONT` | Davant | |
+| `PALM` | Palmell | |
+| `RADIAL` | Radial | |
+| `ULNAR` | Ulnar | |
+| `VARIABLE` | Variable | |
+| `BACK_AND_BASE` | Darrere + base | |
+| `BACK_AND_RADIAL` | Darrere + radial | |
+| `BACK_AND_ULNAR` | Darrere + ulnar | |
+| `BASE_AND_FRONT` | Base + davant | |
+| `BASE_AND_PALM` | Base + palmell | |
+| `BASE_AND_ULNAR` | Base + ulnar | |
+| `FRONT_AND_ULNAR` | Davant + ulnar | |
+| `PALM_AND_RADIAL` | Palmell + radial | |
+| `PALM_AND_ULNAR` | Palmell + ulnar | |
+| `PALM_AND_RADIAL_OR_ULNAR` | Palmell + radial \| ulnar | |
+| `BACK_TO_FINGER_TIPS` | Darrere > puntes dels dits | |
+| `BACK_TO_FRONT` | Darrere > davant | |
+| `BACK_TO_PALM` | Darrere > palmell | |
+| `BACK_TO_RADIAL` | Darrere > radial | |
+| `BASE_TO_BACK` | Base > darrere | |
+| `BASE_TO_BASE` | Base > base | |
+| `BASE_TO_FRONT` | Base > davant | |
+| `BASE_TO_PALM` | Base > palmell | |
+| `BASE_TO_ULNAR` | Base > ulnar | |
+| `FINGER_TIPS_TO_BACK` | Puntes dels dits > darrere | |
+| `FINGER_TIPS_TO_BASE` | Puntes dels dits > base | |
+| `FINGER_TIPS_TO_PALM` | Puntes dels dits > palmell | |
+| `FRONT_TO_BACK` | Davant > darrere | |
+| `PALM_TO_BACK` | Palmell > darrere | |
+| `PALM_TO_BASE` | Palmell > base | |
+| `RADIAL_TO_ULNAR` | Radial > ulnar | |
+| `ULNAR_TO_BASE` | Ulnar > base | |
+| `ULNAR_TO_BASE_TO_RADIAL` | Ulnar > base > radial | |
+| `ULNAR_TO_FRONT` | Ulnar > davant | |
+| `ULNAR_TO_PALM` | Ulnar > palmell | |
+| `ULNAR_TO_PALM_TO_RADIAL` | Ulnar > palmell > radial | |
+| `ULNAR_TO_RADIAL` | Ulnar > radial | |
+| `BACK_OR_BASE` | Darrere \| base | |
+| `BACK_OR_FINGER_TIPS` | Darrere \| puntes dels dits | |
+| `BACK_OR_PALM` | Darrere \| palmell | |
+| `BASE_OR_FRONT` | Base \| davant | |
+| `FINGER_TIPS_OR_BASE` | Puntes dels dits \| base | |
+| `FINGER_TIPS_OR_ULNAR` | Puntes dels dits \| ulnar | |
+| `FRONT_OR_PALM` | Davant \| palmell | |
+| `RADIAL_OR_ULNAR` | Radial \| ulnar | |
+
+## OrientationRelatedToLocation (28 valors)
+
+| SignBank ID | Etiqueta UI (ca) | Notes reunió |
+|-------------|------------------|-------------|
+| `EMPTY` | ------------- | |
+| `AO_FINGERS_CONTRA` | Dits contra | |
+| `AO_FINGERS_DOWN` | Dits avall | |
+| `AO_FINGERS_UP` | Dits amunt | |
+| `AO_PALM_BACKWARDS` | Palmell cap enrere | |
+| `AO_PALM_DOWN` | Palmell avall | |
+| `AO_PALM_DOWN_TO_UP` | Palmell d'avall a amunt | |
+| `AO_PALM_FORWARDS` | Palmell cap endavant | |
+| `AO_PALM_INWARDS` | Palmell cap endins | |
+| `AO_PALM_OUTWARDS` | Palmell cap enfora | |
+| `AO_PALM_UP` | Palmell amunt | |
+| `AO_PALM_UP_OR_DOWN` | Palmell amunt o avall | |
+| `BACK` | Darrere | |
+| `BACK_TO_PALM` | De darrere a palmell | |
+| `BACK_TO_ULNAR` | De darrere a ulnar | |
+| `BACK_OR_PALM` | Darrere o palmell | |
+| `BACK_OR_PALM_TO_PALM` | De darrere o palmell a palmell | |
+| `BASE` | Base | |
+| `COUNTING` | Comptant | |
+| `FINGER_TIPS` | Puntes dels dits | |
+| `FINGER_TIPS_OR_BASE` | Puntes dels dits o base | |
+| `FINGERSPELLING` | Dactilologia | |
+| `FRONT` | Davant | |
+| `PALM` | Palmell | |
+| `PALM_TO_ULNAR` | De palmell a ulnar | |
+| `RADIAL` | Radial | |
+| `RADIAL_OR_ULNAR` | Radial o ulnar | |
+| `ULNAR` | Ulnar | |
+
+## OrientationChange (17 valors)
+
+| SignBank ID | Etiqueta UI (ca) | Notes reunió |
+|-------------|------------------|-------------|
+| `EMPTY` | ------------- | |
+| `EXTENSION` | Extensió | |
+| `EXTENSION_AND_PRONATION` | Extensió + pronació | |
+| `EXTENSION_TO_FLEXION` | Extensió > flexió | |
+| `EXTENSION_OR_FLEXION` | Extensió \| flexió | |
+| `FLEXION` | Flexió | |
+| `FLEXION_TO_EXTENSION` | Flexió > extensió | |
+| `PRONATION` | Pronació | |
+| `PRONATION_OR_SUPINATION` | Pronació \| supinació | |
+| `RADIAL_AND_ULNAR_FLEXION` | Flexió radial + ulnar | |
+| `RADIAL_FLEXION` | Flexió radial | |
+| `ROTATION` | Rotació | |
+| `SUPINATION` | Supinació | |
+| `SUPINATION_TO_PRONATION` | Supinació > pronació | |
+| `ULNAR_FLEXION` | Flexió ulnar | |
+| `PRONATION_TO_FLEXION` | Pronació > flexió | |
+| `SUPINATION_TO_EXTENSION` | Supinació > extensió | |
+
+## ContactType (14 valors)
+
+| SignBank ID | Etiqueta UI (ca) | Notes reunió |
+|-------------|------------------|-------------|
+| `EMPTY` | ------------- | |
+| `BRUSH` | Fregament | |
+| `CONTINUOUS` | Continu | |
+| `CONTINUOUS_TO_CONTINUOUS` | Continu > continu | |
+| `CONTINUOUS_TO_FINAL` | Continu > final | |
+| `CONTINUOUS_TO_NONE` | Continu > cap | |
+| `DOUBLE` | Doble | |
+| `FINAL` | Final | |
+| `FINAL_TO_CONTINUOUS` | Final > continu | |
+| `FINAL_TO_NONE` | Final > cap | |
+| `INITIAL` | Inicial | |
+| `NONE_TO_FINAL` | Cap > final | |
+| `NONE_TO_INITIAL` | Cap > inicial | |
+| `INITIAL_TO_FINAL` | Inicial > final | |
+
+## MovementType (9 valors)
+
+| SignBank ID | Etiqueta UI (ca) | Notes reunió |
+|-------------|------------------|-------------|
+| `EMPTY` | ------------- | |
+| `ARC` | Arc | |
+| `CIRCLE` | Cercle | |
+| `CROSS` | Creu | |
+| `MOTIVATED_SHAPE` | Forma motivada | |
+| `SPIRAL` | Espiral | |
+| `STRAIGHT` | Recte | |
+| `ZIGZAG` | Ziga-zaga | |
+| `STRAIGHT_TO_CIRCLE` | Recte > cercle | |
+
+## MovementDirection (64 valors)
+
+| SignBank ID | Etiqueta UI (ca) | Notes reunió |
+|-------------|------------------|-------------|
+| `EMPTY` | ------------- | |
+| `BACKWARDS` | Enrere | |
+| `BACKWARDS_AND_CONTRALATERAL` | Enrere i contralateral | |
+| `BACKWARDS_AND_DOWNWARDS` | Enrere i avall | |
+| `BACKWARDS_AND_IPSILATERAL` | Enrere i ipsilateral | |
+| `BACKWARDS_AND_UPWARDS` | Enrere i amunt | |
+| `BACKWARDS_TO_DOWNWARDS` | Enrere a avall | |
+| `BACKWARDS_TO_FORWARDS` | Enrere a endavant | |
+| `BACKWARDS_OR_FORWARDS` | Enrere o endavant | |
+| `CONTRALATERAL` | Contralateral | |
+| `CONTRALATERAL_AND_DOWNWARDS` | Contralateral i avall | |
+| `CONTRALATERAL_AND_FORWARDS` | Contralateral i endavant | |
+| `CONTRALATERAL_AND_UPWARDS` | Contralateral i amunt | |
+| `CONTRALATERAL_TO_FORWARDS` | Contralateral a endavant | |
+| `CONTRALATERAL_TO_IPSILATERAL` | Contralateral a ipsilateral | |
+| `DISTAL` | Distal | |
+| `DOWNWARDS` | Avall | |
+| `DOWNWARDS_AND_CONTRALATERAL_OR_IPSILATERAL` | Avall i contralateral o ipsilateral | |
+| `DOWNWARDS_AND_FORWARDS` | Avall i endavant | |
+| `DOWNWARDS_AND_IPSILATERAL` | Avall i ipsilateral | |
+| `DOWNWARDS_AND_IPSILATERAL_TO_DOWNWARDS` | Avall i ipsilateral a avall | |
+| `DOWNWARDS_AND_TOWARDS` | Avall i cap a | |
+| `DOWNWARDS_TO_CONTRALATERAL` | Avall a contralateral | |
+| `DOWNWARDS_TO_FORWARDS` | Avall a endavant | |
+| `DOWNWARDS_TO_IPSILATERAL` | Avall a ipsilateral | |
+| `DOWNWARDS_TO_UPWARDS` | Avall a amunt | |
+| `DOWNWARDS_OR_UPWARDS` | Avall o amunt | |
+| `DOWNWARDS_OR_UPWARDS_AND_IPSILATERAL` | Avall o amunt i ipsilateral | |
+| `FORWARDS` | Endavant | |
+| `FORWARDS_AND_IPSILATERAL` | Endavant i ipsilateral | |
+| `FORWARDS_AND_UPWARDS` | Endavant i amunt | |
+| `FORWARDS_TO_BACKWARDS` | Endavant a enrere | |
+| `FORWARDS_TO_CONTRALATERAL` | Endavant a contralateral | |
+| `FORWARDS_TO_DOWNWARDS` | Endavant a avall | |
+| `FORWARDS_TO_IPSILATERAL` | Endavant a ipsilateral | |
+| `FORWARDS_TO_IPSILATERAL_TO_FORWARDS` | Endavant a ipsilateral a endavant | |
+| `FORWARDS_TO_UPWARDS` | Endavant a amunt | |
+| `FROM_LOCATION` | Des de la ubicació | |
+| `IPSILATERAL` | Ipsilateral | |
+| `IPSILATERAL_AND_UP_AND_DOWN` | Ipsilateral i amunt i avall | |
+| `IPSILATERAL_AND_UPWARDS` | Ipsilateral i amunt | |
+| `IPSILATERAL_TO_CONTRALATERAL` | Ipsilateral a contralateral | |
+| `IPSILATERAL_TO_DOWNWARDS` | Ipsilateral a avall | |
+| `IPSILATERAL_TO_DOWNWARDS_TO_CONTRALATERAL` | Ipsilateral a avall a contralateral | |
+| `IPSILATERAL_TO_UPWARDS` | Ipsilateral a amunt | |
+| `IPSILATERAL_AND_CONTRALATERAL` | Ipsilateral i contralateral | |
+| `IPSILATERAL_OR_CONTRALATERAL` | Ipsilateral o contralateral | |
+| `LATERAL` | Lateral | |
+| `PROXIMAL` | Proximal | |
+| `TO_AND_FRO` | Anada i tornada | |
+| `TOWARDS_LOCATION` | Cap a la ubicació | |
+| `UP_AND_DOWN` | Amunt i avall | |
+| `UPWARDS` | Amunt | |
+| `UPWARDS_TO_DOWNWARDS` | Amunt a avall | |
+| `UPWARDS_TO_FORWARDS_TO_DOWNWARDS` | Amunt a endavant a avall | |
+| `UPWARDS_TO_IPSILATERAL` | Amunt a ipsilateral | |
+| `VARIABLE` | Variable | |
+| `FORWARDS_AND_DOWNWARDS` | Endavant i avall | |
+| `CONTRALATERAL_TO_DOWNWARDS` | Contralateral a avall | |
+| `DOWNWARDS_TO_CONTRALATERAL_TO_IPSILATERAL` | Avall a contralateral a ipsilateral | |
+| `UPWARDS_AND_FORWARDS` | Amunt i endavant | |
+| `IPSILATERAL_TO_FORWARDS` | Ipsilateral a endavant | |
+| `IPSILATERAL_TO_BACKWARDS_TO_CONTRALATERAL` | Ipsilateral a enrere a contralateral | |
+| `IPSILATERAL_AND_DOWNWARDS` | Ipsilateral i avall | |
+
