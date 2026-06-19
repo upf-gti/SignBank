@@ -237,6 +237,7 @@ const translations: TranslateKeys = {
   addMinimalPair: 'Añadir par mínimo',
   addRelation: 'Añadir relación',
   backToRequests: 'Volver a solicitudes',
+  backToSearch: 'Volver a búsqueda',
   BOTH: 'Ambos',
   LEFT: 'Izquierda',
   RIGHT: 'Derecha',

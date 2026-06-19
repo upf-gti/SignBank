@@ -38,17 +38,34 @@
       </div>
     </div>
 
-    <GlossDetailComponent
+    <div
       v-else-if="glossData"
-      v-model:edit-mode="editMode"
-      class="gloss-page__detail col column"
-      :class="{ 'gloss-page__detail--editing': editMode }"
-      :gloss-data="glossData"
-      :allow-edit="true"
-      :constrained-layout="!editMode"
-      @save-gloss="saveGloss"
-      @update:gloss-data="updateGlossData"
-    />
+      class="gloss-page__content col column"
+      :class="{ 'gloss-page__content--editing': editMode }"
+    >
+      <div
+        v-if="!editMode"
+        class="gloss-page__toolbar q-px-md q-pt-sm"
+      >
+        <q-btn
+          flat
+          icon="arrow_back"
+          :label="translate('backToSearch')"
+          @click="router.push('/search')"
+        />
+      </div>
+
+      <GlossDetailComponent
+        v-model:edit-mode="editMode"
+        class="gloss-page__detail col column"
+        :class="{ 'gloss-page__detail--editing': editMode }"
+        :gloss-data="glossData"
+        :allow-edit="true"
+        :constrained-layout="!editMode"
+        @save-gloss="saveGloss"
+        @update:gloss-data="updateGlossData"
+      />
+    </div>
   </q-page>
 </template>
 
@@ -122,6 +139,24 @@ const updateGlossData = (updatedGlossData: GlossData) => {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+
+.gloss-page__content {
+  flex: 1 1 0;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.gloss-page__content--editing {
+  flex: 1 1 auto;
+  min-height: auto;
+  height: auto;
+  overflow: visible;
+}
+
+.gloss-page__toolbar {
+  flex: 0 0 auto;
 }
 
 .gloss-page__detail {

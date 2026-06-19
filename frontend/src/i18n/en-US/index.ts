@@ -289,6 +289,7 @@ const translations: TranslateKeys = {
   decline: 'Decline',
   reviewRequest: 'Review Request',
   backToRequests: 'Back to Requests',
+  backToSearch: 'Back to Search',
   requestedBy: 'Requested by',
   addMinimalPair: 'Add minimal pair',
   addRelation: 'Add relation',

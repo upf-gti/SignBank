@@ -720,6 +720,7 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   decline: string;
   reviewRequest: string;
   backToRequests: string;
+  backToSearch: string;
   requestedBy: string;
   addRelation: string;
   acceptedBy: string;

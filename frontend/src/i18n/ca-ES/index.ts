@@ -19,6 +19,7 @@ const translations: TranslateKeys = {
   decline: 'Rebutjar',
   reviewRequest: 'Revisar sol·licitud',
   backToRequests: 'Tornar a sol·licituds',
+  backToSearch: 'Tornar a la cerca',
   requestedBy: 'Sol·licitat per',
   acceptedBy: 'Acceptat per',
   exitEditMode: 'Sortir del mode d\'edició',

@@ -150,6 +150,8 @@ const showSidebar = computed(() => hasSignVideos.value || hasGlossTranslations.v
 }
 
 .gloss-video-column {
+  display: flex;
+  flex-direction: column;
   flex: 0 0 42%;
   min-width: 0;
   min-height: 0;

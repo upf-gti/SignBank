@@ -9,7 +9,7 @@ export type FitxaMappingField = keyof typeof mappings.fields;
 
 export interface EnumResolveResult<T = string> {
   value: T | null;
-  field: string;
+  field: FitxaMappingField;
   input: string;
 }
 

@@ -138,7 +138,9 @@ function selectVideo(videoId: string | undefined) {
   flex: 1 1 0;
   min-height: 0;
   width: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .sign-videos-browse__toolbar {
@@ -198,12 +200,15 @@ function selectVideo(videoId: string | undefined) {
 
 .sign-videos-browse__single {
   flex: 0 0 auto;
-  margin-bottom: 16px;
+  width: 100%;
+  max-width: var(--sb-video-max-width, 480px);
+  margin: 0 auto 16px;
 }
 
 .sign-videos-browse__single-video {
   border-radius: var(--sb-card-radius, 12px);
   overflow: hidden;
+  max-width: 100%;
 }
 
 .sign-videos-browse__phonology {

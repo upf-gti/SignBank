@@ -23,13 +23,17 @@
       @click="emit('showAllVideos')"
     />
 
-    <GlossTranslationsComponent
+    <div
       v-if="hasGlossTranslations"
-      :gloss-data="glossData"
-      :edit-mode="false"
-      hide-section-title
-      compact
-    />
+      class="sign-video-panel__translations"
+    >
+      <GlossTranslationsComponent
+        :gloss-data="glossData"
+        :edit-mode="false"
+        hide-section-title
+        compact
+      />
+    </div>
   </div>
 </template>
 
@@ -73,12 +77,26 @@ const detailsButtonLabel = computed(() =>
 
 <style scoped>
 .sign-video-aside {
+  flex: 0 0 auto;
   border-radius: var(--sb-card-radius, 12px);
   overflow: hidden;
+  max-width: 100%;
 }
 
 .sign-video-panel {
+  display: flex;
+  flex-direction: column;
   height: 100%;
   max-height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.sign-video-panel__translations {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 </style>
