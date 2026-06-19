@@ -363,7 +363,7 @@ const moveVideoRight = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.96);
+  background: color-mix(in srgb, var(--sb-surface-elevated) 96%, transparent);
 }
 
 .angle-toggle--compact :deep(.q-btn) {

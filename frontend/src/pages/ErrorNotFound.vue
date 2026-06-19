@@ -34,6 +34,6 @@ import translate from 'src/utils/translate';
 
 <style scoped>
 .not-found-page {
-  background: #fafafa;
+  background: var(--sb-bg);
 }
 </style>

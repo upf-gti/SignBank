@@ -6,6 +6,8 @@ import { fileURLToPath } from 'node:url';
 
 export default defineConfig(() => {
   return {
+    sassVariables: 'src/css/quasar.variables.scss',
+
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
     // preFetch: true,
 
@@ -128,17 +130,17 @@ export default defineConfig(() => {
     framework: {
       config: {
         brand: {
-          primary: '#c8102f',
-          secondary: '#FFFFFF',
-          accent: '#9C27B0',
+          primary: '#B6463A',
+          secondary: '#EDE4D6',
+          accent: '#9C6B4A',
 
-          dark: '#1d1d1d',
-          'dark-page': '#121212',
+          dark: '#2F2A24',
+          'dark-page': '#1A1714',
 
-          positive: '#21BA45',
-          negative: '#8B0000',
-          info: '#31CCEC',
-          warning: '#F2C037'
+          positive: '#3F7A52',
+          negative: '#B64A4A',
+          info: '#5B7C8C',
+          warning: '#B3832E'
         }
       },
       plugins: ['Notify', 'Dialog'],

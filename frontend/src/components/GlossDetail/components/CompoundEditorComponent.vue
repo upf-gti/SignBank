@@ -579,7 +579,7 @@ defineExpose({ saveAll, getStepValidationErrors });
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: var(--sb-card-radius, 12px);
   padding: 16px 20px;
-  background: #fff;
+  background: var(--sb-surface);
 }
 
 .inline-morpheme-editor__phonology :deep(.sign-phonology) {

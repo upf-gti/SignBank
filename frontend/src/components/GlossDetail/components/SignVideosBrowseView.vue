@@ -224,12 +224,12 @@ function selectVideo(videoId: string | undefined) {
 }
 
 .sign-videos-browse__picker-item:hover {
-  border-color: rgba(200, 16, 47, 0.35);
+  border-color: color-mix(in srgb, var(--primary) 35%, transparent);
 }
 
 .sign-videos-browse__picker-item--active {
   border-color: var(--primary);
-  box-shadow: 0 2px 12px rgba(200, 16, 47, 0.12);
+  box-shadow: 0 2px 12px color-mix(in srgb, var(--primary) 12%, transparent);
 }
 
 .sign-videos-browse__picker-label {
@@ -254,7 +254,7 @@ function selectVideo(videoId: string | undefined) {
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: var(--sb-card-radius, 12px);
   padding: 16px 20px;
-  background: #fff;
+  background: var(--sb-surface);
 }
 
 .sign-videos-browse__phonology :deep(.sign-phonology) {

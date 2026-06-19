@@ -177,7 +177,7 @@ function confirmDelete() {
 }
 
 .editable-module.inline-mode {
-  background: white;
+  background: var(--sb-surface);
   border: 1px solid rgba(0, 0, 0, 0.08);
   padding: 12px;
   border-radius: var(--sb-card-radius, 12px);

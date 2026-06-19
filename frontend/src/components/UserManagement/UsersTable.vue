@@ -159,7 +159,7 @@ function updateUserRole(userId: string, newRole: Role) {
   .q-table__bottom,
   thead tr:first-child th
     /* bg color is important for th; just specify one */
-    background-color: white
+    background-color: var(--sb-surface)
 
   thead tr th
     position: sticky

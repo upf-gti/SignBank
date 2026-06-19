@@ -386,7 +386,7 @@ function emitUpdate() {
   position: sticky;
   top: 0;
   z-index: 2;
-  background: #fff;
+  background: var(--sb-surface);
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
   font-weight: 600;
   font-size: 0.8rem;

@@ -650,12 +650,12 @@ function validateVideo(video: SignVideo): { isValid: boolean; errors: string[] }
 }
 
 .videos-editor__picker-item:hover {
-  border-color: rgba(200, 16, 47, 0.35);
+  border-color: color-mix(in srgb, var(--primary) 35%, transparent);
 }
 
 .videos-editor__picker-item--active {
   border-color: var(--primary);
-  box-shadow: 0 2px 12px rgba(200, 16, 47, 0.12);
+  box-shadow: 0 2px 12px color-mix(in srgb, var(--primary) 12%, transparent);
 }
 
 .videos-editor__picker-label {
@@ -687,7 +687,7 @@ function validateVideo(video: SignVideo): { isValid: boolean; errors: string[] }
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: var(--sb-card-radius, 12px);
   padding: 16px 20px;
-  background: #fff;
+  background: var(--sb-surface);
 }
 
 .videos-editor__phonology-toolbar {

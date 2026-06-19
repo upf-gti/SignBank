@@ -278,16 +278,16 @@ onMounted(async () => {
 }
 
 .filters-container::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--sb-surface-muted);
 }
 
 .filters-container::-webkit-scrollbar-thumb {
-  background: #888;
+  background: #B5A796;
   border-radius: 3px;
 }
 
 .filters-container::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #9A8B7A;
 }
 
 /* Mobile responsive adjustments */

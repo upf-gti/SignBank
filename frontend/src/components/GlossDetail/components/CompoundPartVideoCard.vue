@@ -68,7 +68,7 @@ defineProps<{
   min-height: 120px;
   padding: 12px;
   text-align: center;
-  background: #f5f5f5;
+  background: var(--sb-surface-muted);
   border-radius: 8px;
 }
 </style>

@@ -300,7 +300,7 @@ async function handleFinish() {
 
 .creation-stepper {
   border-radius: var(--sb-card-radius, 12px);
-  background: white;
+  background: var(--sb-surface);
   flex: 1 1 auto;
 }
 </style>
@@ -329,7 +329,7 @@ async function handleFinish() {
   padding: 12px 16px;
   box-sizing: border-box;
   pointer-events: auto;
-  background: #fff;
+  background: var(--sb-surface);
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-bottom: none;
   border-radius: var(--sb-card-radius, 12px) var(--sb-card-radius, 12px) 0 0;

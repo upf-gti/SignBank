@@ -1,6 +1,6 @@
 <template>
   <q-header
-    class="bg-secondary text-black app-header"
+    class="app-header"
     bordered
   >
     <loginComponent v-model="isLoginDialogOpen" />
@@ -11,7 +11,7 @@
       :width="280"
       bordered
       overlay
-      class="bg-secondary"
+      class="app-drawer"
     >
       <q-list padding>
         <q-item-label
@@ -184,6 +184,12 @@ const isActive = (path: string) => route.path === path || route.path.startsWith(
 </script>
 
 <style scoped>
+.app-header,
+.app-drawer {
+  background-color: var(--sb-surface-muted);
+  color: var(--sb-text-primary);
+}
+
 .app-header {
   min-height: 64px;
   box-shadow: none;
@@ -198,7 +204,7 @@ const isActive = (path: string) => route.path === path || route.path.startsWith(
 }
 
 .nav-item-active {
-  background: rgba(200, 16, 47, 0.08);
+  background: rgba(182, 70, 58, 0.1);
   color: var(--primary);
   font-weight: 500;
 }
