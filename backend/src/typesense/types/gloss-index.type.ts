@@ -1,5 +1,5 @@
 import {
-  Hand,
+  Handedness,
   HandConfiguration,
   ConfigurationChange,
   RelationBetweenArticulators,
@@ -23,10 +23,12 @@ export interface GlossIndex {
   lexicalCategory: LexicalCategory | string;
   lexicalCategories: (LexicalCategory | string)[];
   description: string;
-  hands: Hand;
-  configuration: HandConfiguration | '';
+  handedness: Handedness;
+  dominantConfiguration: HandConfiguration | '';
+  nonDominantConfiguration: HandConfiguration | '';
+  dominantRelationBetweenArticulators: RelationBetweenArticulators | '';
+  nonDominantRelationBetweenArticulators: RelationBetweenArticulators | '';
   configurationChanges: ConfigurationChange | '';
-  relationBetweenArticulators: RelationBetweenArticulators | '';
   location: Location | '';
   movementRelatedOrientation: MovementRelatedOrientation | '';
   orientationRelatedToLocation: OrientationRelatedToLocation | '';

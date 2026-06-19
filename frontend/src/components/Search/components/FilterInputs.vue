@@ -7,12 +7,13 @@
 </template>
 
 <script setup lang="ts">
-// Create a type for filter inputs that allows empty values
+import SearchPhonologyFilters from './SearchPhonologyFilters.vue';
+
 type FilterInputs = {
-  hands: string | null;
-  configuration: string;
+  handedness: string | null;
+  dominantConfiguration: string;
   configurationChanges: string;
-  relationBetweenArticulators: string;
+  dominantRelationBetweenArticulators: string;
   location: string;
   movementRelatedOrientation: string;
   orientationRelatedToLocation: string;
@@ -26,8 +27,6 @@ type FilterInputs = {
   movementDirection: string;
 };
 
-import SearchPhonologyFilters from './SearchPhonologyFilters.vue';
-
 defineProps<{
   phonologyData: FilterInputs;
 }>();
@@ -35,5 +34,4 @@ defineProps<{
 defineEmits<{
   (e: 'update:phonology-data', value: FilterInputs): void;
 }>();
-
-</script> 
+</script>

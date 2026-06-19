@@ -67,10 +67,12 @@ enum RelationType {
     HYPONYM
 }
 
-enum Hand {
-    RIGHT
-    LEFT
-    BOTH
+enum Handedness {
+    ONE
+    TWO_A
+    TWO_N
+    TWO_S
+    NA
 }
 
 enum GlossStatus {
@@ -643,10 +645,12 @@ model SignVideo {
 }
 
 model VideoData {
-    hands                        Hand
-    configuration                HandConfiguration
+    handedness                         Handedness                   @default(ONE)
+    dominantConfiguration              HandConfiguration?
+    nonDominantConfiguration           HandConfiguration?
+    dominantRelationBetweenArticulators  RelationBetweenArticulators?
+    nonDominantRelationBetweenArticulators RelationBetweenArticulators?
     configurationChanges         ConfigurationChange
-    relationBetweenArticulators  RelationBetweenArticulators
     location                     Location
     movementRelatedOrientation   MovementRelatedOrientation
     orientationRelatedToLocation OrientationRelatedToLocation

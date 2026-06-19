@@ -1,43 +1,37 @@
 <template>
   <div class="phonology-filters overflow-x-hidden">
     <div class="column q-col-gutter-md">
-      <!-- Hands -->
+      <!-- Handedness -->
       <div class="col-12">
         <q-item-label
           v-if="!isEditable"
           caption
         >
-          {{ translate('hands') }}
+          {{ translate('handedness') }}
         </q-item-label>
         <div
           v-if="!isEditable"
           class="q-py-sm"
         >
           <span
-            v-if="localData.hands"
+            v-if="localData.handedness"
             class="text-body2"
-          >{{ getHandLabel(localData.hands) }}</span>
+          >{{ getHandednessLabel(localData.handedness) }}</span>
           <span
             v-else
             class="text-grey-5"
           >{{ translate('notSet') }}</span>
         </div>
-        <q-btn-toggle
+        <q-select
           v-else
-          v-model="localData.hands"
-          :options="[
-            { label: translate('activeHand'), value: 'RIGHT' },
-            { label: translate('both'), value: 'BOTH' }
-          ]"
-          spread
-          no-caps
-          unelevated
-          toggle-color="primary"
-          color="grey-3"
-          text-color="grey-8"
-          class="full-width"
+          v-model="localData.handedness"
+          :options="phonologyOptions.handednessOptions"
+          :label="translate('handedness')"
           clearable
-          @update:model-value="updateField('hands', $event)"
+          emit-value
+          map-options
+          options-dense
+          @update:model-value="updateField('handedness', $event)"
         />
       </div>
 
@@ -54,9 +48,9 @@
           class="q-py-sm"
         >
           <span
-            v-if="localData.configuration"
+            v-if="localData.dominantConfiguration"
             class="text-body2"
-          >{{ getConfigurationLabel(localData.configuration) }}</span>
+          >{{ getConfigurationLabel(localData.dominantConfiguration) }}</span>
           <span
             v-else
             class="text-grey-5"
@@ -64,8 +58,8 @@
         </div>
         <q-select
           v-else
-          v-model="localData.configuration"
-          :options="filteredOptions.configuration"
+          v-model="localData.dominantConfiguration"
+          :options="filteredOptions.dominantConfiguration"
           :label="translate('configuration')"
           clearable
           emit-value
@@ -73,8 +67,8 @@
           options-dense
           use-input
           input-debounce="300"
-          @filter="(val, update) => filterFn(val, update, phonologyOptions.handConfigurationOptions, 'configuration')"
-          @update:model-value="updateField('configuration', $event)"
+          @filter="(val, update) => filterFn(val, update, phonologyOptions.handConfigurationOptions, 'dominantConfiguration')"
+          @update:model-value="updateField('dominantConfiguration', $event)"
         />
       </div>
 
@@ -142,9 +136,9 @@
           class="q-py-sm"
         >
           <span
-            v-if="localData.relationBetweenArticulators"
+            v-if="localData.dominantRelationBetweenArticulators"
             class="text-body2"
-          >{{ getRelationBetweenArticulatorsLabel(localData.relationBetweenArticulators) }}</span>
+          >{{ getRelationBetweenArticulatorsLabel(localData.dominantRelationBetweenArticulators) }}</span>
           <span
             v-else
             class="text-grey-5"
@@ -152,8 +146,8 @@
         </div>
         <q-select
           v-else
-          v-model="localData.relationBetweenArticulators"
-          :options="filteredOptions.relationBetweenArticulators"
+          v-model="localData.dominantRelationBetweenArticulators"
+          :options="filteredOptions.dominantRelationBetweenArticulators"
           :label="translate('relationBetweenArticulators')"
           clearable
           emit-value
@@ -161,8 +155,8 @@
           options-dense
           use-input
           input-debounce="300"
-          @filter="(val, update) => filterFn(val, update, phonologyOptions.relationBetweenArticulatorsOptions, 'relationBetweenArticulators')"
-          @update:model-value="updateField('relationBetweenArticulators', $event)"
+          @filter="(val, update) => filterFn(val, update, phonologyOptions.relationBetweenArticulatorsOptions, 'dominantRelationBetweenArticulators')"
+          @update:model-value="updateField('dominantRelationBetweenArticulators', $event)"
         />
       </div>
 
@@ -540,28 +534,31 @@
             class="text-grey-5"
           >{{ translate('notSet') }}</span>
         </div>
-        <div v-else class="column">
+        <div
+          v-else
+          class="column"
+        >
           <q-label>
             {{ translate('repeatedMovement') }}
           </q-label>
           <q-btn-toggle
-          v-model="localData.repeatedMovement"
-          :options="[
-            { label: translate('yes'), value: true },
-            { label: translate('no'), value: false }
-          ]"
-          spread
-          no-caps
-          unelevated
-          :label="translate('repeatedMovement')"
-          toggle-color="primary"
-          color="grey-3"
-          text-color="grey-8"
-          class="full-width"
-          clearable
-          @update:model-value="updateBooleanField('repeatedMovement', $event)"
-        />
-      </div>
+            v-model="localData.repeatedMovement"
+            :options="[
+              { label: translate('yes'), value: true },
+              { label: translate('no'), value: false }
+            ]"
+            spread
+            no-caps
+            unelevated
+            :label="translate('repeatedMovement')"
+            toggle-color="primary"
+            color="grey-3"
+            text-color="grey-8"
+            class="full-width"
+            clearable
+            @update:model-value="updateBooleanField('repeatedMovement', $event)"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -574,10 +571,10 @@ import { usePhonologyOptions } from '../../../utils/phonologyOptions';
 
 // Create a type for filter inputs that allows empty values
 type FilterInputs = {
-  hands: string | null;
-  configuration: string;
+  handedness: string | null;
+  dominantConfiguration: string;
   configurationChanges: string;
-  relationBetweenArticulators: string;
+  dominantRelationBetweenArticulators: string;
   location: string;
   movementRelatedOrientation: string;
   orientationRelatedToLocation: string;
@@ -611,10 +608,10 @@ const localData = ref<FilterInputs>({ ...props.phonologyData });
 
 // Initialize filtered options with the original options
 const filteredOptions = ref({
-  hands: phonologyOptions.handOptions,
-  configuration: phonologyOptions.handConfigurationOptions,
+  handedness: phonologyOptions.handednessOptions,
+  dominantConfiguration: phonologyOptions.handConfigurationOptions,
   configurationChanges: phonologyOptions.configurationChangeOptions,
-  relationBetweenArticulators: phonologyOptions.relationBetweenArticulatorsOptions,
+  dominantRelationBetweenArticulators: phonologyOptions.relationBetweenArticulatorsOptions,
   location: phonologyOptions.locationOptions,
   movementRelatedOrientation: phonologyOptions.movementRelatedOrientationOptions,
   orientationRelatedToLocation: phonologyOptions.orientationRelatedToLocationOptions,
@@ -661,17 +658,9 @@ const updateField = (field: keyof FilterInputs, value: string | string[] | numbe
   emit('update:phonologyData', localData.value);
 };
 
-const getHandLabel = (hands: string) => {
-  switch (hands) {
-    case 'RIGHT':
-      return translate('right');
-    case 'LEFT':
-      return translate('left');
-    case 'BOTH':
-      return translate('both');
-    default:
-      return '';
-  }
+const getHandednessLabel = (handedness: string) => {
+  const option = phonologyOptions.handednessOptions.find(o => o.value === handedness);
+  return option ? option.label : '';
 };
 
 const getConfigurationLabel = (configuration: string) => {

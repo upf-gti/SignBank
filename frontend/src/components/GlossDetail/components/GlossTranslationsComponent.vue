@@ -239,7 +239,7 @@ const deleteTranslation = async (translation: GlossTranslation) => {
   if (!translation.id) {
     const index = localGlossData.value.glossTranslations?.findIndex((t) => t === translation) ?? -1;
     if (index !== -1) {
-      localGlossData.value.glossTranslations!.splice(index, 1);
+      localGlossData.value.glossTranslations.splice(index, 1);
     }
     return;
   }
@@ -270,7 +270,7 @@ const cancelTranslation = (translation: GlossTranslation) => {
   if (!translation.id) {
     const index = localGlossData.value.glossTranslations?.findIndex((t) => t === translation) ?? -1;
     if (index !== -1) {
-      localGlossData.value.glossTranslations!.splice(index, 1);
+      localGlossData.value.glossTranslations.splice(index, 1);
     }
   }
 };

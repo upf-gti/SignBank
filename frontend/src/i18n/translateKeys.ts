@@ -42,6 +42,18 @@ export interface PhonologyTranslateKeys {
       WIGGLING: string;
       WIGGLING_description: string;
     };
+    handedness: {
+      ONE: string;
+      ONE_description: string;
+      TWO_A: string;
+      TWO_A_description: string;
+      TWO_N: string;
+      TWO_N_description: string;
+      TWO_S: string;
+      TWO_S_description: string;
+      NA: string;
+      NA_description: string;
+    };
     handConfiguration: {
       EMPTY: string;
       CONF_1: string;
@@ -534,6 +546,9 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   portuguese: string;
   russian: string;
   hands: string;
+  handedness: string;
+  mainHand: string;
+  nonDominantHand: string;
   configuration: string;
   configurationChanges: string;
   vocalization: string;
@@ -548,6 +563,8 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   rightHand: string;
   leftHand: string;
   bothHands: string;
+  useSameForBothHands: string;
+  editHandsSeparately: string;
   showConfigurationDetails: string;
   configurationDetails: string;
   resultsFound: string;
@@ -654,6 +671,7 @@ interface TranslateKeys extends PhonologyTranslateKeys {
     failedToCreateDefinition: string;
     failedToSortDefinitions: string;
     unsupportedVideoFormat: string;
+    handednessRequired: string;
   };
   ACCEPTED: string;
   DENIED: string;

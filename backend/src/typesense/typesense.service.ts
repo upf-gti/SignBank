@@ -5,7 +5,7 @@ import { VIDEOS_COLLECTION_NAME, videosSchema } from './typesense.config';
 import { GlossIndex } from './types/gloss-index.type';
 import {
   GlossStatus,
-  Hand,
+  Handedness,
   Prisma,
 } from '@prisma/client';
 
@@ -157,10 +157,12 @@ export class TypesenseService implements OnModuleInit {
       lexicalCategory: primaryDefinition?.lexicalCategory ?? lexicalCategories[0] ?? '',
       lexicalCategories,
       description,
-      hands: videoData?.hands ?? Hand.RIGHT,
-      configuration: videoData?.configuration ?? '',
+      handedness: videoData?.handedness ?? Handedness.ONE,
+      dominantConfiguration: videoData?.dominantConfiguration ?? '',
+      nonDominantConfiguration: videoData?.nonDominantConfiguration ?? '',
+      dominantRelationBetweenArticulators: videoData?.dominantRelationBetweenArticulators ?? '',
+      nonDominantRelationBetweenArticulators: videoData?.nonDominantRelationBetweenArticulators ?? '',
       configurationChanges: videoData?.configurationChanges ?? '',
-      relationBetweenArticulators: videoData?.relationBetweenArticulators ?? '',
       location: videoData?.location ?? '',
       movementRelatedOrientation: videoData?.movementRelatedOrientation ?? '',
       orientationRelatedToLocation: videoData?.orientationRelatedToLocation ?? '',
@@ -408,11 +410,11 @@ export class TypesenseService implements OnModuleInit {
         q: searchParameters.q || '*',
         query_by:
           searchParameters.query_by ||
-          'gloss,signVideoTitle,description,configuration,location,hands,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection',
+          'gloss,signVideoTitle,description,dominantConfiguration,nonDominantConfiguration,location,handedness,configurationChanges,dominantRelationBetweenArticulators,nonDominantRelationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection',
         filter_by: searchParameters.filter_by || '',
         facet_by:
           searchParameters.facet_by ||
-          'lexicalCategory,configuration,location,hands,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection,repeatedMovement,description,gloss,signVideoTitle',
+          'lexicalCategory,dominantConfiguration,nonDominantConfiguration,location,handedness,configurationChanges,dominantRelationBetweenArticulators,nonDominantRelationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection,repeatedMovement,description,gloss,signVideoTitle',
         max_hits: searchParameters.max_hits || 100,
         page: searchParameters.page || 1,
         per_page: searchParameters.per_page || 20,

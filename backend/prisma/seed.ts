@@ -1,4 +1,4 @@
-import { PrismaClient, Role, Language, LexicalCategory, Hand, GlossStatus, ConfigurationChange, RelationBetweenArticulators, Location, MovementType, MovementRelatedOrientation, OrientationChange, ContactType, OrientationRelatedToLocation, HandConfiguration, RelationType, MovementDirection } from '@prisma/client';
+import { PrismaClient, Role, Language, LexicalCategory, Handedness, GlossStatus, ConfigurationChange, RelationBetweenArticulators, Location, MovementType, MovementRelatedOrientation, OrientationChange, ContactType, OrientationRelatedToLocation, HandConfiguration, RelationType, MovementDirection } from '@prisma/client';
 import * as argon2 from 'argon2';
 
 const prisma = new PrismaClient();
@@ -146,10 +146,10 @@ async function main() {
           glossData: { connect: { id: collGlossData.id } },
           videoData: {
             create: {
-              hands: senseTitle === 'Coll (part del cos)' ? Hand.RIGHT : Hand.BOTH,
-              configuration: HandConfiguration.CONF_1,
+              handedness: senseTitle === 'Coll (part del cos)' ? Handedness.ONE : Handedness.TWO_S,
+              dominantConfiguration: HandConfiguration.CONF_1,
               configurationChanges: ConfigurationChange.BENDING,
-              relationBetweenArticulators: RelationBetweenArticulators.ABOVE,
+              dominantRelationBetweenArticulators: RelationBetweenArticulators.ABOVE,
               location: senseTitle === 'Coll (part del cos)' ? Location.NECK : Location.NEUTRAL_SPACE,
               movementRelatedOrientation: MovementRelatedOrientation.FRONT,
               orientationRelatedToLocation: OrientationRelatedToLocation.AO_FINGERS_CONTRA,
@@ -292,10 +292,10 @@ async function main() {
       glossData: { connect: { id: contentGlossData.id } },
       videoData: {
         create: {
-          hands: Hand.BOTH,
-          configuration: HandConfiguration.CONF_8,
+          handedness: Handedness.TWO_S,
+          dominantConfiguration: HandConfiguration.CONF_8,
           configurationChanges: ConfigurationChange.OPENING_AND_SPREADING,
-          relationBetweenArticulators: RelationBetweenArticulators.CROSS,
+          dominantRelationBetweenArticulators: RelationBetweenArticulators.CROSS,
           location: Location.CHEST,
           movementRelatedOrientation: MovementRelatedOrientation.FRONT,
           orientationRelatedToLocation: OrientationRelatedToLocation.AO_FINGERS_CONTRA,
@@ -325,10 +325,10 @@ async function main() {
       glossData: { connect: { id: felicGlossData.id } },
       videoData: {
         create: {
-          hands: Hand.RIGHT,
-          configuration: HandConfiguration.CONF_15,
+          handedness: Handedness.ONE,
+          dominantConfiguration: HandConfiguration.CONF_15,
           configurationChanges: ConfigurationChange.CLOSING_AND_WIGGLING,
-          relationBetweenArticulators: RelationBetweenArticulators.FRONT,
+          dominantRelationBetweenArticulators: RelationBetweenArticulators.FRONT,
           location: Location.CHEEK,
           movementRelatedOrientation: MovementRelatedOrientation.FRONT,
           orientationRelatedToLocation: OrientationRelatedToLocation.AO_FINGERS_CONTRA,
@@ -674,10 +674,10 @@ async function main() {
         glossData: { connect: { id: petitGlossData.id } },
         videoData: {
           create: {
-            hands: Hand.BOTH,
-            configuration: HandConfiguration.CONF_23,
+            handedness: Handedness.TWO_S,
+            dominantConfiguration: HandConfiguration.CONF_23,
             configurationChanges: ConfigurationChange.CLOSING_AND_RUBBING,
-            relationBetweenArticulators: RelationBetweenArticulators.INSIDE,
+            dominantRelationBetweenArticulators: RelationBetweenArticulators.INSIDE,
             location: Location.NEUTRAL_SPACE,
             movementRelatedOrientation: MovementRelatedOrientation.FRONT,
             orientationRelatedToLocation: OrientationRelatedToLocation.AO_FINGERS_CONTRA,
@@ -705,10 +705,10 @@ async function main() {
         glossData: { connect: { id: granGlossData.id } },
         videoData: {
           create: {
-            hands: Hand.BOTH,
-            configuration: HandConfiguration.CONF_31,
+            handedness: Handedness.TWO_S,
+            dominantConfiguration: HandConfiguration.CONF_31,
             configurationChanges: ConfigurationChange.OPENING_AND_RUBBING,
-            relationBetweenArticulators: RelationBetweenArticulators.ABOVE_BELOW,
+            dominantRelationBetweenArticulators: RelationBetweenArticulators.ABOVE_BELOW,
             location: Location.NEUTRAL_SPACE,
             movementRelatedOrientation: MovementRelatedOrientation.FRONT,
             orientationRelatedToLocation: OrientationRelatedToLocation.AO_FINGERS_CONTRA,
@@ -736,10 +736,10 @@ async function main() {
         glossData: { connect: { id: bancGlossData.id } },
         videoData: {
           create: {
-            hands: Hand.RIGHT,
-            configuration: HandConfiguration.CONF_12,
+            handedness: Handedness.ONE,
+            dominantConfiguration: HandConfiguration.CONF_12,
             configurationChanges: ConfigurationChange.UNBENDING,
-            relationBetweenArticulators: RelationBetweenArticulators.FRONT,
+            dominantRelationBetweenArticulators: RelationBetweenArticulators.FRONT,
             location: Location.WEAK_HAND_PALM,
             movementRelatedOrientation: MovementRelatedOrientation.FRONT,
             orientationRelatedToLocation: OrientationRelatedToLocation.AO_FINGERS_CONTRA,
@@ -767,10 +767,10 @@ async function main() {
         glossData: { connect: { id: bancGlossData.id } },
         videoData: {
           create: {
-            hands: Hand.BOTH,
-            configuration: HandConfiguration.CONF_18,
+            handedness: Handedness.TWO_S,
+            dominantConfiguration: HandConfiguration.CONF_18,
             configurationChanges: ConfigurationChange.CURVING,
-            relationBetweenArticulators: RelationBetweenArticulators.NEXT_TO,
+            dominantRelationBetweenArticulators: RelationBetweenArticulators.NEXT_TO,
             location: Location.HORIZONTAL_PLANE,
             movementRelatedOrientation: MovementRelatedOrientation.FRONT,
             orientationRelatedToLocation: OrientationRelatedToLocation.AO_FINGERS_CONTRA,
@@ -798,10 +798,10 @@ async function main() {
         glossData: { connect: { id: sotaGlossData.id } },
         videoData: {
           create: {
-            hands: Hand.RIGHT,
-            configuration: HandConfiguration.CONF_25,
+            handedness: Handedness.ONE,
+            dominantConfiguration: HandConfiguration.CONF_25,
             configurationChanges: ConfigurationChange.OPENING_AND_WIGGLING,
-            relationBetweenArticulators: RelationBetweenArticulators.BELOW,
+            dominantRelationBetweenArticulators: RelationBetweenArticulators.BELOW,
             location: Location.WEAK_HAND_PALM,
             movementRelatedOrientation: MovementRelatedOrientation.FRONT,
             orientationRelatedToLocation: OrientationRelatedToLocation.AO_FINGERS_CONTRA,
@@ -829,10 +829,10 @@ async function main() {
         glossData: { connect: { id: sobreGlossData.id } },
         videoData: {
           create: {
-            hands: Hand.RIGHT,
-            configuration: HandConfiguration.CONF_35,
+            handedness: Handedness.ONE,
+            dominantConfiguration: HandConfiguration.CONF_35,
             configurationChanges: ConfigurationChange.OPENING_TO_CLOSING,
-            relationBetweenArticulators: RelationBetweenArticulators.ABOVE,
+            dominantRelationBetweenArticulators: RelationBetweenArticulators.ABOVE,
             location: Location.WEAK_HAND_PALM,
             movementRelatedOrientation: MovementRelatedOrientation.FRONT,
             orientationRelatedToLocation: OrientationRelatedToLocation.AO_FINGERS_CONTRA,
@@ -860,10 +860,10 @@ async function main() {
         glossData: { connect: { id: sobreGlossData.id } },
         videoData: {
           create: {
-            hands: Hand.BOTH,
-            configuration: HandConfiguration.CONF_42,
+            handedness: Handedness.TWO_S,
+            dominantConfiguration: HandConfiguration.CONF_42,
             configurationChanges: ConfigurationChange.CLOSING_TO_OPENING,
-            relationBetweenArticulators: RelationBetweenArticulators.FRONT_BACK,
+            dominantRelationBetweenArticulators: RelationBetweenArticulators.FRONT_BACK,
             location: Location.NEUTRAL_SPACE,
             movementRelatedOrientation: MovementRelatedOrientation.FRONT,
             orientationRelatedToLocation: OrientationRelatedToLocation.AO_FINGERS_CONTRA,

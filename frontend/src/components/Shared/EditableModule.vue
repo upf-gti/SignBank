@@ -71,7 +71,6 @@
         type="submit"
       />
     </div>
-
   </q-form>
 </template>
 

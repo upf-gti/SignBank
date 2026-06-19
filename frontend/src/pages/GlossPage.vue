@@ -136,7 +136,8 @@ const updateGlossData = (updatedGlossData: GlossData) => {
 .gloss-page {
   height: calc(100vh - 64px);
   max-height: calc(100vh - 64px);
-  overflow: hidden;
+  overflow-x: visible;
+  overflow-y: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -145,7 +146,8 @@ const updateGlossData = (updatedGlossData: GlossData) => {
   flex: 1 1 0;
   min-height: 0;
   height: 100%;
-  overflow: hidden;
+  overflow-x: visible;
+  overflow-y: hidden;
 }
 
 .gloss-page__content--editing {
@@ -163,7 +165,8 @@ const updateGlossData = (updatedGlossData: GlossData) => {
   flex: 1 1 0;
   min-height: 0;
   height: 100%;
-  overflow: hidden;
+  overflow-x: visible;
+  overflow-y: hidden;
 }
 
 .gloss-page__detail--editing {

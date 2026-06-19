@@ -1,4 +1,4 @@
-import { Role } from 'src/types/models';
+import type { Role } from 'src/types/models';
 import translate from 'src/utils/translate';
 
 export const getUserTableColumns = () => [

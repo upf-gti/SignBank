@@ -1,8 +1,13 @@
 <template>
-  <q-card flat class="col column no-wrap">
+  <q-card
+    flat
+    class="col column no-wrap"
+  >
     <q-card-section>
       <div class="row items-center justify-between">
-        <div class="text-h6">{{ translate('allUsers') }}</div>
+        <div class="text-h6">
+          {{ translate('allUsers') }}
+        </div>
         <q-input
           v-model="searchQueryModel"
           :placeholder="translate('searchUsers')"

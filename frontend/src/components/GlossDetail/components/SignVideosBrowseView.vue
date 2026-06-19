@@ -10,75 +10,76 @@
         @click="emit('back')"
       />
       <span
-        v-if="sortedVideos.length > 1"
+        v-if="hasMultipleVideos"
         class="text-body2 text-grey-7"
       >
-        {{ sortedVideos.length }} {{ translate('videos') }}
+        {{ pickerVideos.length }} {{ translate('videos') }}
       </span>
     </div>
 
-    <div
-      v-if="sortedVideos.length > 1"
-      class="sign-videos-browse__gallery"
-    >
-      <button
-        v-for="video in sortedVideos"
-        :key="video.id"
-        type="button"
-        class="sign-videos-browse__card"
-        :class="{ 'sign-videos-browse__card--active': video.id === selectedVideoId }"
-        @click="selectVideo(video.id)"
-      >
-        <div class="sign-videos-browse__card-title ellipsis">
-          {{ video.title || translate('videos') }}
-        </div>
-        <q-card
-          flat
-          bordered
-          class="sign-videos-browse__card-video"
-        >
-          <GlossVideoComponent
-            :sign-video="video"
-            :edit-mode="false"
-            compact
-          />
-        </q-card>
-      </button>
-    </div>
+    <div class="sign-videos-browse__main">
+      <aside class="sign-videos-browse__videos">
+        <!-- Single video: show player only -->
+        <template v-if="!hasMultipleVideos && selectedVideo">
+          <div
+            v-if="selectedVideo.title"
+            class="text-subtitle2 text-weight-medium sign-videos-browse__video-title"
+          >
+            {{ selectedVideo.title }}
+          </div>
+          <q-card
+            flat
+            bordered
+            class="sign-videos-browse__player"
+          >
+            <GlossVideoComponent
+              :sign-video="selectedVideo"
+              :edit-mode="false"
+            />
+          </q-card>
+        </template>
 
-    <div
-      v-else-if="selectedVideo"
-      class="sign-videos-browse__single"
-    >
-      <div
-        v-if="selectedVideo.title"
-        class="text-subtitle1 text-weight-medium q-mb-sm"
+        <!-- Multiple videos: list others only (primary stays on main gloss view) -->
+        <div
+          v-else-if="pickerVideos.length"
+          class="sign-videos-browse__picker"
+        >
+          <button
+            v-for="video in pickerVideos"
+            :key="video.id ?? video.title"
+            type="button"
+            class="sign-videos-browse__picker-item"
+            :class="{ 'sign-videos-browse__picker-item--active': video.id === selectedVideoId }"
+            @click="selectVideo(video.id)"
+          >
+            <span class="sign-videos-browse__picker-label ellipsis">
+              {{ video.title || translate('videos') }}
+            </span>
+            <q-card
+              flat
+              bordered
+              class="sign-videos-browse__picker-video"
+            >
+              <GlossVideoComponent
+                :sign-video="video"
+                :edit-mode="false"
+                :compact="video.id !== selectedVideoId"
+              />
+            </q-card>
+          </button>
+        </div>
+      </aside>
+
+      <section
+        v-if="selectedVideo?.videoData"
+        class="sign-videos-browse__phonology"
       >
-        {{ selectedVideo.title }}
-      </div>
-      <q-card
-        flat
-        bordered
-        class="sign-videos-browse__single-video"
-      >
-        <GlossVideoComponent
-          :sign-video="selectedVideo"
+        <SignFonologyComponent
+          :video-data="selectedVideo.videoData"
           :edit-mode="false"
         />
-      </q-card>
+      </section>
     </div>
-
-    <q-card
-      v-if="selectedVideo?.videoData"
-      flat
-      bordered
-      class="sign-videos-browse__phonology"
-    >
-      <SignFonologyComponent
-        :video-data="selectedVideo.videoData"
-        :edit-mode="false"
-      />
-    </q-card>
   </div>
 </template>
 
@@ -105,20 +106,42 @@ const sortedVideos = computed(() =>
   )
 )
 
+const hasMultipleVideos = computed(() => sortedVideos.value.length > 1)
+
+const primaryVideoId = computed(() => sortedVideos.value[0]?.id ?? null)
+
+/** Other sign videos — primary is already shown on the main gloss view */
+const pickerVideos = computed(() => {
+  if (!hasMultipleVideos.value) return []
+  return sortedVideos.value.filter((video) => video.id !== primaryVideoId.value)
+})
+
 const selectedVideo = computed(() =>
   sortedVideos.value.find((video) => video.id === selectedVideoId.value) ?? null
 )
 
 watch(
-  sortedVideos,
-  (videos) => {
+  [sortedVideos, hasMultipleVideos, primaryVideoId],
+  () => {
+    const videos = sortedVideos.value
     if (!videos.length) {
       selectedVideoId.value = null
       return
     }
 
-    if (!videos.some((video) => video.id === selectedVideoId.value)) {
+    if (!hasMultipleVideos.value) {
       selectedVideoId.value = videos[0]?.id ?? null
+      return
+    }
+
+    const others = pickerVideos.value
+    if (!others.length) {
+      selectedVideoId.value = null
+      return
+    }
+
+    if (!others.some((video) => video.id === selectedVideoId.value)) {
+      selectedVideoId.value = others[0]?.id ?? null
     }
   },
   { immediate: true }
@@ -138,9 +161,7 @@ function selectVideo(videoId: string | undefined) {
   flex: 1 1 0;
   min-height: 0;
   width: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
 }
 
 .sign-videos-browse__toolbar {
@@ -152,95 +173,153 @@ function selectVideo(videoId: string | undefined) {
   gap: 12px;
 }
 
-.sign-videos-browse__gallery {
+.sign-videos-browse__main {
   display: flex;
-  gap: 16px;
-  flex: 0 0 auto;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding-bottom: 8px;
-  margin-bottom: 16px;
-  scrollbar-gutter: stable;
+  flex: 1 1 0;
+  min-height: 0;
+  gap: 20px;
+  overflow: hidden;
+}
+
+.sign-videos-browse__videos {
+  flex: 0 0 34%;
+  max-width: 380px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-x: hidden;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-.sign-videos-browse__card {
-  flex: 0 0 380px;
-  width: 380px;
+.sign-videos-browse__video-title {
+  flex: 0 0 auto;
+}
+
+.sign-videos-browse__player {
+  flex: 0 0 auto;
+  border-radius: var(--sb-card-radius, 12px);
+  overflow: hidden;
+}
+
+.sign-videos-browse__picker {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.sign-videos-browse__picker-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   border: 2px solid transparent;
   border-radius: var(--sb-card-radius, 12px);
   background: transparent;
   cursor: pointer;
-  padding: 4px;
+  padding: 6px;
   text-align: left;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.sign-videos-browse__card:hover {
+.sign-videos-browse__picker-item:hover {
   border-color: rgba(200, 16, 47, 0.35);
 }
 
-.sign-videos-browse__card--active {
+.sign-videos-browse__picker-item--active {
   border-color: var(--primary);
   box-shadow: 0 2px 12px rgba(200, 16, 47, 0.12);
 }
 
-.sign-videos-browse__card-title {
-  font-size: 0.9rem;
+.sign-videos-browse__picker-label {
+  font-size: 0.85rem;
   font-weight: 500;
   color: rgba(0, 0, 0, 0.75);
-  margin-bottom: 8px;
-  padding: 0 4px;
+  padding: 0 2px;
 }
 
-.sign-videos-browse__card-video {
+.sign-videos-browse__picker-video {
   border-radius: var(--sb-card-radius, 12px);
   overflow: hidden;
-}
-
-.sign-videos-browse__single {
-  flex: 0 0 auto;
-  width: 100%;
-  max-width: var(--sb-video-max-width, 480px);
-  margin: 0 auto 16px;
-}
-
-.sign-videos-browse__single-video {
-  border-radius: var(--sb-card-radius, 12px);
-  overflow: hidden;
-  max-width: 100%;
 }
 
 .sign-videos-browse__phonology {
   flex: 1 1 0;
+  min-width: 0;
   min-height: 0;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: var(--sb-card-radius, 12px);
-  padding: 12px 16px;
-  -webkit-overflow-scrolling: touch;
+  padding: 16px 20px;
+  background: #fff;
 }
 
 .sign-videos-browse__phonology :deep(.sign-phonology) {
+  flex: 1 1 0;
+  min-height: 0;
   margin-top: 0;
 }
 
-.sign-videos-browse__phonology :deep(.phonology-filters > .column) {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  column-gap: 20px;
-  row-gap: 4px;
+.sign-videos-browse__phonology :deep(.text-subtitle2) {
+  font-size: 1.05rem;
 }
 
-.sign-videos-browse__phonology :deep(.q-item-label) {
-  margin-bottom: 2px;
-  font-size: 0.7rem;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  color: rgba(0, 0, 0, 0.5);
+.sign-videos-browse__phonology :deep(.phonology-table__grid) {
+  font-size: 0.95rem;
 }
 
-.sign-videos-browse__phonology :deep(.q-py-sm) {
-  padding-top: 0 !important;
-  padding-bottom: 10px !important;
+.sign-videos-browse__phonology :deep(.phonology-table__grid .text-caption) {
+  font-size: 0.8rem;
+}
+
+.sign-videos-browse__phonology :deep(.phonology-table__grid .text-body2),
+.sign-videos-browse__phonology :deep(.phonology-table__grid td),
+.sign-videos-browse__phonology :deep(.phonology-table__grid th) {
+  font-size: 0.95rem;
+  white-space: normal;
+  word-break: break-word;
+  padding: 10px 8px;
+}
+
+.sign-videos-browse__picker-item--active .sign-videos-browse__picker-video {
+  overflow: hidden;
+}
+
+@media (max-width: 767px) {
+  .sign-videos-browse__main {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .sign-videos-browse__videos {
+    flex: 0 0 auto;
+    max-width: none;
+    width: 100%;
+  }
+
+  .sign-videos-browse__picker {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 4px;
+  }
+
+  .sign-videos-browse__picker-item {
+    flex: 0 0 140px;
+    width: 140px;
+  }
+
+  .sign-videos-browse__picker-item--active {
+    flex: 0 0 min(280px, 72vw);
+    width: min(280px, 72vw);
+  }
+
+  .sign-videos-browse__phonology {
+    flex: 1 1 auto;
+    min-height: 50vh;
+  }
 }
 </style>

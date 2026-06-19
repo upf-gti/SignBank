@@ -1,6 +1,6 @@
 import type { RelatedGloss, MinimalPair } from "./gloss"
 import type { 
-  Hand,
+  Handedness,
   HandConfiguration,
   ConfigurationChange,
   RelationBetweenArticulators,
@@ -81,10 +81,12 @@ export interface Video {
 }
 
 export interface PhonologyData {
-  hands: Hand;
-  configuration: HandConfiguration;
+  handedness: Handedness;
+  dominantConfiguration?: HandConfiguration | null;
+  nonDominantConfiguration?: HandConfiguration | null;
+  dominantRelationBetweenArticulators?: RelationBetweenArticulators | null;
+  nonDominantRelationBetweenArticulators?: RelationBetweenArticulators | null;
   configurationChanges: ConfigurationChange;
-  relationBetweenArticulators: RelationBetweenArticulators;
   location: Location;
   movementRelatedOrientation: MovementRelatedOrientation;
   orientationRelatedToLocation: OrientationRelatedToLocation;

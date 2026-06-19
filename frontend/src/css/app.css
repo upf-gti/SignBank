@@ -3,6 +3,25 @@
   --primary: #c8102f;
   --sb-card-radius: 12px;
   --sb-transition: 0.2s ease;
+  --sb-video-max-width: 480px;
+  --sb-video-max-height: none;
+  --sb-video-compact-max-height: 140px;
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --sb-video-max-width: 360px;
+    --sb-video-max-height: min(32vh, 200px);
+    --sb-video-compact-max-height: 120px;
+  }
+}
+
+@media (max-width: 599px) {
+  :root {
+    --sb-video-max-width: 100%;
+    --sb-video-max-height: min(28vh, 168px);
+    --sb-video-compact-max-height: 100px;
+  }
 }
 
 body {

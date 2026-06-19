@@ -44,6 +44,18 @@ const phonology : PhonologyTranslateKeys = {
       WIGGLING: 'Vibració',
       WIGGLING_description: 'Oscil·lació alterna dels dits seleccionats'
     },
+    handedness: {
+      ONE: '1',
+      ONE_description: 'Signe amb una mà',
+      TWO_A: '2a',
+      TWO_A_description: 'Signe amb dues mans assimètric',
+      TWO_N: '2n',
+      TWO_N_description: 'Signe amb dues mans no mirall',
+      TWO_S: '2s',
+      TWO_S_description: 'Signe amb dues mans simètric',
+      NA: 'x',
+      NA_description: 'No aplicable',
+    },
     handConfiguration: {
       EMPTY: '------- BUIT -------',
       CONF_1: '0',

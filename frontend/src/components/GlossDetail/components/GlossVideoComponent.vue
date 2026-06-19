@@ -3,6 +3,7 @@
     <div
       v-if="hasAnyVideoUrl || editMode"
       class="video-angle-container"
+      :class="{ 'video-angle-container--compact': compact }"
     >
       <video
         v-for="video in sortedVideosWithUrl"
@@ -311,11 +312,19 @@ const moveVideoRight = async () => {
 <style scoped>
 .video-angle-container {
   position: relative;
-  width: 100%;
+  width: min(100%, var(--sb-video-max-width, 480px));
+  max-width: 100%;
   aspect-ratio: 16 / 9;
+  max-height: var(--sb-video-max-height, none);
+  margin-inline: auto;
   background: #000;
   border-radius: var(--sb-card-radius, 12px);
   overflow: hidden;
+}
+
+.video-angle-container--compact {
+  max-height: var(--sb-video-compact-max-height, 140px);
+  width: min(100%, calc(var(--sb-video-compact-max-height, 140px) * 16 / 9));
 }
 
 .angle-video {

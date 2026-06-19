@@ -147,6 +147,7 @@ const showSidebar = computed(() => hasSignVideos.value || hasGlossTranslations.v
 
 .gloss-view-layout__body--all-videos {
   gap: 0;
+  min-height: 0;
 }
 
 .gloss-video-column {
@@ -197,11 +198,13 @@ const showSidebar = computed(() => hasSignVideos.value || hasGlossTranslations.v
   .gloss-video-column {
     flex: 0 0 auto;
     width: 100%;
+    max-height: calc(var(--sb-video-max-height, 200px) + 72px);
   }
 
   .gloss-content-column {
     flex: 1 1 0;
     width: 100%;
+    min-height: 0;
   }
 }
 </style>
