@@ -1,5 +1,8 @@
 <template>
-  <div class="sign-phonology">
+  <div
+    class="sign-phonology"
+    :class="{ 'sign-phonology--natural-height': naturalHeight }"
+  >
     <div class="text-subtitle2 text-weight-medium sign-phonology__title">
       {{ translate('signFonology') }}
     </div>
@@ -7,6 +10,7 @@
       :phonology-data="videoData"
       :is-editable="editMode"
       :compact="compact ?? false"
+      :natural-height="naturalHeight ?? false"
       @update:phonology-data="$emit('update:video-data', $event)"
     />
   </div>
@@ -21,6 +25,7 @@ defineProps<{
   videoData: PhonologyData;
   editMode: boolean;
   compact?: boolean;
+  naturalHeight?: boolean;
 }>();
 
 defineEmits<{
@@ -40,5 +45,11 @@ defineEmits<{
 .sign-phonology__title {
   flex: 0 0 auto;
   margin-bottom: 8px;
+}
+
+.sign-phonology--natural-height {
+  min-height: auto;
+  flex: 0 0 auto;
+  height: auto;
 }
 </style>

@@ -24,7 +24,8 @@
       <GlossVideoComponent
         :sign-video="entry.signVideo"
         :edit-mode="false"
-        compact
+        :compact="true"
+        :hide-angles="entry.isInlineMorpheme"
       />
     </q-card-section>
 

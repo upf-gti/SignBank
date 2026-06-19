@@ -76,7 +76,7 @@ defineEmits<{
 
 const phonologyResult = computed(() => {
   const warnings: string[] = [];
-  const columns = flattenCompoundPhonologyColumns(props.glossData, '', 0, warnings);
+  const columns = flattenCompoundPhonologyColumns(props.glossData, 0, warnings);
   return { columns, warnings };
 });
 

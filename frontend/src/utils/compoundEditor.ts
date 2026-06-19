@@ -12,18 +12,67 @@ export function partKindFromCompoundPart(part: CompoundPart): CompoundPartKind {
   return part.linkedGlossId ? 'linked' : 'inline';
 }
 
-export function toEditableCompoundPart(part: CompoundPart): EditableCompoundPart {
+function clonePhonology(phonology: PhonologyData): PhonologyData {
+  return { ...phonology };
+}
+
+function resolveInlinePhonology(part: CompoundPart): PhonologyData {
+  const source = part.inlinePhonology ?? part.inlineSignVideo?.videoData;
+  if (source) {
+    return clonePhonology(source);
+  }
+  return createDefaultPhonology();
+}
+
+function buildInlineSignVideo(
+  gloss: string,
+  phonology: PhonologyData,
+  existing?: SignVideo | null,
+): SignVideo {
+  if (existing) {
+    return {
+      ...existing,
+      videos: existing.videos ?? [],
+      minimalPairs: existing.minimalPairs ?? [],
+      videoData: phonology,
+      videoDataId: phonology.id || existing.videoDataId || '',
+    };
+  }
+
   return {
-    ...part,
-    partKind: partKindFromCompoundPart(part),
-    inlinePhonology: part.inlinePhonology ?? (part.linkedGlossId ? null : createDefaultPhonology()),
-    inlineSignVideo: part.inlineSignVideo
+    id: '',
+    title: gloss,
+    priority: 1,
+    videoDataId: phonology.id || '',
+    videos: [{
+      id: crypto.randomUUID(),
+      angle: 'front',
+      url: '',
+      priority: 1,
+    }],
+    minimalPairs: [],
+    videoData: phonology,
+  };
+}
+
+export function toEditableCompoundPart(part: CompoundPart): EditableCompoundPart {
+  const partKind = partKindFromCompoundPart(part);
+  const inlinePhonology = partKind === 'inline' ? resolveInlinePhonology(part) : null;
+  const inlineSignVideo = partKind === 'inline' && inlinePhonology
+    ? buildInlineSignVideo(part.gloss, inlinePhonology, part.inlineSignVideo)
+    : part.inlineSignVideo
       ? {
           ...part.inlineSignVideo,
           videos: part.inlineSignVideo.videos ?? [],
           minimalPairs: part.inlineSignVideo.minimalPairs ?? [],
         }
-      : null,
+      : null;
+
+  return {
+    ...part,
+    partKind,
+    inlinePhonology,
+    inlineSignVideo,
   };
 }
 
@@ -39,23 +88,23 @@ export function createEmptyEditablePart(position: number): EditableCompoundPart 
     position,
     gloss: '',
     partKind: 'inline',
-    redundant: false,
     isNew: true,
     inlinePhonology: phonology,
-    inlineSignVideo: {
-      id: '',
-      title: '',
-      priority: 1,
-      videoDataId: phonology.id || '',
-      videos: [{
-        id: crypto.randomUUID(),
-        angle: 'front',
-        url: '',
-        priority: 1,
-      }],
-      minimalPairs: [],
-      videoData: phonology,
-    },
+    inlineSignVideo: buildInlineSignVideo('', phonology),
+  };
+}
+
+export function initializeInlineMorpheme(
+  gloss: string,
+  existing?: SignVideo | null,
+): Pick<EditableCompoundPart, 'inlinePhonology' | 'inlineSignVideo'> {
+  const phonology = existing?.videoData
+    ? clonePhonology(existing.videoData)
+    : createDefaultPhonology();
+
+  return {
+    inlinePhonology: phonology,
+    inlineSignVideo: buildInlineSignVideo(gloss, phonology, existing ?? undefined),
   };
 }
 
@@ -90,7 +139,6 @@ export function buildCompoundUpdatePayload(
       position: index + 1,
       gloss: part.gloss.trim(),
       compExternalId: part.compExternalId ?? null,
-      redundant: part.redundant ?? false,
       linkedGlossId: part.partKind === 'linked' ? part.linkedGlossId ?? null : null,
       inlinePhonology:
         part.partKind === 'inline' && part.inlinePhonology

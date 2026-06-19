@@ -22,14 +22,25 @@
         <div class="text-subtitle1 text-weight-medium">
           {{ translate('compoundParts') }}
         </div>
-        <q-btn
-          flat
-          no-caps
-          color="primary"
-          icon="add"
-          :label="translate('addCompoundPart')"
-          @click="addPart"
-        />
+        <div class="row items-center q-gutter-sm">
+          <q-btn
+            v-if="parts.length > 1"
+            flat
+            no-caps
+            color="primary"
+            icon="swap_vert"
+            :label="translate('sortCompoundParts')"
+            @click="openReorderDialog"
+          />
+          <q-btn
+            flat
+            no-caps
+            color="primary"
+            icon="add"
+            :label="translate('addCompoundPart')"
+            @click="addPart"
+          />
+        </div>
       </div>
 
       <q-banner
@@ -50,14 +61,43 @@
           v-for="(part, index) in parts"
           :key="part.id || `new-${index}`"
           expand-separator
-          :label="partLabel(part, index)"
-          :caption="partCaption(part)"
           header-class="text-weight-medium"
         >
+          <template #header>
+            <q-item-section avatar>
+              <q-avatar
+                color="primary"
+                text-color="white"
+                size="32px"
+              >
+                {{ index + 1 }}
+              </q-avatar>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>{{ partLabel(part) }}</q-item-label>
+              <q-item-label caption>
+                {{ partCaption(part) }}
+              </q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-btn
+                flat
+                round
+                dense
+                color="negative"
+                icon="delete"
+                :aria-label="translate('removeCompoundPart')"
+                @click.stop="confirmRemovePart(index)"
+              >
+                <q-tooltip>{{ translate('removeCompoundPart') }}</q-tooltip>
+              </q-btn>
+            </q-item-section>
+          </template>
+
           <q-card flat>
             <q-card-section class="q-gutter-md">
               <div class="row q-col-gutter-md">
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-md-6">
                   <q-input
                     v-model="part.gloss"
                     :label="translate('compoundPartGloss')"
@@ -65,7 +105,7 @@
                     dense
                   />
                 </div>
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-md-6">
                   <q-select
                     v-model="part.partKind"
                     :options="partKindOptions"
@@ -77,22 +117,7 @@
                     @update:model-value="onPartKindChange(part)"
                   />
                 </div>
-                <div class="col-12 col-md-4">
-                  <q-input
-                    v-model="part.compExternalId"
-                    :label="translate('compExternalId')"
-                    outlined
-                    dense
-                    clearable
-                  />
-                </div>
               </div>
-
-              <q-toggle
-                v-model="part.redundant"
-                :label="translate('redundantMorpheme')"
-                dense
-              />
 
               <template v-if="part.partKind === 'linked'">
                 <div class="row items-center q-gutter-sm">
@@ -130,57 +155,41 @@
               </template>
 
               <template v-else>
-                <div class="text-subtitle2 text-weight-medium">
-                  {{ translate('inlineMorphemePhonology') }}
-                </div>
-                <SignFonologyComponent
-                  v-if="part.inlinePhonology"
-                  :video-data="part.inlinePhonology"
-                  :edit-mode="true"
-                  @update:video-data="(value) => updateInlinePhonology(part, value)"
-                />
+                <div class="inline-morpheme-editor">
+                  <aside class="inline-morpheme-editor__video">
+                    <div class="text-subtitle2 text-weight-medium q-mb-sm">
+                      {{ translate('inlineMorphemeVideo') }}
+                    </div>
+                    <q-card
+                      v-if="part.inlineSignVideo"
+                      flat
+                      bordered
+                    >
+                      <GlossVideoComponent
+                        :sign-video="part.inlineSignVideo"
+                        :edit-mode="true"
+                        :compact="true"
+                        hide-angles
+                        @update:sign-video="(value) => updateInlineSignVideo(part, value)"
+                      />
+                    </q-card>
+                  </aside>
 
-                <div class="text-subtitle2 text-weight-medium q-mt-md">
-                  {{ translate('inlineMorphemeVideo') }}
+                  <section
+                    v-if="part.inlinePhonology"
+                    class="inline-morpheme-editor__phonology"
+                  >
+                    <SignFonologyComponent
+                      :key="`${part.id || index}-phonology`"
+                      :video-data="part.inlinePhonology"
+                      :edit-mode="true"
+                      :compact="false"
+                      natural-height
+                      @update:video-data="(value) => updateInlinePhonology(part, value)"
+                    />
+                  </section>
                 </div>
-                <q-card
-                  v-if="part.inlineSignVideo"
-                  flat
-                  bordered
-                >
-                  <GlossVideoComponent
-                    :sign-video="part.inlineSignVideo"
-                    :edit-mode="true"
-                    compact
-                    @update:sign-video="(value) => updateInlineSignVideo(part, value)"
-                  />
-                </q-card>
               </template>
-
-              <div class="row justify-end q-gutter-sm">
-                <q-btn
-                  v-if="index > 0"
-                  flat
-                  dense
-                  icon="keyboard_arrow_up"
-                  @click="movePart(index, -1)"
-                />
-                <q-btn
-                  v-if="index < parts.length - 1"
-                  flat
-                  dense
-                  icon="keyboard_arrow_down"
-                  @click="movePart(index, 1)"
-                />
-                <q-btn
-                  flat
-                  dense
-                  color="negative"
-                  icon="delete"
-                  :label="translate('removeCompoundPart')"
-                  @click="removePart(index)"
-                />
-              </div>
             </q-card-section>
           </q-card>
         </q-expansion-item>
@@ -207,6 +216,89 @@
       v-model="showPhonologyPreview"
       :gloss-data="previewGlossData"
     />
+
+    <q-dialog v-model="showReorderDialog">
+      <q-card style="min-width: 420px; max-width: 90vw">
+        <q-card-section>
+          <div class="text-h6">
+            {{ translate('sortCompoundParts') }}
+          </div>
+          <div class="text-body2 text-grey-7 q-mt-xs">
+            {{ translate('sortCompoundPartsHint') }}
+          </div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          <q-list
+            bordered
+            separator
+            class="rounded-borders"
+          >
+            <q-item
+              v-for="(part, index) in reorderDraft"
+              :key="part.id || `reorder-${index}`"
+            >
+              <q-item-section avatar>
+                <q-avatar
+                  color="grey-3"
+                  text-color="dark"
+                  size="28px"
+                >
+                  {{ index + 1 }}
+                </q-avatar>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label class="text-weight-medium">
+                  {{ part.gloss?.trim() || translate('compoundPartGloss') }}
+                </q-item-label>
+                <q-item-label caption>
+                  {{ part.partKind === 'linked' ? translate('partTypeLinked') : translate('partTypeInline') }}
+                </q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <q-btn
+                  flat
+                  round
+                  dense
+                  icon="arrow_upward"
+                  :disable="index === 0"
+                  :aria-label="translate('moveUp')"
+                  @click="movePartInDraft(index, -1)"
+                >
+                  <q-tooltip>{{ translate('moveUp') }}</q-tooltip>
+                </q-btn>
+                <q-btn
+                  flat
+                  round
+                  dense
+                  icon="arrow_downward"
+                  :disable="index === reorderDraft.length - 1"
+                  :aria-label="translate('moveDown')"
+                  @click="movePartInDraft(index, 1)"
+                >
+                  <q-tooltip>{{ translate('moveDown') }}</q-tooltip>
+                </q-btn>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn
+            v-close-popup
+            flat
+            :label="translate('cancel')"
+            color="primary"
+          />
+          <q-btn
+            unelevated
+            :label="translate('save')"
+            color="primary"
+            @click="applyReorder"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -226,9 +318,9 @@ import {
   buildCompoundUpdatePayload,
   createEmptyEditablePart,
   editablePartsFromGloss,
+  initializeInlineMorpheme,
   type EditableCompoundPart,
 } from 'src/utils/compoundEditor';
-import { createDefaultPhonology } from 'src/utils/defaultPhonology';
 
 const props = defineProps<{
   glossData: GlossData;
@@ -246,6 +338,8 @@ const parts = ref<EditableCompoundPart[]>(editablePartsFromGloss(props.glossData
 const showGlossSearch = ref(false);
 const glossSearchPartIndex = ref<number | null>(null);
 const showPhonologyPreview = ref(false);
+const showReorderDialog = ref(false);
+const reorderDraft = ref<EditableCompoundPart[]>([]);
 
 const partKindOptions = [
   { label: translate('partTypeLinked'), value: 'linked' },
@@ -268,7 +362,6 @@ const previewGlossData = computed<GlossData>(() => ({
     gloss: part.gloss,
     compExternalId: part.compExternalId ?? null,
     linkedGlossId: part.partKind === 'linked' ? part.linkedGlossId ?? null : null,
-    redundant: part.redundant ?? false,
     linkedGloss: part.linkedGloss ?? null,
     inlinePhonology: part.partKind === 'inline' ? part.inlinePhonology ?? null : null,
     inlineSignVideo: part.partKind === 'inline' ? part.inlineSignVideo ?? null : null,
@@ -279,9 +372,8 @@ const hasPhonologyPreview = computed(() =>
   flattenCompoundPhonologyColumns(previewGlossData.value).length > 0,
 );
 
-function partLabel(part: EditableCompoundPart, index: number) {
-  const name = part.gloss?.trim() || translate('compoundPartGloss');
-  return `${index + 1}. ${name}`;
+function partLabel(part: EditableCompoundPart) {
+  return part.gloss?.trim() || translate('compoundPartGloss');
 }
 
 function partCaption(part: EditableCompoundPart) {
@@ -301,16 +393,48 @@ function removePart(index: number) {
   });
 }
 
-function movePart(index: number, delta: number) {
+function confirmRemovePart(index: number) {
+  const part = parts.value[index];
+  const label = part?.gloss?.trim() || translate('compoundPartGloss');
+
+  $q.dialog({
+    title: translate('confirmDelete'),
+    message: translate('confirmDeleteCompoundPartMessage', { part: label }),
+    cancel: {
+      label: translate('cancel'),
+      flat: true,
+      color: 'primary',
+    },
+    ok: {
+      label: translate('removeCompoundPart'),
+      flat: true,
+      color: 'negative',
+    },
+  }).onOk(() => {
+    removePart(index);
+  });
+}
+
+function openReorderDialog() {
+  reorderDraft.value = parts.value.map((part) => ({ ...part }));
+  showReorderDialog.value = true;
+}
+
+function movePartInDraft(index: number, delta: number) {
   const target = index + delta;
-  if (target < 0 || target >= parts.value.length) return;
-  const copy = [...parts.value];
+  if (target < 0 || target >= reorderDraft.value.length) return;
+  const copy = [...reorderDraft.value];
   const [item] = copy.splice(index, 1);
   copy.splice(target, 0, item);
-  copy.forEach((part, idx) => {
+  reorderDraft.value = copy;
+}
+
+function applyReorder() {
+  reorderDraft.value.forEach((part, idx) => {
     part.position = idx + 1;
   });
-  parts.value = copy;
+  parts.value = reorderDraft.value;
+  showReorderDialog.value = false;
 }
 
 function onPartKindChange(part: EditableCompoundPart) {
@@ -321,22 +445,9 @@ function onPartKindChange(part: EditableCompoundPart) {
   }
   part.linkedGlossId = null;
   part.linkedGloss = null;
-  part.inlinePhonology = createDefaultPhonology();
-  const phonology = part.inlinePhonology;
-  part.inlineSignVideo = {
-    id: '',
-    title: part.gloss,
-    priority: 1,
-    videoDataId: phonology.id || '',
-    videos: [{
-      id: crypto.randomUUID(),
-      angle: 'front',
-      url: '',
-      priority: 1,
-    }],
-    minimalPairs: [],
-    videoData: phonology,
-  };
+  const inline = initializeInlineMorpheme(part.gloss, part.inlineSignVideo);
+  part.inlinePhonology = inline.inlinePhonology;
+  part.inlineSignVideo = inline.inlineSignVideo;
 }
 
 function openGlossSearch(index: number) {
@@ -374,6 +485,9 @@ function updateInlinePhonology(part: EditableCompoundPart, value: PhonologyData)
 
 function updateInlineSignVideo(part: EditableCompoundPart, value: SignVideo) {
   part.inlineSignVideo = value;
+  if (value.videoData) {
+    part.inlinePhonology = { ...value.videoData };
+  }
 }
 
 function getStepValidationErrors(): string[] {
@@ -442,5 +556,45 @@ defineExpose({ saveAll, getStepValidationErrors });
 <style scoped>
 .compound-editor {
   width: 100%;
+}
+
+.inline-morpheme-editor {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.inline-morpheme-editor__video {
+  flex: 0 0 34%;
+  max-width: 380px;
+  min-width: 0;
+}
+
+.inline-morpheme-editor__phonology {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: var(--sb-card-radius, 12px);
+  padding: 16px 20px;
+  background: #fff;
+}
+
+.inline-morpheme-editor__phonology :deep(.sign-phonology) {
+  margin-top: 0;
+}
+
+@media (max-width: 1023px) {
+  .inline-morpheme-editor {
+    flex-direction: column;
+  }
+
+  .inline-morpheme-editor__video {
+    flex: 0 0 auto;
+    max-width: none;
+    width: 100%;
+  }
 }
 </style>

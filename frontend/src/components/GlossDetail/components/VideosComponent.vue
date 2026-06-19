@@ -118,6 +118,7 @@
           :video-data="selectedVideo.videoData"
           :edit-mode="true"
           :compact="false"
+          natural-height
           @update:video-data="updateSelectedVideoData"
         />
       </section>
@@ -615,8 +616,7 @@ function validateVideo(video: SignVideo): { isValid: boolean; errors: string[] }
 .videos-editor {
   display: flex;
   gap: 20px;
-  min-height: 420px;
-  align-items: stretch;
+  align-items: flex-start;
 }
 
 .videos-editor__videos {
@@ -680,16 +680,14 @@ function validateVideo(video: SignVideo): { isValid: boolean; errors: string[] }
 }
 
 .videos-editor__phonology {
-  flex: 1 1 0;
+  flex: 1 1 auto;
   min-width: 0;
-  min-height: 0;
   display: flex;
   flex-direction: column;
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: var(--sb-card-radius, 12px);
   padding: 16px 20px;
   background: #fff;
-  overflow: hidden;
 }
 
 .videos-editor__phonology-toolbar {
@@ -697,8 +695,6 @@ function validateVideo(video: SignVideo): { isValid: boolean; errors: string[] }
 }
 
 .videos-editor__phonology :deep(.sign-phonology) {
-  flex: 1 1 0;
-  min-height: 0;
   margin-top: 0;
 }
 

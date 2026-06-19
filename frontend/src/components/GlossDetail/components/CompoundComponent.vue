@@ -91,7 +91,6 @@
               </template>
             </span>
             <span v-else>{{ translate('inlineMorpheme') }}</span>
-            <span v-if="part.redundant"> · {{ translate('redundantMorpheme') }}</span>
           </q-item-label>
         </q-item-section>
         <q-item-section side>

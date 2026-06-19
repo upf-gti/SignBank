@@ -31,7 +31,7 @@
     </div>
 
     <div
-      v-if="editMode || sortedVideos.length > 1"
+      v-if="!hideAngles && (editMode || sortedVideos.length > 1)"
       class="column col justify-start items-start q-mt-sm"
     >
       <div class="row justify-between items-center full-width">
@@ -133,6 +133,8 @@ const props = defineProps<{
   signVideo: SignVideo;
   editMode: boolean;
   compact?: boolean;
+  /** Single front video only — no angle picker (inline compound morphemes). */
+  hideAngles?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -145,6 +147,7 @@ const localSignVideo = ref<SignVideo>(normalizeSignVideo(props.signVideo));
 
 watch(() => props.signVideo, (newSignVideo) => {
   localSignVideo.value = normalizeSignVideo(newSignVideo);
+  selectedVideo.value = localSignVideo.value.videos[0]?.id || '';
 }, { deep: true });
 
 const selectedVideo = ref<string>(localSignVideo.value.videos[0]?.id || '');

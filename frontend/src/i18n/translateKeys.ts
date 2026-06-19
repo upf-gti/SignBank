@@ -658,6 +658,9 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   isCompoundSign: string;
   addCompoundPart: string;
   removeCompoundPart: string;
+  sortCompoundParts: string;
+  sortCompoundPartsHint: string;
+  confirmDeleteCompoundPartMessage: string;
   compoundPartGloss: string;
   compoundPartType: string;
   partTypeLinked: string;

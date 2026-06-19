@@ -133,7 +133,7 @@ export interface CompoundPart {
   gloss: string;
   compExternalId?: string | null;
   linkedGlossId?: string | null;
-  redundant: boolean;
+  redundant?: boolean;
   linkedGloss?: GlossData | null;
   inlinePhonology?: PhonologyData | null;
   inlineSignVideo?: SignVideo | null;

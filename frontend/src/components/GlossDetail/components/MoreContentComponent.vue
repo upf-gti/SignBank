@@ -1,7 +1,9 @@
 <template>
-  <div>
+  <div
+    v-if="editMode"
+    class="creation-stepper-shell"
+  >
     <q-stepper
-      v-if="editMode"
       v-model="step"
       color="primary"
       animated
@@ -24,17 +26,6 @@
           :hide-gloss-translations="Boolean(localGlossData.isCompound)"
           @update:gloss-data="updateGlossData"
         />
-
-        <q-stepper-navigation class="row justify-end q-mt-md">
-          <q-btn
-            color="primary"
-            unelevated
-            :label="translate('next')"
-            icon-right="arrow_forward"
-            :loading="stepLoading"
-            @click="goToStep('video')"
-          />
-        </q-stepper-navigation>
       </q-step>
 
       <q-step
@@ -50,25 +41,6 @@
           :inline-edit="true"
           @update:gloss-data="updateGlossData"
         />
-
-        <q-stepper-navigation class="row justify-between q-mt-md">
-          <q-btn
-            flat
-            color="primary"
-            :label="translate('back')"
-            icon="arrow_back"
-            :disable="stepLoading"
-            @click="step = 'core'"
-          />
-          <q-btn
-            color="primary"
-            unelevated
-            :label="translate('next')"
-            icon-right="arrow_forward"
-            :loading="stepLoading"
-            @click="goToStep('compound')"
-          />
-        </q-stepper-navigation>
       </q-step>
 
       <q-step
@@ -82,25 +54,6 @@
           :gloss-data="localGlossData"
           @update:gloss-data="updateGlossData"
         />
-
-        <q-stepper-navigation class="row justify-between q-mt-md">
-          <q-btn
-            flat
-            color="primary"
-            :label="translate('back')"
-            icon="arrow_back"
-            :disable="stepLoading"
-            @click="step = 'video'"
-          />
-          <q-btn
-            color="primary"
-            unelevated
-            :label="translate('next')"
-            icon-right="arrow_forward"
-            :loading="stepLoading"
-            @click="goToStep('optional')"
-          />
-        </q-stepper-navigation>
       </q-step>
 
       <q-step
@@ -139,27 +92,46 @@
             @update:gloss-data="updateGlossData"
           />
         </q-expansion-item>
-
-        <q-stepper-navigation class="row justify-between q-mt-md">
-          <q-btn
-            flat
-            color="primary"
-            :label="translate('back')"
-            icon="arrow_back"
-            :disable="stepLoading || submitting"
-            @click="step = 'compound'"
-          />
-          <q-btn
-            color="primary"
-            unelevated
-            :icon="isDraft ? 'send' : 'check'"
-            :label="isDraft ? translate('sendRequest') : translate('save')"
-            :loading="stepLoading || submitting"
-            @click="handleFinish"
-          />
-        </q-stepper-navigation>
       </q-step>
     </q-stepper>
+
+    <Teleport to="body">
+      <footer class="creation-stepper-footer">
+        <div class="creation-stepper-footer__inner">
+          <div class="creation-stepper-footer__side creation-stepper-footer__side--start">
+            <q-btn
+              v-if="step !== 'core'"
+              flat
+              color="primary"
+              :label="translate('back')"
+              icon="arrow_back"
+              :disable="stepLoading || submitting"
+              @click="goBack"
+            />
+          </div>
+          <div class="creation-stepper-footer__side creation-stepper-footer__side--end">
+            <q-btn
+              v-if="step !== 'optional'"
+              color="primary"
+              unelevated
+              :label="translate('next')"
+              icon-right="arrow_forward"
+              :loading="stepLoading"
+              @click="goNext"
+            />
+            <q-btn
+              v-else
+              color="primary"
+              unelevated
+              :icon="isDraft ? 'send' : 'check'"
+              :label="isDraft ? translate('sendRequest') : translate('save')"
+              :loading="stepLoading || submitting"
+              @click="handleFinish"
+            />
+          </div>
+        </div>
+      </footer>
+    </Teleport>
   </div>
 </template>
 
@@ -233,6 +205,27 @@ function showValidationErrors(errors: string[]) {
   });
 }
 
+const previousStep: Record<EditorStep, EditorStep | null> = {
+  core: null,
+  video: 'core',
+  compound: 'video',
+  optional: 'compound',
+};
+
+const nextStep: Record<EditorStep, EditorStep | null> = {
+  core: 'video',
+  video: 'compound',
+  compound: 'optional',
+  optional: null,
+};
+
+function goBack() {
+  const target = previousStep[step.value];
+  if (target) {
+    step.value = target;
+  }
+}
+
 async function goToStep(targetStep: EditorStep) {
   stepLoading.value = true;
   try {
@@ -271,6 +264,13 @@ async function goToStep(targetStep: EditorStep) {
   }
 }
 
+async function goNext() {
+  const target = nextStep[step.value];
+  if (target) {
+    await goToStep(target);
+  }
+}
+
 async function handleFinish() {
   stepLoading.value = true;
   try {
@@ -291,8 +291,64 @@ async function handleFinish() {
 </script>
 
 <style scoped>
+.creation-stepper-shell {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-bottom: 72px;
+}
+
 .creation-stepper {
   border-radius: var(--sb-card-radius, 12px);
   background: white;
+  flex: 1 1 auto;
+}
+</style>
+
+<style>
+.creation-stepper-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2000;
+  display: flex;
+  justify-content: center;
+  padding: 0 16px;
+  pointer-events: none;
+}
+
+.creation-stepper-footer__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 16px;
+  box-sizing: border-box;
+  pointer-events: auto;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-bottom: none;
+  border-radius: var(--sb-card-radius, 12px) var(--sb-card-radius, 12px) 0 0;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.creation-stepper-footer__side {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.creation-stepper-footer__side--start {
+  justify-content: flex-start;
+  flex: 1 1 0;
+}
+
+.creation-stepper-footer__side--end {
+  justify-content: flex-end;
+  flex: 1 1 0;
 }
 </style>

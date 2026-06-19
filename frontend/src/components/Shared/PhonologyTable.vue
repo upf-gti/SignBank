@@ -1,5 +1,8 @@
 <template>
-  <div class="phonology-table">
+  <div
+    class="phonology-table"
+    :class="{ 'phonology-table--natural-height': naturalHeight }"
+  >
     <div class="phonology-table__handedness q-mb-md">
       <div class="text-caption text-grey-7 q-mb-xs">
         {{ translate('handedness') }}
@@ -16,19 +19,32 @@
         </span>
         <span v-else>{{ translate('notSet') }}</span>
       </div>
-      <q-btn-toggle
+      <q-select
         v-else
         v-model="localData.handedness"
         :options="phonologyOptions.handednessOptions"
-        spread
-        no-caps
-        unelevated
-        toggle-color="primary"
-        color="grey-3"
-        text-color="grey-8"
-        class="full-width"
+        outlined
+        dense
+        emit-value
+        map-options
+        options-dense
+        class="full-width phonology-table__handedness-select"
         @update:model-value="emitUpdate"
-      />
+      >
+        <template #option="scope">
+          <q-item v-bind="scope.itemProps">
+            <q-item-section>
+              <q-item-label>{{ scope.opt.label }}</q-item-label>
+              <q-item-label
+                v-if="scope.opt.description"
+                caption
+              >
+                {{ scope.opt.description }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </template>
+      </q-select>
     </div>
 
     <div class="phonology-table__scroll">
@@ -191,6 +207,7 @@ const props = defineProps<{
   phonologyData: PhonologyData;
   isEditable?: boolean;
   compact?: boolean;
+  naturalHeight?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -330,6 +347,22 @@ function emitUpdate() {
 
 .phonology-table__handedness {
   flex: 0 0 auto;
+}
+
+.phonology-table__handedness-select {
+  max-width: 420px;
+}
+
+.phonology-table--natural-height {
+  min-height: auto;
+  flex: 0 0 auto;
+  height: auto;
+}
+
+.phonology-table--natural-height .phonology-table__scroll {
+  flex: 0 0 auto;
+  min-height: auto;
+  overflow: visible;
 }
 
 .phonology-table__scroll {
