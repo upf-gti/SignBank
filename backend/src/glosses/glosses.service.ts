@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { GlossStatus } from '@prisma/client'
+import { compoundPartsInclude } from './compound-include';
 
 @Injectable()
 export class GlossesService {
@@ -22,6 +23,7 @@ export class GlossesService {
           },
         },
         glossTranslations: true,
+        compoundParts: compoundPartsInclude,
         glossVideos: {
           include: {
             videos: true,

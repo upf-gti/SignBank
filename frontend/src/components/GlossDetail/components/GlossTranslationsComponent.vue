@@ -114,6 +114,15 @@
       class="q-mt-sm"
       @click="addTranslation"
     />
+
+    <div
+      v-if="localGlossData.iconicity && !editMode"
+      class="gloss-translations__iconicity text-body2 text-grey-8"
+      :class="glossTranslations.length ? 'q-mt-md' : ''"
+    >
+      <span class="text-weight-medium">{{ translate('iconicity') }}:</span>
+      {{ localGlossData.iconicity }}
+    </div>
   </q-card-section>
 </template>
 

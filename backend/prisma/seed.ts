@@ -1,5 +1,6 @@
 import { PrismaClient, Role, Language, LexicalCategory, Handedness, GlossStatus, ConfigurationChange, RelationBetweenArticulators, Location, MovementType, MovementRelatedOrientation, OrientationChange, ContactType, OrientationRelatedToLocation, HandConfiguration, RelationType, MovementDirection } from '@prisma/client';
 import * as argon2 from 'argon2';
+import { seedCompoundBessonsExample } from './seed/compound-bessons-1d';
 
 const prisma = new PrismaClient();
 
@@ -12,6 +13,7 @@ async function main() {
     prisma.definition.deleteMany(),
     prisma.video.deleteMany(),
     prisma.minimalPair.deleteMany(),
+    prisma.compoundPart.deleteMany(),
     prisma.signVideo.deleteMany(),
     prisma.dictionaryEntry.deleteMany(),
     prisma.relatedGloss.deleteMany(),
@@ -950,6 +952,8 @@ async function main() {
       },
     }),
   ]);
+
+  await seedCompoundBessonsExample(prisma);
 
   console.log('Seed data created successfully');
 }

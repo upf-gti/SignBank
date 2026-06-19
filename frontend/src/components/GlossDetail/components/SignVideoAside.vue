@@ -20,7 +20,7 @@
       class="q-mt-sm full-width"
       :label="detailsButtonLabel"
       icon="videocam"
-      @click="emit('showAllVideos')"
+      @click="onDetailsClick"
     />
 
     <div
@@ -44,13 +44,23 @@ import GlossVideoComponent from './GlossVideoComponent.vue'
 import GlossTranslationsComponent from './GlossTranslationsComponent.vue'
 import translate from 'src/utils/translate'
 
-const { glossData } = defineProps<{
+const { glossData, isCompound = false } = defineProps<{
   glossData: GlossData
+  isCompound?: boolean
 }>()
 
 const emit = defineEmits<{
   (e: 'showAllVideos'): void
+  (e: 'showCompoundPhonology'): void
 }>()
+
+function onDetailsClick() {
+  if (isCompound && !hasMultipleSignVideos.value) {
+    emit('showCompoundPhonology')
+    return
+  }
+  emit('showAllVideos')
+}
 
 const primarySignVideo = computed(() => {
   const videos = glossData.glossVideos || []

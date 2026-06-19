@@ -28,6 +28,10 @@ export const api = {
     unarchiveGloss: (glossDataId: string) =>
       apiClient.patch<GlossData>(`/gloss-data/${glossDataId}/unarchive`),
   },
+  compound: {
+    update: (glossDataId: string, data: Record<string, unknown>) =>
+      apiClient.put<GlossData>(`/gloss-data/${glossDataId}/compound`, data),
+  },
   examples: {
     create: (glossDataId: string, data: { example: string, exampleVideoURL: string }) =>
       apiClient.post<GlossData>(`/examples/gloss/${glossDataId}`, data),

@@ -10,10 +10,10 @@
       class="creation-stepper"
     >
       <q-step
-        :name="1"
+        name="core"
         :title="translate('stepCore')"
         icon="description"
-        :done="step > 1"
+        :done="step !== 'core'"
       >
         <DefinitionsComponent
           ref="definitionsRef"
@@ -21,6 +21,7 @@
           :edit-mode="editMode"
           :allow-edit="editMode"
           :inline-edit="true"
+          :hide-gloss-translations="Boolean(localGlossData.isCompound)"
           @update:gloss-data="updateGlossData"
         />
 
@@ -31,16 +32,16 @@
             :label="translate('next')"
             icon-right="arrow_forward"
             :loading="stepLoading"
-            @click="goToStep(2)"
+            @click="goToStep('video')"
           />
         </q-stepper-navigation>
       </q-step>
 
       <q-step
-        :name="2"
+        name="video"
         :title="translate('stepVideo')"
         icon="videocam"
-        :done="step > 2"
+        :done="step === 'compound' || step === 'optional'"
       >
         <VideosComponent
           ref="videosRef"
@@ -57,7 +58,7 @@
             :label="translate('back')"
             icon="arrow_back"
             :disable="stepLoading"
-            @click="step = 1"
+            @click="step = 'core'"
           />
           <q-btn
             color="primary"
@@ -65,13 +66,45 @@
             :label="translate('next')"
             icon-right="arrow_forward"
             :loading="stepLoading"
-            @click="goToStep(3)"
+            @click="goToStep('compound')"
           />
         </q-stepper-navigation>
       </q-step>
 
       <q-step
-        :name="3"
+        name="compound"
+        :title="translate('stepCompound')"
+        icon="call_merge"
+        :done="step === 'optional'"
+      >
+        <CompoundEditorComponent
+          ref="compoundRef"
+          :gloss-data="localGlossData"
+          @update:gloss-data="updateGlossData"
+        />
+
+        <q-stepper-navigation class="row justify-between q-mt-md">
+          <q-btn
+            flat
+            color="primary"
+            :label="translate('back')"
+            icon="arrow_back"
+            :disable="stepLoading"
+            @click="step = 'video'"
+          />
+          <q-btn
+            color="primary"
+            unelevated
+            :label="translate('next')"
+            icon-right="arrow_forward"
+            :loading="stepLoading"
+            @click="goToStep('optional')"
+          />
+        </q-stepper-navigation>
+      </q-step>
+
+      <q-step
+        name="optional"
         :title="translate('stepOptional')"
         icon="more_horiz"
         optional
@@ -114,7 +147,7 @@
             :label="translate('back')"
             icon="arrow_back"
             :disable="stepLoading || submitting"
-            @click="step = 2"
+            @click="step = 'compound'"
           />
           <q-btn
             color="primary"
@@ -139,14 +172,18 @@ import ExamplesComponent from './ExamplesComponent/ExamplesComponent.vue';
 import VideosComponent from './VideosComponent.vue';
 import RelatedGlosses from './RelatedGlosses.vue';
 import DefinitionsComponent from './DefinitionsComponent/DefinitionsComponent.vue';
+import CompoundEditorComponent from './CompoundEditorComponent.vue';
 
-const $q = useQuasar()
-const step = ref(1)
-const stepLoading = ref(false)
+type EditorStep = 'core' | 'video' | 'compound' | 'optional';
 
-const definitionsRef = ref<InstanceType<typeof DefinitionsComponent> | null>(null)
-const videosRef = ref<InstanceType<typeof VideosComponent> | null>(null)
-const examplesRef = ref<InstanceType<typeof ExamplesComponent> | null>(null)
+const $q = useQuasar();
+const step = ref<EditorStep>('core');
+const stepLoading = ref(false);
+
+const definitionsRef = ref<InstanceType<typeof DefinitionsComponent> | null>(null);
+const videosRef = ref<InstanceType<typeof VideosComponent> | null>(null);
+const compoundRef = ref<InstanceType<typeof CompoundEditorComponent> | null>(null);
+const examplesRef = ref<InstanceType<typeof ExamplesComponent> | null>(null);
 
 const emit = defineEmits<{
   (e: 'update:glossData', glossData: GlossData): void
@@ -169,14 +206,14 @@ watch(() => glossData, (newGlossData) => {
 
 watch(() => editMode, (isEditing) => {
   if (isEditing) {
-    step.value = 1
+    step.value = 'core';
   }
 });
 
 const updateGlossData = (updated: GlossData) => {
   localGlossData.value = updated;
   emit('update:glossData', updated);
-}
+};
 
 function showValidationErrors(errors: string[]) {
   $q.dialog({
@@ -193,49 +230,62 @@ function showValidationErrors(errors: string[]) {
       flat: true,
       color: 'primary',
     },
-  })
+  });
 }
 
-async function goToStep(targetStep: number) {
-  stepLoading.value = true
+async function goToStep(targetStep: EditorStep) {
+  stepLoading.value = true;
   try {
-    if (targetStep === 2) {
-      const errors = definitionsRef.value?.getStepValidationErrors() ?? []
+    if (targetStep === 'video') {
+      const errors = definitionsRef.value?.getStepValidationErrors() ?? [];
       if (errors.length > 0) {
-        showValidationErrors(errors)
-        return
+        showValidationErrors(errors);
+        return;
       }
-      const saved = await definitionsRef.value?.saveAll(true)
-      if (saved === false) return
+      const saved = await definitionsRef.value?.saveAll(true);
+      if (saved === false) return;
     }
 
-    if (targetStep === 3) {
-      const errors = videosRef.value?.getStepValidationErrors() ?? []
+    if (targetStep === 'compound' || targetStep === 'optional') {
+      const errors = videosRef.value?.getStepValidationErrors() ?? [];
       if (errors.length > 0) {
-        showValidationErrors(errors)
-        return
+        showValidationErrors(errors);
+        return;
       }
-      await videosRef.value?.saveAll(true)
+      await videosRef.value?.saveAll(true);
     }
 
-    step.value = targetStep
+    if (targetStep === 'optional') {
+      const errors = compoundRef.value?.getStepValidationErrors() ?? [];
+      if (errors.length > 0) {
+        showValidationErrors(errors);
+        return;
+      }
+      const saved = await compoundRef.value?.saveAll(true);
+      if (!saved) return;
+    }
+
+    step.value = targetStep;
   } finally {
-    stepLoading.value = false
+    stepLoading.value = false;
   }
 }
 
 async function handleFinish() {
-  stepLoading.value = true
+  stepLoading.value = true;
   try {
-    await examplesRef.value?.saveAll(true)
+    const compoundSaved = await compoundRef.value?.saveAll(true);
+    if (compoundSaved === false) return;
+
+    await examplesRef.value?.saveAll(true);
 
     if (isDraft) {
-      emit('submitRequest')
+      emit('submitRequest');
     } else {
-      emit('finishEdit')
+      emit('finishEdit');
     }
   } finally {
-    stepLoading.value = false
+    stepLoading.value = false;
   }
 }
 </script>

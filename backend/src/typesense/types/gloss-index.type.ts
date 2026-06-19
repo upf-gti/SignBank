@@ -20,6 +20,7 @@ export interface GlossIndex {
   gloss: string;
   url: string;
   signVideoTitle: string;
+  isCompound?: boolean;
   lexicalCategory: LexicalCategory | string;
   lexicalCategories: (LexicalCategory | string)[];
   description: string;

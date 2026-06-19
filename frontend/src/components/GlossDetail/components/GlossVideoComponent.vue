@@ -93,7 +93,7 @@
         class="column justify-center no-wrap items-start full-width q-mt-md"
       >
         <q-btn
-          v-if="signVideo.videos.length > 1"
+          v-if="(signVideo.videos?.length ?? 0) > 1"
           flat
           round
           icon="delete"
@@ -121,6 +121,14 @@ import { getVideoUrl } from 'src/utils/videoUrl';
 import { api } from 'src/services/api';
 import { useQuasar } from 'quasar';
 
+function normalizeSignVideo(signVideo: SignVideo): SignVideo {
+  return {
+    ...signVideo,
+    videos: signVideo.videos ?? [],
+    minimalPairs: signVideo.minimalPairs ?? [],
+  };
+}
+
 const props = defineProps<{
   signVideo: SignVideo;
   editMode: boolean;
@@ -133,13 +141,13 @@ const emit = defineEmits<{
 
 const $q = useQuasar();
 
-const localSignVideo = ref<SignVideo>({ ...props.signVideo });
+const localSignVideo = ref<SignVideo>(normalizeSignVideo(props.signVideo));
 
 watch(() => props.signVideo, (newSignVideo) => {
-  localSignVideo.value = { ...newSignVideo };
+  localSignVideo.value = normalizeSignVideo(newSignVideo);
 }, { deep: true });
 
-const selectedVideo = ref<string>(localSignVideo.value?.videos[0]?.id || '');
+const selectedVideo = ref<string>(localSignVideo.value.videos[0]?.id || '');
 const videoRefs = new Map<string, HTMLVideoElement>();
 
 const sortedVideos = computed(() => {

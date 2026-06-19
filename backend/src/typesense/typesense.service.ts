@@ -8,6 +8,11 @@ import {
   Handedness,
   Prisma,
 } from '@prisma/client';
+import { compoundPartsInclude } from '../glosses/compound-include';
+import {
+  resolveCompoundSearchPhonology,
+  resolveCompoundSearchVideoUrl,
+} from '../glosses/compound-phonology';
 
 const glossIndexInclude = {
   definitions: {
@@ -17,6 +22,7 @@ const glossIndexInclude = {
     orderBy: { priority: 'asc' as const },
   },
   glossTranslations: true,
+  compoundParts: compoundPartsInclude,
   glossVideos: {
     include: {
       videos: { orderBy: { priority: 'asc' as const } },
@@ -126,20 +132,8 @@ export class TypesenseService implements OnModuleInit {
   }
 
   buildGlossDocument(glossData: GlossDataForIndex): GlossIndex | null {
-    if (!glossData.glossVideos.length) {
-      return null;
-    }
-
-    const primarySignVideo = glossData.glossVideos[0];
-    const primaryVideo = primarySignVideo.videos[0];
     const primaryDefinition = glossData.definitions[0];
-
-    let description = '';
-    if (primaryDefinition) {
-      description = primaryDefinition.definition;
-    }
-
-    const videoData = primarySignVideo.videoData;
+    const description = primaryDefinition?.definition ?? '';
     const lexicalCategories = [
       ...new Set(
         glossData.definitions
@@ -148,12 +142,53 @@ export class TypesenseService implements OnModuleInit {
       ),
     ];
 
+    if (glossData.isCompound && (glossData.compoundParts?.length ?? 0) > 0) {
+      const videoData = resolveCompoundSearchPhonology(glossData);
+      return {
+        id: glossData.id,
+        glossId: glossData.id,
+        gloss: glossData.gloss,
+        url: resolveCompoundSearchVideoUrl(glossData),
+        signVideoTitle: glossData.gloss,
+        isCompound: true,
+        lexicalCategory: primaryDefinition?.lexicalCategory ?? lexicalCategories[0] ?? '',
+        lexicalCategories,
+        description,
+        handedness: videoData?.handedness ?? Handedness.ONE,
+        dominantConfiguration: videoData?.dominantConfiguration ?? '',
+        nonDominantConfiguration: videoData?.nonDominantConfiguration ?? '',
+        dominantRelationBetweenArticulators: videoData?.dominantRelationBetweenArticulators ?? '',
+        nonDominantRelationBetweenArticulators: videoData?.nonDominantRelationBetweenArticulators ?? '',
+        configurationChanges: videoData?.configurationChanges ?? '',
+        location: videoData?.location ?? '',
+        movementRelatedOrientation: videoData?.movementRelatedOrientation ?? '',
+        orientationRelatedToLocation: videoData?.orientationRelatedToLocation ?? '',
+        orientationChange: videoData?.orientationChange ?? '',
+        contactType: videoData?.contactType ?? '',
+        movementType: videoData?.movementType ?? '',
+        movementDirection: videoData?.movementDirection ?? '',
+        vocalization: videoData?.vocalization ?? '',
+        nonManualComponent: videoData?.nonManualComponent ?? '',
+        inicialization: videoData?.inicialization ?? '',
+        repeatedMovement: videoData?.repeatedMovement ?? false,
+      };
+    }
+
+    if (!glossData.glossVideos.length) {
+      return null;
+    }
+
+    const primarySignVideo = glossData.glossVideos[0];
+    const primaryVideo = primarySignVideo.videos[0];
+    const videoData = primarySignVideo.videoData;
+
     return {
       id: glossData.id,
       glossId: glossData.id,
       gloss: glossData.gloss,
       url: primaryVideo?.url ?? '',
       signVideoTitle: primarySignVideo.title,
+      isCompound: false,
       lexicalCategory: primaryDefinition?.lexicalCategory ?? lexicalCategories[0] ?? '',
       lexicalCategories,
       description,

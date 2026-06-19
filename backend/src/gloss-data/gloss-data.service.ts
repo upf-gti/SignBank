@@ -2,11 +2,15 @@ import { Injectable, NotFoundException, BadRequestException, ConflictException }
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateDefinitionDto, UpdateDefinitionTranslationDto } from './dto/update-definition.dto';
-import { GlossStatus, Language, LexicalCategory } from '@prisma/client';
+import { GlossStatus, Handedness, Language, LexicalCategory, Prisma } from '@prisma/client';
 import { GLOSS_SEARCH_SYNC_EVENT } from '../typesense/types/gloss-index.type';
+import { compoundPartsInclude } from '../glosses/compound-include';
+import { CompoundPartInputDto, UpdateCompoundDto } from './dto/update-compound.dto';
+import { VideoDataDto } from '../sign-videos/dto/video-data.dto';
 
 const glossDataInclude = {
   dictionaryEntry: true,
+  compoundParts: compoundPartsInclude,
   glossVideos: {
     include: {
       videos: true,
@@ -717,5 +721,259 @@ export class GlossDataService {
 
     this.notifySearchIndex(signVideo.glossDataId);
     return this.getGlossData(signVideo.glossDataId);
+  }
+
+  private buildVideoDataCreateInput(videoData: VideoDataDto): Prisma.VideoDataCreateInput {
+    return {
+      handedness: videoData.handedness || Handedness.ONE,
+      dominantConfiguration: videoData.dominantConfiguration ?? null,
+      nonDominantConfiguration: videoData.nonDominantConfiguration ?? null,
+      dominantRelationBetweenArticulators: videoData.dominantRelationBetweenArticulators ?? null,
+      nonDominantRelationBetweenArticulators: videoData.nonDominantRelationBetweenArticulators ?? null,
+      configurationChanges: videoData.configurationChanges || 'EMPTY',
+      location: videoData.location || 'EMPTY',
+      movementRelatedOrientation: videoData.movementRelatedOrientation || 'EMPTY',
+      orientationRelatedToLocation: videoData.orientationRelatedToLocation || 'EMPTY',
+      orientationChange: videoData.orientationChange || 'EMPTY',
+      contactType: videoData.contactType || 'EMPTY',
+      movementType: videoData.movementType || 'EMPTY',
+      movementDirection: videoData.movementDirection || 'EMPTY',
+      vocalization: videoData.vocalization || 'none',
+      nonManualComponent: videoData.nonManualComponent || 'none',
+      inicialization: videoData.inicialization || 'none',
+      repeatedMovement: videoData.repeatedMovement ?? false,
+    };
+  }
+
+  private async deleteCompoundPartById(partId: string) {
+    const part = await this.prisma.compoundPart.findUnique({
+      where: { id: partId },
+      include: { inlineSignVideo: true },
+    });
+    if (!part) return;
+
+    if (part.inlineSignVideoId) {
+      await this.prisma.video.deleteMany({ where: { signVideoId: part.inlineSignVideoId } });
+      await this.prisma.signVideo.delete({ where: { id: part.inlineSignVideoId } });
+    }
+
+    const phonologyId = part.inlinePhonologyId;
+    await this.prisma.compoundPart.delete({ where: { id: partId } });
+
+    if (phonologyId) {
+      await this.prisma.videoData.delete({ where: { id: phonologyId } }).catch(() => undefined);
+    }
+  }
+
+  private async upsertInlineSignVideo(
+    partId: string,
+    videoDataId: string,
+    gloss: string,
+    inlineSignVideo: CompoundPartInputDto['inlineSignVideo'],
+    existingSignVideoId?: string | null,
+  ) {
+    const videos = (inlineSignVideo?.videos ?? []).filter((video) => video.url?.trim());
+    if (!videos.length) {
+      if (existingSignVideoId) {
+        await this.prisma.video.deleteMany({ where: { signVideoId: existingSignVideoId } });
+        await this.prisma.signVideo.delete({ where: { id: existingSignVideoId } });
+        await this.prisma.compoundPart.update({
+          where: { id: partId },
+          data: { inlineSignVideoId: null },
+        });
+      }
+      return;
+    }
+
+    if (existingSignVideoId) {
+      await this.prisma.video.deleteMany({ where: { signVideoId: existingSignVideoId } });
+      await this.prisma.signVideo.update({
+        where: { id: existingSignVideoId },
+        data: {
+          title: gloss,
+          videoDataId,
+          videos: {
+            create: videos.map((video, index) => ({
+              angle: video.angle || 'front',
+              url: video.url!,
+              priority: video.priority ?? index + 1,
+            })),
+          },
+        },
+      });
+      return;
+    }
+
+    const signVideo = await this.prisma.signVideo.create({
+      data: {
+        title: gloss,
+        priority: 1,
+        videoDataId,
+        videos: {
+          create: videos.map((video, index) => ({
+            angle: video.angle || 'front',
+            url: video.url!,
+            priority: video.priority ?? index + 1,
+          })),
+        },
+      },
+    });
+
+    await this.prisma.compoundPart.update({
+      where: { id: partId },
+      data: { inlineSignVideoId: signVideo.id },
+    });
+  }
+
+  private async upsertCompoundPart(glossDataId: string, partDto: CompoundPartInputDto) {
+    const isLinked = Boolean(partDto.linkedGlossId);
+
+    if (isLinked) {
+      if (partDto.id) {
+        const existing = await this.prisma.compoundPart.findUnique({
+          where: { id: partDto.id },
+          include: { inlineSignVideo: true },
+        });
+        if (existing?.inlineSignVideoId || existing?.inlinePhonologyId) {
+          await this.deleteCompoundPartById(partDto.id);
+          return this.prisma.compoundPart.create({
+            data: {
+              glossDataId,
+              position: partDto.position,
+              gloss: partDto.gloss,
+              compExternalId: partDto.compExternalId ?? null,
+              redundant: partDto.redundant ?? false,
+              linkedGlossId: partDto.linkedGlossId,
+            },
+          });
+        }
+        return this.prisma.compoundPart.update({
+          where: { id: partDto.id },
+          data: {
+            position: partDto.position,
+            gloss: partDto.gloss,
+            compExternalId: partDto.compExternalId ?? null,
+            redundant: partDto.redundant ?? false,
+            linkedGlossId: partDto.linkedGlossId,
+            inlinePhonologyId: null,
+            inlineSignVideoId: null,
+          },
+        });
+      }
+
+      return this.prisma.compoundPart.create({
+        data: {
+          glossDataId,
+          position: partDto.position,
+          gloss: partDto.gloss,
+          compExternalId: partDto.compExternalId ?? null,
+          redundant: partDto.redundant ?? false,
+          linkedGlossId: partDto.linkedGlossId,
+        },
+      });
+    }
+
+    if (!partDto.inlinePhonology) {
+      throw new BadRequestException(`Inline compound part "${partDto.gloss}" requires phonology`);
+    }
+
+    let partId = partDto.id;
+    let phonologyId: string | undefined;
+    let existingSignVideoId: string | null | undefined;
+
+    if (partId) {
+      const existing = await this.prisma.compoundPart.findUnique({
+        where: { id: partId },
+      });
+      phonologyId = existing?.inlinePhonologyId ?? undefined;
+      existingSignVideoId = existing?.inlineSignVideoId;
+    }
+
+    if (phonologyId) {
+      await this.prisma.videoData.update({
+        where: { id: phonologyId },
+        data: this.buildVideoDataCreateInput(partDto.inlinePhonology),
+      });
+    } else {
+      const created = await this.prisma.videoData.create({
+        data: this.buildVideoDataCreateInput(partDto.inlinePhonology),
+      });
+      phonologyId = created.id;
+    }
+
+    if (partId) {
+      await this.prisma.compoundPart.update({
+        where: { id: partId },
+        data: {
+          position: partDto.position,
+          gloss: partDto.gloss,
+          compExternalId: partDto.compExternalId ?? null,
+          redundant: partDto.redundant ?? false,
+          linkedGlossId: null,
+          inlinePhonologyId: phonologyId,
+        },
+      });
+    } else {
+      const createdPart = await this.prisma.compoundPart.create({
+        data: {
+          glossDataId,
+          position: partDto.position,
+          gloss: partDto.gloss,
+          compExternalId: partDto.compExternalId ?? null,
+          redundant: partDto.redundant ?? false,
+          inlinePhonologyId: phonologyId,
+        },
+      });
+      partId = createdPart.id;
+      existingSignVideoId = null;
+    }
+
+    await this.upsertInlineSignVideo(
+      partId,
+      phonologyId,
+      partDto.gloss,
+      partDto.inlineSignVideo,
+      existingSignVideoId,
+    );
+  }
+
+  async updateCompound(glossDataId: string, dto: UpdateCompoundDto) {
+    const gloss = await this.prisma.glossData.findUnique({ where: { id: glossDataId } });
+    if (!gloss) {
+      throw new NotFoundException(`GlossData with ID ${glossDataId} not found`);
+    }
+
+    await this.prisma.glossData.update({
+      where: { id: glossDataId },
+      data: {
+        isCompound: dto.isCompound,
+        iconicity: dto.iconicity ?? null,
+      },
+    });
+
+    const existingParts = await this.prisma.compoundPart.findMany({ where: { glossDataId } });
+    const incomingIds = new Set(dto.parts.map((part) => part.id).filter(Boolean));
+
+    if (!dto.isCompound) {
+      for (const part of existingParts) {
+        await this.deleteCompoundPartById(part.id);
+      }
+      this.notifySearchIndex(glossDataId);
+      return this.getGlossData(glossDataId);
+    }
+
+    for (const part of existingParts) {
+      if (!incomingIds.has(part.id)) {
+        await this.deleteCompoundPartById(part.id);
+      }
+    }
+
+    const sortedParts = [...dto.parts].sort((a, b) => a.position - b.position);
+    for (const partDto of sortedParts) {
+      await this.upsertCompoundPart(glossDataId, partDto);
+    }
+
+    this.notifySearchIndex(glossDataId);
+    return this.getGlossData(glossDataId);
   }
 }

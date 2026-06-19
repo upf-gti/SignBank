@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Put, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { GlossDataService } from './gloss-data.service';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { RolesGuard } from '../auth/guard/roles.guard';
 import { Roles } from '../auth/decorator/roles.decorator';
 import { Role, Language } from '@prisma/client';
 import { UpdateDefinitionDto, UpdateDefinitionTranslationDto } from './dto/update-definition.dto';
+import { UpdateCompoundDto } from './dto/update-compound.dto';
 
 @Controller('gloss-data')
 @UseGuards(JwtGuard, RolesGuard)
@@ -250,5 +251,14 @@ export class GlossDataController {
     @Body() data: { videoIds: string[] },
   ) {
     return this.glossDataService.reorderVideos(signVideoId, data.videoIds);
+  }
+
+  @Put(':id/compound')
+  @Roles(Role.ADMIN)
+  async updateCompound(
+    @Param('id') id: string,
+    @Body() data: UpdateCompoundDto,
+  ) {
+    return this.glossDataService.updateCompound(id, data);
   }
 }

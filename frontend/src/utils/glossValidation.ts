@@ -29,6 +29,25 @@ export function validateGloss(glossData: GlossData): ValidationError[] {
     });
   }
 
+  if (glossData.isCompound) {
+    if (!glossData.compoundParts?.length) {
+      errors.push({ message: translate('validation.compoundPartsRequired') });
+    } else {
+      glossData.compoundParts.forEach((part, index) => {
+        const label = part.gloss?.trim() || `#${index + 1}`;
+        if (!part.gloss?.trim()) {
+          errors.push({ message: translate('validation.compoundPartGlossRequired', { part: label }) });
+        }
+        if (part.linkedGlossId) {
+          return;
+        }
+        if (!part.inlinePhonology) {
+          errors.push({ message: translate('validation.compoundPartPhonologyRequired', { part: label }) });
+        }
+      });
+    }
+  }
+
   if (glossData.examples?.length) {
     glossData.examples.forEach((example) => {
       errors.push(...validateExample(example));

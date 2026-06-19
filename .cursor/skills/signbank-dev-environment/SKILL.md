@@ -62,12 +62,14 @@ Source of truth: `.env.example`. Key vars:
 
 ## Common workflows
 
-**Schema change:**
+**Schema change:** follow `signbank-prisma-migrate` skill — edit `schema.prisma`, then:
+
 ```bash
-# Dev: create migration inside backend container or locally with DATABASE_URL set
-npx prisma migrate dev --name describe_change
-make migrate   # deploy in running stack
+docker compose -f docker-compose-local.yaml exec backend npx prisma migrate dev --name describe_change
+docker compose -f docker-compose-local.yaml exec backend npx prisma migrate status
 ```
+
+Deploy only (migrations already committed): `make migrate` or the `migrate deploy` exec above.
 
 **Backend debug:** Node inspector on `9229` when using local compose.
 

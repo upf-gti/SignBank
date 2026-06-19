@@ -559,6 +559,9 @@ model DictionaryEntry {
 model GlossData {
     id                   String             @id @default(uuid())
     gloss                String
+    externalId           String?            @unique
+    isCompound           Boolean            @default(false)
+    iconicity            String?
     createdAt            DateTime           @default(now())
     updatedAt            DateTime           @updatedAt
     editComment          String?
@@ -571,10 +574,30 @@ model GlossData {
     definitions          Definition[]
     examples             Example[]
     glossTranslations    GlossTranslation[]
+    compoundParts        CompoundPart[]
+    usedInCompounds      CompoundPart[]     @relation("CompoundPartLinkedGloss")
     relationsAsSource    RelatedGloss[]     @relation("RelationSource")
     relationsAsTarget    RelatedGloss[]     @relation("RelationTarget")
     minimalPairsAsSource MinimalPair[]      @relation("MinimalPairSource")
     minimalPairsAsTarget MinimalPair[]      @relation("MinimalPairTarget")
+}
+
+model CompoundPart {
+    id                String     @id @default(uuid())
+    glossDataId       String
+    glossData         GlossData  @relation(fields: [glossDataId], references: [id], onDelete: Cascade)
+    position          Int
+    gloss             String
+    compExternalId    String?
+    linkedGlossId     String?
+    linkedGloss       GlossData? @relation("CompoundPartLinkedGloss", fields: [linkedGlossId], references: [id])
+    redundant         Boolean    @default(false)
+    inlinePhonologyId String?    @unique
+    inlinePhonology   VideoData? @relation("CompoundPartInlinePhonology", fields: [inlinePhonologyId], references: [id], onDelete: Cascade)
+    inlineSignVideoId String?    @unique
+    inlineSignVideo   SignVideo? @relation("CompoundPartInlineSignVideo", fields: [inlineSignVideoId], references: [id], onDelete: SetNull)
+
+    @@unique([glossDataId, position])
 }
 
 model RelatedGloss {
@@ -634,14 +657,15 @@ model DefinitionTranslation {
 }
 
 model SignVideo {
-    id          String    @id @default(uuid())
-    title       String
-    videos      Video[]
-    priority    Int       @default(0)
-    videoData   VideoData @relation(fields: [videoDataId], references: [id], onDelete: Cascade)
-    videoDataId String
-    glossData   GlossData @relation(fields: [glossDataId], references: [id], onDelete: Cascade)
-    glossDataId String
+    id                 String        @id @default(uuid())
+    title              String
+    videos             Video[]
+    priority           Int           @default(0)
+    videoData          VideoData     @relation(fields: [videoDataId], references: [id], onDelete: Cascade)
+    videoDataId        String
+    glossData          GlossData?    @relation(fields: [glossDataId], references: [id], onDelete: Cascade)
+    glossDataId        String?
+    compoundPartInline CompoundPart? @relation("CompoundPartInlineSignVideo")
 }
 
 model VideoData {
@@ -663,6 +687,7 @@ model VideoData {
     inicialization               String
     repeatedMovement             Boolean                      @default(false)
     signVideo                    SignVideo[]
+    compoundPart                 CompoundPart?                @relation("CompoundPartInlinePhonology")
     id                           String                       @id @default(uuid())
 }
 

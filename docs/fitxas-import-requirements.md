@@ -270,7 +270,9 @@ On gloss detail (read-only): show category chips/tags.
 
 ### 2.5 Compound signs (domain model)
 
-Compounds are a **v1 database and UI requirement**. SignBank must model them explicitly; the current schema has no compound support.
+> **Implementation status (2026-06-19):** Prisma model (`isCompound`, `CompoundPart`, `inlinePhonology`) and dev seed (`BESSONS-1d` = GERMÀ + SEGON in `backend/prisma/seed/compound-bessons-1d.ts`) are in place. Import pipeline, gloss editor, compound phonology UI, and Typesense assembly are **deferred**.
+
+Compounds are a **v1 database and UI requirement**. SignBank must model them explicitly; the schema now includes compound support.
 
 #### Rules
 
@@ -858,10 +860,10 @@ The create page may stay minimal (name only) or gain an early categories/metadat
 
 | Phase | Scope |
 |-------|-------|
-| **1 — Schema** | Migration: compounds, metadata, per-hand phonology, handedness, traceability; **hand configuration catalog** (§3.4) |
-| **2 — Dry-run importer** | Schema v2 `Examples/`; no DB writes; gap report |
-| **3 — Full import** | DB writes, relation pass, optional video pipeline |
-| **4 — UI** | Gloss detail + **edit/create page rework** (§3.6): phonology table, compounds, categories, metadata |
+| **1 — Schema** | **Compounds done** (`isCompound`, `CompoundPart`, seed). Remaining: metadata, categories, per-hand catalog, traceability `sourceDocPath`; **hand configuration catalog** (§3.4) |
+| **2 — Dry-run importer** | Schema v2 `Examples/`; no DB writes; gap report — compound mapper deferred |
+| **3 — Full import** | DB writes, relation pass, optional video pipeline — includes compound resolver when scheduled |
+| **4 — UI** | Gloss detail + **edit/create page rework** (§3.6): phonology table, **compounds (deferred)**, categories, metadata |
 | **5 — Production** | Full dataset dry-run → staging import → spot-check → Typesense sync → production with backup |
 | **6 — Admin import UI** | Admin-only page: multi-file JSON upload, parse, dry-run preview, import — **complex; needs active prompting** (§3.5) |
 
@@ -909,6 +911,7 @@ See [`fitxas-import-plan.md`](fitxas-import-plan.md) for architecture, CLI flags
 | Resource | Path |
 |----------|------|
 | Implementation plan | [`fitxas-import-plan.md`](fitxas-import-plan.md) |
+| **Task checklist** | [`fitxas-import-tasks.md`](fitxas-import-tasks.md) |
 | Meeting agenda (raw notes) | [`fitxas-import-meeting-agenda.md`](fitxas-import-meeting-agenda.md) |
 | ENUM mapping workflow | [`fitxas-enum-mappings.md`](fitxas-enum-mappings.md) |
 | ENUM reference | [`fitxas-import-enums-reference.md`](fitxas-import-enums-reference.md) |

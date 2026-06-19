@@ -180,16 +180,19 @@ See [`fitxas-import-requirements.md` §5](fitxas-import-requirements.md#5-implem
 
 ### Phase 1 — Schema migration
 
-- Traceability: `externalId`, `sourceDocPath`
-- Compounds: `isCompound`, `CompoundPart[]`
+**Done (compounds only):** `isCompound`, `CompoundPart[]`, `externalId`, `iconicity` on `GlossData`; dev seed `backend/prisma/seed/compound-bessons-1d.ts` (`BESSONS-1d`). Read API: `compoundParts` on `GET /glosses/:id`.
+
+**Remaining Phase 1:**
+
+- Traceability: `sourceDocPath` ( `externalId` done)
 - Semantic categories: `Category` model + many-to-many with `GlossData`
-- Gloss metadata: `iconicity`, `valency`, `KeySignGroup[]` (key signs)
+- Gloss metadata: `valency`, `KeySignGroup[]` (key signs) — `iconicity` column exists
 - Morphology: `SimultaneousMorphology[]`, `AbbreviatedMorphology[]`, `namedEntity`
 - Definitions: make `lexicalCategory` optional on `Definition` (`LexicalCategory?`)
-- Metadata storage: corpus forms, categories, iconicity, valency, signes claus, named entity, simultaneous morphology
-- Per-hand phonology + `Handedness` enum on `VideoData`
 - Hand configuration catalog (`HandConfigurationEntry`) — migrate from closed `HandConfiguration` enum (§3.4)
 - Align frontend `RelationType` in `frontend/src/types/models.ts` with backend (add `HOMONYM`, `VARIANT`)
+
+**Deferred (import + UI):** compound resolver in `import-fitxas`; compound & morphology table in gloss detail/editor; Typesense compound phonology assembly.
 
 ### Phase 2 — Dry-run importer
 
@@ -197,7 +200,7 @@ See [`fitxas-import-requirements.md` §5](fitxas-import-requirements.md#5-implem
 
 - TypeScript interface for schema v2 (single-entry and bundle layouts)
 - `readFitxasDir()` — load and validate JSON files
-- Mappers: definitions, translations, lexical category, phonology (per-hand), relations, compounds
+- Mappers: definitions, translations, lexical category, phonology (per-hand), relations — **compounds deferred** to dedicated import slice
 - `importFitxa()` — Prisma create with nested writes
 - `--dry-run` output: per-file summary + warnings
 - Idempotent upsert by `externalId`

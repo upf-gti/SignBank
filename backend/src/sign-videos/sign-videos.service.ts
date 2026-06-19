@@ -143,14 +143,26 @@ export class SignVideosService {
       });
 
       const glossDataId = signVideo.glossDataId;
-      
+
       // Delete the sign video
       await this.prisma.signVideo.delete({
         where: { id }
       });
 
-      this.notifySearchIndex(glossDataId);
-      return this.glossDataService.getGlossData(glossDataId);
+      if (glossDataId) {
+        this.notifySearchIndex(glossDataId);
+        return this.glossDataService.getGlossData(glossDataId);
+      }
+
+      const compoundPart = await this.prisma.compoundPart.findFirst({
+        where: { inlineSignVideoId: id },
+      });
+      if (compoundPart) {
+        this.notifySearchIndex(compoundPart.glossDataId);
+        return this.glossDataService.getGlossData(compoundPart.glossDataId);
+      }
+
+      throw new NotFoundException(`Sign video with ID "${id}" not found`);
     } catch (error) {
       throw new NotFoundException(`SignVideo with ID ${id} not found or could not be deleted`);
     }
