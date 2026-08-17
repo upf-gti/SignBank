@@ -84,6 +84,19 @@
             </q-item-section>
             <q-item-section>{{ translate('userManagement') }}</q-item-section>
           </q-item>
+
+          <q-item
+            clickable
+            v-ripple
+            :active="isActive('/bulk-import')"
+            active-class="nav-item-active"
+            @click="navigateTo('/bulk-import')"
+          >
+            <q-item-section avatar>
+              <q-icon name="upload_file" />
+            </q-item-section>
+            <q-item-section>{{ translate('bulkImport') }}</q-item-section>
+          </q-item>
         </template>
       </q-list>
 

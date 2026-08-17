@@ -209,6 +209,17 @@ export const api = {
     changePassword: (userId: string, newPassword: string) =>
       apiClient.put(`/users/${userId}/password`, { newPassword }),
   },
+  bulkImport: {
+    importFitxas: (files: File[], overwriteAll: boolean, overwriteGlosses: string[] = []) => {
+      const formData = new FormData()
+      files.forEach((file) => formData.append('files', file))
+      formData.append('overwriteAll', String(overwriteAll))
+      formData.append('overwriteGlosses', JSON.stringify(overwriteGlosses))
+      return apiClient.post('/bulk-import', formData, {
+        timeout: 10 * 60 * 1000,
+      })
+    },
+  },
 }
 
 export default api

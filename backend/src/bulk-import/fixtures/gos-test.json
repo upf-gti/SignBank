@@ -1,0 +1,37 @@
+{
+  "id": "test_gos",
+  "name": "GOS-TEST",
+  "tr_en": "DOG",
+  "tr_es": "PERRO",
+  "tr_ca": "GOS",
+  "definitions": [
+    "Nom – Animal de companyia de l'espècie Canis familiaris."
+  ],
+  "lexical_category": "Nom",
+  "phonology": {
+    "nombre_mans": "1",
+    "configuracio": "Q (Beak)",
+    "localitzacio": "Boca",
+    "canvi_orientacio": "Extensió > Flexió",
+    "moviment_repetit": "Sí"
+  },
+  "minimal_pairs": [
+    {
+      "sign": "GAT-TEST",
+      "description": "Configuració diferent"
+    }
+  ],
+  "related_signs": {
+    "HOMÒNIM": [],
+    "SINÒNIM": ["CA-TEST"],
+    "VARIANT": [],
+    "ANTÒNIM": [],
+    "HIPÒNIM": [],
+    "HIPERÒNIM": ["ANIMAL-TEST"],
+    "VEURE TAMBÉ": []
+  },
+  "notes": "Fitxa de prova: sinònim, hiperònim i parell mínim inexistent",
+  "video_url": null,
+  "is_compound": false,
+  "compound_signs": []
+}

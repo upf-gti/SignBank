@@ -17,6 +17,7 @@ import { DefinitionsModule } from './definitions/definitions.module';
 import { ExampleTranslationsModule } from './example-translations/example-translations.module';
 import { UsersModule } from './users/users.module';
 import { BackupModule } from './backup/backup.module';
+import { BulkImportModule } from './bulk-import/bulk-import.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { BackupModule } from './backup/backup.module';
     ExampleTranslationsModule,
     UsersModule,
     BackupModule,
+    BulkImportModule,
   ],
   controllers: [AppController],
   providers: [AppService],

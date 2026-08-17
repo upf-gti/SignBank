@@ -874,6 +874,29 @@ interface TranslateKeys extends PhonologyTranslateKeys {
   createGlossHint: string;
   requestAlreadyAccepted: string;
   requestAlreadyReviewed: string;
+  bulkImport: string;
+  bulkImportDescription: string;
+  bulkImportSelectFiles: string;
+  bulkImportLimitsHint: string;
+  bulkImportOverwrite: string;
+  bulkImportOverwriteHint: string;
+  bulkImportStart: string;
+  bulkImportCreated: string;
+  bulkImportUpdated: string;
+  bulkImportStubs: string;
+  bulkImportSkipped: string;
+  bulkImportErrors: string;
+  bulkImportDuplicates: string;
+  bulkImportNoErrors: string;
+  bulkImportNoDuplicates: string;
+  bulkImportFile: string;
+  bulkImportField: string;
+  bulkImportValue: string;
+  bulkImportMessage: string;
+  bulkImportFinished: string;
+  bulkImportFailed: string;
+  bulkImportOverwriteOne: string;
+  bulkImportOverwriteOneDone: string;
 }
 
 export default TranslateKeys;

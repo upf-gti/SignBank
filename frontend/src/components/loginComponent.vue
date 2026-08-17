@@ -19,11 +19,8 @@
         />
       </q-card-section>
 
-      <q-card-section>
-        <q-form
-          class="q-gutter-md"
-          @submit="handleLogin"
-        >
+      <q-form @submit="handleLogin">
+        <q-card-section class="q-pt-none q-pb-sm">
           <q-input
             v-model="email"
             type="email"
@@ -39,6 +36,7 @@
 
           <q-input
             v-model="password"
+            class="q-mt-md"
             :type="isPwd ? 'password' : 'text'"
             autocomplete="current-password"
             :label="translate('password')"
@@ -58,26 +56,30 @@
             </template>
           </q-input>
 
-          <div class="row justify-between items-center">
+          <div class="row items-center q-mt-sm">
             <q-btn
               flat
               dense
+              no-caps
               color="primary"
               :label="translate('forgotPassword')"
               tabindex="-1"
             />
           </div>
+        </q-card-section>
 
+        <q-card-actions class="q-px-md q-pb-md">
           <q-btn
             type="submit"
             color="primary"
             :label="translate('login')"
-            class="full-width q-mt-sm"
+            class="full-width"
             unelevated
+            no-caps
             :loading="isLoading"
           />
-        </q-form>
-      </q-card-section>
+        </q-card-actions>
+      </q-form>
     </q-card>
   </q-dialog>
 </template>

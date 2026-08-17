@@ -18,7 +18,7 @@
     "configuracio": "B (B) /O_SSI (O)",
     "configuracio_ma_dominant": "B (B)",
     "configuracio_ma_no_dominant": "O_SSI (O)",
-    "canvi_configuracio": "No",
+    "canvi_configuracio": null,
     "relacio_articuladors": "Damunt / Sota",
     "relacio_articuladors_ma_dominant": "Damunt",
     "relacio_articuladors_ma_no_dominant": "Sota",
@@ -61,13 +61,25 @@
   "valencia": "",
   "signes_claus": [],
   "related_signs": {
-    "HOMÒNIM": [],
-    "SINÒNIM": [],
+    "HOMÒNIM": [
+      "HOMONIM_CERVESA"
+    ],
+    "SINÒNIM": [
+      "SINONIM_CERVESA"
+    ],
     "VARIANT": [],
-    "ANTÒNIM": [],
-    "HIPÒNIM": [],
-    "HIPERÒNIM": [],
-    "VEURE TAMBÉ": []
+    "ANTÒNIM": [
+      "ANTONIM_CERVESA"
+    ],
+    "HIPÒNIM": [
+      "HIPONIM_CERVESA"
+    ],
+    "HIPERÒNIM": [
+      "HIPERONIM_CERVESA"
+    ],
+    "VEURE TAMBÉ": [
+      "VEURE_TAMBE_CERVESA"
+    ]
   },
   "relacio_signes_forasters": {
     "prestec": null,

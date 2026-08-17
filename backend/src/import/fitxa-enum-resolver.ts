@@ -1,11 +1,28 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-const mappings = JSON.parse(
-  fs.readFileSync(path.join(__dirname, 'fitxa-enum-mappings.json'), 'utf8'),
-) as typeof import('./fitxa-enum-mappings.json');
+function loadMappings() {
+  const candidates = [
+    path.join(__dirname, 'fitxa-enum-mappings.json'),
+    path.join(process.cwd(), 'src/import/fitxa-enum-mappings.json'),
+    path.join(process.cwd(), 'dist/src/import/fitxa-enum-mappings.json'),
+  ];
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) {
+      return JSON.parse(fs.readFileSync(candidate, 'utf8'));
+    }
+  }
+  throw new Error(`fitxa-enum-mappings.json not found. Tried: ${candidates.join(', ')}`);
+}
 
-export type FitxaMappingField = keyof typeof mappings.fields;
+const mappings = loadMappings() as {
+  fields: Record<
+    string,
+    { entries?: Array<{ signbankId?: string; value?: boolean; aliases: string[] }> }
+  >;
+};
+
+export type FitxaMappingField = string;
 
 export interface EnumResolveResult<T = string> {
   value: T | null;
