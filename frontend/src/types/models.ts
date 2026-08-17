@@ -1,17 +1,4 @@
 import type { RelatedGloss, MinimalPair } from "./gloss"
-import type { 
-  Handedness,
-  HandConfiguration,
-  ConfigurationChange,
-  RelationBetweenArticulators,
-  MovementRelatedOrientation,
-  OrientationRelatedToLocation,
-  OrientationChange,
-  ContactType,
-  MovementType,
-  Location,
-  MovementDirection,
-} from './enums';
 
 export type WordStatus = 'PUBLISHED' | 'DRAFT' | 'PENDING';
 
@@ -81,19 +68,19 @@ export interface Video {
 }
 
 export interface PhonologyData {
-  handedness: Handedness;
-  dominantConfiguration?: HandConfiguration | null;
-  nonDominantConfiguration?: HandConfiguration | null;
-  dominantRelationBetweenArticulators?: RelationBetweenArticulators | null;
-  nonDominantRelationBetweenArticulators?: RelationBetweenArticulators | null;
-  configurationChanges: ConfigurationChange;
-  location: Location;
-  movementRelatedOrientation: MovementRelatedOrientation;
-  orientationRelatedToLocation: OrientationRelatedToLocation;
-  orientationChange: OrientationChange;
-  contactType: ContactType;
-  movementType: MovementType;
-  movementDirection: MovementDirection;
+  handedness: string;
+  dominantConfiguration?: string | null;
+  nonDominantConfiguration?: string | null;
+  dominantRelationBetweenArticulators?: string | null;
+  nonDominantRelationBetweenArticulators?: string | null;
+  configurationChanges: string;
+  location: string;
+  movementRelatedOrientation: string;
+  orientationRelatedToLocation: string;
+  orientationChange: string;
+  contactType: string;
+  movementType: string;
+  movementDirection: string;
   vocalization: string;
   nonManualComponent: string;
   repeatedMovement: boolean;

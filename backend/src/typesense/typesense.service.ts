@@ -5,7 +5,6 @@ import { VIDEOS_COLLECTION_NAME, videosSchema } from './typesense.config';
 import { GlossIndex } from './types/gloss-index.type';
 import {
   GlossStatus,
-  Handedness,
   Prisma,
 } from '@prisma/client';
 import { compoundPartsInclude } from '../glosses/compound-include';
@@ -13,6 +12,10 @@ import {
   resolveCompoundSearchPhonology,
   resolveCompoundSearchVideoUrl,
 } from '../glosses/compound-phonology';
+import {
+  toSearchPhonology,
+  videoDataPhonologyInclude,
+} from '../phonology-values/phonology-video-data';
 
 const glossIndexInclude = {
   definitions: {
@@ -26,7 +29,7 @@ const glossIndexInclude = {
   glossVideos: {
     include: {
       videos: { orderBy: { priority: 'asc' as const } },
-      videoData: true,
+      videoData: { include: videoDataPhonologyInclude },
     },
     orderBy: { priority: 'asc' as const },
   },
@@ -154,23 +157,7 @@ export class TypesenseService implements OnModuleInit {
         lexicalCategory: primaryDefinition?.lexicalCategory ?? lexicalCategories[0] ?? '',
         lexicalCategories,
         description,
-        handedness: videoData?.handedness ?? Handedness.ONE,
-        dominantConfiguration: videoData?.dominantConfiguration ?? '',
-        nonDominantConfiguration: videoData?.nonDominantConfiguration ?? '',
-        dominantRelationBetweenArticulators: videoData?.dominantRelationBetweenArticulators ?? '',
-        nonDominantRelationBetweenArticulators: videoData?.nonDominantRelationBetweenArticulators ?? '',
-        configurationChanges: videoData?.configurationChanges ?? '',
-        location: videoData?.location ?? '',
-        movementRelatedOrientation: videoData?.movementRelatedOrientation ?? '',
-        orientationRelatedToLocation: videoData?.orientationRelatedToLocation ?? '',
-        orientationChange: videoData?.orientationChange ?? '',
-        contactType: videoData?.contactType ?? '',
-        movementType: videoData?.movementType ?? '',
-        movementDirection: videoData?.movementDirection ?? '',
-        vocalization: videoData?.vocalization ?? '',
-        nonManualComponent: videoData?.nonManualComponent ?? '',
-        inicialization: videoData?.inicialization ?? '',
-        repeatedMovement: videoData?.repeatedMovement ?? false,
+        ...toSearchPhonology(videoData),
       };
     }
 
@@ -192,23 +179,7 @@ export class TypesenseService implements OnModuleInit {
       lexicalCategory: primaryDefinition?.lexicalCategory ?? lexicalCategories[0] ?? '',
       lexicalCategories,
       description,
-      handedness: videoData?.handedness ?? Handedness.ONE,
-      dominantConfiguration: videoData?.dominantConfiguration ?? '',
-      nonDominantConfiguration: videoData?.nonDominantConfiguration ?? '',
-      dominantRelationBetweenArticulators: videoData?.dominantRelationBetweenArticulators ?? '',
-      nonDominantRelationBetweenArticulators: videoData?.nonDominantRelationBetweenArticulators ?? '',
-      configurationChanges: videoData?.configurationChanges ?? '',
-      location: videoData?.location ?? '',
-      movementRelatedOrientation: videoData?.movementRelatedOrientation ?? '',
-      orientationRelatedToLocation: videoData?.orientationRelatedToLocation ?? '',
-      orientationChange: videoData?.orientationChange ?? '',
-      contactType: videoData?.contactType ?? '',
-      movementType: videoData?.movementType ?? '',
-      movementDirection: videoData?.movementDirection ?? '',
-      vocalization: videoData?.vocalization ?? '',
-      nonManualComponent: videoData?.nonManualComponent ?? '',
-      inicialization: videoData?.inicialization ?? '',
-      repeatedMovement: videoData?.repeatedMovement ?? false,
+      ...toSearchPhonology(videoData),
     };
   }
 

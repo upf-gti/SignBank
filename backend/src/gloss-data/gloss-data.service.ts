@@ -2,11 +2,18 @@ import { Injectable, NotFoundException, BadRequestException, ConflictException }
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateDefinitionDto, UpdateDefinitionTranslationDto } from './dto/update-definition.dto';
-import { GlossStatus, Handedness, Language, LexicalCategory, Prisma } from '@prisma/client';
+import { GlossStatus, Language, LexicalCategory, Prisma } from '@prisma/client';
 import { GLOSS_SEARCH_SYNC_EVENT } from '../typesense/types/gloss-index.type';
 import { compoundPartsInclude } from '../glosses/compound-include';
 import { CompoundPartInputDto, UpdateCompoundDto } from './dto/update-compound.dto';
 import { VideoDataDto } from '../sign-videos/dto/video-data.dto';
+import { PhonologyValuesService } from '../phonology-values/phonology-values.service';
+import {
+  flattenPhonologyInTree,
+  videoDataFromCodes,
+  videoDataPhonologyInclude,
+  videoDataUpdateFromCodes,
+} from '../phonology-values/phonology-video-data';
 
 const glossDataInclude = {
   dictionaryEntry: true,
@@ -14,7 +21,7 @@ const glossDataInclude = {
   glossVideos: {
     include: {
       videos: true,
-      videoData: true,
+      videoData: { include: videoDataPhonologyInclude },
     },
   },
   definitions: {
@@ -85,13 +92,15 @@ export class GlossDataService {
   constructor(
     private prisma: PrismaService,
     private eventEmitter: EventEmitter2,
+    private phonologyValuesService: PhonologyValuesService,
   ) {}
 
   async getGlossData(id: string) {
-    return this.prisma.glossData.findUnique({
+    const gloss = await this.prisma.glossData.findUnique({
       where: { id },
       include: glossDataInclude,
     });
+    return flattenPhonologyInTree(gloss);
   }
 
   async updateGloss(id: string, gloss: string) {
@@ -723,26 +732,9 @@ export class GlossDataService {
     return this.getGlossData(signVideo.glossDataId);
   }
 
-  private buildVideoDataCreateInput(videoData: VideoDataDto): Prisma.VideoDataCreateInput {
-    return {
-      handedness: videoData.handedness || Handedness.ONE,
-      dominantConfiguration: videoData.dominantConfiguration ?? null,
-      nonDominantConfiguration: videoData.nonDominantConfiguration ?? null,
-      dominantRelationBetweenArticulators: videoData.dominantRelationBetweenArticulators ?? null,
-      nonDominantRelationBetweenArticulators: videoData.nonDominantRelationBetweenArticulators ?? null,
-      configurationChanges: videoData.configurationChanges || 'EMPTY',
-      location: videoData.location || 'EMPTY',
-      movementRelatedOrientation: videoData.movementRelatedOrientation || 'EMPTY',
-      orientationRelatedToLocation: videoData.orientationRelatedToLocation || 'EMPTY',
-      orientationChange: videoData.orientationChange || 'EMPTY',
-      contactType: videoData.contactType || 'EMPTY',
-      movementType: videoData.movementType || 'EMPTY',
-      movementDirection: videoData.movementDirection || 'EMPTY',
-      vocalization: videoData.vocalization || 'none',
-      nonManualComponent: videoData.nonManualComponent || 'none',
-      inicialization: videoData.inicialization || 'none',
-      repeatedMovement: videoData.repeatedMovement ?? false,
-    };
+  private async buildVideoDataCreateInput(videoData: VideoDataDto): Promise<Prisma.VideoDataCreateInput> {
+    await this.phonologyValuesService.assertVideoDataCodes(videoData);
+    return videoDataFromCodes(videoData);
   }
 
   private async deleteCompoundPartById(partId: string) {
@@ -892,11 +884,11 @@ export class GlossDataService {
     if (phonologyId) {
       await this.prisma.videoData.update({
         where: { id: phonologyId },
-        data: this.buildVideoDataCreateInput(partDto.inlinePhonology),
+        data: videoDataUpdateFromCodes(partDto.inlinePhonology),
       });
     } else {
       const created = await this.prisma.videoData.create({
-        data: this.buildVideoDataCreateInput(partDto.inlinePhonology),
+        data: await this.buildVideoDataCreateInput(partDto.inlinePhonology),
       });
       phonologyId = created.id;
     }

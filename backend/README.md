@@ -48,6 +48,14 @@ The following diagram illustrates the main structure of the database used by the
 
 ---
 
+## Phonology values (`/phonology-values`)
+- `GET /phonology-values` — List catalog values (query: `dimension`, `includeInactive`, `withUsage`)
+- `POST /phonology-values` — Create a value (admin)
+- `PATCH /phonology-values/:id` — Update a value (admin)
+- `DELETE /phonology-values/:id` — Delete a value if unused (admin)
+
+---
+
 ## Gloss Requests (`/gloss-requests`)
 - `GET /gloss-requests/pending` — List all pending requests (admin)
 - `GET /gloss-requests/my-requests` — List requests created by current user

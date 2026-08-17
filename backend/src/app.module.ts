@@ -18,12 +18,14 @@ import { ExampleTranslationsModule } from './example-translations/example-transl
 import { UsersModule } from './users/users.module';
 import { BackupModule } from './backup/backup.module';
 import { BulkImportModule } from './bulk-import/bulk-import.module';
+import { PhonologyValuesModule } from './phonology-values/phonology-values.module';
 
 @Module({
   imports: [
     ScheduleModule.forRoot(),
     PrismaModule,
     AuthModule,
+    PhonologyValuesModule,
     GlossRequestsModule,
     GlossesModule,
     GlossDataModule,

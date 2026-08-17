@@ -1,0 +1,6169 @@
+[
+  {
+    "dimension": "HANDEDNESS",
+    "code": "ONE",
+    "labelCa": "1",
+    "labelEn": "1",
+    "labelEs": "1",
+    "descriptionCa": "Signe amb una mà",
+    "descriptionEn": "One-handed sign",
+    "descriptionEs": "Signo con una mano",
+    "aliases": [
+      "1"
+    ],
+    "sortOrder": 0
+  },
+  {
+    "dimension": "HANDEDNESS",
+    "code": "TWO_A",
+    "labelCa": "2a",
+    "labelEn": "2a",
+    "labelEs": "2a",
+    "descriptionCa": "Signe amb dues mans assimètric",
+    "descriptionEn": "Two-handed asymmetrical",
+    "descriptionEs": "Signo con dos manos asimétrico",
+    "aliases": [
+      "2a"
+    ],
+    "sortOrder": 1
+  },
+  {
+    "dimension": "HANDEDNESS",
+    "code": "TWO_N",
+    "labelCa": "2n",
+    "labelEn": "2n",
+    "labelEs": "2n",
+    "descriptionCa": "Signe amb dues mans no mirall",
+    "descriptionEn": "Two-handed non-mirrored",
+    "descriptionEs": "Signo con dos manos no espejadas",
+    "aliases": [
+      "2n"
+    ],
+    "sortOrder": 2
+  },
+  {
+    "dimension": "HANDEDNESS",
+    "code": "TWO_S",
+    "labelCa": "2s",
+    "labelEn": "2s",
+    "labelEs": "2s",
+    "descriptionCa": "Signe amb dues mans simètric",
+    "descriptionEn": "Two-handed symmetrical",
+    "descriptionEs": "Signo con dos manos simétrico",
+    "aliases": [
+      "2s"
+    ],
+    "sortOrder": 3
+  },
+  {
+    "dimension": "HANDEDNESS",
+    "code": "NA",
+    "labelCa": "x",
+    "labelEn": "x",
+    "labelEs": "x",
+    "descriptionCa": "No aplicable",
+    "descriptionEn": "Not applicable",
+    "descriptionEs": "No aplicable",
+    "aliases": [
+      "x"
+    ],
+    "sortOrder": 4
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "EMPTY",
+    "labelCa": "------- BUIT -------",
+    "labelEn": "------- BUIT -------",
+    "labelEs": "Vacío",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [],
+    "sortOrder": 0
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_1",
+    "labelCa": "0",
+    "labelEn": "BABY_O",
+    "labelEs": "BABY_O",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "(baby_o)",
+      "baby_o",
+      "baby_o ()"
+    ],
+    "sortOrder": 1
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_2",
+    "labelCa": "0e",
+    "labelEn": "BABY_beak_closed",
+    "labelEs": "BABY_beak_closed",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "0e",
+      "0e (baby_beak_closed)",
+      "baby_beak_closed",
+      "baby_beak_closed (0e)"
+    ],
+    "sortOrder": 2
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_3",
+    "labelCa": "0_SSI",
+    "labelEn": "O",
+    "labelEs": "O",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "0_ssi",
+      "0_ssi (o)",
+      "o",
+      "o (0_ssi)"
+    ],
+    "sortOrder": 3
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_4",
+    "labelCa": "1",
+    "labelEn": "1",
+    "labelEs": "1",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "1",
+      "1 (1)"
+    ],
+    "sortOrder": 4
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_5",
+    "labelCa": "1d",
+    "labelEn": "1_curved",
+    "labelEs": "1_curved",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "1_curved",
+      "1_curved (1d)",
+      "1d",
+      "1d (1_curved)"
+    ],
+    "sortOrder": 5
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_6",
+    "labelCa": "2",
+    "labelEn": "beak2_open_spread",
+    "labelEs": "beak2_open_spread",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "2",
+      "2 (beak2_open_spread)",
+      "beak2_open_spread",
+      "beak2_open_spread (2)"
+    ],
+    "sortOrder": 6
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_1D834",
+    "labelCa": "2t",
+    "labelEn": "Beak2_open",
+    "labelEs": "Beak2_open",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "2t",
+      "2t (beak2_open)",
+      "beak2_open",
+      "beak2_open (2t)"
+    ],
+    "sortOrder": 7
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_7",
+    "labelCa": "2d",
+    "labelEn": "C2_spread",
+    "labelEs": "C2_spread",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "2d",
+      "2d (c2_spread)",
+      "c2_spread",
+      "c2_spread (2d)"
+    ],
+    "sortOrder": 8
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_8",
+    "labelCa": "3",
+    "labelEn": "3",
+    "labelEs": "3",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "3",
+      "3 (3)"
+    ],
+    "sortOrder": 9
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_9",
+    "labelCa": "3d",
+    "labelEn": "3_curved",
+    "labelEs": "3_curved",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "3_curved",
+      "3_curved (3d)",
+      "3d",
+      "3d (3_curved)"
+    ],
+    "sortOrder": 10
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_10",
+    "labelCa": "4",
+    "labelEn": "4",
+    "labelEs": "4",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "4",
+      "4 (4)"
+    ],
+    "sortOrder": 11
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_11",
+    "labelCa": "4d",
+    "labelEn": "4_curved",
+    "labelEs": "4_curved",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "4_curved",
+      "4_curved (4d)",
+      "4d",
+      "4d (4_curved)"
+    ],
+    "sortOrder": 12
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_12",
+    "labelCa": "5",
+    "labelEn": "5",
+    "labelEs": "5",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "5",
+      "5 (5)"
+    ],
+    "sortOrder": 13
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_13",
+    "labelCa": "5d",
+    "labelEn": "C_spread",
+    "labelEs": "C_spread",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "5d",
+      "5d (c_spread)",
+      "c_spread",
+      "c_spread (5d)"
+    ],
+    "sortOrder": 14
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_14",
+    "labelCa": "6",
+    "labelEn": "A",
+    "labelEs": "A",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "6",
+      "6 (a)",
+      "a",
+      "a (6)"
+    ],
+    "sortOrder": 15
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_15",
+    "labelCa": "6d",
+    "labelEn": "6d",
+    "labelEs": "6d",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "6d",
+      "6d (6d)"
+    ],
+    "sortOrder": 16
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_16",
+    "labelCa": "7",
+    "labelEn": "Baby_beak_open",
+    "labelEs": "Baby_beak_open",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "7",
+      "7 (baby_beak_open)",
+      "baby_beak_open",
+      "baby_beak_open (7)"
+    ],
+    "sortOrder": 17
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_1D86C",
+    "labelCa": "7d",
+    "labelEn": "BABY_C",
+    "labelEs": "BABY_C",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "7d",
+      "7d (baby_c)",
+      "baby_c",
+      "baby_c (7d)"
+    ],
+    "sortOrder": 18
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_18",
+    "labelCa": "8",
+    "labelEn": "W",
+    "labelEs": "W",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "8",
+      "8 (w)",
+      "w",
+      "w (8)"
+    ],
+    "sortOrder": 19
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_1D82E",
+    "labelCa": "8t",
+    "labelEn": "L2",
+    "labelEs": "L2",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "8t",
+      "8t (l2)",
+      "l2",
+      "l2 (8t)"
+    ],
+    "sortOrder": 20
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_19",
+    "labelCa": "8d",
+    "labelEn": "V_curved",
+    "labelEs": "V_curved",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "8d",
+      "8d (v_curved)",
+      "v_curved",
+      "v_curved (8d)"
+    ],
+    "sortOrder": 21
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_20",
+    "labelCa": "A",
+    "labelEn": "E",
+    "labelEs": "E",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "a",
+      "a (e)",
+      "e",
+      "e (a)"
+    ],
+    "sortOrder": 22
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_21",
+    "labelCa": "B",
+    "labelEn": "B",
+    "labelEs": "B",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "b",
+      "b (b)"
+    ],
+    "sortOrder": 23
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_22",
+    "labelCa": "Bd",
+    "labelEn": "B_bent",
+    "labelEs": "B_bent",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "b_bent",
+      "b_bent (bd)",
+      "bd",
+      "bd (b_bent)"
+    ],
+    "sortOrder": 24
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_23",
+    "labelCa": "C",
+    "labelEn": "C",
+    "labelEs": "C",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "c",
+      "c (c)"
+    ],
+    "sortOrder": 25
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_24",
+    "labelCa": "D",
+    "labelEn": "P",
+    "labelEs": "P",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "d",
+      "d (p)",
+      "p",
+      "p (d)"
+    ],
+    "sortOrder": 26
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_25",
+    "labelCa": "E",
+    "labelEn": "C_spread",
+    "labelEs": "C_spread",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "c_spread",
+      "c_spread (e)",
+      "e",
+      "e (c_spread)"
+    ],
+    "sortOrder": 27
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_26",
+    "labelCa": "F",
+    "labelEn": "F",
+    "labelEs": "F",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "f",
+      "f (f)"
+    ],
+    "sortOrder": 28
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_27",
+    "labelCa": "G_SSI",
+    "labelEn": "BABY_C_extended",
+    "labelEs": "BABY_C_extended",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "baby_c_extended",
+      "baby_c_extended (g_ssi)",
+      "g_ssi",
+      "g_ssi (baby_c_extended)"
+    ],
+    "sortOrder": 29
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_29",
+    "labelCa": "Id",
+    "labelEn": "Id",
+    "labelEs": "Id",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "(id)",
+      "id",
+      "id ()"
+    ],
+    "sortOrder": 30
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_30",
+    "labelCa": "I",
+    "labelEn": "I",
+    "labelEs": "I",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "i",
+      "i (i)"
+    ],
+    "sortOrder": 31
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_31",
+    "labelCa": "K",
+    "labelEn": "K",
+    "labelEs": "K",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "k",
+      "k (k)"
+    ],
+    "sortOrder": 32
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_32",
+    "labelCa": "O",
+    "labelEn": "T",
+    "labelEs": "T",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "o",
+      "o (t)",
+      "t",
+      "t (o)"
+    ],
+    "sortOrder": 33
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_33",
+    "labelCa": "Q",
+    "labelEn": "beak",
+    "labelEs": "beak",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "beak",
+      "beak (q)",
+      "q",
+      "q (beak)"
+    ],
+    "sortOrder": 34
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_34",
+    "labelCa": "R",
+    "labelEn": "R",
+    "labelEs": "R",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "r",
+      "r (r)"
+    ],
+    "sortOrder": 35
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_35",
+    "labelCa": "S",
+    "labelEn": "S",
+    "labelEs": "S",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "(s)",
+      "s",
+      "s ()"
+    ],
+    "sortOrder": 36
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_36",
+    "labelCa": "T",
+    "labelEn": "T",
+    "labelEs": "T",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "(t)",
+      "t",
+      "t ()"
+    ],
+    "sortOrder": 37
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_37",
+    "labelCa": "T_antiga",
+    "labelEn": "Money",
+    "labelEs": "Money",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "money",
+      "money (t_antiga)",
+      "t_antiga",
+      "t_antiga (money)"
+    ],
+    "sortOrder": 38
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_38",
+    "labelCa": "U",
+    "labelEn": "Homs",
+    "labelEs": "Homs",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "homs",
+      "homs (u)",
+      "u",
+      "u (homs)"
+    ],
+    "sortOrder": 39
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_39",
+    "labelCa": "Y_SSI",
+    "labelEn": "Y",
+    "labelEs": "Y",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "y",
+      "y (y_ssi)",
+      "y_ssi",
+      "y_ssi (y)"
+    ],
+    "sortOrder": 40
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_40",
+    "labelCa": "polze-cor",
+    "labelEn": "5m_closed",
+    "labelEs": "5m_closed",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "5m_closed",
+      "5m_closed (polze-cor)",
+      "polze-cor",
+      "polze-cor (5m_closed)"
+    ],
+    "sortOrder": 41
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_1D8C3",
+    "labelCa": "Cor_e",
+    "labelEn": "Cor_e",
+    "labelEs": "Cor_e",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "(cor_e)",
+      "cor_e",
+      "cor_e ()"
+    ],
+    "sortOrder": 42
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_42",
+    "labelCa": "5m_tancat",
+    "labelEn": "5m_closed",
+    "labelEs": "5m_closed",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "5m_closed",
+      "5m_closed (5m_tancat)",
+      "5m_tancat",
+      "5m_tancat (5m_closed)"
+    ],
+    "sortOrder": 43
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_1D87D",
+    "labelCa": "Ce",
+    "labelEn": "beak_open",
+    "labelEs": "beak_open",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "beak_open",
+      "beak_open (ce)",
+      "ce",
+      "ce (beak_open)"
+    ],
+    "sortOrder": 44
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_1D8C5",
+    "labelCa": "Cor",
+    "labelEn": "5m",
+    "labelEs": "5m",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "5m",
+      "5m (cor)",
+      "cor",
+      "cor (5m)"
+    ],
+    "sortOrder": 45
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_1D8A7",
+    "labelCa": "5r",
+    "labelEn": "5r",
+    "labelEs": "5r",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "5r",
+      "5r (5r)"
+    ],
+    "sortOrder": 46
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_1D8B",
+    "labelCa": "5r_tancat",
+    "labelEn": "5r_closed",
+    "labelEs": "5r_closed",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "5r_closed",
+      "5r_closed (5r_tancat)",
+      "5r_tancat",
+      "5r_tancat (5r_closed)"
+    ],
+    "sortOrder": 47
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_1D88E",
+    "labelCa": "9",
+    "labelEn": "9",
+    "labelEs": "9",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "9",
+      "9 (9)"
+    ],
+    "sortOrder": 48
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_1D8BA",
+    "labelCa": "ASL_T",
+    "labelEn": "ASL_T",
+    "labelEs": "ASL_T",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ily",
+      "ily (ily)"
+    ],
+    "sortOrder": 49
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_1D8C7",
+    "labelCa": "Cor-E",
+    "labelEn": "G",
+    "labelEs": "G",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cor-e",
+      "cor-e (middle finger)",
+      "middle finger",
+      "middle finger (cor-e)"
+    ],
+    "sortOrder": 50
+  },
+  {
+    "dimension": "HAND_CONFIGURATION",
+    "code": "CONF_2A",
+    "labelCa": "ILY",
+    "labelEn": "ILY",
+    "labelEs": "ILY",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "baby_beak",
+      "baby_beak (oe)",
+      "oe",
+      "oe (baby_beak)"
+    ],
+    "sortOrder": 51
+  },
+  {
+    "dimension": "CONFIGURATION_CHANGE",
+    "code": "EMPTY",
+    "labelCa": "------- BUIT -------",
+    "labelEn": "Empty",
+    "labelEs": "Vacío",
+    "descriptionCa": "No hi ha canvis de configuració",
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [],
+    "sortOrder": 0
+  },
+  {
+    "dimension": "CONFIGURATION_CHANGE",
+    "code": "BENDING",
+    "labelCa": "Flexió",
+    "labelEn": "Bending",
+    "labelEs": "Inclinación",
+    "descriptionCa": "Els dits seleccionats es flexionen només en les articulacions proximals",
+    "descriptionEn": "The selected fingers flex at the proximal joints only",
+    "descriptionEs": "Los dedos seleccionados flexionan solo en el punto de articulación más próximo",
+    "aliases": [
+      "bending",
+      "inclinacio"
+    ],
+    "sortOrder": 1
+  },
+  {
+    "dimension": "CONFIGURATION_CHANGE",
+    "code": "CLOSING",
+    "labelCa": "Tancament",
+    "labelEn": "Closing",
+    "labelEs": "Cierre",
+    "descriptionCa": "La relació d'obertura entre els dits seleccionats i el polze canvia d'obert a tancat",
+    "descriptionEn": "The aperture relation between the selected fingers and thumb changes from open to close",
+    "descriptionEs": "La relación de apertura entre los dedos seleccionados y el pulgar cambia de abierto a cerrado",
+    "aliases": [
+      "closing",
+      "tancament"
+    ],
+    "sortOrder": 2
+  },
+  {
+    "dimension": "CONFIGURATION_CHANGE",
+    "code": "CLOSING_AND_RUBBING",
+    "labelCa": "Tancament + Fregament",
+    "labelEn": "Closing and Rubbing",
+    "labelEs": "Cierre y Fricción",
+    "descriptionCa": "Moviment simultani de tancament i fregament",
+    "descriptionEn": "Simultaneous movement of closing and rubbing",
+    "descriptionEs": "Movimiento simultáneo de cierre y fricción",
+    "aliases": [
+      "closing + rubbing",
+      "closing+rubbing",
+      "tancament + friccio"
+    ],
+    "sortOrder": 3
+  },
+  {
+    "dimension": "CONFIGURATION_CHANGE",
+    "code": "CLOSING_AND_WIGGLING",
+    "labelCa": "Tancament + Vibració",
+    "labelEn": "Closing and Wiggling",
+    "labelEs": "Cierre y Vibración",
+    "descriptionCa": "Moviment simultani de tancament i vibració",
+    "descriptionEn": "Simultaneous movement of closing and wiggling",
+    "descriptionEs": "Movimiento simultáneo de cierre y vibración",
+    "aliases": [
+      "closing + wiggling",
+      "closing+wiggling",
+      "tancament + vibracio"
+    ],
+    "sortOrder": 4
+  },
+  {
+    "dimension": "CONFIGURATION_CHANGE",
+    "code": "CLOSING_TO_OPENING",
+    "labelCa": "Tancament > Obertura",
+    "labelEn": "Closing to Opening",
+    "labelEs": "Cierre a Apertura",
+    "descriptionCa": "D'un moviment de tancament passa a un moviment d'obertura",
+    "descriptionEn": "Movement changes from closing to opening",
+    "descriptionEs": "De un movimiento de cierre pasa a un movimiento de apertura",
+    "aliases": [
+      "closing > opening",
+      "closing>opening",
+      "tancament>obertura"
+    ],
+    "sortOrder": 5
+  },
+  {
+    "dimension": "CONFIGURATION_CHANGE",
+    "code": "CONSECUTIVE_CLOSING",
+    "labelCa": "Tancament consecutiu",
+    "labelEn": "Consecutive Closing",
+    "labelEs": "Cierre consecutivo",
+    "descriptionCa": "Moviments seqüencials de tancament",
+    "descriptionEn": "Sequential closing movements",
+    "descriptionEs": "Movimientos secuenciales de cierre",
+    "aliases": [
+      "consecutive closing",
+      "tancament consecutiu"
+    ],
+    "sortOrder": 6
+  },
+  {
+    "dimension": "CONFIGURATION_CHANGE",
+    "code": "CURVING",
+    "labelCa": "Corbat",
+    "labelEn": "Curving",
+    "labelEs": "Encorvado",
+    "descriptionCa": "Els dits seleccionats es flexionen en totes les articulacions distals",
+    "descriptionEn": "The selected fingers flex at all (distal) joints",
+    "descriptionEs": "Los dedos seleccionados flexionan en todas las articulaciones distales",
+    "aliases": [
+      "curving",
+      "encorbament"
+    ],
+    "sortOrder": 7
+  },
+  {
+    "dimension": "CONFIGURATION_CHANGE",
+    "code": "NONE_TO_SPREADING",
+    "labelCa": "Cap a Extensió",
+    "labelEn": "None to Spreading",
+    "labelEs": "Nada a Extensión",
+    "descriptionCa": "De cap moviment passa a extensió",
+    "descriptionEn": "Movement changes from no movement to spreading",
+    "descriptionEs": "De ningún movimiento pasa a extensión",
+    "aliases": [
+      "none > spreading",
+      "none>spreading",
+      "res>extensio"
+    ],
+    "sortOrder": 8
+  },
+  {
+    "dimension": "CONFIGURATION_CHANGE",
+    "code": "OPENING",
+    "labelCa": "Obertura",
+    "labelEn": "Opening",
+    "labelEs": "Apertura",
+    "descriptionCa": "La relació d'obertura entre els dits seleccionats i el polze canvia de tancat a obert",
+    "descriptionEn": "The aperture relation between the selected fingers and thumb changes from close to open",
+    "descriptionEs": "La relación de apertura entre los dedos seleccionados y el pulgar cambia de cerrado a abierto",
+    "aliases": [
+      "obertura",
+      "opening"
+    ],
+    "sortOrder": 9
+  },
+  {
+    "dimension": "CONFIGURATION_CHANGE",
+    "code": "OPENING_AND_RUBBING",
+    "labelCa": "Obertura + Fregament",
+    "labelEn": "Opening and Rubbing",
+    "labelEs": "Apertura y Fricción",
+    "descriptionCa": "Moviment simultani d'obertura i fregament",
+    "descriptionEn": "Simultaneous movement of opening and rubbing",
+    "descriptionEs": "Movimiento simultáneo de apertura y fricción",
+    "aliases": [
+      "obertura+friccio",
+      "opening + rubbing",
+      "opening+rubbing"
+    ],
+    "sortOrder": 10
+  },
+  {
+    "dimension": "CONFIGURATION_CHANGE",
+    "code": "OPENING_AND_SPREADING",
+    "labelCa": "Obertura + Extensió",
+    "labelEn": "Opening and Spreading",
+    "labelEs": "Apertura y Extensión",
+    "descriptionCa": "Moviment simultani d'obertura i extensió",
+    "descriptionEn": "Simultaneous movement of opening and spreading",
+    "descriptionEs": "Movimiento simultáneo de apertura y extensión",
+    "aliases": [
+      "obertura+extensio",
+      "opening + spreading",
+      "opening+spreading"
+    ],
+    "sortOrder": 11
+  },
+  {
+    "dimension": "CONFIGURATION_CHANGE",
+    "code": "OPENING_AND_WIGGLING",
+    "labelCa": "Obertura + Vibració",
+    "labelEn": "Opening and Wiggling",
+    "labelEs": "Apertura y Vibración",
+    "descriptionCa": "Moviment simultani d'obertura i vibració",
+    "descriptionEn": "Simultaneous movement of opening and wiggling",
+    "descriptionEs": "Movimiento simultáneo de apertura y vibración",
+    "aliases": [
+      "obertura+vibracio",
+      "opening + wiggling",
+      "opening+wiggling"
+    ],
+    "sortOrder": 12
+  },
+  {
+    "dimension": "CONFIGURATION_CHANGE",
+    "code": "OPENING_TO_CLOSING",
+    "labelCa": "Obertura > Tancament",
+    "labelEn": "Opening to Closing",
+    "labelEs": "Apertura a Cierre",
+    "descriptionCa": "De moviment d'obertura passa a moviment de tancament",
+    "descriptionEn": "Movement changes from opening to closing",
+    "descriptionEs": "De movimiento de apertura pasa a movimiento de cierre",
+    "aliases": [
+      "obertura>tancament",
+      "opening > closing",
+      "opening>closing"
+    ],
+    "sortOrder": 13
+  },
+  {
+    "dimension": "CONFIGURATION_CHANGE",
+    "code": "RUBBING",
+    "labelCa": "Fregament",
+    "labelEn": "Rubbing",
+    "labelEs": "Fricción",
+    "descriptionCa": "El polze i els dits seleccionats es freguen",
+    "descriptionEn": "Thumb and selected fingers rub",
+    "descriptionEs": "El pulgar y los dedos seleccionados se frotan",
+    "aliases": [
+      "friccio",
+      "rubbing"
+    ],
+    "sortOrder": 14
+  },
+  {
+    "dimension": "CONFIGURATION_CHANGE",
+    "code": "SPREADING",
+    "labelCa": "Extensió",
+    "labelEn": "Spreading",
+    "labelEs": "Extensión",
+    "descriptionCa": "L'espai entre els dits seleccionats augmenta",
+    "descriptionEn": "The space between the selected fingers increases",
+    "descriptionEs": "El espacio entre los dedos seleccionados aumenta",
+    "aliases": [
+      "extensio",
+      "spreading"
+    ],
+    "sortOrder": 15
+  },
+  {
+    "dimension": "CONFIGURATION_CHANGE",
+    "code": "UNBENDING",
+    "labelCa": "Estirament",
+    "labelEn": "Unbending",
+    "labelEs": "Estiramiento",
+    "descriptionCa": "Moviment d'estirament dels dits",
+    "descriptionEn": "Movement of straightening fingers from bent position",
+    "descriptionEs": "Movimiento de estiramiento de los dedos",
+    "aliases": [
+      "estirament",
+      "unbending"
+    ],
+    "sortOrder": 16
+  },
+  {
+    "dimension": "CONFIGURATION_CHANGE",
+    "code": "UNCURVING",
+    "labelCa": "Redreçament",
+    "labelEn": "Uncurving",
+    "labelEs": "Enderezamiento",
+    "descriptionCa": "Moviment de redreçament",
+    "descriptionEn": "Movement of straightening curved fingers",
+    "descriptionEs": "Movimiento de enderezamiento",
+    "aliases": [
+      "redrecament",
+      "uncurving"
+    ],
+    "sortOrder": 17
+  },
+  {
+    "dimension": "CONFIGURATION_CHANGE",
+    "code": "UNSPREADING",
+    "labelCa": "Ajustament",
+    "labelEn": "Unspreading",
+    "labelEs": "Ajuste",
+    "descriptionCa": "Els dits seleccionats (excloent el polze) s'apropen o contacten entre ells lateralment",
+    "descriptionEn": "The selected fingers (excluding the thumb) approach or contact each other at the lateral side",
+    "descriptionEs": "Los dedos seleccionados (excluyendo el pulgar) se juntan o contactan entre ellos lateralmente",
+    "aliases": [
+      "ajustament",
+      "unspreading"
+    ],
+    "sortOrder": 18
+  },
+  {
+    "dimension": "CONFIGURATION_CHANGE",
+    "code": "WIGGLING",
+    "labelCa": "Vibració",
+    "labelEn": "Wiggling",
+    "labelEs": "Vibración",
+    "descriptionCa": "Oscil·lació alterna dels dits seleccionats",
+    "descriptionEn": "Alternated bending of the selected fingers",
+    "descriptionEs": "Oscilación alterna de los dedos seleccionados",
+    "aliases": [
+      "vibracio",
+      "wiggling"
+    ],
+    "sortOrder": 19
+  },
+  {
+    "dimension": "RELATION_BETWEEN_ARTICULATORS",
+    "code": "EMPTY",
+    "labelCa": "------- BUIT -------",
+    "labelEn": "Empty",
+    "labelEs": "Vacío",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [],
+    "sortOrder": 0
+  },
+  {
+    "dimension": "RELATION_BETWEEN_ARTICULATORS",
+    "code": "ABOVE",
+    "labelCa": "A dalt",
+    "labelEn": "Above",
+    "labelEs": "Arriba",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "above",
+      "damunt"
+    ],
+    "sortOrder": 1
+  },
+  {
+    "dimension": "RELATION_BETWEEN_ARTICULATORS",
+    "code": "ABOVE_BELOW",
+    "labelCa": "A dalt i a baix",
+    "labelEn": "Above and Below",
+    "labelEs": "Arriba y Abajo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [],
+    "sortOrder": 2
+  },
+  {
+    "dimension": "RELATION_BETWEEN_ARTICULATORS",
+    "code": "AROUND",
+    "labelCa": "Al voltant",
+    "labelEn": "Around",
+    "labelEs": "Alrededor",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "al voltant",
+      "around"
+    ],
+    "sortOrder": 3
+  },
+  {
+    "dimension": "RELATION_BETWEEN_ARTICULATORS",
+    "code": "BACK",
+    "labelCa": "Darrere",
+    "labelEn": "Back",
+    "labelEs": "Atrás",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "back",
+      "darrere"
+    ],
+    "sortOrder": 4
+  },
+  {
+    "dimension": "RELATION_BETWEEN_ARTICULATORS",
+    "code": "BELOW",
+    "labelCa": "A baix",
+    "labelEn": "Below",
+    "labelEs": "Abajo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "below",
+      "sota"
+    ],
+    "sortOrder": 5
+  },
+  {
+    "dimension": "RELATION_BETWEEN_ARTICULATORS",
+    "code": "CROSS",
+    "labelCa": "Creuat",
+    "labelEn": "Cross",
+    "labelEs": "Cruzado",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "creuat",
+      "cross"
+    ],
+    "sortOrder": 6
+  },
+  {
+    "dimension": "RELATION_BETWEEN_ARTICULATORS",
+    "code": "FRONT",
+    "labelCa": "Davant",
+    "labelEn": "Front",
+    "labelEs": "Frente",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "davant",
+      "front"
+    ],
+    "sortOrder": 7
+  },
+  {
+    "dimension": "RELATION_BETWEEN_ARTICULATORS",
+    "code": "FRONT_BACK",
+    "labelCa": "Davant i darrere",
+    "labelEn": "Front and Back",
+    "labelEs": "Frente y Atrás",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [],
+    "sortOrder": 8
+  },
+  {
+    "dimension": "RELATION_BETWEEN_ARTICULATORS",
+    "code": "INSIDE",
+    "labelCa": "Dins",
+    "labelEn": "Inside",
+    "labelEs": "Dentro",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "dins",
+      "inside"
+    ],
+    "sortOrder": 9
+  },
+  {
+    "dimension": "RELATION_BETWEEN_ARTICULATORS",
+    "code": "INTERWOVEN",
+    "labelCa": "Entrellaçat",
+    "labelEn": "Interwoven",
+    "labelEs": "Entrelazado",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "entrellacats",
+      "interwoven"
+    ],
+    "sortOrder": 10
+  },
+  {
+    "dimension": "RELATION_BETWEEN_ARTICULATORS",
+    "code": "NEXT_TO",
+    "labelCa": "Al costat",
+    "labelEn": "Next to",
+    "labelEs": "Al lado",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "al costat",
+      "next-to"
+    ],
+    "sortOrder": 11
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "EMPTY",
+    "labelCa": "-------------",
+    "labelEn": "Empty",
+    "labelEs": "Vacío",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [],
+    "sortOrder": 0
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "ARM",
+    "labelCa": "Braç",
+    "labelEn": "Arm",
+    "labelEs": "Brazo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "arm",
+      "brac"
+    ],
+    "sortOrder": 1
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "ARMPIT",
+    "labelCa": "Aixella",
+    "labelEn": "Armpit",
+    "labelEs": "Axila",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "aixella",
+      "armpit"
+    ],
+    "sortOrder": 2
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "BACK",
+    "labelCa": "Esquena",
+    "labelEn": "Back",
+    "labelEs": "Espalda",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "back",
+      "esquena"
+    ],
+    "sortOrder": 3
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "BACK_OF_HEAD",
+    "labelCa": "Part posterior del cap",
+    "labelEn": "Back of Head",
+    "labelEs": "Parte trasera de la cabeza",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "back of head",
+      "darrera del cap"
+    ],
+    "sortOrder": 4
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "BELLY",
+    "labelCa": "Ventre",
+    "labelEn": "Belly",
+    "labelEs": "Vientre",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "belly",
+      "panxa"
+    ],
+    "sortOrder": 5
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "BREASTS",
+    "labelCa": "Pits",
+    "labelEn": "Breasts",
+    "labelEs": "Pechos",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "breasts",
+      "pit"
+    ],
+    "sortOrder": 6
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "BREAST_IPSI",
+    "labelCa": "Pit ipsilateral",
+    "labelEn": "Breast Ipsi",
+    "labelEs": "Pecho Ipsilateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "breast_ipsi",
+      "pit_ipsi"
+    ],
+    "sortOrder": 7
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "BREAST_CONTRA",
+    "labelCa": "Pit contralateral",
+    "labelEn": "Breast Contra",
+    "labelEs": "Pecho Contralateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "breast_contra",
+      "pit_contra"
+    ],
+    "sortOrder": 8
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "BRIDGE_OF_NOSE",
+    "labelCa": "Pont del nas",
+    "labelEn": "Bridge of Nose",
+    "labelEs": "Puente de la nariz",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [],
+    "sortOrder": 9
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "CHEEK",
+    "labelCa": "Galta",
+    "labelEn": "Cheek",
+    "labelEs": "Mejilla",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cheek",
+      "galta"
+    ],
+    "sortOrder": 10
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "CHEEK_CONTRA",
+    "labelCa": "Galta contralateral",
+    "labelEn": "Cheek Contra",
+    "labelEs": "Mejilla Contralateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cheek contra",
+      "galta_contra"
+    ],
+    "sortOrder": 11
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "CHEEKBONE",
+    "labelCa": "Pòmul",
+    "labelEn": "Cheekbone",
+    "labelEs": "Pómulo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cheekbone",
+      "pomul"
+    ],
+    "sortOrder": 12
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "CHEST",
+    "labelCa": "Pit",
+    "labelEn": "Chest",
+    "labelEs": "Pecho",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "chest",
+      "torax"
+    ],
+    "sortOrder": 13
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "CHEST_CONTRA",
+    "labelCa": "Pit contralateral",
+    "labelEn": "Chest Contra",
+    "labelEs": "Pecho Contralateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "chest contra",
+      "torax_contra"
+    ],
+    "sortOrder": 14
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "CHIN",
+    "labelCa": "Barbeta",
+    "labelEn": "Chin",
+    "labelEs": "Barbilla",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "barbeta",
+      "chin"
+    ],
+    "sortOrder": 15
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "CHIN_CONTRA",
+    "labelCa": "Barbeta contralateral",
+    "labelEn": "Chin Contra",
+    "labelEs": "Barbilla Contralateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "barbeta_contra",
+      "chin contra"
+    ],
+    "sortOrder": 16
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "CROTCH",
+    "labelCa": "Entrecuix",
+    "labelEn": "Crotch",
+    "labelEs": "Entrepierna",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "crotch",
+      "entrecuix"
+    ],
+    "sortOrder": 17
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "EAR",
+    "labelCa": "Orella",
+    "labelEn": "Ear",
+    "labelEs": "Oreja",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ear",
+      "orella"
+    ],
+    "sortOrder": 18
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "EARLOBE",
+    "labelCa": "Lòbul de l'orella",
+    "labelEn": "Earlobe",
+    "labelEs": "Lóbulo de la oreja",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "earlobe",
+      "lobul"
+    ],
+    "sortOrder": 19
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "EAST",
+    "labelCa": "Est",
+    "labelEn": "East",
+    "labelEs": "Este",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "east",
+      "est"
+    ],
+    "sortOrder": 20
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "ELBOW",
+    "labelCa": "Colze",
+    "labelEn": "Elbow",
+    "labelEs": "Codo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "colze",
+      "elbow"
+    ],
+    "sortOrder": 21
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "EYE",
+    "labelCa": "Ull",
+    "labelEn": "Eye",
+    "labelEs": "Ojo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "eye",
+      "ull"
+    ],
+    "sortOrder": 22
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "EYEBROW",
+    "labelCa": "Cella",
+    "labelEn": "Eyebrow",
+    "labelEs": "Ceja",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cella",
+      "eyebrow"
+    ],
+    "sortOrder": 23
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "FACE",
+    "labelCa": "Cara",
+    "labelEn": "Face",
+    "labelEs": "Cara",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cara",
+      "face"
+    ],
+    "sortOrder": 24
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "FACE_IPSI",
+    "labelCa": "Cara ipsilateral",
+    "labelEn": "Face Ipsi",
+    "labelEs": "Cara Ipsilateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cara ipsi",
+      "face ipsi"
+    ],
+    "sortOrder": 25
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "FLANK",
+    "labelCa": "Costat",
+    "labelEn": "Flank",
+    "labelEs": "Costado",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "flank",
+      "templa"
+    ],
+    "sortOrder": 26
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "FOREHEAD",
+    "labelCa": "Front",
+    "labelEn": "Forehead",
+    "labelEs": "Frente",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "forehead",
+      "front"
+    ],
+    "sortOrder": 27
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "FOREHEAD_CONTRA",
+    "labelCa": "Front contralateral",
+    "labelEn": "Forehead Contra",
+    "labelEs": "Frente Contralateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "forehead contra",
+      "front_contra"
+    ],
+    "sortOrder": 28
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "HEAD",
+    "labelCa": "Cap",
+    "labelEn": "Head",
+    "labelEs": "Cabeza",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cap",
+      "head"
+    ],
+    "sortOrder": 29
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "HEAD_CONTRA",
+    "labelCa": "Cap contralateral",
+    "labelEn": "Head Contra",
+    "labelEs": "Cabeza Contralateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cap contra",
+      "head contra"
+    ],
+    "sortOrder": 30
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "HEAD_IPSI",
+    "labelCa": "Cap ipsilateral",
+    "labelEn": "Head Ipsi",
+    "labelEs": "Cabeza Ipsilateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cap ipsi",
+      "head ipsi"
+    ],
+    "sortOrder": 31
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "HIP",
+    "labelCa": "Maluc",
+    "labelEn": "Hip",
+    "labelEs": "Cadera",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "hip",
+      "maluc"
+    ],
+    "sortOrder": 32
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "HORIZONTAL_PLANE",
+    "labelCa": "Pla horitzontal",
+    "labelEn": "Horizontal Plane",
+    "labelEs": "Plano Horizontal",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "horizontal plane",
+      "pla horitzontal"
+    ],
+    "sortOrder": 33
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "KNEE",
+    "labelCa": "Genoll",
+    "labelEn": "Knee",
+    "labelEs": "Rodilla",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "genoll",
+      "knee"
+    ],
+    "sortOrder": 34
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "LEG",
+    "labelCa": "Cama",
+    "labelEn": "Leg",
+    "labelEs": "Pierna",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cama",
+      "leg"
+    ],
+    "sortOrder": 35
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "LOWER_ARM",
+    "labelCa": "Avantbraç",
+    "labelEn": "Lower Arm",
+    "labelEs": "Antebrazo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "avantbrac",
+      "lower arm"
+    ],
+    "sortOrder": 36
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "LOWER_LIP",
+    "labelCa": "Llavi inferior",
+    "labelEn": "Lower Lip",
+    "labelEs": "Labio inferior",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "llavi inferior",
+      "lower lip"
+    ],
+    "sortOrder": 37
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "MOUTH",
+    "labelCa": "Boca",
+    "labelEn": "Mouth",
+    "labelEs": "Boca",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "boca",
+      "mouth"
+    ],
+    "sortOrder": 38
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "MOUTH_CONTRA",
+    "labelCa": "Boca contralateral",
+    "labelEn": "Mouth Contra",
+    "labelEs": "Boca Contralateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "boca_contra",
+      "mouth contra"
+    ],
+    "sortOrder": 39
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "MOUTH_IPSI",
+    "labelCa": "Boca ipsilateral",
+    "labelEn": "Mouth Ipsi",
+    "labelEs": "Boca Ipsilateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "boca_ipsi",
+      "mouth ipsi"
+    ],
+    "sortOrder": 40
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "NECK",
+    "labelCa": "Coll",
+    "labelEn": "Neck",
+    "labelEs": "Cuello",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "coll",
+      "neck"
+    ],
+    "sortOrder": 41
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "NECK_CONTRA",
+    "labelCa": "Coll contralateral",
+    "labelEn": "Neck Contra",
+    "labelEs": "Cuello Contralateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "coll_contra",
+      "neck contra"
+    ],
+    "sortOrder": 42
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "NEUTRAL_SPACE",
+    "labelCa": "Espai neutral",
+    "labelEn": "Neutral Space",
+    "labelEs": "Espacio Neutral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "espai neutre",
+      "neutral space"
+    ],
+    "sortOrder": 43
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "NOSE",
+    "labelCa": "Nas",
+    "labelEn": "Nose",
+    "labelEs": "Nariz",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "nas",
+      "nose"
+    ],
+    "sortOrder": 44
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "PARALLEL_PLANE",
+    "labelCa": "Pla paral·lel",
+    "labelEn": "Parallel Plane",
+    "labelEs": "Plano Paralelo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "parallel plane",
+      "pla paral·lel"
+    ],
+    "sortOrder": 45
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "R_LOC",
+    "labelCa": "Ubicació R",
+    "labelEn": "R Location",
+    "labelEs": "Ubicación R",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "r-loc"
+    ],
+    "sortOrder": 46
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "SHOULDER",
+    "labelCa": "Espatlla",
+    "labelEn": "Shoulder",
+    "labelEs": "Hombro",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "espatlla",
+      "shoulder"
+    ],
+    "sortOrder": 47
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "SHOULDER_CONTRA",
+    "labelCa": "Espatlla contralateral",
+    "labelEn": "Shoulder Contra",
+    "labelEs": "Hombro Contralateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "espatlla_contra",
+      "shoulder contra"
+    ],
+    "sortOrder": 48
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "TEETH",
+    "labelCa": "Dents",
+    "labelEn": "Teeth",
+    "labelEs": "Dientes",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "dents",
+      "teeth"
+    ],
+    "sortOrder": 49
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "TEMPLE",
+    "labelCa": "Templa",
+    "labelEn": "Temple",
+    "labelEs": "Sien",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "templa",
+      "temple"
+    ],
+    "sortOrder": 50
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "THUMB",
+    "labelCa": "Polze",
+    "labelEn": "Thumb",
+    "labelEs": "Pulgar",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "polze",
+      "thumb"
+    ],
+    "sortOrder": 51
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "TONGUE",
+    "labelCa": "Llengua",
+    "labelEn": "Tongue",
+    "labelEs": "Lengua",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "llengua",
+      "tongue"
+    ],
+    "sortOrder": 52
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "TRUNK",
+    "labelCa": "Tronc",
+    "labelEn": "Trunk",
+    "labelEs": "Tronco",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "tronc",
+      "trunk"
+    ],
+    "sortOrder": 53
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "UPPER_ARM",
+    "labelCa": "Braç superior",
+    "labelEn": "Upper Arm",
+    "labelEs": "Brazo superior",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "part alta brac",
+      "upper arm"
+    ],
+    "sortOrder": 54
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "UPPER_LIP",
+    "labelCa": "Llavi superior",
+    "labelEn": "Upper Lip",
+    "labelEs": "Labio superior",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "llavi superior",
+      "upper lip"
+    ],
+    "sortOrder": 55
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "VARIABLE",
+    "labelCa": "Variable",
+    "labelEn": "Variable",
+    "labelEs": "Variable",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "variable"
+    ],
+    "sortOrder": 56
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "VIRTUAL_OBJECT",
+    "labelCa": "Objecte virtual",
+    "labelEn": "Virtual Object",
+    "labelEs": "Objeto Virtual",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "objecte virtual",
+      "virtual object"
+    ],
+    "sortOrder": 57
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "WAIST",
+    "labelCa": "Cintura",
+    "labelEn": "Waist",
+    "labelEs": "Cintura",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cintura",
+      "waist"
+    ],
+    "sortOrder": 58
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "WEST",
+    "labelCa": "Oest",
+    "labelEn": "West",
+    "labelEs": "Oeste",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "oest",
+      "west"
+    ],
+    "sortOrder": 59
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "WRIST",
+    "labelCa": "Canell",
+    "labelEn": "Wrist",
+    "labelEs": "Muñeca",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "canell",
+      "wrist"
+    ],
+    "sortOrder": 60
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "WEAK_HAND",
+    "labelCa": "Mà feble",
+    "labelEn": "Weak Hand",
+    "labelEs": "Mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ma no-dominant",
+      "weak hand"
+    ],
+    "sortOrder": 61
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "WEAK_HAND_BACK",
+    "labelCa": "Dors de la mà feble",
+    "labelEn": "Weak Hand Back",
+    "labelEs": "Dorso de la mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ma no-dominant: darrere",
+      "weak hand: back"
+    ],
+    "sortOrder": 62
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "WEAK_HAND_BASE",
+    "labelCa": "Base de la mà feble",
+    "labelEn": "Weak Hand Base",
+    "labelEs": "Base de la mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ma no-dominant: base",
+      "weak hand: base"
+    ],
+    "sortOrder": 63
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "WEAK_HAND_FINGER_TIPS",
+    "labelCa": "Puntes dels dits de la mà feble",
+    "labelEn": "Weak Hand Finger Tips",
+    "labelEs": "Puntas de los dedos de la mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ma no-dominant: punta dels dits",
+      "weak hand: finger tips"
+    ],
+    "sortOrder": 64
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "WEAK_HAND_FINGER",
+    "labelCa": "Dit de la mà feble",
+    "labelEn": "Weak Hand Finger",
+    "labelEs": "Dedo de la mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ma no-dominant: dit",
+      "weak hand: finger"
+    ],
+    "sortOrder": 65
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "WEAK_HAND_FRONT",
+    "labelCa": "Front de la mà feble",
+    "labelEn": "Weak Hand Front",
+    "labelEs": "Frente de la mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ma no-dominant: davant",
+      "weak hand: front"
+    ],
+    "sortOrder": 66
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "WEAK_HAND_INDEX_FINGER",
+    "labelCa": "Dit índex de la mà feble",
+    "labelEn": "Weak Hand Index Finger",
+    "labelEs": "Dedo índice de la mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ma no-dominant: dit index",
+      "weak hand: index finger"
+    ],
+    "sortOrder": 67
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "WEAK_HAND_KNUCKLES",
+    "labelCa": "Artells de la mà feble",
+    "labelEn": "Weak Hand Knuckles",
+    "labelEs": "Nudillos de la mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ma no-dominant: artells",
+      "weak hand: knuckles"
+    ],
+    "sortOrder": 68
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "WEAK_HAND_MIDDLE_FINGER",
+    "labelCa": "Dit del mig de la mà feble",
+    "labelEn": "Weak Hand Middle Finger",
+    "labelEs": "Dedo medio de la mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ma no-dominant: dit mig",
+      "weak hand: middle finger"
+    ],
+    "sortOrder": 69
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "WEAK_HAND_PALM",
+    "labelCa": "Palmell de la mà feble",
+    "labelEn": "Weak Hand Palm",
+    "labelEs": "Palma de la mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ma no-dominant: palmell",
+      "weak hand: palm"
+    ],
+    "sortOrder": 70
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "WEAK_HAND_PINKIE",
+    "labelCa": "Dit petit de la mà feble",
+    "labelEn": "Weak Hand Pinkie",
+    "labelEs": "Meñique de la mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ma no-dominant: menovell",
+      "weak hand: pinkie"
+    ],
+    "sortOrder": 71
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "WEAK_HAND_PINKIE_SIDE",
+    "labelCa": "Costat del dit petit de la mà feble",
+    "labelEn": "Weak Hand Pinkie Side",
+    "labelEs": "Lado del meñique de la mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ma no-dominant: costat menovell",
+      "weak hand: pinkie side"
+    ],
+    "sortOrder": 72
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "WEAK_HAND_RING_FINGER",
+    "labelCa": "Dit anular de la mà feble",
+    "labelEn": "Weak Hand Ring Finger",
+    "labelEs": "Dedo anular de la mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ma no-dominant: anular",
+      "weak hand: ring finger"
+    ],
+    "sortOrder": 73
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "WEAK_HAND_THENAR",
+    "labelCa": "Tenar de la mà feble",
+    "labelEn": "Weak Hand Thenar",
+    "labelEs": "Tenar de la mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ma no-dominant: tenar",
+      "weak hand: thenar"
+    ],
+    "sortOrder": 74
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "WEAK_HAND_THUMB",
+    "labelCa": "Polze de la mà feble",
+    "labelEn": "Weak Hand Thumb",
+    "labelEs": "Pulgar de la mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ma no-dominant: polze",
+      "weak hand: thumb"
+    ],
+    "sortOrder": 75
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "WEAK_HAND_THUMB_SIDE",
+    "labelCa": "Costat del polze de la mà feble",
+    "labelEn": "Weak Hand Thumb Side",
+    "labelEs": "Lado del pulgar de la mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ma no-dominant: costat polze",
+      "weak hand: thumb side"
+    ],
+    "sortOrder": 76
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "WEAK_HAND_WEB_SPACE",
+    "labelCa": "Espai interdigital de la mà feble",
+    "labelEn": "Weak Hand Web Space",
+    "labelEs": "Espacio interdigital de la mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ma no-dominant: espai web",
+      "weak hand: web space"
+    ],
+    "sortOrder": 77
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "BELLY_TO_CHEST",
+    "labelCa": "Ventre > pit",
+    "labelEn": "Belly to Chest",
+    "labelEs": "Del vientre al pecho",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "belly > chest",
+      "belly>chest",
+      "panxa > pit"
+    ],
+    "sortOrder": 78
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "CHEEK_TO_CHEEK",
+    "labelCa": "Galta > galta",
+    "labelEn": "Cheek to Cheek",
+    "labelEs": "De mejilla a mejilla",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cheek > cheek",
+      "galta > galta"
+    ],
+    "sortOrder": 79
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "CHEEK_TO_CHIN",
+    "labelCa": "Galta > barbeta",
+    "labelEn": "Cheek to Chin",
+    "labelEs": "De mejilla a barbilla",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cheek > chin",
+      "galta > barbeta"
+    ],
+    "sortOrder": 80
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "CHIN_TO_CHEST",
+    "labelCa": "Barbeta > pit",
+    "labelEn": "Chin to Chest",
+    "labelEs": "De barbilla a pecho",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "barbeta > torax",
+      "chin > chest"
+    ],
+    "sortOrder": 81
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "CHIN_TO_NEUTRAL_SPACE",
+    "labelCa": "Barbeta > espai neutral",
+    "labelEn": "Chin to Neutral Space",
+    "labelEs": "De barbilla a espacio neutral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "barbeta > espai neutre",
+      "chin > neutral space"
+    ],
+    "sortOrder": 82
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "CHIN_TO_WEAK_HAND_INDEX",
+    "labelCa": "Barbeta > índex de mà feble",
+    "labelEn": "Chin to Weak Hand Index",
+    "labelEs": "De barbilla a índice de mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [],
+    "sortOrder": 83
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "CHIN_TO_WEAK_HAND_PALM",
+    "labelCa": "Barbeta > palmell de mà feble",
+    "labelEn": "Chin to Weak Hand Palm",
+    "labelEs": "De barbilla a palma de mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "barbeta > ma no-dominant: palmell",
+      "chin > weak hand: palm"
+    ],
+    "sortOrder": 84
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "CHIN_TO_WEAK_HAND_THUMB",
+    "labelCa": "Barbeta > polze de mà feble",
+    "labelEn": "Chin to Weak Hand Thumb",
+    "labelEs": "De barbilla a pulgar de mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [],
+    "sortOrder": 85
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "EAR_TO_CHEEK",
+    "labelCa": "Orella > galta",
+    "labelEn": "Ear to Cheek",
+    "labelEs": "De oreja a mejilla",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ear > cheek",
+      "orella > galta"
+    ],
+    "sortOrder": 86
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "EAR_TO_CHEST",
+    "labelCa": "Orella > pit",
+    "labelEn": "Ear to Chest",
+    "labelEs": "De oreja a pecho",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ear > chest",
+      "orella > torax"
+    ],
+    "sortOrder": 87
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "EAR_TO_MOUTH",
+    "labelCa": "Orella > boca",
+    "labelEn": "Ear to Mouth",
+    "labelEs": "De oreja a boca",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ear > mouth",
+      "orella > boca"
+    ],
+    "sortOrder": 88
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "EYE_TO_NEUTRAL_SPACE",
+    "labelCa": "Ull > espai neutral",
+    "labelEn": "Eye to Neutral Space",
+    "labelEs": "De ojo a espacio neutral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "eye > neutral space",
+      "ull > espai neutre"
+    ],
+    "sortOrder": 89
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "FACE_TO_HEAD",
+    "labelCa": "Cara > cap",
+    "labelEn": "Face to Head",
+    "labelEs": "De cara a cabeza",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cara > cap",
+      "face > head",
+      "face> head"
+    ],
+    "sortOrder": 90
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "FACE_TO_NEUTRAL_SPACE",
+    "labelCa": "Cara > espai neutral",
+    "labelEn": "Face to Neutral Space",
+    "labelEs": "De cara a espacio neutral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cara > espai neutre",
+      "face > neutral space"
+    ],
+    "sortOrder": 91
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "FOREHEAD_TO_CHEST",
+    "labelCa": "Front > pit",
+    "labelEn": "Forehead to Chest",
+    "labelEs": "De frente a pecho",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "forehead > chest",
+      "front > pit"
+    ],
+    "sortOrder": 92
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "FOREHEAD_TO_CHIN",
+    "labelCa": "Front > barbeta",
+    "labelEn": "Forehead to Chin",
+    "labelEs": "De frente a barbilla",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "forehead > chin",
+      "front > barebeta"
+    ],
+    "sortOrder": 93
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "FOREHEAD_TO_NEUTRAL_SPACE",
+    "labelCa": "Front > espai neutral",
+    "labelEn": "Forehead to Neutral Space",
+    "labelEs": "De frente a espacio neutral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "forehead > neutral space",
+      "front > espai neutre"
+    ],
+    "sortOrder": 94
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "FOREHEAD_TO_WEAK_HAND_PALM",
+    "labelCa": "Front > palmell de mà feble",
+    "labelEn": "Forehead to Weak Hand Palm",
+    "labelEs": "De frente a palma de mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "forehead > weak hand: palm",
+      "front > ma no-dominant: palmell"
+    ],
+    "sortOrder": 95
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "HEAD_TO_CHEST",
+    "labelCa": "Cap > pit",
+    "labelEn": "Head to Chest",
+    "labelEs": "De cabeza a pecho",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cap > pit",
+      "head > chest"
+    ],
+    "sortOrder": 96
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "HEAD_TO_CHEST_TO_SHOULDER",
+    "labelCa": "Cap > pit > espatlla",
+    "labelEn": "Head to Chest to Shoulder",
+    "labelEs": "De cabeza a pecho a hombro",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cap > pit > espatlla",
+      "head > chest > shoulder"
+    ],
+    "sortOrder": 97
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "HEAD_TO_NEUTRAL_SPACE",
+    "labelCa": "Cap > espai neutral",
+    "labelEn": "Head to Neutral Space",
+    "labelEs": "De cabeza a espacio neutral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cap > espai neutre",
+      "head > neutral space"
+    ],
+    "sortOrder": 98
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "HEAD_TO_SHOULDER",
+    "labelCa": "Cap > espatlla",
+    "labelEn": "Head to Shoulder",
+    "labelEs": "De cabeza a hombro",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cap > espatlla",
+      "head > shoulder"
+    ],
+    "sortOrder": 99
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "HEAD_TO_WEAK_HAND_PALM",
+    "labelCa": "Cap > palmell de mà feble",
+    "labelEn": "Head to Weak Hand Palm",
+    "labelEs": "De cabeza a palma de mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cap > ma no-dominant: palmell",
+      "head > weak hand: palm"
+    ],
+    "sortOrder": 100
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "LEG_TO_WAIST",
+    "labelCa": "Cama > cintura",
+    "labelEn": "Leg to Waist",
+    "labelEs": "De pierna a cintura",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cama > cintura",
+      "leg > waist"
+    ],
+    "sortOrder": 101
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "MOUTH_TO_CHEEK",
+    "labelCa": "Boca > galta",
+    "labelEn": "Mouth to Cheek",
+    "labelEs": "De boca a mejilla",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "boca > galta",
+      "mouth > cheek"
+    ],
+    "sortOrder": 102
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "MOUTH_TO_CHEST",
+    "labelCa": "Boca > pit",
+    "labelEn": "Mouth to Chest",
+    "labelEs": "De boca a pecho",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "boca > pit",
+      "mouth > chest"
+    ],
+    "sortOrder": 103
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "MOUTH_TO_CHIN",
+    "labelCa": "Boca > barbeta",
+    "labelEn": "Mouth to Chin",
+    "labelEs": "De boca a barbilla",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "boca > barbeta",
+      "mouth > chin"
+    ],
+    "sortOrder": 104
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "MOUTH_TO_NEUTRAL_SPACE",
+    "labelCa": "Boca > espai neutral",
+    "labelEn": "Mouth to Neutral Space",
+    "labelEs": "De boca a espacio neutral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "boca > espai neutre",
+      "mouth > neutral space"
+    ],
+    "sortOrder": 105
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "MOUTH_TO_WEAK_HAND",
+    "labelCa": "Boca > mà feble",
+    "labelEn": "Mouth to Weak Hand",
+    "labelEs": "De boca a mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "boca > ma no-dominant",
+      "mouth > weak hand"
+    ],
+    "sortOrder": 106
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "MOUTH_TO_WEAK_HAND_PALM",
+    "labelCa": "Boca > palmell de mà feble",
+    "labelEn": "Mouth to Weak Hand Palm",
+    "labelEs": "De boca a palma de mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "boca > ma no-dominant: palmell",
+      "mouth > weak hand: palm"
+    ],
+    "sortOrder": 107
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "NECK_TO_CHEST",
+    "labelCa": "Coll > pit",
+    "labelEn": "Neck to Chest",
+    "labelEs": "De cuello a pecho",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "coll > pit",
+      "neck > chest"
+    ],
+    "sortOrder": 108
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "NECK_TO_NEUTRAL_SPACE",
+    "labelCa": "Coll > espai neutral",
+    "labelEn": "Neck to Neutral Space",
+    "labelEs": "De cuello a espacio neutral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "coll > espai neutre",
+      "neck > neutral space"
+    ],
+    "sortOrder": 109
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "NEUTRAL_SPACE_TO_HEAD",
+    "labelCa": "Espai neutral > cap",
+    "labelEn": "Neutral Space to Head",
+    "labelEs": "De espacio neutral a cabeza",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "espai neutre > cap",
+      "neutral space > head"
+    ],
+    "sortOrder": 110
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "NEUTRAL_SPACE_TO_SHOULDER",
+    "labelCa": "Espai neutral > espatlla",
+    "labelEn": "Neutral Space to Shoulder",
+    "labelEs": "De espacio neutral a hombro",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "espai neutre > espatlla",
+      "neutral space > shoulder"
+    ],
+    "sortOrder": 111
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "NEUTRAL_SPACE_TO_NOSE",
+    "labelCa": "Espai neutral > nas",
+    "labelEn": "Neutral Space to Nose",
+    "labelEs": "De espacio neutral a nariz",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "espai neutre > nas",
+      "neutral space > nose"
+    ],
+    "sortOrder": 112
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "NEUTRAL_SPACE_TO_CHEEK",
+    "labelCa": "Espai neutral > galta",
+    "labelEn": "Neutral Space to Cheek",
+    "labelEs": "De espacio neutral a mejilla",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "espai neutre > galta",
+      "neutral space > cheek"
+    ],
+    "sortOrder": 113
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "NEUTRAL_SPACE_TO_MOUTH",
+    "labelCa": "Espai neutral > boca",
+    "labelEn": "Neutral Space to Mouth",
+    "labelEs": "De espacio neutral a boca",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "espai neutre > boca",
+      "neutral space > mouth"
+    ],
+    "sortOrder": 114
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "NEUTRAL_SPACE_TO_CHEST",
+    "labelCa": "Espai neutral > pit",
+    "labelEn": "Neutral Space to Chest",
+    "labelEs": "De espacio neutral a pecho",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [],
+    "sortOrder": 115
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "NEUTRAL_SPACE_TO_WEAK_HAND",
+    "labelCa": "Espai neutral > mà feble",
+    "labelEn": "Neutral Space to Weak Hand",
+    "labelEs": "De espacio neutral a mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "espai neutre > ma no-dominant",
+      "neutral space > weak hand"
+    ],
+    "sortOrder": 116
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "NOSE_TO_CHIN",
+    "labelCa": "Nas > barbeta",
+    "labelEn": "Nose to Chin",
+    "labelEs": "De nariz a barbilla",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "nas > barbeta",
+      "nose > chin"
+    ],
+    "sortOrder": 117
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "NOSE_TO_NEUTRAL_SPACE",
+    "labelCa": "Nas > espai neutral",
+    "labelEn": "Nose to Neutral Space",
+    "labelEs": "De nariz a espacio neutral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "nas > espai neutre",
+      "nose > neutral space"
+    ],
+    "sortOrder": 118
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "NOSE_TO_WEAK_HAND",
+    "labelCa": "Nas > mà feble",
+    "labelEn": "Nose to Weak Hand",
+    "labelEs": "De nariz a mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "nas > ma no-dominant",
+      "nose > weak hand"
+    ],
+    "sortOrder": 119
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "R_LOC_TO_R_LOC",
+    "labelCa": "Ubicació R > ubicació R",
+    "labelEn": "R Location to R Location",
+    "labelEs": "De ubicación R a ubicación R",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "r-loc > r-loc"
+    ],
+    "sortOrder": 120
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "SHOULDER_TO_CHEST",
+    "labelCa": "Espatlla > pit",
+    "labelEn": "Shoulder to Chest",
+    "labelEs": "De hombro a pecho",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "espatlla > pit",
+      "shoulder > chest"
+    ],
+    "sortOrder": 121
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "SHOULDER_TO_SHOULDER",
+    "labelCa": "Espatlla > espatlla",
+    "labelEn": "Shoulder to Shoulder",
+    "labelEs": "De hombro a hombro",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "espatlla > espatlla",
+      "shoulder > shoulder"
+    ],
+    "sortOrder": 122
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "SHOULDER_TO_WEAK_HAND_PALM",
+    "labelCa": "Espatlla > palmell de mà feble",
+    "labelEn": "Shoulder to Weak Hand Palm",
+    "labelEs": "De hombro a palma de mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "espatlla > ma no-dominant: palmell",
+      "shoulder > weak hand: palm"
+    ],
+    "sortOrder": 123
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "SHOULDER_TO_NEUTRAL_SPACE",
+    "labelCa": "Espatlla > espai neutral",
+    "labelEn": "Shoulder to Neutral Space",
+    "labelEs": "De hombro a espacio neutral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "espatlla > espai neutre",
+      "shoulder > neutral space"
+    ],
+    "sortOrder": 124
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "SHOULDER_TO_HIT",
+    "labelCa": "Espatlla > cop",
+    "labelEn": "Shoulder to Hit",
+    "labelEs": "De hombro a golpe",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "espatlla > cadera",
+      "shoulder > hit"
+    ],
+    "sortOrder": 125
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "TEMPLE_TO_CHEST",
+    "labelCa": "Templa > pit",
+    "labelEn": "Temple to Chest",
+    "labelEs": "De sien a pecho",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "templa > pit",
+      "temple > chest"
+    ],
+    "sortOrder": 126
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "TEMPLE_TO_CHEEK",
+    "labelCa": "Templa > galta",
+    "labelEn": "Temple to Cheek",
+    "labelEs": "De sien a mejilla",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "templa > galta",
+      "temple > cheek"
+    ],
+    "sortOrder": 127
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "TEMPLE_TO_SHOULDER",
+    "labelCa": "Templa > espatlla",
+    "labelEn": "Temple to Shoulder",
+    "labelEs": "De sien a hombro",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "templa > espatlla",
+      "temple > shoulder"
+    ],
+    "sortOrder": 128
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "TEMPLE_TO_NEUTRAL_SPACE",
+    "labelCa": "Templa > espai neutral",
+    "labelEn": "Temple to Neutral Space",
+    "labelEs": "De sien a espacio neutral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "templa > espai neutre",
+      "temple > neutral space"
+    ],
+    "sortOrder": 129
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "WEAK_HAND_TO_ARM",
+    "labelCa": "Mà feble > braç",
+    "labelEn": "Weak Hand to Arm",
+    "labelEs": "De mano débil a brazo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ma no-dominant > brac",
+      "weak hand > arm"
+    ],
+    "sortOrder": 130
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "WEAK_HAND_TO_NEUTRAL_SPACE",
+    "labelCa": "Mà feble > espai neutral",
+    "labelEn": "Weak Hand to Neutral Space",
+    "labelEs": "De mano débil a espacio neutral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ma no-dominant > espai neutre",
+      "weak hand > neutral space"
+    ],
+    "sortOrder": 131
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "WEAK_HAND_THUMB_SIDE_TO_ARM",
+    "labelCa": "Costat del polze de la mà feble > braç",
+    "labelEn": "Weak Hand Thumb Side to Arm",
+    "labelEs": "Del lado del pulgar de la mano débil al brazo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ma no-dominant: costat polze > brac",
+      "weak hand: thumb side > arm"
+    ],
+    "sortOrder": 132
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "ARMPIT_TO_NEUTRAL_SPACE",
+    "labelCa": "Aixella > espai neutral",
+    "labelEn": "Armpit to Neutral Space",
+    "labelEs": "De axila a espacio neutral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "aixella > espai neutre",
+      "armpit > neutral space"
+    ],
+    "sortOrder": 133
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "CHEST_TO_CHIN",
+    "labelCa": "Pit > barbeta",
+    "labelEn": "Chest to Chin",
+    "labelEs": "De pecho a barbilla",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "chest > chin",
+      "torax > barbeta"
+    ],
+    "sortOrder": 134
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "CHEST_TO_NEUTRAL_SPACE",
+    "labelCa": "Pit > espai neutral",
+    "labelEn": "Chest to Neutral Space",
+    "labelEs": "De pecho a espacio neutral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "chest > neutral space",
+      "torax > espai neutre"
+    ],
+    "sortOrder": 135
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "BELLY_AND_FOREHEAD",
+    "labelCa": "Ventre + front",
+    "labelEn": "Belly and Forehead",
+    "labelEs": "Vientre y frente",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "belly + forehead",
+      "panxa + front"
+    ],
+    "sortOrder": 136
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "HEAD_AND_NEUTRAL_SPACE",
+    "labelCa": "Cap + espai neutral",
+    "labelEn": "Head and Neutral Space",
+    "labelEs": "Cabeza y espacio neutral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cap + espai neutre",
+      "head + neutral space"
+    ],
+    "sortOrder": 137
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "FLANK_OR_HEAD",
+    "labelCa": "Costat | cap",
+    "labelEn": "Flank or Head",
+    "labelEs": "Costado o cabeza",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "flank/head",
+      "templa / cap"
+    ],
+    "sortOrder": 138
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "NEUTRAL_SPACE_OR_WEAK_HAND_FRONT",
+    "labelCa": "Espai neutral | front de mà feble",
+    "labelEn": "Neutral Space or Weak Hand Front",
+    "labelEs": "Espacio neutral o frente de mano débil",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "espai neutre / ma no-dominant: davant",
+      "neutral space / weak hand: front"
+    ],
+    "sortOrder": 139
+  },
+  {
+    "dimension": "LOCATION",
+    "code": "BOTTOM_OR_CROTCH",
+    "labelCa": "Cul | entrecuix",
+    "labelEn": "Bottom or Crotch",
+    "labelEs": "Trasero o entrepierna",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "bottom / crotch",
+      "part inferior / entremig"
+    ],
+    "sortOrder": 140
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "EMPTY",
+    "labelCa": "------- BUIT -------",
+    "labelEn": "Empty",
+    "labelEs": "Vacío",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [],
+    "sortOrder": 0
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "BACK",
+    "labelCa": "Darrere",
+    "labelEn": "Back",
+    "labelEs": "Atrás",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "back",
+      "darrere"
+    ],
+    "sortOrder": 1
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "BASE",
+    "labelCa": "Base",
+    "labelEn": "Base",
+    "labelEs": "Base",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "base"
+    ],
+    "sortOrder": 2
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "FINGER_TIPS",
+    "labelCa": "Puntes dels dits",
+    "labelEn": "Finger Tips",
+    "labelEs": "Puntas de los dedos",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "finger tips",
+      "punta dels dits"
+    ],
+    "sortOrder": 3
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "FRONT",
+    "labelCa": "Davant",
+    "labelEn": "Front",
+    "labelEs": "Frente",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "davant",
+      "front"
+    ],
+    "sortOrder": 4
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "PALM",
+    "labelCa": "Palmell",
+    "labelEn": "Palm",
+    "labelEs": "Palma",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "palm",
+      "palmell"
+    ],
+    "sortOrder": 5
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "RADIAL",
+    "labelCa": "Radial",
+    "labelEn": "Radial",
+    "labelEs": "Radial",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "radial"
+    ],
+    "sortOrder": 6
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "ULNAR",
+    "labelCa": "Ulnar",
+    "labelEn": "Ulnar",
+    "labelEs": "Ulnar",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cubital",
+      "ulnar"
+    ],
+    "sortOrder": 7
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "VARIABLE",
+    "labelCa": "Variable",
+    "labelEn": "Variable",
+    "labelEs": "Variable",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "variable"
+    ],
+    "sortOrder": 8
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "BACK_AND_BASE",
+    "labelCa": "Darrere + base",
+    "labelEn": "Back and Base",
+    "labelEs": "Atrás y Base",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "back + base",
+      "darrere + base"
+    ],
+    "sortOrder": 9
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "BACK_AND_RADIAL",
+    "labelCa": "Darrere + radial",
+    "labelEn": "Back and Radial",
+    "labelEs": "Atrás y Radial",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "back + radial",
+      "darrere + radial"
+    ],
+    "sortOrder": 10
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "BACK_AND_ULNAR",
+    "labelCa": "Darrere + ulnar",
+    "labelEn": "Back and Ulnar",
+    "labelEs": "Atrás y Ulnar",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "back + ulnar",
+      "darrere + cubital"
+    ],
+    "sortOrder": 11
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "BASE_AND_FRONT",
+    "labelCa": "Base + davant",
+    "labelEn": "Base and Front",
+    "labelEs": "Base y Frente",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "base + davant",
+      "base + front"
+    ],
+    "sortOrder": 12
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "BASE_AND_PALM",
+    "labelCa": "Base + palmell",
+    "labelEn": "Base and Palm",
+    "labelEs": "Base y Palma",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "base + palm",
+      "base + palmell"
+    ],
+    "sortOrder": 13
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "BASE_AND_ULNAR",
+    "labelCa": "Base + ulnar",
+    "labelEn": "Base and Ulnar",
+    "labelEs": "Base y Ulnar",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "base + cubital",
+      "base + ulnar"
+    ],
+    "sortOrder": 14
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "FRONT_AND_ULNAR",
+    "labelCa": "Davant + ulnar",
+    "labelEn": "Front and Ulnar",
+    "labelEs": "Frente y Ulnar",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "davant + cubital",
+      "front + ulnar"
+    ],
+    "sortOrder": 15
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "PALM_AND_RADIAL",
+    "labelCa": "Palmell + radial",
+    "labelEn": "Palm and Radial",
+    "labelEs": "Palma y Radial",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "palm + radial",
+      "palmell + radial"
+    ],
+    "sortOrder": 16
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "PALM_AND_ULNAR",
+    "labelCa": "Palmell + ulnar",
+    "labelEn": "Palm and Ulnar",
+    "labelEs": "Palma y Ulnar",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "palm + ulnar",
+      "palmell + cubital"
+    ],
+    "sortOrder": 17
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "PALM_AND_RADIAL_OR_ULNAR",
+    "labelCa": "Palmell + radial | ulnar",
+    "labelEn": "Palm and Radial or Ulnar",
+    "labelEs": "Palma y Radial o Ulnar",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "palm + radial/ulnar",
+      "palmell + radial/ cubital"
+    ],
+    "sortOrder": 18
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "BACK_TO_FINGER_TIPS",
+    "labelCa": "Darrere > puntes dels dits",
+    "labelEn": "Back to Finger Tips",
+    "labelEs": "De Atrás a Puntas de los dedos",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "back > finger tips",
+      "darrere + punta dels dits"
+    ],
+    "sortOrder": 19
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "BACK_TO_FRONT",
+    "labelCa": "Darrere > davant",
+    "labelEn": "Back to Front",
+    "labelEs": "De Atrás a Frente",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "back > front",
+      "darrere > davant"
+    ],
+    "sortOrder": 20
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "BACK_TO_PALM",
+    "labelCa": "Darrere > palmell",
+    "labelEn": "Back to Palm",
+    "labelEs": "De Atrás a Palma",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "back > palm",
+      "darrere > palmell"
+    ],
+    "sortOrder": 21
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "BACK_TO_RADIAL",
+    "labelCa": "Darrere > radial",
+    "labelEn": "Back to Radial",
+    "labelEs": "De Atrás a Radial",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "back > radial",
+      "darrere > radial"
+    ],
+    "sortOrder": 22
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "BASE_TO_BACK",
+    "labelCa": "Base > darrere",
+    "labelEn": "Base to Back",
+    "labelEs": "De Base a Atrás",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "base > back",
+      "base > darrere"
+    ],
+    "sortOrder": 23
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "BASE_TO_BASE",
+    "labelCa": "Base > base",
+    "labelEn": "Base to Base",
+    "labelEs": "De Base a Base",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "base > base"
+    ],
+    "sortOrder": 24
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "BASE_TO_FRONT",
+    "labelCa": "Base > davant",
+    "labelEn": "Base to Front",
+    "labelEs": "De Base a Frente",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "base > davant",
+      "base > front"
+    ],
+    "sortOrder": 25
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "BASE_TO_PALM",
+    "labelCa": "Base > palmell",
+    "labelEn": "Base to Palm",
+    "labelEs": "De Base a Palma",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "base > palm",
+      "base > palmell"
+    ],
+    "sortOrder": 26
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "BASE_TO_ULNAR",
+    "labelCa": "Base > ulnar",
+    "labelEn": "Base to Ulnar",
+    "labelEs": "De Base a Ulnar",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "base > cubital",
+      "base > ulnar"
+    ],
+    "sortOrder": 27
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "FINGER_TIPS_TO_BACK",
+    "labelCa": "Puntes dels dits > darrere",
+    "labelEn": "Finger Tips to Back",
+    "labelEs": "De Puntas de los dedos a Atrás",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "finger tips > back",
+      "punta dels dits > darrere"
+    ],
+    "sortOrder": 28
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "FINGER_TIPS_TO_BASE",
+    "labelCa": "Puntes dels dits > base",
+    "labelEn": "Finger Tips to Base",
+    "labelEs": "De Puntas de los dedos a Base",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "finger tips > base",
+      "punta dels dits > base"
+    ],
+    "sortOrder": 29
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "FINGER_TIPS_TO_PALM",
+    "labelCa": "Puntes dels dits > palmell",
+    "labelEn": "Finger Tips to Palm",
+    "labelEs": "De Puntas de los dedos a Palma",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "finger tips > palm",
+      "punta dels dits > palmell"
+    ],
+    "sortOrder": 30
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "FRONT_TO_BACK",
+    "labelCa": "Davant > darrere",
+    "labelEn": "Front to Back",
+    "labelEs": "De Frente a Atrás",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "davant > darrere",
+      "front > back"
+    ],
+    "sortOrder": 31
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "PALM_TO_BACK",
+    "labelCa": "Palmell > darrere",
+    "labelEn": "Palm to Back",
+    "labelEs": "De Palma a Atrás",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "palm > back",
+      "palmell > darrere"
+    ],
+    "sortOrder": 32
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "PALM_TO_BASE",
+    "labelCa": "Palmell > base",
+    "labelEn": "Palm to Base",
+    "labelEs": "De Palma a Base",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "palm > base",
+      "palmell > base"
+    ],
+    "sortOrder": 33
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "RADIAL_TO_ULNAR",
+    "labelCa": "Radial > ulnar",
+    "labelEn": "Radial to Ulnar",
+    "labelEs": "De Radial a Ulnar",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "radial > cubital",
+      "radial > ulnar"
+    ],
+    "sortOrder": 34
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "ULNAR_TO_BASE",
+    "labelCa": "Ulnar > base",
+    "labelEn": "Ulnar to Base",
+    "labelEs": "De Ulnar a Base",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cubital > base",
+      "ulnar > base"
+    ],
+    "sortOrder": 35
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "ULNAR_TO_BASE_TO_RADIAL",
+    "labelCa": "Ulnar > base > radial",
+    "labelEn": "Ulnar to Base to Radial",
+    "labelEs": "De Ulnar a Base a Radial",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cubital > base > radial",
+      "ulnar > base > radial",
+      "ulnar > base >radial"
+    ],
+    "sortOrder": 36
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "ULNAR_TO_FRONT",
+    "labelCa": "Ulnar > davant",
+    "labelEn": "Ulnar to Front",
+    "labelEs": "De Ulnar a Frente",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cubital > davant",
+      "ulnar > front"
+    ],
+    "sortOrder": 37
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "ULNAR_TO_PALM",
+    "labelCa": "Ulnar > palmell",
+    "labelEn": "Ulnar to Palm",
+    "labelEs": "De Ulnar a Palma",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cubital > palmell",
+      "ulnar > palm"
+    ],
+    "sortOrder": 38
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "ULNAR_TO_PALM_TO_RADIAL",
+    "labelCa": "Ulnar > palmell > radial",
+    "labelEn": "Ulnar to Palm to Radial",
+    "labelEs": "De Ulnar a Palma a Radial",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cubital > palmell > radial",
+      "ulnar > palm > radial"
+    ],
+    "sortOrder": 39
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "ULNAR_TO_RADIAL",
+    "labelCa": "Ulnar > radial",
+    "labelEn": "Ulnar to Radial",
+    "labelEs": "De Ulnar a Radial",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cubital > radial",
+      "ulnar > radial"
+    ],
+    "sortOrder": 40
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "BACK_OR_BASE",
+    "labelCa": "Darrere | base",
+    "labelEn": "Back or Base",
+    "labelEs": "Atrás o Base",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "back / base",
+      "darrere / base"
+    ],
+    "sortOrder": 41
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "BACK_OR_FINGER_TIPS",
+    "labelCa": "Darrere | puntes dels dits",
+    "labelEn": "Back or Finger Tips",
+    "labelEs": "Atrás o Puntas de los dedos",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "back/finger tips",
+      "darrere / punta dels dits"
+    ],
+    "sortOrder": 42
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "BACK_OR_PALM",
+    "labelCa": "Darrere | palmell",
+    "labelEn": "Back or Palm",
+    "labelEs": "Atrás o Palma",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "back/palm",
+      "darrere / palmell"
+    ],
+    "sortOrder": 43
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "BASE_OR_FRONT",
+    "labelCa": "Base | davant",
+    "labelEn": "Base or Front",
+    "labelEs": "Base o Frente",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "base > davant",
+      "base/front"
+    ],
+    "sortOrder": 44
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "FINGER_TIPS_OR_BASE",
+    "labelCa": "Puntes dels dits | base",
+    "labelEn": "Finger Tips or Base",
+    "labelEs": "Puntas de los dedos o Base",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "finger tips/base",
+      "punta dels dits / base"
+    ],
+    "sortOrder": 45
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "FINGER_TIPS_OR_ULNAR",
+    "labelCa": "Puntes dels dits | ulnar",
+    "labelEn": "Finger Tips or Ulnar",
+    "labelEs": "Puntas de los dedos o Ulnar",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "finger tips/ulnar",
+      "punta dels dits / cubital"
+    ],
+    "sortOrder": 46
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "FRONT_OR_PALM",
+    "labelCa": "Davant | palmell",
+    "labelEn": "Front or Palm",
+    "labelEs": "Frente o Palma",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "davant / palmell",
+      "front/palm"
+    ],
+    "sortOrder": 47
+  },
+  {
+    "dimension": "MOVEMENT_RELATED_ORIENTATION",
+    "code": "RADIAL_OR_ULNAR",
+    "labelCa": "Radial | ulnar",
+    "labelEn": "Radial or Ulnar",
+    "labelEs": "Radial o Ulnar",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "radial / cubital",
+      "radial/ulnar"
+    ],
+    "sortOrder": 48
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "EMPTY",
+    "labelCa": "-------------",
+    "labelEn": "Empty",
+    "labelEs": "Vacío",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [],
+    "sortOrder": 0
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "AO_FINGERS_CONTRA",
+    "labelCa": "Dits contra",
+    "labelEn": "Fingers Contra",
+    "labelEs": "Dedos Contra",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ao: dits-contra",
+      "ao: fingers-contra"
+    ],
+    "sortOrder": 1
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "AO_FINGERS_DOWN",
+    "labelCa": "Dits avall",
+    "labelEn": "Fingers Down",
+    "labelEs": "Dedos Abajo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ao: dits-avall",
+      "ao: fingers-down"
+    ],
+    "sortOrder": 2
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "AO_FINGERS_UP",
+    "labelCa": "Dits amunt",
+    "labelEn": "Fingers Up",
+    "labelEs": "Dedos Arriba",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ao: dits-amunt",
+      "ao: fingers-up"
+    ],
+    "sortOrder": 3
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "AO_PALM_BACKWARDS",
+    "labelCa": "Palmell cap enrere",
+    "labelEn": "Palm Backwards",
+    "labelEs": "Palma Hacia Atrás",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ao: palm-backwards",
+      "ao: palmell-enrere"
+    ],
+    "sortOrder": 4
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "AO_PALM_DOWN",
+    "labelCa": "Palmell avall",
+    "labelEn": "Palm Down",
+    "labelEs": "Palma Abajo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ao: palm-down",
+      "ao: palmell-avall"
+    ],
+    "sortOrder": 5
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "AO_PALM_DOWN_TO_UP",
+    "labelCa": "Palmell d'avall a amunt",
+    "labelEn": "Palm Down to Up",
+    "labelEs": "Palma de Abajo a Arriba",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [],
+    "sortOrder": 6
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "AO_PALM_FORWARDS",
+    "labelCa": "Palmell cap endavant",
+    "labelEn": "Palm Forwards",
+    "labelEs": "Palma Hacia Adelante",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ao: palm-forwards",
+      "ao: palmell-endavant"
+    ],
+    "sortOrder": 7
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "AO_PALM_INWARDS",
+    "labelCa": "Palmell cap endins",
+    "labelEn": "Palm Inwards",
+    "labelEs": "Palma Hacia Adentro",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ao: palm-inwards",
+      "ao: palmell-endins"
+    ],
+    "sortOrder": 8
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "AO_PALM_OUTWARDS",
+    "labelCa": "Palmell cap enfora",
+    "labelEn": "Palm Outwards",
+    "labelEs": "Palma Hacia Afuera",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ao: palm-outwards",
+      "ao: palmell-enfora"
+    ],
+    "sortOrder": 9
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "AO_PALM_UP",
+    "labelCa": "Palmell amunt",
+    "labelEn": "Palm Up",
+    "labelEs": "Palma Arriba",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ao: palm-up",
+      "ao: palmell-amunt"
+    ],
+    "sortOrder": 10
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "AO_PALM_UP_OR_DOWN",
+    "labelCa": "Palmell amunt o avall",
+    "labelEn": "Palm Up or Down",
+    "labelEs": "Palma Arriba o Abajo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ao: palm-up/down",
+      "ao: palmell-amunt/avall"
+    ],
+    "sortOrder": 11
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "BACK",
+    "labelCa": "Darrere",
+    "labelEn": "Back",
+    "labelEs": "Atrás",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "back",
+      "darrere"
+    ],
+    "sortOrder": 12
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "BACK_TO_PALM",
+    "labelCa": "De darrere a palmell",
+    "labelEn": "Back to Palm",
+    "labelEs": "De Atrás a Palma",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "back > palm",
+      "darrere > palmell"
+    ],
+    "sortOrder": 13
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "BACK_TO_ULNAR",
+    "labelCa": "De darrere a ulnar",
+    "labelEn": "Back to Ulnar",
+    "labelEs": "De Atrás a Ulnar",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "back > ulnar",
+      "darrere > cubital"
+    ],
+    "sortOrder": 14
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "BACK_OR_PALM",
+    "labelCa": "Darrere o palmell",
+    "labelEn": "Back or Palm",
+    "labelEs": "Atrás o Palma",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "back/palm",
+      "darrere / palmell"
+    ],
+    "sortOrder": 15
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "BACK_OR_PALM_TO_PALM",
+    "labelCa": "De darrere o palmell a palmell",
+    "labelEn": "Back or Palm to Palm",
+    "labelEs": "De Atrás o Palma a Palma",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "back/palm > palm",
+      "darrere / palmell > palmell"
+    ],
+    "sortOrder": 16
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "BASE",
+    "labelCa": "Base",
+    "labelEn": "Base",
+    "labelEs": "Base",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "base"
+    ],
+    "sortOrder": 17
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "COUNTING",
+    "labelCa": "Comptant",
+    "labelEn": "Counting",
+    "labelEs": "Contando",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "comptant",
+      "counting"
+    ],
+    "sortOrder": 18
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "FINGER_TIPS",
+    "labelCa": "Puntes dels dits",
+    "labelEn": "Finger Tips",
+    "labelEs": "Puntas de los dedos",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "finger tips",
+      "punta dels dits"
+    ],
+    "sortOrder": 19
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "FINGER_TIPS_OR_BASE",
+    "labelCa": "Puntes dels dits o base",
+    "labelEn": "Finger Tips or Base",
+    "labelEs": "Puntas de los dedos o Base",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "finger tips/base",
+      "punta dels dits / base"
+    ],
+    "sortOrder": 20
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "FINGERSPELLING",
+    "labelCa": "Dactilologia",
+    "labelEn": "Fingerspelling",
+    "labelEs": "Deletreo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "fingerspelling",
+      "lletreig"
+    ],
+    "sortOrder": 21
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "FRONT",
+    "labelCa": "Davant",
+    "labelEn": "Front",
+    "labelEs": "Frente",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "davant",
+      "front"
+    ],
+    "sortOrder": 22
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "PALM",
+    "labelCa": "Palmell",
+    "labelEn": "Palm",
+    "labelEs": "Palma",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "palm",
+      "palmell"
+    ],
+    "sortOrder": 23
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "PALM_TO_ULNAR",
+    "labelCa": "De palmell a ulnar",
+    "labelEn": "Palm to Ulnar",
+    "labelEs": "De Palma a Ulnar",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "palm > ulnar",
+      "palmell > cubital"
+    ],
+    "sortOrder": 24
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "RADIAL",
+    "labelCa": "Radial",
+    "labelEn": "Radial",
+    "labelEs": "Radial",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "radial"
+    ],
+    "sortOrder": 25
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "RADIAL_OR_ULNAR",
+    "labelCa": "Radial o ulnar",
+    "labelEn": "Radial or Ulnar",
+    "labelEs": "Radial o Ulnar",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "radial / cubital",
+      "radial /ulnar"
+    ],
+    "sortOrder": 26
+  },
+  {
+    "dimension": "ORIENTATION_RELATED_TO_LOCATION",
+    "code": "ULNAR",
+    "labelCa": "Ulnar",
+    "labelEn": "Ulnar",
+    "labelEs": "Ulnar",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cubital",
+      "ulnar"
+    ],
+    "sortOrder": 27
+  },
+  {
+    "dimension": "ORIENTATION_CHANGE",
+    "code": "EMPTY",
+    "labelCa": "-------------",
+    "labelEn": "Empty",
+    "labelEs": "Vacío",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [],
+    "sortOrder": 0
+  },
+  {
+    "dimension": "ORIENTATION_CHANGE",
+    "code": "EXTENSION",
+    "labelCa": "Extensió",
+    "labelEn": "Extension",
+    "labelEs": "Extensión",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "extensio",
+      "extension"
+    ],
+    "sortOrder": 1
+  },
+  {
+    "dimension": "ORIENTATION_CHANGE",
+    "code": "EXTENSION_AND_PRONATION",
+    "labelCa": "Extensió + pronació",
+    "labelEn": "Extension and Pronation",
+    "labelEs": "Extensión y Pronación",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "extensio + pronacio",
+      "extension + pronation"
+    ],
+    "sortOrder": 2
+  },
+  {
+    "dimension": "ORIENTATION_CHANGE",
+    "code": "EXTENSION_TO_FLEXION",
+    "labelCa": "Extensió > flexió",
+    "labelEn": "Extension to Flexion",
+    "labelEs": "De Extensión a Flexión",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "extensio > flexio",
+      "extension > flexion"
+    ],
+    "sortOrder": 3
+  },
+  {
+    "dimension": "ORIENTATION_CHANGE",
+    "code": "EXTENSION_OR_FLEXION",
+    "labelCa": "Extensió | flexió",
+    "labelEn": "Extension or Flexion",
+    "labelEs": "Extensión o Flexión",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "extensio / flexio",
+      "extension/flexion"
+    ],
+    "sortOrder": 4
+  },
+  {
+    "dimension": "ORIENTATION_CHANGE",
+    "code": "FLEXION",
+    "labelCa": "Flexió",
+    "labelEn": "Flexion",
+    "labelEs": "Flexión",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "flexio",
+      "flexion"
+    ],
+    "sortOrder": 5
+  },
+  {
+    "dimension": "ORIENTATION_CHANGE",
+    "code": "FLEXION_TO_EXTENSION",
+    "labelCa": "Flexió > extensió",
+    "labelEn": "Flexion to Extension",
+    "labelEs": "De Flexión a Extensión",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "flexio > extensio",
+      "flexion > extension"
+    ],
+    "sortOrder": 6
+  },
+  {
+    "dimension": "ORIENTATION_CHANGE",
+    "code": "PRONATION",
+    "labelCa": "Pronació",
+    "labelEn": "Pronation",
+    "labelEs": "Pronación",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "pronacio",
+      "pronation"
+    ],
+    "sortOrder": 7
+  },
+  {
+    "dimension": "ORIENTATION_CHANGE",
+    "code": "PRONATION_OR_SUPINATION",
+    "labelCa": "Pronació | supinació",
+    "labelEn": "Pronation or Supination",
+    "labelEs": "Pronación o Supinación",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "pronacio / supinacio",
+      "pronation/supination"
+    ],
+    "sortOrder": 8
+  },
+  {
+    "dimension": "ORIENTATION_CHANGE",
+    "code": "RADIAL_AND_ULNAR_FLEXION",
+    "labelCa": "Flexió radial + ulnar",
+    "labelEn": "Radial and Ulnar Flexion",
+    "labelEs": "Flexión Radial y Ulnar",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "flexio radial i cubital",
+      "radial and ulnar flexion"
+    ],
+    "sortOrder": 9
+  },
+  {
+    "dimension": "ORIENTATION_CHANGE",
+    "code": "RADIAL_FLEXION",
+    "labelCa": "Flexió radial",
+    "labelEn": "Radial Flexion",
+    "labelEs": "Flexión Radial",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "flexio radial",
+      "radial flexion"
+    ],
+    "sortOrder": 10
+  },
+  {
+    "dimension": "ORIENTATION_CHANGE",
+    "code": "ROTATION",
+    "labelCa": "Rotació",
+    "labelEn": "Rotation",
+    "labelEs": "Rotación",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "rotacio",
+      "rotation"
+    ],
+    "sortOrder": 11
+  },
+  {
+    "dimension": "ORIENTATION_CHANGE",
+    "code": "SUPINATION",
+    "labelCa": "Supinació",
+    "labelEn": "Supination",
+    "labelEs": "Supinación",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "supinacio",
+      "supination"
+    ],
+    "sortOrder": 12
+  },
+  {
+    "dimension": "ORIENTATION_CHANGE",
+    "code": "SUPINATION_TO_PRONATION",
+    "labelCa": "Supinació > pronació",
+    "labelEn": "Supination to Pronation",
+    "labelEs": "De Supinación a Pronación",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "supinacio > pronacio",
+      "supination > pronation"
+    ],
+    "sortOrder": 13
+  },
+  {
+    "dimension": "ORIENTATION_CHANGE",
+    "code": "ULNAR_FLEXION",
+    "labelCa": "Flexió ulnar",
+    "labelEn": "Ulnar Flexion",
+    "labelEs": "Flexión Ulnar",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "flexio cubital",
+      "ulnar flexion"
+    ],
+    "sortOrder": 14
+  },
+  {
+    "dimension": "ORIENTATION_CHANGE",
+    "code": "PRONATION_TO_FLEXION",
+    "labelCa": "Pronació > flexió",
+    "labelEn": "Pronation to Flexion",
+    "labelEs": "De Pronación a Flexión",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "pronacio > flexio",
+      "pronation > flexion"
+    ],
+    "sortOrder": 15
+  },
+  {
+    "dimension": "ORIENTATION_CHANGE",
+    "code": "SUPINATION_TO_EXTENSION",
+    "labelCa": "Supinació > extensió",
+    "labelEn": "Supination to Extension",
+    "labelEs": "De Supinación a Extensión",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "supinacio > extensio",
+      "supination > extension"
+    ],
+    "sortOrder": 16
+  },
+  {
+    "dimension": "CONTACT_TYPE",
+    "code": "EMPTY",
+    "labelCa": "-------------",
+    "labelEn": "Empty",
+    "labelEs": "Vacío",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [],
+    "sortOrder": 0
+  },
+  {
+    "dimension": "CONTACT_TYPE",
+    "code": "BRUSH",
+    "labelCa": "Fregament",
+    "labelEn": "Brush",
+    "labelEs": "Roce",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "brush",
+      "frec"
+    ],
+    "sortOrder": 1
+  },
+  {
+    "dimension": "CONTACT_TYPE",
+    "code": "CONTINUOUS",
+    "labelCa": "Continu",
+    "labelEn": "Continuous",
+    "labelEs": "Continuo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "continu",
+      "continuous"
+    ],
+    "sortOrder": 2
+  },
+  {
+    "dimension": "CONTACT_TYPE",
+    "code": "CONTINUOUS_TO_CONTINUOUS",
+    "labelCa": "Continu > continu",
+    "labelEn": "Continuous to Continuous",
+    "labelEs": "De Continuo a Continuo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "continu > continu",
+      "continuous > continuous"
+    ],
+    "sortOrder": 3
+  },
+  {
+    "dimension": "CONTACT_TYPE",
+    "code": "CONTINUOUS_TO_FINAL",
+    "labelCa": "Continu > final",
+    "labelEn": "Continuous to Final",
+    "labelEs": "De Continuo a Final",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "continu > final",
+      "continuous > final"
+    ],
+    "sortOrder": 4
+  },
+  {
+    "dimension": "CONTACT_TYPE",
+    "code": "CONTINUOUS_TO_NONE",
+    "labelCa": "Continu > cap",
+    "labelEn": "Continuous to None",
+    "labelEs": "De Continuo a Ninguno",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "continu > res",
+      "continuous > none"
+    ],
+    "sortOrder": 5
+  },
+  {
+    "dimension": "CONTACT_TYPE",
+    "code": "DOUBLE",
+    "labelCa": "Doble",
+    "labelEn": "Double",
+    "labelEs": "Doble",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "doble",
+      "double"
+    ],
+    "sortOrder": 6
+  },
+  {
+    "dimension": "CONTACT_TYPE",
+    "code": "FINAL",
+    "labelCa": "Final",
+    "labelEn": "Final",
+    "labelEs": "Final",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "final"
+    ],
+    "sortOrder": 7
+  },
+  {
+    "dimension": "CONTACT_TYPE",
+    "code": "FINAL_TO_CONTINUOUS",
+    "labelCa": "Final > continu",
+    "labelEn": "Final to Continuous",
+    "labelEs": "De Final a Continuo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "final > continu",
+      "final > continuous"
+    ],
+    "sortOrder": 8
+  },
+  {
+    "dimension": "CONTACT_TYPE",
+    "code": "FINAL_TO_NONE",
+    "labelCa": "Final > cap",
+    "labelEn": "Final to None",
+    "labelEs": "De Final a Ninguno",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "final > none",
+      "final > res"
+    ],
+    "sortOrder": 9
+  },
+  {
+    "dimension": "CONTACT_TYPE",
+    "code": "INITIAL",
+    "labelCa": "Inicial",
+    "labelEn": "Initial",
+    "labelEs": "Inicial",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "inicial",
+      "initial"
+    ],
+    "sortOrder": 10
+  },
+  {
+    "dimension": "CONTACT_TYPE",
+    "code": "NONE_TO_FINAL",
+    "labelCa": "Cap > final",
+    "labelEn": "None to Final",
+    "labelEs": "De Ninguno a Final",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "none > final",
+      "res > final"
+    ],
+    "sortOrder": 11
+  },
+  {
+    "dimension": "CONTACT_TYPE",
+    "code": "NONE_TO_INITIAL",
+    "labelCa": "Cap > inicial",
+    "labelEn": "None to Initial",
+    "labelEs": "De Ninguno a Inicial",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "none > initial",
+      "res > inicial"
+    ],
+    "sortOrder": 12
+  },
+  {
+    "dimension": "CONTACT_TYPE",
+    "code": "INITIAL_TO_FINAL",
+    "labelCa": "Inicial > final",
+    "labelEn": "Initial to Final",
+    "labelEs": "De Inicial a Final",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "inicial > final",
+      "initial > final"
+    ],
+    "sortOrder": 13
+  },
+  {
+    "dimension": "MOVEMENT_TYPE",
+    "code": "EMPTY",
+    "labelCa": "-------------",
+    "labelEn": "Empty",
+    "labelEs": "Vacío",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [],
+    "sortOrder": 0
+  },
+  {
+    "dimension": "MOVEMENT_TYPE",
+    "code": "ARC",
+    "labelCa": "Arc",
+    "labelEn": "Arc",
+    "labelEs": "Arco",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "arc"
+    ],
+    "sortOrder": 1
+  },
+  {
+    "dimension": "MOVEMENT_TYPE",
+    "code": "CIRCLE",
+    "labelCa": "Cercle",
+    "labelEn": "Circle",
+    "labelEs": "Círculo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "circle",
+      "circular"
+    ],
+    "sortOrder": 2
+  },
+  {
+    "dimension": "MOVEMENT_TYPE",
+    "code": "CROSS",
+    "labelCa": "Creu",
+    "labelEn": "Cross",
+    "labelEs": "Cruz",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "creuat",
+      "cross"
+    ],
+    "sortOrder": 3
+  },
+  {
+    "dimension": "MOVEMENT_TYPE",
+    "code": "MOTIVATED_SHAPE",
+    "labelCa": "Forma motivada",
+    "labelEn": "Motivated Shape",
+    "labelEs": "Forma Motivada",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "forma motivada",
+      "motivated shape"
+    ],
+    "sortOrder": 4
+  },
+  {
+    "dimension": "MOVEMENT_TYPE",
+    "code": "SPIRAL",
+    "labelCa": "Espiral",
+    "labelEn": "Spiral",
+    "labelEs": "Espiral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "espiral",
+      "spiral"
+    ],
+    "sortOrder": 5
+  },
+  {
+    "dimension": "MOVEMENT_TYPE",
+    "code": "STRAIGHT",
+    "labelCa": "Recte",
+    "labelEn": "Straight",
+    "labelEs": "Recto",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "recte",
+      "straight"
+    ],
+    "sortOrder": 6
+  },
+  {
+    "dimension": "MOVEMENT_TYPE",
+    "code": "ZIGZAG",
+    "labelCa": "Ziga-zaga",
+    "labelEn": "Zigzag",
+    "labelEs": "Zigzag",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ziga-zaga",
+      "zigzag"
+    ],
+    "sortOrder": 7
+  },
+  {
+    "dimension": "MOVEMENT_TYPE",
+    "code": "STRAIGHT_TO_CIRCLE",
+    "labelCa": "Recte > cercle",
+    "labelEn": "Straight to Circle",
+    "labelEs": "De Recto a Círculo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "recte > cercle",
+      "straight > circle"
+    ],
+    "sortOrder": 8
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "EMPTY",
+    "labelCa": "-------------",
+    "labelEn": "Empty",
+    "labelEs": "Vacío",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [],
+    "sortOrder": 0
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "BACKWARDS",
+    "labelCa": "Enrere",
+    "labelEn": "Backwards",
+    "labelEs": "Hacia atrás",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "backwards",
+      "enrere"
+    ],
+    "sortOrder": 1
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "BACKWARDS_AND_CONTRALATERAL",
+    "labelCa": "Enrere i contralateral",
+    "labelEn": "Backwards and contralateral",
+    "labelEs": "Hacia atrás y contralateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "backwards + contralateral",
+      "enrere + contralateral"
+    ],
+    "sortOrder": 2
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "BACKWARDS_AND_DOWNWARDS",
+    "labelCa": "Enrere i avall",
+    "labelEn": "Backwards and downwards",
+    "labelEs": "Hacia atrás y hacia abajo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "backwards + downwards",
+      "enrere + avall"
+    ],
+    "sortOrder": 3
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "BACKWARDS_AND_IPSILATERAL",
+    "labelCa": "Enrere i ipsilateral",
+    "labelEn": "Backwards and ipsilateral",
+    "labelEs": "Hacia atrás y ipsilateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "backwards + ipsilateral",
+      "enrere + ipsilateral"
+    ],
+    "sortOrder": 4
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "BACKWARDS_AND_UPWARDS",
+    "labelCa": "Enrere i amunt",
+    "labelEn": "Backwards and upwards",
+    "labelEs": "Hacia atrás y hacia arriba",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "backwards + upwards",
+      "enrere + amunt"
+    ],
+    "sortOrder": 5
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "BACKWARDS_TO_DOWNWARDS",
+    "labelCa": "Enrere a avall",
+    "labelEn": "Backwards to downwards",
+    "labelEs": "Hacia atrás a abajo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "backwards > downwards",
+      "enrere > avall"
+    ],
+    "sortOrder": 6
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "BACKWARDS_TO_FORWARDS",
+    "labelCa": "Enrere a endavant",
+    "labelEn": "Backwards to forwards",
+    "labelEs": "Hacia atrás a adelante",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "backwards > forwards",
+      "enrere > endavant"
+    ],
+    "sortOrder": 7
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "BACKWARDS_OR_FORWARDS",
+    "labelCa": "Enrere o endavant",
+    "labelEn": "Backwards or forwards",
+    "labelEs": "Hacia atrás o adelante",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "backwards/forwards",
+      "enrere / endavant"
+    ],
+    "sortOrder": 8
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "CONTRALATERAL",
+    "labelCa": "Contralateral",
+    "labelEn": "Contralateral",
+    "labelEs": "Contralateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "contralateral"
+    ],
+    "sortOrder": 9
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "CONTRALATERAL_AND_DOWNWARDS",
+    "labelCa": "Contralateral i avall",
+    "labelEn": "Contralateral and downwards",
+    "labelEs": "Contralateral y hacia abajo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "contralateral + avall",
+      "contralateral + downwards"
+    ],
+    "sortOrder": 10
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "CONTRALATERAL_AND_FORWARDS",
+    "labelCa": "Contralateral i endavant",
+    "labelEn": "Contralateral and forwards",
+    "labelEs": "Contralateral y hacia adelante",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "contralateral + endavant",
+      "contralateral + forwards"
+    ],
+    "sortOrder": 11
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "CONTRALATERAL_AND_UPWARDS",
+    "labelCa": "Contralateral i amunt",
+    "labelEn": "Contralateral and upwards",
+    "labelEs": "Contralateral y hacia arriba",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "contralateral + amunt",
+      "contralateral + upwards"
+    ],
+    "sortOrder": 12
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "CONTRALATERAL_TO_FORWARDS",
+    "labelCa": "Contralateral a endavant",
+    "labelEn": "Contralateral to forwards",
+    "labelEs": "Contralateral a adelante",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "contralateral > endavant",
+      "contralateral > forwards"
+    ],
+    "sortOrder": 13
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "CONTRALATERAL_TO_IPSILATERAL",
+    "labelCa": "Contralateral a ipsilateral",
+    "labelEn": "Contralateral to ipsilateral",
+    "labelEs": "Contralateral a ipsilateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "contralateral > ipsilateral"
+    ],
+    "sortOrder": 14
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "DISTAL",
+    "labelCa": "Distal",
+    "labelEn": "Distal",
+    "labelEs": "Distal",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "distal"
+    ],
+    "sortOrder": 15
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "DOWNWARDS",
+    "labelCa": "Avall",
+    "labelEn": "Downwards",
+    "labelEs": "Hacia abajo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "avall",
+      "downwards"
+    ],
+    "sortOrder": 16
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "DOWNWARDS_AND_CONTRALATERAL_OR_IPSILATERAL",
+    "labelCa": "Avall i contralateral o ipsilateral",
+    "labelEn": "Downwards and contralateral or ipsilateral",
+    "labelEs": "Hacia abajo y contralateral o ipsilateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "avall + contralateral / ipsilateral",
+      "downwards + contralateral/ipsilateral"
+    ],
+    "sortOrder": 17
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "DOWNWARDS_AND_FORWARDS",
+    "labelCa": "Avall i endavant",
+    "labelEn": "Downwards and forwards",
+    "labelEs": "Hacia abajo y adelante",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "avall + endavant",
+      "downwards + forwards"
+    ],
+    "sortOrder": 18
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "DOWNWARDS_AND_IPSILATERAL",
+    "labelCa": "Avall i ipsilateral",
+    "labelEn": "Downwards and ipsilateral",
+    "labelEs": "Hacia abajo y ipsilateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "avall + ipsilateral",
+      "downwards + ipsilateral"
+    ],
+    "sortOrder": 19
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "DOWNWARDS_AND_IPSILATERAL_TO_DOWNWARDS",
+    "labelCa": "Avall i ipsilateral a avall",
+    "labelEn": "Downwards and ipsilateral to downwards",
+    "labelEs": "Hacia abajo y ipsilateral a abajo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "avall + ipsilateral > avall",
+      "downwards + ipsilateral > downwards"
+    ],
+    "sortOrder": 20
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "DOWNWARDS_AND_TOWARDS",
+    "labelCa": "Avall i cap a",
+    "labelEn": "Downwards and towards",
+    "labelEs": "Hacia abajo y hacia",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "avall + cap a",
+      "downwards + towards"
+    ],
+    "sortOrder": 21
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "DOWNWARDS_TO_CONTRALATERAL",
+    "labelCa": "Avall a contralateral",
+    "labelEn": "Downwards to contralateral",
+    "labelEs": "Hacia abajo a contralateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "avall > contralateral",
+      "downwards > contralateral"
+    ],
+    "sortOrder": 22
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "DOWNWARDS_TO_FORWARDS",
+    "labelCa": "Avall a endavant",
+    "labelEn": "Downwards to forwards",
+    "labelEs": "Hacia abajo a adelante",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "avall > endavant",
+      "downwards > forwards"
+    ],
+    "sortOrder": 23
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "DOWNWARDS_TO_IPSILATERAL",
+    "labelCa": "Avall a ipsilateral",
+    "labelEn": "Downwards to ipsilateral",
+    "labelEs": "Hacia abajo a ipsilateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "avall > ipsilateral",
+      "downwards > ipsilateral"
+    ],
+    "sortOrder": 24
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "DOWNWARDS_TO_UPWARDS",
+    "labelCa": "Avall a amunt",
+    "labelEn": "Downwards to upwards",
+    "labelEs": "Hacia abajo a arriba",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "avall > amunt",
+      "downwards > upwards"
+    ],
+    "sortOrder": 25
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "DOWNWARDS_OR_UPWARDS",
+    "labelCa": "Avall o amunt",
+    "labelEn": "Downwards or upwards",
+    "labelEs": "Hacia abajo o arriba",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "avall / amunt",
+      "downwards/upwards"
+    ],
+    "sortOrder": 26
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "DOWNWARDS_OR_UPWARDS_AND_IPSILATERAL",
+    "labelCa": "Avall o amunt i ipsilateral",
+    "labelEn": "Downwards or upwards and ipsilateral",
+    "labelEs": "Hacia abajo o arriba y ipsilateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "avall / amunt + ipsilateral",
+      "downwards/upwards + ipsilateral"
+    ],
+    "sortOrder": 27
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "FORWARDS",
+    "labelCa": "Endavant",
+    "labelEn": "Forwards",
+    "labelEs": "Hacia adelante",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "endavant",
+      "forwards"
+    ],
+    "sortOrder": 28
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "FORWARDS_AND_IPSILATERAL",
+    "labelCa": "Endavant i ipsilateral",
+    "labelEn": "Forwards and ipsilateral",
+    "labelEs": "Hacia adelante y ipsilateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "endavant + ipsilateral",
+      "forwards + ipsilateral"
+    ],
+    "sortOrder": 29
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "FORWARDS_AND_UPWARDS",
+    "labelCa": "Endavant i amunt",
+    "labelEn": "Forwards and upwards",
+    "labelEs": "Hacia adelante y arriba",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "endavant + amunt",
+      "forwards + upwards"
+    ],
+    "sortOrder": 30
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "FORWARDS_TO_BACKWARDS",
+    "labelCa": "Endavant a enrere",
+    "labelEn": "Forwards to backwards",
+    "labelEs": "Hacia adelante a atrás",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "endavant > enrere",
+      "forwards > backwards"
+    ],
+    "sortOrder": 31
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "FORWARDS_TO_CONTRALATERAL",
+    "labelCa": "Endavant a contralateral",
+    "labelEn": "Forwards to contralateral",
+    "labelEs": "Hacia adelante a contralateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "endavant > contralateral",
+      "forwards > contralateral"
+    ],
+    "sortOrder": 32
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "FORWARDS_TO_DOWNWARDS",
+    "labelCa": "Endavant a avall",
+    "labelEn": "Forwards to downwards",
+    "labelEs": "Hacia adelante a abajo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "endavant > avall",
+      "forwards > downwards"
+    ],
+    "sortOrder": 33
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "FORWARDS_TO_IPSILATERAL",
+    "labelCa": "Endavant a ipsilateral",
+    "labelEn": "Forwards to ipsilateral",
+    "labelEs": "Hacia adelante a ipsilateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "endavant > ipsilateral",
+      "forwards > ipsilateral"
+    ],
+    "sortOrder": 34
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "FORWARDS_TO_IPSILATERAL_TO_FORWARDS",
+    "labelCa": "Endavant a ipsilateral a endavant",
+    "labelEn": "Forwards to ipsilateral to forwards",
+    "labelEs": "Hacia adelante a ipsilateral a adelante",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "endavant > ipsilateral > endavant",
+      "forwards > ipsilateral > forwards"
+    ],
+    "sortOrder": 35
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "FORWARDS_TO_UPWARDS",
+    "labelCa": "Endavant a amunt",
+    "labelEn": "Forwards to upwards",
+    "labelEs": "Hacia adelante a arriba",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "endavant > amunt",
+      "forwards > upwards"
+    ],
+    "sortOrder": 36
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "FROM_LOCATION",
+    "labelCa": "Des de la ubicació",
+    "labelEn": "From location",
+    "labelEs": "Desde la ubicación",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "des de la localitzacio",
+      "from location"
+    ],
+    "sortOrder": 37
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "IPSILATERAL",
+    "labelCa": "Ipsilateral",
+    "labelEn": "Ipsilateral",
+    "labelEs": "Ipsilateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ipsilateral"
+    ],
+    "sortOrder": 38
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "IPSILATERAL_AND_UP_AND_DOWN",
+    "labelCa": "Ipsilateral i amunt i avall",
+    "labelEn": "Ipsilateral and up and down",
+    "labelEs": "Ipsilateral y arriba y abajo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ipsilateral + amunt i avall",
+      "ipsilateral + up and down"
+    ],
+    "sortOrder": 39
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "IPSILATERAL_AND_UPWARDS",
+    "labelCa": "Ipsilateral i amunt",
+    "labelEn": "Ipsilateral and upwards",
+    "labelEs": "Ipsilateral y arriba",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ipsilateral + amunt",
+      "ipsilateral + upwards"
+    ],
+    "sortOrder": 40
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "IPSILATERAL_TO_CONTRALATERAL",
+    "labelCa": "Ipsilateral a contralateral",
+    "labelEn": "Ipsilateral to contralateral",
+    "labelEs": "Ipsilateral a contralateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ipsilateral > contralateral"
+    ],
+    "sortOrder": 41
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "IPSILATERAL_TO_DOWNWARDS",
+    "labelCa": "Ipsilateral a avall",
+    "labelEn": "Ipsilateral to downwards",
+    "labelEs": "Ipsilateral a abajo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ipsilateral > avall",
+      "ipsilateral > downwards"
+    ],
+    "sortOrder": 42
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "IPSILATERAL_TO_DOWNWARDS_TO_CONTRALATERAL",
+    "labelCa": "Ipsilateral a avall a contralateral",
+    "labelEn": "Ipsilateral to downwards to contralateral",
+    "labelEs": "Ipsilateral a abajo a contralateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ipsilateral > avall > contralateral",
+      "ipsilateral > downwards > contralateral"
+    ],
+    "sortOrder": 43
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "IPSILATERAL_TO_UPWARDS",
+    "labelCa": "Ipsilateral a amunt",
+    "labelEn": "Ipsilateral to upwards",
+    "labelEs": "Ipsilateral a arriba",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ipsilateral > amunt",
+      "ipsilateral > upwards"
+    ],
+    "sortOrder": 44
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "IPSILATERAL_AND_CONTRALATERAL",
+    "labelCa": "Ipsilateral i contralateral",
+    "labelEn": "Ipsilateral and contralateral",
+    "labelEs": "Ipsilateral y contralateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ipsilateral and contralateral",
+      "ipsilateral i contralateral"
+    ],
+    "sortOrder": 45
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "IPSILATERAL_OR_CONTRALATERAL",
+    "labelCa": "Ipsilateral o contralateral",
+    "labelEn": "Ipsilateral or contralateral",
+    "labelEs": "Ipsilateral o contralateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ipsilateral / contralateral",
+      "ipsilateral/contralateral"
+    ],
+    "sortOrder": 46
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "LATERAL",
+    "labelCa": "Lateral",
+    "labelEn": "Lateral",
+    "labelEs": "Lateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "lateral"
+    ],
+    "sortOrder": 47
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "PROXIMAL",
+    "labelCa": "Proximal",
+    "labelEn": "Proximal",
+    "labelEs": "Proximal",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "proximal"
+    ],
+    "sortOrder": 48
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "TO_AND_FRO",
+    "labelCa": "Anada i tornada",
+    "labelEn": "To and fro",
+    "labelEs": "Ida y vuelta",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "to and fro",
+      "vaive"
+    ],
+    "sortOrder": 49
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "TOWARDS_LOCATION",
+    "labelCa": "Cap a la ubicació",
+    "labelEn": "Towards location",
+    "labelEs": "Hacia la ubicación",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "cap a la localitzacio",
+      "towards location"
+    ],
+    "sortOrder": 50
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "UP_AND_DOWN",
+    "labelCa": "Amunt i avall",
+    "labelEn": "Up and down",
+    "labelEs": "Arriba y abajo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "amunt i avall",
+      "up and down"
+    ],
+    "sortOrder": 51
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "UPWARDS",
+    "labelCa": "Amunt",
+    "labelEn": "Upwards",
+    "labelEs": "Hacia arriba",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "amunt",
+      "upwards"
+    ],
+    "sortOrder": 52
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "UPWARDS_TO_DOWNWARDS",
+    "labelCa": "Amunt a avall",
+    "labelEn": "Upwards to downwards",
+    "labelEs": "Hacia arriba a abajo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "amunt > avall",
+      "upwards > downwards"
+    ],
+    "sortOrder": 53
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "UPWARDS_TO_FORWARDS_TO_DOWNWARDS",
+    "labelCa": "Amunt a endavant a avall",
+    "labelEn": "Upwards to forwards to downwards",
+    "labelEs": "Hacia arriba a adelante a abajo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "amunt > endavant > avall",
+      "upwards > forwards > downwards"
+    ],
+    "sortOrder": 54
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "UPWARDS_TO_IPSILATERAL",
+    "labelCa": "Amunt a ipsilateral",
+    "labelEn": "Upwards to ipsilateral",
+    "labelEs": "Hacia arriba a ipsilateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "amunt > ipsilateral",
+      "upwards > ipsilateral"
+    ],
+    "sortOrder": 55
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "VARIABLE",
+    "labelCa": "Variable",
+    "labelEn": "Variable",
+    "labelEs": "Variable",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "variable"
+    ],
+    "sortOrder": 56
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "FORWARDS_AND_DOWNWARDS",
+    "labelCa": "Endavant i avall",
+    "labelEn": "Forwards and downwards",
+    "labelEs": "Hacia adelante y abajo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [],
+    "sortOrder": 57
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "CONTRALATERAL_TO_DOWNWARDS",
+    "labelCa": "Contralateral a avall",
+    "labelEn": "Contralateral to downwards",
+    "labelEs": "Contralateral a abajo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "contralateral > avall",
+      "contralateral > downwards"
+    ],
+    "sortOrder": 58
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "DOWNWARDS_TO_CONTRALATERAL_TO_IPSILATERAL",
+    "labelCa": "Avall a contralateral a ipsilateral",
+    "labelEn": "Downwards to contralateral to ipsilateral",
+    "labelEs": "Hacia abajo a contralateral a ipsilateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "avall > contralateral > ipsilateral",
+      "downwards > contralateral > ipsilateral"
+    ],
+    "sortOrder": 59
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "UPWARDS_AND_FORWARDS",
+    "labelCa": "Amunt i endavant",
+    "labelEn": "Upwards and forwards",
+    "labelEs": "Hacia arriba y adelante",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "amunt + endavant",
+      "upwards + forwards"
+    ],
+    "sortOrder": 60
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "IPSILATERAL_TO_FORWARDS",
+    "labelCa": "Ipsilateral a endavant",
+    "labelEn": "Ipsilateral to forwards",
+    "labelEs": "Ipsilateral a adelante",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ipsilateral > endavant",
+      "ipsilateral > forwards"
+    ],
+    "sortOrder": 61
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "IPSILATERAL_TO_BACKWARDS_TO_CONTRALATERAL",
+    "labelCa": "Ipsilateral a enrere a contralateral",
+    "labelEn": "Ipsilateral to backwards to contralateral",
+    "labelEs": "Ipsilateral a atrás a contralateral",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ipsilateral > backwards > contralateral",
+      "ipsilateral > enrere > contralateral"
+    ],
+    "sortOrder": 62
+  },
+  {
+    "dimension": "MOVEMENT_DIRECTION",
+    "code": "IPSILATERAL_AND_DOWNWARDS",
+    "labelCa": "Ipsilateral i avall",
+    "labelEn": "Ipsilateral and downwards",
+    "labelEs": "Ipsilateral y abajo",
+    "descriptionCa": null,
+    "descriptionEn": null,
+    "descriptionEs": null,
+    "aliases": [
+      "ipsilateral + downwards",
+      "ispilateral + avall"
+    ],
+    "sortOrder": 63
+  }
+]

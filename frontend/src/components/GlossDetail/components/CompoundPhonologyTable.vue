@@ -149,7 +149,7 @@ const phonologyRows = computed<{ id: string; label: string; getValue: RowGetter 
       slot,
       'dominantConfiguration',
       'nonDominantConfiguration',
-      phonologyOptions.handConfigurationOptions,
+      phonologyOptions.handConfigurationOptions.value,
     ),
   },
   {
@@ -159,54 +159,54 @@ const phonologyRows = computed<{ id: string; label: string; getValue: RowGetter 
       slot,
       'dominantRelationBetweenArticulators',
       'nonDominantRelationBetweenArticulators',
-      phonologyOptions.relationBetweenArticulatorsOptions,
+      phonologyOptions.relationBetweenArticulatorsOptions.value,
     ),
   },
   {
     id: 'location',
     label: translate('location'),
-    getValue: (slot) => formatSharedEnum(slot.phonology.location, phonologyOptions.locationOptions),
+    getValue: (slot) => formatSharedEnum(slot.phonology.location, phonologyOptions.locationOptions.value),
   },
   {
     id: 'configurationChanges',
     label: translate('configurationChanges'),
-    getValue: (slot) => formatSharedEnum(slot.phonology.configurationChanges, phonologyOptions.configurationChangeOptions),
+    getValue: (slot) => formatSharedEnum(slot.phonology.configurationChanges, phonologyOptions.configurationChangeOptions.value),
   },
   {
     id: 'movementRelatedOrientation',
     label: translate('movementRelatedOrientation'),
-    getValue: (slot) => formatSharedEnum(slot.phonology.movementRelatedOrientation, phonologyOptions.movementRelatedOrientationOptions),
+    getValue: (slot) => formatSharedEnum(slot.phonology.movementRelatedOrientation, phonologyOptions.movementRelatedOrientationOptions.value),
   },
   {
     id: 'orientationRelatedToLocation',
     label: translate('orientationRelatedToLocation'),
-    getValue: (slot) => formatSharedEnum(slot.phonology.orientationRelatedToLocation, phonologyOptions.orientationRelatedToLocationOptions),
+    getValue: (slot) => formatSharedEnum(slot.phonology.orientationRelatedToLocation, phonologyOptions.orientationRelatedToLocationOptions.value),
   },
   {
     id: 'orientationChange',
     label: translate('orientationChange'),
-    getValue: (slot) => formatSharedEnum(slot.phonology.orientationChange, phonologyOptions.orientationChangeOptions),
+    getValue: (slot) => formatSharedEnum(slot.phonology.orientationChange, phonologyOptions.orientationChangeOptions.value),
   },
   {
     id: 'contactType',
     label: translate('contactType'),
-    getValue: (slot) => formatSharedEnum(slot.phonology.contactType, phonologyOptions.contactTypeOptions),
+    getValue: (slot) => formatSharedEnum(slot.phonology.contactType, phonologyOptions.contactTypeOptions.value),
   },
   {
     id: 'movementType',
     label: translate('movementType'),
-    getValue: (slot) => formatSharedEnum(slot.phonology.movementType, phonologyOptions.movementTypeOptions),
+    getValue: (slot) => formatSharedEnum(slot.phonology.movementType, phonologyOptions.movementTypeOptions.value),
   },
   {
     id: 'movementDirection',
     label: translate('movementDirection'),
-    getValue: (slot) => formatSharedEnum(slot.phonology.movementDirection, phonologyOptions.movementDirectionOptions),
+    getValue: (slot) => formatSharedEnum(slot.phonology.movementDirection, phonologyOptions.movementDirectionOptions.value),
   },
 ]);
 
 function formatHandedness(handedness: string | undefined) {
   if (!handedness) return translate('notSet');
-  return getOptionLabel(phonologyOptions.handednessOptions, handedness);
+  return getOptionLabel(phonologyOptions.handednessOptions.value, handedness);
 }
 
 function formatSharedEnum(

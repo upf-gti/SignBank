@@ -1,5 +1,4 @@
 import type { GlossData , Language, RequestStatus } from './models'
-import type { Handedness } from './enums'
 
 export type WordStatus = 'PUBLISHED' | 'DRAFT' | 'PENDING';
 
@@ -96,7 +95,7 @@ export interface UpdateVideoDto {
   url: string;
   priority?: number;
   videoData: {
-    handedness: Handedness;
+    handedness: string;
     dominantConfiguration: string;
     nonDominantConfiguration?: string;
     configurationChanges: string;
@@ -182,7 +181,7 @@ export interface GlossRequestDetailResponse extends GlossRequestResponse {
     url: string;
     priority: number;
     videoData: {
-      handedness: Handedness;
+      handedness: string;
       dominantConfiguration: string;
       nonDominantConfiguration?: string;
       configurationChanges: string;

@@ -214,7 +214,7 @@ import EditableModule from 'src/components/Shared/EditableModule.vue';
 import { ref, watch, computed, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
 import api from 'src/services/api';
-import { Handedness, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType, MovementDirection } from 'src/types/enums';
+import { createDefaultPhonology } from 'src/utils/defaultPhonology';
 
 const glossData = defineModel<GlossData>({ required: true });
 const emit = defineEmits<{
@@ -357,24 +357,7 @@ const addVideo = () => {
       priority: 1,
     }],
     minimalPairs: [],
-    videoData: {
-      handedness: Handedness.ONE,
-      dominantConfiguration: HandConfiguration.CONF_1,
-      configurationChanges: ConfigurationChange.BENDING,
-      dominantRelationBetweenArticulators: RelationBetweenArticulators.ABOVE,
-      location: Location.NEUTRAL_SPACE,
-      movementRelatedOrientation: MovementRelatedOrientation.FRONT,
-      orientationRelatedToLocation: OrientationRelatedToLocation.AO_FINGERS_CONTRA,
-      orientationChange: OrientationChange.EXTENSION,
-      contactType: ContactType.CONTINUOUS,
-      movementType: MovementType.STRAIGHT,
-      movementDirection: MovementDirection.FORWARDS,
-      repeatedMovement: false,
-      vocalization: '',
-      nonManualComponent: '',
-      inicialization: '',
-      id: Date.now().toString(),
-    },
+    videoData: createDefaultPhonology(),
   };
 
   glossData.value.glossVideos.unshift(newVideo);

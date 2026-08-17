@@ -1,20 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import {
-  ConfigurationChange,
-  ContactType,
   GlossStatus,
-  Handedness,
-  HandConfiguration,
   Language,
   LexicalCategory,
-  Location,
-  MovementDirection,
-  MovementRelatedOrientation,
-  MovementType,
-  OrientationChange,
-  OrientationRelatedToLocation,
   Prisma,
-  RelationBetweenArticulators,
   RelationType,
 } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
@@ -27,6 +16,7 @@ import type {
   MappedFitxa,
   MappedPhonology,
 } from './fitxa.types';
+import { videoDataFromCodes } from '../phonology-values/phonology-video-data';
 
 type UploadedJsonFile = {
   originalname: string;
@@ -370,29 +360,7 @@ export class BulkImportService {
   }
 
   private videoDataCreate(phonology: MappedPhonology) {
-    return {
-      handedness: phonology.handedness as Handedness,
-      dominantConfiguration: phonology.dominantConfiguration as HandConfiguration | null,
-      nonDominantConfiguration: phonology.nonDominantConfiguration as HandConfiguration | null,
-      dominantRelationBetweenArticulators:
-        phonology.dominantRelationBetweenArticulators as RelationBetweenArticulators | null,
-      nonDominantRelationBetweenArticulators:
-        phonology.nonDominantRelationBetweenArticulators as RelationBetweenArticulators | null,
-      configurationChanges: phonology.configurationChanges as ConfigurationChange,
-      location: phonology.location as Location,
-      movementRelatedOrientation:
-        phonology.movementRelatedOrientation as MovementRelatedOrientation,
-      orientationRelatedToLocation:
-        phonology.orientationRelatedToLocation as OrientationRelatedToLocation,
-      orientationChange: phonology.orientationChange as OrientationChange,
-      contactType: phonology.contactType as ContactType,
-      movementType: phonology.movementType as MovementType,
-      movementDirection: phonology.movementDirection as MovementDirection,
-      vocalization: phonology.vocalization,
-      nonManualComponent: phonology.nonManualComponent,
-      inicialization: phonology.inicialization,
-      repeatedMovement: phonology.repeatedMovement,
-    };
+    return videoDataFromCodes(phonology);
   }
 
   private async ensureLinks(
@@ -540,18 +508,12 @@ export class BulkImportService {
       ? index.get(this.glossKey(part.gloss))?.id ?? null
       : null;
 
-    if (linkedGlossId) {
-      await this.prisma.compoundPart.create({
-        data: {
-          glossDataId,
-          position: part.position,
-          gloss: part.gloss,
-          compExternalId: part.compExternalId,
-          redundant: part.redundant,
-          linkedGlossId,
-        },
+    let inlinePhonologyId: string | undefined;
+    if (!linkedGlossId && part.phonology) {
+      const phonology = await this.prisma.videoData.create({
+        data: this.videoDataCreate(part.phonology),
       });
-      return;
+      inlinePhonologyId = phonology.id;
     }
 
     await this.prisma.compoundPart.create({
@@ -561,9 +523,8 @@ export class BulkImportService {
         gloss: part.gloss,
         compExternalId: part.compExternalId,
         redundant: part.redundant,
-        inlinePhonology: part.phonology
-          ? { create: this.videoDataCreate(part.phonology) }
-          : undefined,
+        linkedGlossId,
+        inlinePhonologyId,
       },
     });
   }

@@ -1,9 +1,7 @@
-import { Handedness } from 'src/types/enums';
-
-export function isMultiHand(handedness: Handedness | string | null | undefined): boolean {
-  return handedness === Handedness.TWO_A
-    || handedness === Handedness.TWO_N
-    || handedness === Handedness.TWO_S;
+export function isMultiHand(handedness: string | null | undefined): boolean {
+  return handedness === 'TWO_A'
+    || handedness === 'TWO_N'
+    || handedness === 'TWO_S';
 }
 
 export type PhonologyDisplayMode = 'single' | 'merged' | 'split';
@@ -29,35 +27,35 @@ export function getPhonologyDisplayMode(
   return 'split';
 }
 
-export function mapFitxaHandednessCode(code: string): Handedness | null {
+export function mapFitxaHandednessCode(code: string): string | null {
   const normalized = String(code).trim().toLowerCase();
   switch (normalized) {
     case '1':
-      return Handedness.ONE;
+      return 'ONE';
     case '2a':
-      return Handedness.TWO_A;
+      return 'TWO_A';
     case '2n':
-      return Handedness.TWO_N;
+      return 'TWO_N';
     case '2s':
-      return Handedness.TWO_S;
+      return 'TWO_S';
     case 'x':
-      return Handedness.NA;
+      return 'NA';
     default:
       return null;
   }
 }
 
-export function handednessToFitxaCode(handedness: Handedness): string {
+export function handednessToFitxaCode(handedness: string): string {
   switch (handedness) {
-    case Handedness.ONE:
+    case 'ONE':
       return '1';
-    case Handedness.TWO_A:
+    case 'TWO_A':
       return '2a';
-    case Handedness.TWO_N:
+    case 'TWO_N':
       return '2n';
-    case Handedness.TWO_S:
+    case 'TWO_S':
       return '2s';
-    case Handedness.NA:
+    case 'NA':
       return 'x';
     default:
       return '1';

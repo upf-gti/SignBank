@@ -3,126 +3,116 @@ import {
   Language,
   LexicalCategory,
   GlossStatus,
-  Handedness,
-  HandConfiguration,
-  ConfigurationChange,
-  RelationBetweenArticulators,
-  Location,
-  MovementRelatedOrientation,
-  OrientationRelatedToLocation,
-  OrientationChange,
-  ContactType,
-  MovementType,
-  MovementDirection,
   RelationType,
 } from '@prisma/client';
+import { videoDataFromCodes } from '../../src/phonology-values/phonology-video-data';
 
 /** Simple one-handed phonology for SEGON inline morpheme and BESSONS-T_antiga. */
 function buildBessonsComponentPhonology() {
-  return {
-    handedness: Handedness.ONE,
-    location: Location.NEUTRAL_SPACE,
-    orientationChange: OrientationChange.FLEXION,
-    configurationChanges: ConfigurationChange.EMPTY,
-    movementRelatedOrientation: MovementRelatedOrientation.EMPTY,
-    orientationRelatedToLocation: OrientationRelatedToLocation.EMPTY,
-    contactType: ContactType.EMPTY,
-    movementType: MovementType.EMPTY,
-    movementDirection: MovementDirection.EMPTY,
+  return videoDataFromCodes({
+    handedness: 'ONE',
+    location: 'NEUTRAL_SPACE',
+    orientationChange: 'FLEXION',
+    configurationChanges: 'EMPTY',
+    movementRelatedOrientation: 'EMPTY',
+    orientationRelatedToLocation: 'EMPTY',
+    contactType: 'EMPTY',
+    movementType: 'EMPTY',
+    movementDirection: 'EMPTY',
     vocalization: 'none',
     nonManualComponent: 'none',
     inicialization: 'none',
     repeatedMovement: false,
-  };
+  });
 }
 
 /** Two-handed asymmetric phonology for GERMÀ (see synonym GERMÀ+Conf 2 in bessons-1d.json). */
 function buildGermaPhonology() {
-  return {
-    handedness: Handedness.TWO_A,
-    dominantConfiguration: HandConfiguration.CONF_2,
-    nonDominantConfiguration: HandConfiguration.CONF_1,
-    dominantRelationBetweenArticulators: RelationBetweenArticulators.NEXT_TO,
-    nonDominantRelationBetweenArticulators: RelationBetweenArticulators.FRONT,
-    configurationChanges: ConfigurationChange.OPENING,
-    location: Location.NEUTRAL_SPACE,
-    movementRelatedOrientation: MovementRelatedOrientation.FRONT,
-    orientationRelatedToLocation: OrientationRelatedToLocation.AO_FINGERS_CONTRA,
-    orientationChange: OrientationChange.FLEXION,
-    contactType: ContactType.CONTINUOUS,
-    movementType: MovementType.ARC,
-    movementDirection: MovementDirection.FORWARDS,
+  return videoDataFromCodes({
+    handedness: 'TWO_A',
+    dominantConfiguration: 'CONF_2',
+    nonDominantConfiguration: 'CONF_1',
+    dominantRelationBetweenArticulators: 'NEXT_TO',
+    nonDominantRelationBetweenArticulators: 'FRONT',
+    configurationChanges: 'OPENING',
+    location: 'NEUTRAL_SPACE',
+    movementRelatedOrientation: 'FRONT',
+    orientationRelatedToLocation: 'AO_FINGERS_CONTRA',
+    orientationChange: 'FLEXION',
+    contactType: 'CONTINUOUS',
+    movementType: 'ARC',
+    movementDirection: 'FORWARDS',
     vocalization: 'none',
     nonManualComponent: 'none',
     inicialization: 'none',
     repeatedMovement: true,
-  };
+  });
 }
 
 /** Phonology for the full BESSONS-1d compound sign (distinct from component phonology). */
 function buildBessonsCompoundPhonology() {
-  return {
-    handedness: Handedness.TWO_S,
-    dominantConfiguration: HandConfiguration.CONF_2,
-    nonDominantConfiguration: HandConfiguration.CONF_2,
-    dominantRelationBetweenArticulators: RelationBetweenArticulators.NEXT_TO,
-    nonDominantRelationBetweenArticulators: RelationBetweenArticulators.NEXT_TO,
-    configurationChanges: ConfigurationChange.OPENING_AND_SPREADING,
-    location: Location.NEUTRAL_SPACE,
-    movementRelatedOrientation: MovementRelatedOrientation.FRONT,
-    orientationRelatedToLocation: OrientationRelatedToLocation.AO_FINGERS_CONTRA,
-    orientationChange: OrientationChange.FLEXION,
-    contactType: ContactType.CONTINUOUS,
-    movementType: MovementType.ARC,
-    movementDirection: MovementDirection.FORWARDS,
+  return videoDataFromCodes({
+    handedness: 'TWO_S',
+    dominantConfiguration: 'CONF_2',
+    nonDominantConfiguration: 'CONF_2',
+    dominantRelationBetweenArticulators: 'NEXT_TO',
+    nonDominantRelationBetweenArticulators: 'NEXT_TO',
+    configurationChanges: 'OPENING_AND_SPREADING',
+    location: 'NEUTRAL_SPACE',
+    movementRelatedOrientation: 'FRONT',
+    orientationRelatedToLocation: 'AO_FINGERS_CONTRA',
+    orientationChange: 'FLEXION',
+    contactType: 'CONTINUOUS',
+    movementType: 'ARC',
+    movementDirection: 'FORWARDS',
     vocalization: 'none',
     nonManualComponent: 'none',
     inicialization: 'none',
     repeatedMovement: true,
-  };
+  });
 }
 
 /** One-handed phonology for TERCER inline morpheme in nested compound example. */
 function buildTercerInlinePhonology() {
-  return {
-    handedness: Handedness.ONE,
-    dominantConfiguration: HandConfiguration.CONF_3,
-    configurationChanges: ConfigurationChange.CLOSING,
-    location: Location.CHEST,
-    movementRelatedOrientation: MovementRelatedOrientation.FRONT,
-    orientationRelatedToLocation: OrientationRelatedToLocation.EMPTY,
-    orientationChange: OrientationChange.EXTENSION,
-    contactType: ContactType.FINAL,
-    movementType: MovementType.STRAIGHT,
-    movementDirection: MovementDirection.DOWNWARDS,
+  return videoDataFromCodes({
+    handedness: 'ONE',
+    dominantConfiguration: 'CONF_3',
+    configurationChanges: 'CLOSING',
+    location: 'CHEST',
+    movementRelatedOrientation: 'FRONT',
+    orientationRelatedToLocation: 'EMPTY',
+    orientationChange: 'EXTENSION',
+    contactType: 'FINAL',
+    movementType: 'STRAIGHT',
+    movementDirection: 'DOWNWARDS',
     vocalization: 'none',
     nonManualComponent: 'none',
     inicialization: 'none',
     repeatedMovement: false,
-  };
+  });
 }
 
 /** Phonology for the full BESSONS-TRES nested compound sign. */
 function buildBessonsTresCompoundPhonology() {
-  return {
-    handedness: Handedness.TWO_S,
-    dominantConfiguration: HandConfiguration.CONF_3,
-    nonDominantConfiguration: HandConfiguration.CONF_3,
-    dominantRelationBetweenArticulators: RelationBetweenArticulators.NEXT_TO,
-    nonDominantRelationBetweenArticulators: RelationBetweenArticulators.NEXT_TO,
-    configurationChanges: ConfigurationChange.OPENING_AND_SPREADING,
-    location: Location.NEUTRAL_SPACE,
-    movementRelatedOrientation: MovementRelatedOrientation.FRONT,
-    orientationRelatedToLocation: OrientationRelatedToLocation.AO_FINGERS_CONTRA,
-    orientationChange: OrientationChange.FLEXION,
-    contactType: ContactType.CONTINUOUS,
-    movementType: MovementType.CIRCLE,
-    movementDirection: MovementDirection.FORWARDS,
+  return videoDataFromCodes({
+    handedness: 'TWO_S',
+    dominantConfiguration: 'CONF_3',
+    nonDominantConfiguration: 'CONF_3',
+    dominantRelationBetweenArticulators: 'NEXT_TO',
+    nonDominantRelationBetweenArticulators: 'NEXT_TO',
+    configurationChanges: 'OPENING_AND_SPREADING',
+    location: 'NEUTRAL_SPACE',
+    movementRelatedOrientation: 'FRONT',
+    orientationRelatedToLocation: 'AO_FINGERS_CONTRA',
+    orientationChange: 'FLEXION',
+    contactType: 'CONTINUOUS',
+    movementType: 'CIRCLE',
+    movementDirection: 'FORWARDS',
     vocalization: 'none',
     nonManualComponent: 'none',
     inicialization: 'none',
     repeatedMovement: true,
-  };
+  });
 }
 
 /** Inline morpheme video — not a published gloss; only shown on the parent compound. */

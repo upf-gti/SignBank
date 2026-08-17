@@ -213,6 +213,16 @@ export const api = {
     changePassword: (userId: string, newPassword: string) =>
       apiClient.put(`/users/${userId}/password`, { newPassword }),
   },
+  phonologyValues: {
+    list: (params?: { dimension?: string; includeInactive?: boolean; withUsage?: boolean }) =>
+      apiClient.get('/phonology-values', { params }),
+    create: (data: Record<string, unknown>) =>
+      apiClient.post('/phonology-values', data),
+    update: (id: string, data: Record<string, unknown>) =>
+      apiClient.patch(`/phonology-values/${id}`, data),
+    remove: (id: string, params?: { confirmCode?: string }) =>
+      apiClient.delete(`/phonology-values/${id}`, { params }),
+  },
   bulkImport: {
     importFitxas: (files: File[], overwriteAll: boolean, overwriteGlosses: string[] = []) => {
       const formData = new FormData()

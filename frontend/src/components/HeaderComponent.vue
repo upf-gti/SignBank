@@ -1,6 +1,6 @@
 <template>
   <q-header
-    class="app-header"
+    class="bg-secondary text-black app-header"
     bordered
   >
     <loginComponent v-model="isLoginDialogOpen" />
@@ -11,7 +11,7 @@
       :width="280"
       bordered
       overlay
-      class="app-drawer"
+      class="bg-secondary"
     >
       <q-list padding>
         <q-item-label
@@ -96,6 +96,19 @@
               <q-icon name="upload_file" />
             </q-item-section>
             <q-item-section>{{ translate('bulkImport') }}</q-item-section>
+          </q-item>
+
+          <q-item
+            v-ripple
+            clickable
+            :active="isActive('/phonology-catalog')"
+            active-class="nav-item-active"
+            @click="navigateTo('/phonology-catalog')"
+          >
+            <q-item-section avatar>
+              <q-icon name="tune" />
+            </q-item-section>
+            <q-item-section>{{ translate('phonologyCatalog') }}</q-item-section>
           </q-item>
         </template>
       </q-list>
@@ -197,12 +210,6 @@ const isActive = (path: string) => route.path === path || route.path.startsWith(
 </script>
 
 <style scoped>
-.app-header,
-.app-drawer {
-  background-color: var(--sb-surface-muted);
-  color: var(--sb-text-primary);
-}
-
 .app-header {
   min-height: 64px;
   box-shadow: none;
@@ -217,7 +224,7 @@ const isActive = (path: string) => route.path === path || route.path.startsWith(
 }
 
 .nav-item-active {
-  background: rgba(182, 70, 58, 0.1);
+  background: rgba(200, 16, 47, 0.08);
   color: var(--primary);
   font-weight: 500;
 }

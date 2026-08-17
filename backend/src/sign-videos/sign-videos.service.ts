@@ -2,32 +2,14 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { CreateSignVideoDto, UpdateSignVideoDto } from './dto/index';
 import { PrismaService } from 'src/prisma/prisma.service'
-import { GlossData, Handedness, Prisma } from '@prisma/client'
+import { GlossData, Prisma } from '@prisma/client'
 import { GlossDataService } from 'src/gloss-data/gloss-data.service'
 import { GLOSS_SEARCH_SYNC_EVENT } from '../typesense/types/gloss-index.type';
-
-function buildVideoDataFields(
-  videoData: CreateSignVideoDto['videoData'] | UpdateSignVideoDto['videoData'],
-) {
-  return {
-    handedness: videoData.handedness || Handedness.ONE,
-    dominantConfiguration: videoData.dominantConfiguration ?? null,
-    nonDominantConfiguration: videoData.nonDominantConfiguration ?? null,
-    dominantRelationBetweenArticulators: videoData.dominantRelationBetweenArticulators ?? null,
-    nonDominantRelationBetweenArticulators: videoData.nonDominantRelationBetweenArticulators ?? null,
-    configurationChanges: videoData.configurationChanges || 'EMPTY',
-    location: videoData.location || 'EMPTY',
-    movementRelatedOrientation: videoData.movementRelatedOrientation || 'EMPTY',
-    orientationRelatedToLocation: videoData.orientationRelatedToLocation || 'EMPTY',
-    orientationChange: videoData.orientationChange || 'EMPTY',
-    contactType: videoData.contactType || 'EMPTY',
-    movementType: videoData.movementType || 'EMPTY',
-    movementDirection: videoData.movementDirection || 'EMPTY',
-    vocalization: videoData.vocalization || '',
-    nonManualComponent: videoData.nonManualComponent || '',
-    inicialization: videoData.inicialization || '',
-  };
-}
+import { PhonologyValuesService } from '../phonology-values/phonology-values.service';
+import {
+  videoDataFromCodes,
+  videoDataUpdateFromCodes,
+} from '../phonology-values/phonology-video-data';
 
 @Injectable()
 export class SignVideosService {    
@@ -35,6 +17,7 @@ export class SignVideosService {
     private prisma: PrismaService,
     private glossDataService: GlossDataService,
     private eventEmitter: EventEmitter2,
+    private phonologyValuesService: PhonologyValuesService,
   ) {}
 
   private notifySearchIndex(glossDataId: string) {
@@ -42,13 +25,11 @@ export class SignVideosService {
   }
 
   async create(createSignVideoDto: CreateSignVideoDto): Promise<GlossData> {
+    await this.phonologyValuesService.assertVideoDataCodes(createSignVideoDto.videoData);
 
     // Create the video data first
     const videoData = await this.prisma.videoData.create({
-      data: {
-        id: createSignVideoDto.videoData.id,
-        ...buildVideoDataFields(createSignVideoDto.videoData),
-      }
+      data: videoDataFromCodes(createSignVideoDto.videoData),
     });
 
     // Create the sign video with the video data
@@ -83,6 +64,8 @@ export class SignVideosService {
   }
 
   async update(id: string, updateSignVideoDto: UpdateSignVideoDto): Promise<GlossData> {
+    await this.phonologyValuesService.assertVideoDataCodes(updateSignVideoDto.videoData);
+
     const signVideo = await this.prisma.signVideo.findUnique({
       where: { id },
       include: {
@@ -100,9 +83,11 @@ export class SignVideosService {
     await this.prisma.videoData.update({
       where: { id: signVideo.videoDataId },
       data: {
-        id: updateSignVideoDto.videoData.id,
-        ...buildVideoDataFields(updateSignVideoDto.videoData),
-      }
+        ...(updateSignVideoDto.videoData.id
+          ? { id: updateSignVideoDto.videoData.id }
+          : {}),
+        ...videoDataUpdateFromCodes(updateSignVideoDto.videoData),
+      },
     });
 
     // Delete existing videos and create new ones

@@ -1,40 +1,27 @@
-/* app global css — warm neutral palette (Option A) */
+/* app global css */
 :root {
-  --primary: #B6463A;
-  --primary-hover: #9E3C31;
+  --primary: #c8102f;
+  --primary-hover: #a50d26;
 
-  /* Strong warm contrast — clearly off-white, easy on the eyes */
-  --sb-bg: #D4C8B8;
-  --sb-surface: #EDE4D6;
-  --sb-surface-elevated: #F5EFE6;
-  --sb-surface-muted: #C4B8A8;
+  --sb-bg: #fafafa;
+  --sb-surface: #ffffff;
+  --sb-surface-elevated: #ffffff;
+  --sb-surface-muted: #f5f5f5;
 
-  --sb-text-primary: #2F2A24;
-  --sb-text-secondary: #6B6258;
+  --sb-text-primary: #1d1d1d;
+  --sb-text-secondary: #616161;
 
-  --sb-border: #C9BDB0;
+  --sb-border: rgba(0, 0, 0, 0.12);
 
-  --sb-positive: #3F7A52;
-  --sb-warning: #B3832E;
-  --sb-negative: #B64A4A;
+  --sb-positive: #21ba45;
+  --sb-warning: #f2c037;
+  --sb-negative: #8b0000;
 
   --sb-card-radius: 12px;
   --sb-transition: 0.2s ease;
   --sb-video-max-width: 480px;
   --sb-video-max-height: none;
   --sb-video-compact-max-height: 140px;
-}
-
-body.body--light {
-  --q-primary: #B6463A;
-  --q-secondary: #EDE4D6;
-  --q-accent: #9C6B4A;
-  --q-dark: #2F2A24;
-  --q-dark-page: #1A1714;
-  --q-positive: #3F7A52;
-  --q-negative: #B64A4A;
-  --q-info: #5B7C8C;
-  --q-warning: #B3832E;
 }
 
 @media (max-width: 1023px) {
@@ -53,116 +40,9 @@ body.body--light {
   }
 }
 
-html,
-body,
-#q-app {
-  background-color: var(--sb-bg) !important;
-  color: var(--sb-text-primary);
-}
-
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-.q-layout,
-.q-page-container,
-.q-page,
-.q-drawer__content {
-  background-color: var(--sb-bg) !important;
-  color: var(--sb-text-primary);
-}
-
-.q-header,
-.q-footer {
-  background-color: var(--sb-surface-muted) !important;
-  color: var(--sb-text-primary) !important;
-}
-
-.q-toolbar {
-  background-color: inherit !important;
-  color: inherit !important;
-}
-
-.q-card,
-.q-stepper,
-.q-list--bordered,
-.q-expansion-item__container,
-.q-menu .q-list {
-  background-color: var(--sb-surface) !important;
-  color: var(--sb-text-primary) !important;
-}
-
-.q-card--flat {
-  background-color: var(--sb-surface) !important;
-}
-
-.q-dialog .q-card,
-.q-select__dialog .q-card {
-  background-color: var(--sb-surface-elevated) !important;
-}
-
-.q-field--outlined .q-field__control,
-.q-field--filled .q-field__control {
-  background-color: var(--sb-surface-elevated) !important;
-}
-
-.q-field--outlined .q-field__control:before {
-  border-color: var(--sb-border) !important;
-}
-
-.q-separator {
-  background: var(--sb-border) !important;
-}
-
-.q-item {
-  color: var(--sb-text-primary);
-}
-
-.q-item__label--caption,
-.text-grey-7,
-.text-grey-8 {
-  color: var(--sb-text-secondary) !important;
-}
-
-.q-tab-panels,
-.q-tab-panel {
-  background: transparent !important;
-  color: var(--sb-text-primary);
-}
-
-.q-markup-table,
-.q-markup-table thead th,
-.q-table thead tr,
-.q-table tbody td {
-  background-color: var(--sb-surface) !important;
-  color: var(--sb-text-primary);
-}
-
-.q-banner {
-  background-color: var(--sb-surface-muted) !important;
-  color: var(--sb-text-primary) !important;
-}
-
-/* Remap Quasar grey utilities to warm neutrals */
-.bg-secondary,
-.bg-grey-1 {
-  background-color: var(--sb-surface-elevated) !important;
-}
-
-.bg-grey-2,
-.bg-grey-3 {
-  background-color: var(--sb-surface-muted) !important;
-}
-
-.q-hover\:bg-grey-1:hover,
-.q-item.q-hoverable:hover > .q-focus-helper,
-.q-item--clickable:hover {
-  background-color: rgba(182, 70, 58, 0.06) !important;
-}
-
-.q-btn--outline {
-  color: var(--primary) !important;
 }
 
 /* Consistent focus ring for keyboard navigation */
@@ -178,16 +58,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--sb-surface-muted);
+  background: #f5f5f5;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #B5A796;
+  background: #c4c4c4;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #9A8B7A;
+  background: #999;
 }
 
 /* Shared card hover effect */
@@ -198,10 +78,10 @@ body {
 
 .sb-card-interactive:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(47, 42, 36, 0.12);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 .sb-card-interactive:focus-visible {
   transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(47, 42, 36, 0.12);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }

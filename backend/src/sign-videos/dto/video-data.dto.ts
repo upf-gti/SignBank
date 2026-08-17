@@ -1,69 +1,56 @@
-import { IsEnum, IsBoolean, IsOptional, IsString } from 'class-validator';
-import {
-  Handedness,
-  HandConfiguration,
-  ConfigurationChange,
-  RelationBetweenArticulators,
-  Location,
-  MovementRelatedOrientation,
-  OrientationRelatedToLocation,
-  OrientationChange,
-  ContactType,
-  MovementType,
-  MovementDirection,
-} from '@prisma/client';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 export class VideoDataDto {
-  @IsEnum(Handedness)
-  handedness: Handedness;
+  @IsString()
+  handedness: string;
 
-  @IsEnum(HandConfiguration)
+  @IsString()
   @IsOptional()
-  dominantConfiguration?: HandConfiguration;
+  dominantConfiguration?: string;
 
-  @IsEnum(HandConfiguration)
+  @IsString()
   @IsOptional()
-  nonDominantConfiguration?: HandConfiguration;
+  nonDominantConfiguration?: string;
 
-  @IsEnum(RelationBetweenArticulators)
+  @IsString()
   @IsOptional()
-  dominantRelationBetweenArticulators?: RelationBetweenArticulators;
+  dominantRelationBetweenArticulators?: string;
 
-  @IsEnum(RelationBetweenArticulators)
+  @IsString()
   @IsOptional()
-  nonDominantRelationBetweenArticulators?: RelationBetweenArticulators;
+  nonDominantRelationBetweenArticulators?: string;
 
-  @IsEnum(ConfigurationChange)
+  @IsString()
   @IsOptional()
-  configurationChanges?: ConfigurationChange;
+  configurationChanges?: string;
 
-  @IsEnum(Location)
+  @IsString()
   @IsOptional()
-  location?: Location;
+  location?: string;
 
-  @IsEnum(MovementRelatedOrientation)
+  @IsString()
   @IsOptional()
-  movementRelatedOrientation?: MovementRelatedOrientation;
+  movementRelatedOrientation?: string;
 
-  @IsEnum(OrientationRelatedToLocation)
+  @IsString()
   @IsOptional()
-  orientationRelatedToLocation?: OrientationRelatedToLocation;
+  orientationRelatedToLocation?: string;
 
-  @IsEnum(OrientationChange)
+  @IsString()
   @IsOptional()
-  orientationChange?: OrientationChange;
+  orientationChange?: string;
 
-  @IsEnum(ContactType)
+  @IsString()
   @IsOptional()
-  contactType?: ContactType;
+  contactType?: string;
 
-  @IsEnum(MovementType)
+  @IsString()
   @IsOptional()
-  movementType?: MovementType;
+  movementType?: string;
 
-  @IsEnum(MovementDirection)
+  @IsString()
   @IsOptional()
-  movementDirection?: MovementDirection;
+  movementDirection?: string;
 
   @IsString()
   @IsOptional()

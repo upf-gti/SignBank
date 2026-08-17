@@ -229,44 +229,73 @@ type SharedRowDef = {
   advanced?: boolean;
 };
 
-const sharedRowDefs: SharedRowDef[] = [
-  { field: 'configurationChanges', label: translate('configurationChanges'), type: 'select', optionsKey: 'configurationChanges', allOptions: phonologyOptions.configurationChangeOptions, advanced: true },
-  { field: 'location', label: translate('location'), type: 'select', optionsKey: 'location', allOptions: phonologyOptions.locationOptions },
-  { field: 'movementRelatedOrientation', label: translate('movementRelatedOrientation'), type: 'select', optionsKey: 'movementRelatedOrientation', allOptions: phonologyOptions.movementRelatedOrientationOptions, advanced: true },
-  { field: 'orientationRelatedToLocation', label: translate('orientationRelatedToLocation'), type: 'select', optionsKey: 'orientationRelatedToLocation', allOptions: phonologyOptions.orientationRelatedToLocationOptions, advanced: true },
-  { field: 'orientationChange', label: translate('orientationChange'), type: 'select', optionsKey: 'orientationChange', allOptions: phonologyOptions.orientationChangeOptions, advanced: true },
-  { field: 'contactType', label: translate('contactType'), type: 'select', optionsKey: 'contactType', allOptions: phonologyOptions.contactTypeOptions, advanced: true },
-  { field: 'movementType', label: translate('movementType'), type: 'select', optionsKey: 'movementType', allOptions: phonologyOptions.movementTypeOptions },
-  { field: 'movementDirection', label: translate('movementDirection'), type: 'select', optionsKey: 'movementDirection', allOptions: phonologyOptions.movementDirectionOptions, advanced: true },
+const sharedRowDefs = computed<SharedRowDef[]>(() => [
+  { field: 'configurationChanges', label: translate('configurationChanges'), type: 'select', optionsKey: 'configurationChanges', allOptions: phonologyOptions.configurationChangeOptions.value, advanced: true },
+  { field: 'location', label: translate('location'), type: 'select', optionsKey: 'location', allOptions: phonologyOptions.locationOptions.value },
+  { field: 'movementRelatedOrientation', label: translate('movementRelatedOrientation'), type: 'select', optionsKey: 'movementRelatedOrientation', allOptions: phonologyOptions.movementRelatedOrientationOptions.value, advanced: true },
+  { field: 'orientationRelatedToLocation', label: translate('orientationRelatedToLocation'), type: 'select', optionsKey: 'orientationRelatedToLocation', allOptions: phonologyOptions.orientationRelatedToLocationOptions.value, advanced: true },
+  { field: 'orientationChange', label: translate('orientationChange'), type: 'select', optionsKey: 'orientationChange', allOptions: phonologyOptions.orientationChangeOptions.value, advanced: true },
+  { field: 'contactType', label: translate('contactType'), type: 'select', optionsKey: 'contactType', allOptions: phonologyOptions.contactTypeOptions.value, advanced: true },
+  { field: 'movementType', label: translate('movementType'), type: 'select', optionsKey: 'movementType', allOptions: phonologyOptions.movementTypeOptions.value },
+  { field: 'movementDirection', label: translate('movementDirection'), type: 'select', optionsKey: 'movementDirection', allOptions: phonologyOptions.movementDirectionOptions.value, advanced: true },
   { field: 'vocalization', label: translate('vocalization'), type: 'text', advanced: true },
   { field: 'nonManualComponent', label: translate('nonManualComponent'), type: 'text', advanced: true },
   { field: 'inicialization', label: translate('inicialization'), type: 'text', advanced: true },
   { field: 'repeatedMovement', label: translate('repeatedMovement'), type: 'boolean', advanced: true },
-];
+]);
 
 const visibleSharedRows = computed(() => {
   if (props.compact && props.isEditable) {
-    return sharedRowDefs.filter(r => !r.advanced && r.field !== 'configurationChanges');
+    return sharedRowDefs.value.filter(r => !r.advanced && r.field !== 'configurationChanges');
   }
-  return sharedRowDefs.filter(r => !r.advanced || !props.compact);
+  return sharedRowDefs.value.filter(r => !r.advanced || !props.compact);
 });
 
 const advancedSharedRows = computed(() =>
-  sharedRowDefs.filter(r => r.advanced),
+  sharedRowDefs.value.filter(r => r.advanced),
 );
 
 const filteredOptions = ref({
-  configuration: phonologyOptions.handConfigurationOptions,
-  relationBetweenArticulators: phonologyOptions.relationBetweenArticulatorsOptions,
-  configurationChanges: phonologyOptions.configurationChangeOptions,
-  location: phonologyOptions.locationOptions,
-  movementRelatedOrientation: phonologyOptions.movementRelatedOrientationOptions,
-  orientationRelatedToLocation: phonologyOptions.orientationRelatedToLocationOptions,
-  orientationChange: phonologyOptions.orientationChangeOptions,
-  contactType: phonologyOptions.contactTypeOptions,
-  movementType: phonologyOptions.movementTypeOptions,
-  movementDirection: phonologyOptions.movementDirectionOptions,
+  configuration: phonologyOptions.handConfigurationOptions.value,
+  relationBetweenArticulators: phonologyOptions.relationBetweenArticulatorsOptions.value,
+  configurationChanges: phonologyOptions.configurationChangeOptions.value,
+  location: phonologyOptions.locationOptions.value,
+  movementRelatedOrientation: phonologyOptions.movementRelatedOrientationOptions.value,
+  orientationRelatedToLocation: phonologyOptions.orientationRelatedToLocationOptions.value,
+  orientationChange: phonologyOptions.orientationChangeOptions.value,
+  contactType: phonologyOptions.contactTypeOptions.value,
+  movementType: phonologyOptions.movementTypeOptions.value,
+  movementDirection: phonologyOptions.movementDirectionOptions.value,
 });
+
+watch(
+  () => [
+    phonologyOptions.handConfigurationOptions.value,
+    phonologyOptions.relationBetweenArticulatorsOptions.value,
+    phonologyOptions.configurationChangeOptions.value,
+    phonologyOptions.locationOptions.value,
+    phonologyOptions.movementRelatedOrientationOptions.value,
+    phonologyOptions.orientationRelatedToLocationOptions.value,
+    phonologyOptions.orientationChangeOptions.value,
+    phonologyOptions.contactTypeOptions.value,
+    phonologyOptions.movementTypeOptions.value,
+    phonologyOptions.movementDirectionOptions.value,
+  ],
+  () => {
+    filteredOptions.value = {
+      configuration: phonologyOptions.handConfigurationOptions.value,
+      relationBetweenArticulators: phonologyOptions.relationBetweenArticulatorsOptions.value,
+      configurationChanges: phonologyOptions.configurationChangeOptions.value,
+      location: phonologyOptions.locationOptions.value,
+      movementRelatedOrientation: phonologyOptions.movementRelatedOrientationOptions.value,
+      orientationRelatedToLocation: phonologyOptions.orientationRelatedToLocationOptions.value,
+      orientationChange: phonologyOptions.orientationChangeOptions.value,
+      contactType: phonologyOptions.contactTypeOptions.value,
+      movementType: phonologyOptions.movementTypeOptions.value,
+      movementDirection: phonologyOptions.movementDirectionOptions.value,
+    };
+  },
+);
 
 watch(() => props.phonologyData, (newValue) => {
   localData.value = { ...newValue };
@@ -293,11 +322,11 @@ function filterFn(
 }
 
 function getHandednessLabel(handedness: string) {
-  return getOptionLabel(phonologyOptions.handednessOptions, handedness);
+  return getOptionLabel(phonologyOptions.handednessOptions.value, handedness);
 }
 
 function getHandednessDescription(handedness: string) {
-  const option = phonologyOptions.handednessOptions.find(o => o.value === handedness);
+  const option = phonologyOptions.handednessOptions.value.find(o => o.value === handedness);
   return option?.description ?? '';
 }
 

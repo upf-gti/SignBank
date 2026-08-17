@@ -608,18 +608,49 @@ const localData = ref<FilterInputs>({ ...props.phonologyData });
 
 // Initialize filtered options with the original options
 const filteredOptions = ref({
-  handedness: phonologyOptions.handednessOptions,
-  dominantConfiguration: phonologyOptions.handConfigurationOptions,
-  configurationChanges: phonologyOptions.configurationChangeOptions,
-  dominantRelationBetweenArticulators: phonologyOptions.relationBetweenArticulatorsOptions,
-  location: phonologyOptions.locationOptions,
-  movementRelatedOrientation: phonologyOptions.movementRelatedOrientationOptions,
-  orientationRelatedToLocation: phonologyOptions.orientationRelatedToLocationOptions,
-  orientationChange: phonologyOptions.orientationChangeOptions,
-  contactType: phonologyOptions.contactTypeOptions,
-  movementType: phonologyOptions.movementTypeOptions,
-  movementDirection: phonologyOptions.movementDirectionOptions,
+  handedness: phonologyOptions.handednessOptions.value,
+  dominantConfiguration: phonologyOptions.handConfigurationOptions.value,
+  configurationChanges: phonologyOptions.configurationChangeOptions.value,
+  dominantRelationBetweenArticulators: phonologyOptions.relationBetweenArticulatorsOptions.value,
+  location: phonologyOptions.locationOptions.value,
+  movementRelatedOrientation: phonologyOptions.movementRelatedOrientationOptions.value,
+  orientationRelatedToLocation: phonologyOptions.orientationRelatedToLocationOptions.value,
+  orientationChange: phonologyOptions.orientationChangeOptions.value,
+  contactType: phonologyOptions.contactTypeOptions.value,
+  movementType: phonologyOptions.movementTypeOptions.value,
+  movementDirection: phonologyOptions.movementDirectionOptions.value,
 });
+
+watch(
+  () => [
+    phonologyOptions.handednessOptions.value,
+    phonologyOptions.handConfigurationOptions.value,
+    phonologyOptions.configurationChangeOptions.value,
+    phonologyOptions.relationBetweenArticulatorsOptions.value,
+    phonologyOptions.locationOptions.value,
+    phonologyOptions.movementRelatedOrientationOptions.value,
+    phonologyOptions.orientationRelatedToLocationOptions.value,
+    phonologyOptions.orientationChangeOptions.value,
+    phonologyOptions.contactTypeOptions.value,
+    phonologyOptions.movementTypeOptions.value,
+    phonologyOptions.movementDirectionOptions.value,
+  ],
+  () => {
+    filteredOptions.value = {
+      handedness: phonologyOptions.handednessOptions.value,
+      dominantConfiguration: phonologyOptions.handConfigurationOptions.value,
+      configurationChanges: phonologyOptions.configurationChangeOptions.value,
+      dominantRelationBetweenArticulators: phonologyOptions.relationBetweenArticulatorsOptions.value,
+      location: phonologyOptions.locationOptions.value,
+      movementRelatedOrientation: phonologyOptions.movementRelatedOrientationOptions.value,
+      orientationRelatedToLocation: phonologyOptions.orientationRelatedToLocationOptions.value,
+      orientationChange: phonologyOptions.orientationChangeOptions.value,
+      contactType: phonologyOptions.contactTypeOptions.value,
+      movementType: phonologyOptions.movementTypeOptions.value,
+      movementDirection: phonologyOptions.movementDirectionOptions.value,
+    };
+  },
+);
 
 // Keep local data in sync with prop changes
 watch(() => props.phonologyData, (newValue) => {
@@ -659,57 +690,57 @@ const updateField = (field: keyof FilterInputs, value: string | string[] | numbe
 };
 
 const getHandednessLabel = (handedness: string) => {
-  const option = phonologyOptions.handednessOptions.find(o => o.value === handedness);
+  const option = phonologyOptions.handednessOptions.value.find(o => o.value === handedness);
   return option ? option.label : '';
 };
 
 const getConfigurationLabel = (configuration: string) => {
-  const option = phonologyOptions.handConfigurationOptions.find(o => o.value === configuration);
+  const option = phonologyOptions.handConfigurationOptions.value.find(o => o.value === configuration);
   return option ? option.label : '';
 };
 
 const getConfigurationChangesLabel = (configurationChanges: string) => {
-  const option = phonologyOptions.configurationChangeOptions.find(o => o.value === configurationChanges);
+  const option = phonologyOptions.configurationChangeOptions.value.find(o => o.value === configurationChanges);
   return option ? option.label : '';
 };
 
 const getRelationBetweenArticulatorsLabel = (relationBetweenArticulators: string) => {
-  const option = phonologyOptions.relationBetweenArticulatorsOptions.find(o => o.value === relationBetweenArticulators);
+  const option = phonologyOptions.relationBetweenArticulatorsOptions.value.find(o => o.value === relationBetweenArticulators);
   return option ? option.label : '';
 };
 
 const getLocationLabel = (location: string) => {
-  const option = phonologyOptions.locationOptions.find(o => o.value === location);
+  const option = phonologyOptions.locationOptions.value.find(o => o.value === location);
   return option ? option.label : '';
 };
 
 const getMovementRelatedOrientationLabel = (movementRelatedOrientation: string) => {
-  const option = phonologyOptions.movementRelatedOrientationOptions.find(o => o.value === movementRelatedOrientation);
+  const option = phonologyOptions.movementRelatedOrientationOptions.value.find(o => o.value === movementRelatedOrientation);
   return option ? option.label : '';
 };
 
 const getOrientationRelatedToLocationLabel = (orientationRelatedToLocation: string) => {
-  const option = phonologyOptions.orientationRelatedToLocationOptions.find(o => o.value === orientationRelatedToLocation);
+  const option = phonologyOptions.orientationRelatedToLocationOptions.value.find(o => o.value === orientationRelatedToLocation);
   return option ? option.label : '';
 };
 
 const getOrientationChangeLabel = (orientationChange: string) => {
-  const option = phonologyOptions.orientationChangeOptions.find(o => o.value === orientationChange);
+  const option = phonologyOptions.orientationChangeOptions.value.find(o => o.value === orientationChange);
   return option ? option.label : '';
 };
 
 const getContactTypeLabel = (contactType: string) => {
-  const option = phonologyOptions.contactTypeOptions.find(o => o.value === contactType);
+  const option = phonologyOptions.contactTypeOptions.value.find(o => o.value === contactType);
   return option ? option.label : '';
 };
 
 const getMovementTypeLabel = (movementType: string) => {
-  const option = phonologyOptions.movementTypeOptions.find(o => o.value === movementType);
+  const option = phonologyOptions.movementTypeOptions.value.find(o => o.value === movementType);
   return option ? option.label : '';
 };
 
 const getMovementDirectionLabel = (movementDirection: string) => {
-  const option = phonologyOptions.movementDirectionOptions.find(o => o.value === movementDirection);
+  const option = phonologyOptions.movementDirectionOptions.value.find(o => o.value === movementDirection);
   return option ? option.label : '';
 };
 

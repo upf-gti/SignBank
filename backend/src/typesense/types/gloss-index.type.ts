@@ -1,17 +1,4 @@
-import {
-  Handedness,
-  HandConfiguration,
-  ConfigurationChange,
-  RelationBetweenArticulators,
-  Location,
-  MovementRelatedOrientation,
-  OrientationRelatedToLocation,
-  OrientationChange,
-  ContactType,
-  MovementType,
-  MovementDirection,
-  LexicalCategory,
-} from '@prisma/client';
+import { LexicalCategory } from '@prisma/client';
 
 /** One Typesense document per published gloss (document id = glossData.id). */
 export interface GlossIndex {
@@ -24,19 +11,19 @@ export interface GlossIndex {
   lexicalCategory: LexicalCategory | string;
   lexicalCategories: (LexicalCategory | string)[];
   description: string;
-  handedness: Handedness;
-  dominantConfiguration: HandConfiguration | '';
-  nonDominantConfiguration: HandConfiguration | '';
-  dominantRelationBetweenArticulators: RelationBetweenArticulators | '';
-  nonDominantRelationBetweenArticulators: RelationBetweenArticulators | '';
-  configurationChanges: ConfigurationChange | '';
-  location: Location | '';
-  movementRelatedOrientation: MovementRelatedOrientation | '';
-  orientationRelatedToLocation: OrientationRelatedToLocation | '';
-  orientationChange: OrientationChange | '';
-  contactType: ContactType | '';
-  movementType: MovementType | '';
-  movementDirection: MovementDirection | '';
+  handedness: string;
+  dominantConfiguration: string;
+  nonDominantConfiguration: string;
+  dominantRelationBetweenArticulators: string;
+  nonDominantRelationBetweenArticulators: string;
+  configurationChanges: string;
+  location: string;
+  movementRelatedOrientation: string;
+  orientationRelatedToLocation: string;
+  orientationChange: string;
+  contactType: string;
+  movementType: string;
+  movementDirection: string;
   repeatedMovement: boolean;
   vocalization: string;
   nonManualComponent: string;

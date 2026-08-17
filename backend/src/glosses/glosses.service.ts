@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { GlossStatus } from '@prisma/client'
 import { compoundPartsInclude } from './compound-include';
+import { flattenPhonologyInTree, videoDataPhonologyInclude } from '../phonology-values/phonology-video-data';
 
 @Injectable()
 export class GlossesService {
@@ -27,7 +28,7 @@ export class GlossesService {
         glossVideos: {
           include: {
             videos: true,
-            videoData: true,
+            videoData: { include: videoDataPhonologyInclude },
           },
         },
         relationsAsSource: {
@@ -37,7 +38,7 @@ export class GlossesService {
                 glossVideos: {
                   include: {
                     videos: true,
-                    videoData: true,
+                    videoData: { include: videoDataPhonologyInclude },
                   },
                 },
               },
@@ -61,7 +62,7 @@ export class GlossesService {
                 glossVideos: {
                   include: {
                     videos: true,
-                    videoData: true,
+                    videoData: { include: videoDataPhonologyInclude },
                   },
                 },
               },
@@ -78,7 +79,7 @@ export class GlossesService {
                 glossVideos: {
                   include: {
                     videos: true,
-                    videoData: true,
+                    videoData: { include: videoDataPhonologyInclude },
                   },
                 },
               },
@@ -104,6 +105,6 @@ export class GlossesService {
       throw new NotFoundException(`Gloss with ID ${id} not found`);
     }
 
-    return gloss;
+    return flattenPhonologyInTree(gloss);
   }
 } 
