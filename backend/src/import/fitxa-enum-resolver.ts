@@ -15,20 +15,23 @@ function loadMappings() {
   throw new Error(`fitxa-enum-mappings.json not found. Tried: ${candidates.join(', ')}`);
 }
 
-const mappings = loadMappings() as {
-  fields: Record<
-    string,
-    { entries?: Array<{ signbankId?: string; value?: boolean; aliases: string[] }> }
-  >;
-};
+const mappings = loadMappings() as typeof import('./fitxa-enum-mappings.json');
 
-export type FitxaMappingField = string;
+export type FitxaMappingField = keyof typeof mappings.fields;
 
 export interface EnumResolveResult<T = string> {
   value: T | null;
-  field: string;
+  field: FitxaMappingField;
   input: string;
 }
+
+const FITXA_HANDEDNESS_TO_SIGNBANK: Record<string, string> = {
+  '1': 'ONE',
+  '2a': 'TWO_A',
+  '2n': 'TWO_N',
+  '2s': 'TWO_S',
+  x: 'NA',
+};
 
 function normalize(input: string): string {
   return input
@@ -44,15 +47,18 @@ function stripCompoundPrefix(input: string): string {
 }
 
 function buildAliasIndex(
-  entries: Array<{ signbankId?: string; value?: boolean; aliases: string[] }>,
-  valueKey: 'signbankId' | 'value' = 'signbankId',
+  entries: Array<{ signbankId?: string; code?: string; value?: boolean; aliases: string[] }>,
+  valueKey: 'signbankId' | 'value' | 'code' = 'signbankId',
 ): Map<string, string | boolean> {
   const index = new Map<string, string | boolean>();
   for (const entry of entries) {
     const value = entry[valueKey];
     if (value === undefined) continue;
     for (const alias of entry.aliases) {
-      index.set(normalize(alias), value);
+      index.set(normalize(String(alias)), value);
+    }
+    if (entry.code !== undefined) {
+      index.set(normalize(String(entry.code)), entry.code);
     }
   }
   return index;
@@ -78,6 +84,12 @@ export function resolveFitxaEnum(
   const input = String(raw ?? '').trim();
   if (!input) return { value: null, field, input };
 
+  if (field === 'handedness') {
+    const code = normalize(input);
+    const signbankId = FITXA_HANDEDNESS_TO_SIGNBANK[code] ?? null;
+    return { value: signbankId, field, input };
+  }
+
   const index = getIndex(field);
   const candidates = [input, stripCompoundPrefix(input)];
 
@@ -91,12 +103,20 @@ export function resolveFitxaEnum(
   return { value: null, field, input };
 }
 
-/** Map JSON phonology block to SignBank VideoData enum fields. */
-export function mapPhonologyFromFitxa(phonology: Record<string, unknown>) {
-  const fieldMap: Array<[FitxaMappingField, string]> = [
-    ['configuration', 'configuracio'],
+export interface MappedPhonologyFromFitxa {
+  handedness: EnumResolveResult;
+  dominantConfiguration: EnumResolveResult;
+  nonDominantConfiguration: EnumResolveResult;
+  dominantRelationBetweenArticulators: EnumResolveResult;
+  nonDominantRelationBetweenArticulators: EnumResolveResult;
+  shared: Record<string, EnumResolveResult>;
+  moviment_repetit: EnumResolveResult;
+}
+
+/** Map JSON phonology block (schema v2) to SignBank VideoData enum fields. */
+export function mapPhonologyFromFitxa(phonology: Record<string, unknown>): MappedPhonologyFromFitxa {
+  const sharedFieldMap: Array<[FitxaMappingField, string]> = [
     ['configurationChanges', 'canvi_configuracio'],
-    ['relationBetweenArticulators', 'relacio_articuladors'],
     ['location', 'localitzacio'],
     ['movementRelatedOrientation', 'orientacio_moviment'],
     ['orientationRelatedToLocation', 'orientacio_localitzacio'],
@@ -106,15 +126,34 @@ export function mapPhonologyFromFitxa(phonology: Record<string, unknown>) {
     ['movementDirection', 'direccio_moviment'],
   ];
 
-  const result: Record<string, EnumResolveResult> = {};
-  for (const [field, jsonKey] of fieldMap) {
-    result[jsonKey] = resolveFitxaEnum(field, phonology[jsonKey] as string);
+  const shared: Record<string, EnumResolveResult> = {};
+  for (const [field, jsonKey] of sharedFieldMap) {
+    shared[jsonKey] = resolveFitxaEnum(field, phonology[jsonKey] as string);
   }
 
   const repeated = resolveFitxaEnum('repeatedMovement', phonology.moviment_repetit as string);
-  result.moviment_repetit = repeated;
 
-  return result;
+  return {
+    handedness: resolveFitxaEnum('handedness', phonology.nombre_mans as string),
+    dominantConfiguration: resolveFitxaEnum(
+      'configuration',
+      phonology.configuracio_ma_dominant as string,
+    ),
+    nonDominantConfiguration: resolveFitxaEnum(
+      'configuration',
+      phonology.configuracio_ma_no_dominant as string,
+    ),
+    dominantRelationBetweenArticulators: resolveFitxaEnum(
+      'relationBetweenArticulators',
+      phonology.relacio_articuladors_ma_dominant as string,
+    ),
+    nonDominantRelationBetweenArticulators: resolveFitxaEnum(
+      'relationBetweenArticulators',
+      phonology.relacio_articuladors_ma_no_dominant as string,
+    ),
+    shared,
+    moviment_repetit: repeated,
+  };
 }
 
 export { mappings };

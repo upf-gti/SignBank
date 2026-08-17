@@ -1,0 +1,232 @@
+{
+  "gloss_id": "0764_01_cervesa",
+  "gloss_name": "CERVESA",
+  "definition": "Nom – Beguda fermentada preparada a partir de cereals germinats, especialment ordi, i aromatitzada amb llúpol.",
+  "definitions": [
+    "Nom – Beguda fermentada preparada a partir de cereals germinats, especialment ordi, i aromatitzada amb llúpol."
+  ],
+  "translations": {
+    "english": "BEER",
+    "spanish": "CERVEZA",
+    "catalan": null
+  },
+  "phonology": {
+    "nombre_mans": "2a",
+    "configuracio_ma_dominant": "B (B)",
+    "configuracio_ma_no_dominant": "0_SSI (O)",
+    "canvi_configuracio": "No",
+    "relacio_articuladors_ma_dominant": "Damunt",
+    "relacio_articuladors_ma_no_dominant": "Sota",
+    "localitzacio": "Mà no-dominant: costat polze",
+    "orientacio_moviment": "Palm",
+    "orientacio_localitzacio": "AO: palm-down",
+    "canvi_orientacio": "Flexió > Extensió",
+    "tipus_contacte": "Final",
+    "forma_moviment": null,
+    "direccio_moviment": "Cap a la localització",
+    "moviment_repetit": "Sí",
+    "vocalitzacio": null,
+    "component_no_manual": null
+  },
+  "compound": {
+    "is_compound": false,
+    "components": []
+  },
+  "iconicity": "Sí",
+  "related_signs": {
+    "HOMÒNIM": [],
+    "SINÒNIM": [],
+    "VARIANT": [],
+    "ANTÒNIM": [],
+    "HIPÒNIM": [],
+    "HIPERÒNIM": [],
+    "VEURE TAMBÉ": []
+  },
+  "synonyms": [],
+  "categories": [
+    "Aliment"
+  ],
+  "entitat_amb_nom": null,
+  "valencia": null,
+  "signes_claus": [],
+  "relacio_signes_forasters": {
+    "prestec": null,
+    "llengua_relacionada": null,
+    "glossa_llengua_relacionada": null
+  },
+  "morfologia_simultania": [],
+  "morfologia_abreujada": [
+    {
+      "glossa_abreujada": null,
+      "rol_en_aquest_signe": null
+    }
+  ],
+  "minimal_pairs": [
+    {
+      "sign": "TAPAR-5",
+      "description": "Moviment simple vs. repetit"
+    },
+    {
+      "sign": "VÀTER-B",
+      "description": "???? (potser són iguals)"
+    }
+  ],
+  "corpus_forms": [
+    "NOMÉS APAREIX ALS MATERIALS"
+  ],
+  "lexical_category": "Nom",
+  "annotations": [],
+  "occurrences": {
+    "general": [
+      {
+        "source": "MARTÍN & ALVARADO",
+        "appears": "ALTRE",
+        "gloss": "Conf B"
+      },
+      {
+        "source": "PERELLÓ & FRÍGOLA",
+        "appears": "SÍ",
+        "gloss": "CERVESA"
+      },
+      {
+        "source": "FERRERONS",
+        "appears": "SÍ",
+        "gloss": "CERVESA"
+      },
+      {
+        "source": "DILSCAT",
+        "appears": "SÍ",
+        "gloss": "CERVESA"
+      },
+      {
+        "source": "MIRA QUÈ DIC",
+        "appears": "SÍ",
+        "gloss": "CERVESA"
+      },
+      {
+        "source": "VOCABULARI BÀSIC",
+        "appears": "SÍ",
+        "gloss": "CERVESA"
+      }
+    ],
+    "learning": [
+      {
+        "source": "A1 JUAN VALENZUELA",
+        "appears": "SÍ",
+        "gloss": "No hi ha glossa"
+      },
+      {
+        "source": "A1",
+        "appears": "SÍ",
+        "gloss": "CERVESA"
+      },
+      {
+        "source": "A2",
+        "appears": "SÍ",
+        "gloss": "CERVESA"
+      },
+      {
+        "source": "APRENEM 1",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "APRENEM 2",
+        "appears": "SÍ",
+        "gloss": "CERVESA"
+      }
+    ],
+    "specific": [
+      {
+        "source": "MEDICINES",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "ÀREES MEDI SOCIAL",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "ÀREES MEDI NATURAL",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "ALIMENTS",
+        "appears": "SÍ",
+        "gloss": "CERVESA"
+      },
+      {
+        "source": "ANIMALS",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "LÀMINES GENERALITAT",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "El GENÍS I LA SANITAT",
+        "appears": null,
+        "gloss": null
+      },
+      {
+        "source": "EL GENÍS I L’EDUCACIÓ",
+        "appears": null,
+        "gloss": null
+      },
+      {
+        "source": "RECULL TOPONÍMIC",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "53 MALES MANERES",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "HISTÒRIA FILOSOFIA",
+        "appears": null,
+        "gloss": null
+      },
+      {
+        "source": "ÀGILS COMUNICACIÓ",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "SIGNAPP",
+        "appears": "SÍ",
+        "gloss": "CERVESA"
+      }
+    ],
+    "web": [
+      {
+        "source": "SANTI FRÍGOLA",
+        "appears": "NO",
+        "gloss": null
+      }
+    ]
+  },
+  "video_urls": [
+    {
+      "url": "https://drive.google.com/file/d/1JELU8mXStloevsXlyBnO3jXWj7p-QxP0/view?usp=sharing",
+      "source": "IEC Fitxes Entrades",
+      "description": null,
+      "thumbnail_url": null
+    }
+  ],
+  "iec_metadata": {
+    "entry_id": "0764_01_cervesa",
+    "entry_date": null,
+    "last_modified": null,
+    "contributor": null,
+    "status": null,
+    "notes": null
+  },
+  "notes": "Observacions: LALI (2/12/2024): He fet una fitxa per VÀTER-B però no hi veig la diferència amb CERVESA.",
+  "schema_version": 2
+}

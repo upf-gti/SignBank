@@ -13,10 +13,10 @@ export interface SearchResult {
   id: string;
   url: string | null;
   signVideoTitle: string | null;
-  hands: string | null;
-  configuration: string | null;
+  handedness: string | null;
+  dominantConfiguration: string | null;
   configurationChanges: string | null;
-  relationBetweenArticulators: string | null;
+  dominantRelationBetweenArticulators: string | null;
   location: string | null;
   movementRelatedOrientation: string | null;
   locationRelatedOrientation: string | null;
@@ -61,10 +61,10 @@ class SearchService {
   getFacetFields() {
     return [
       { field: 'lexicalCategory', label: translate('lexicalCategory') },
-      { field: 'hands', label: translate('hands') },
-      { field: 'configuration', label: translate('configuration') },
+      { field: 'handedness', label: translate('handedness') },
+      { field: 'dominantConfiguration', label: translate('configuration') },
       { field: 'configurationChanges', label: translate('configurationChanges') },
-      { field: 'relationBetweenArticulators', label: translate('relationBetweenArticulators') },
+      { field: 'dominantRelationBetweenArticulators', label: translate('relationBetweenArticulators') },
       { field: 'location', label: translate('location') },
       { field: 'movementRelatedOrientation', label: translate('movementRelatedOrientation') },
       { field: 'locationRelatedOrientation', label: translate('locationRelatedOrientation') },

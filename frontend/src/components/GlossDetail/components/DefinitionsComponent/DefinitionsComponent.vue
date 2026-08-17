@@ -56,24 +56,24 @@
 
     <q-list v-if="!isMobile">
       <!-- Desktop -->
-        <DefinitionCardDesktop
-          v-for="(definition, index) in definitions.sort((a, b) => a.priority - b.priority)"
-          :key="definition.id || index"
-          :definition="definition"
-          :allow-edit="allowEdit"
-          :inline-edit="inlineEdit"
-          :hide-definition-video="hideDefinitionVideo"
-          @save="saveDefinition"
-          @delete="deleteDefinition"
-          @upload-video="uploadVideo"
-          @delete-video="deleteDefinitionVideo"
-          @video-error="handleVideoError"
-          @show-video="openVideo"
-          @update-translations="updateDefinitionTranslations"
-        />
-      </q-list>
-      <q-list v-else>
-        <!-- Mobile -->
+      <DefinitionCardDesktop
+        v-for="(definition, index) in definitions.sort((a, b) => a.priority - b.priority)"
+        :key="definition.id || index"
+        :definition="definition"
+        :allow-edit="allowEdit"
+        :inline-edit="inlineEdit"
+        :hide-definition-video="hideDefinitionVideo"
+        @save="saveDefinition"
+        @delete="deleteDefinition"
+        @upload-video="uploadVideo"
+        @delete-video="deleteDefinitionVideo"
+        @video-error="handleVideoError"
+        @show-video="openVideo"
+        @update-translations="updateDefinitionTranslations"
+      />
+    </q-list>
+    <q-list v-else>
+      <!-- Mobile -->
       <DefinitionCardMobile
         v-for="(definition, index) in definitions.sort((a, b) => a.priority - b.priority)"
         :key="definition.id || index"
@@ -139,8 +139,10 @@
           class="row items-center q-mb-sm"
         >
           <div class="col">
-            <div class="text-bold">{{ definition.title }}</div>
-            <div >{{ definition.definition }}</div>
+            <div class="text-bold">
+              {{ definition.title }}
+            </div>
+            <div>{{ definition.definition }}</div>
           </div>
           <div class="col-auto">
             <q-btn
@@ -179,11 +181,11 @@
   </q-dialog>
 
   <!-- Create Definition Dialog -->
-    <CreateDefinitionDialog
-      v-model="showCreateDefinitionDialog"
-      :gloss-data-id="glossData?.id || ''"
-      @definition-created="handleDefinitionCreated"
-    />
+  <CreateDefinitionDialog
+    v-model="showCreateDefinitionDialog"
+    :gloss-data-id="glossData?.id || ''"
+    @definition-created="handleDefinitionCreated"
+  />
 </template>
 
 <script setup lang="ts">
@@ -481,7 +483,7 @@ const saveSortDefinitions = async () => {
         updateData.videoDefinitionUrl = definition.videoDefinitionUrl
       }
       
-      return api.definitions.update(props.glossData!.id!, definition.id!, updateData)
+      return api.definitions.update(props.glossData.id!, definition.id!, updateData)
     })
     
     if (updatePromises.length === 0) {

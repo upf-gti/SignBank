@@ -1,19 +1,29 @@
 import { IsString, IsOptional, ValidateNested, IsEnum, IsNotEmpty, ArrayNotEmpty, IsInt, Min, IsArray } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
-import { Language, LexicalCategory, Hand, RelationType, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType } from '@prisma/client';
+import { Language, LexicalCategory, Handedness, RelationType, HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType } from '@prisma/client';
 
 export class VideoDataDto {
-  @IsEnum(Hand)
-  hands: Hand;
+  @IsEnum(Handedness)
+  handedness: Handedness;
 
   @IsEnum(HandConfiguration)
-  configuration: HandConfiguration;
+  @IsOptional()
+  dominantConfiguration?: HandConfiguration;
+
+  @IsEnum(HandConfiguration)
+  @IsOptional()
+  nonDominantConfiguration?: HandConfiguration;
 
   @IsEnum(ConfigurationChange)
   configurationChanges: ConfigurationChange;
 
   @IsEnum(RelationBetweenArticulators)
-  relationBetweenArticulators: RelationBetweenArticulators;
+  @IsOptional()
+  dominantRelationBetweenArticulators?: RelationBetweenArticulators;
+
+  @IsEnum(RelationBetweenArticulators)
+  @IsOptional()
+  nonDominantRelationBetweenArticulators?: RelationBetweenArticulators;
 
   @IsEnum(Location)
   location: Location;

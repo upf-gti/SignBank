@@ -1,6 +1,6 @@
 <template>
   <q-header
-    class="bg-secondary text-black app-header"
+    class="app-header"
     bordered
   >
     <loginComponent v-model="isLoginDialogOpen" />
@@ -11,7 +11,7 @@
       :width="280"
       bordered
       overlay
-      class="bg-secondary"
+      class="app-drawer"
     >
       <q-list padding>
         <q-item-label
@@ -23,8 +23,8 @@
 
         <q-item
           v-if="route.path !== '/search' && route.path !== '/'"
-          clickable
           v-ripple
+          clickable
           :active="isActive('/search')"
           active-class="nav-item-active"
           @click="navigateTo('/search')"
@@ -37,8 +37,8 @@
 
         <q-item
           v-if="userStore.isLoggedIn"
-          clickable
           v-ripple
+          clickable
           :active="isActive('/my-requests')"
           active-class="nav-item-active"
           @click="navigateTo('/my-requests')"
@@ -60,8 +60,8 @@
           </q-item-label>
 
           <q-item
-            clickable
             v-ripple
+            clickable
             :active="isActive('/confirm-requests')"
             active-class="nav-item-active"
             @click="navigateTo('/confirm-requests')"
@@ -73,8 +73,8 @@
           </q-item>
 
           <q-item
-            clickable
             v-ripple
+            clickable
             :active="isActive('/user-management')"
             active-class="nav-item-active"
             @click="navigateTo('/user-management')"
@@ -104,28 +104,38 @@
         <q-separator class="q-mb-sm" />
         <q-item
           v-if="!userStore.isLoggedIn"
-          clickable
           v-ripple
-          @click="openLogin"
+          clickable
           class="rounded-borders"
+          @click="openLogin"
         >
           <q-item-section avatar>
-            <q-icon name="login" color="primary" />
+            <q-icon
+              name="login"
+              color="primary"
+            />
           </q-item-section>
-          <q-item-section class="text-primary">{{ translate('login') }}</q-item-section>
+          <q-item-section class="text-primary">
+            {{ translate('login') }}
+          </q-item-section>
         </q-item>
 
         <q-item
           v-if="userStore.isLoggedIn"
-          clickable
           v-ripple
-          @click="userStore.logout"
+          clickable
           class="rounded-borders"
+          @click="userStore.logout"
         >
           <q-item-section avatar>
-            <q-icon name="logout" color="negative" />
+            <q-icon
+              name="logout"
+              color="negative"
+            />
           </q-item-section>
-          <q-item-section class="text-negative">{{ translate('logout') }}</q-item-section>
+          <q-item-section class="text-negative">
+            {{ translate('logout') }}
+          </q-item-section>
         </q-item>
       </div>
     </q-drawer>
@@ -187,6 +197,12 @@ const isActive = (path: string) => route.path === path || route.path.startsWith(
 </script>
 
 <style scoped>
+.app-header,
+.app-drawer {
+  background-color: var(--sb-surface-muted);
+  color: var(--sb-text-primary);
+}
+
 .app-header {
   min-height: 64px;
   box-shadow: none;
@@ -201,7 +217,7 @@ const isActive = (path: string) => route.path === path || route.path.startsWith(
 }
 
 .nav-item-active {
-  background: rgba(200, 16, 47, 0.08);
+  background: rgba(182, 70, 58, 0.1);
   color: var(--primary);
   font-weight: 500;
 }

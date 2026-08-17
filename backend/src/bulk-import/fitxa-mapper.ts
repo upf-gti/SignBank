@@ -1,4 +1,4 @@
-import { Hand } from '@prisma/client';
+import { Handedness } from '@prisma/client';
 import {
   resolveFitxaEnum,
   type FitxaMappingField,
@@ -16,9 +16,7 @@ const PHONOLOGY_FIELDS: Array<{
   mappingField: FitxaMappingField;
   videoDataKey: keyof MappedPhonology;
 }> = [
-  { jsonKey: 'configuracio', mappingField: 'configuration', videoDataKey: 'configuration' },
   { jsonKey: 'canvi_configuracio', mappingField: 'configurationChanges', videoDataKey: 'configurationChanges' },
-  { jsonKey: 'relacio_articuladors', mappingField: 'relationBetweenArticulators', videoDataKey: 'relationBetweenArticulators' },
   { jsonKey: 'localitzacio', mappingField: 'location', videoDataKey: 'location' },
   { jsonKey: 'orientacio_moviment', mappingField: 'movementRelatedOrientation', videoDataKey: 'movementRelatedOrientation' },
   { jsonKey: 'orientacio_localitzacio', mappingField: 'orientationRelatedToLocation', videoDataKey: 'orientationRelatedToLocation' },
@@ -128,33 +126,29 @@ function resolveEnumValue(
   return emptyValue;
 }
 
-function mapHands(
+function mapHandedness(
   raw: string | null | undefined,
   gloss: string,
   fileName: string,
   issues: ImportIssue[],
-): Hand {
+): Handedness {
   if (raw == null || String(raw).trim() === '') {
-    return Hand.RIGHT;
+    return Handedness.ONE;
   }
 
-  const value = String(raw).trim().replace(/^\d+n\s+comp:\s*/i, '');
-  const code = normalize(value);
-
-  if (code === '1') return Hand.RIGHT;
-  if (code === '2a' || code === '2n' || code === '2s' || code === '2') {
-    return Hand.BOTH;
+  const resolved = resolveFitxaEnum('handedness', raw);
+  if (resolved.value) {
+    return resolved.value as Handedness;
   }
-  if (code === 'x') return Hand.BOTH;
 
   issues.push({
     gloss,
     fileName,
     field: 'phonology.nombre_mans',
     value: String(raw),
-    message: 'Invalid handedness code; stored as RIGHT',
+    message: 'Invalid handedness code; stored as ONE',
   });
-  return Hand.RIGHT;
+  return Handedness.ONE;
 }
 
 function mapLexicalCategory(
@@ -295,10 +289,48 @@ function mapPhonology(
   }
 
   const mapped: MappedPhonology = {
-    hands: mapHands(phonology.nombre_mans, gloss, fileName, issues),
-    configuration: 'EMPTY',
+    handedness: mapHandedness(phonology.nombre_mans, gloss, fileName, issues),
+    dominantConfiguration: resolveEnumValue(
+      'configuration',
+      phonology.configuracio_ma_dominant || phonology.configuracio,
+      gloss,
+      fileName,
+      'phonology.configuracio_ma_dominant',
+      issues,
+      'EMPTY',
+    ),
+    nonDominantConfiguration: phonology.configuracio_ma_no_dominant
+      ? resolveEnumValue(
+          'configuration',
+          phonology.configuracio_ma_no_dominant,
+          gloss,
+          fileName,
+          'phonology.configuracio_ma_no_dominant',
+          issues,
+          'EMPTY',
+        )
+      : null,
+    dominantRelationBetweenArticulators: resolveEnumValue(
+      'relationBetweenArticulators',
+      phonology.relacio_articuladors_ma_dominant || phonology.relacio_articuladors,
+      gloss,
+      fileName,
+      'phonology.relacio_articuladors_ma_dominant',
+      issues,
+      'EMPTY',
+    ),
+    nonDominantRelationBetweenArticulators: phonology.relacio_articuladors_ma_no_dominant
+      ? resolveEnumValue(
+          'relationBetweenArticulators',
+          phonology.relacio_articuladors_ma_no_dominant,
+          gloss,
+          fileName,
+          'phonology.relacio_articuladors_ma_no_dominant',
+          issues,
+          'EMPTY',
+        )
+      : null,
     configurationChanges: 'EMPTY',
-    relationBetweenArticulators: 'EMPTY',
     location: 'EMPTY',
     movementRelatedOrientation: 'EMPTY',
     orientationRelatedToLocation: 'EMPTY',
@@ -322,19 +354,6 @@ function mapPhonology(
       issues,
       'EMPTY',
     ) as never;
-  }
-
-  const dominant = phonology.configuracio_ma_dominant;
-  if (dominant && mapped.configuration === 'EMPTY') {
-    mapped.configuration = resolveEnumValue(
-      'configuration',
-      dominant,
-      gloss,
-      fileName,
-      'phonology.configuracio_ma_dominant',
-      issues,
-      'EMPTY',
-    );
   }
 
   const repeated = resolveFitxaEnum('repeatedMovement', phonology.moviment_repetit);

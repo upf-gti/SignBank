@@ -6,7 +6,7 @@
     "deleteOutDir": true,
     "assets": [
       {
-        "include": "import/*.json",
+        "include": "import/**/*.json",
         "watchAssets": true
       }
     ]

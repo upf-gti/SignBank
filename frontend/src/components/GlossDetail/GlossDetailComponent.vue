@@ -150,11 +150,13 @@ const handleGlossDataUpdate = (updatedGlossData: GlossData) => {
   height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-x: visible;
+  overflow-y: hidden;
 }
 
 .gloss-detail-card--constrained > :not(.gloss-detail-card__main) {
   flex: 0 0 auto;
+  flex-shrink: 0;
 }
 
 .gloss-detail-card--constrained .gloss-detail-card__main {

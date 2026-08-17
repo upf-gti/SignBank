@@ -1,10 +1,11 @@
 <template>
-  <q-page padding 
-  :style-fn="(header: number, height: number) => {
+  <q-page
+    padding 
+    :style-fn="(header: number, height: number) => {
       pageHeight = height-header
       return { height: `${height - header}px` };
     }"
-    >
+  >
     <div class="row justify-center">
       <div class="col-12 col-md-8 col-lg-6">
         <q-card class="q-pa-lg">

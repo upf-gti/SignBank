@@ -18,11 +18,16 @@
         >
           <SignVideoAside
             :gloss-data="glossData"
+            :is-compound="isCompound"
             @show-all-videos="showAllVideos = true"
+            @show-compound-phonology="openCompoundPhonology"
           />
         </div>
 
-        <div class="gloss-content-column">
+        <div
+          class="gloss-content-column"
+          :class="{ 'gloss-content-column--full': !showSidebar }"
+        >
           <q-tabs
             v-model="selectedTab"
             class="gloss-content-tabs text-primary q-mb-sm"
@@ -37,6 +42,11 @@
             <q-tab
               name="definitions"
               :label="translate('definitions')"
+            />
+            <q-tab
+              v-if="isCompound"
+              name="compound"
+              :label="translate('compound')"
             />
             <q-tab
               name="examples"
@@ -64,7 +74,18 @@
                   :allow-edit="false"
                   hide-section-title
                   hide-definition-video
-                  hide-gloss-translations
+                  :hide-gloss-translations="!isCompound"
+                />
+              </q-tab-panel>
+
+              <q-tab-panel
+                v-if="isCompound"
+                name="compound"
+                class="q-pa-none"
+              >
+                <CompoundComponent
+                  v-model:show-phonology="showCompoundPhonology"
+                  :gloss-data="glossData"
                 />
               </q-tab-panel>
 
@@ -108,14 +129,24 @@ import SignVideosBrowseView from './SignVideosBrowseView.vue'
 import DefinitionsComponent from './DefinitionsComponent/DefinitionsComponent.vue'
 import ExamplesComponent from './ExamplesComponent/ExamplesComponent.vue'
 import RelatedGlosses from './RelatedGlosses.vue'
+import CompoundComponent from './CompoundComponent.vue'
 import translate from 'src/utils/translate'
+import { isCompoundGloss } from 'src/utils/compoundPhonology'
 
 const { glossData } = defineProps<{
   glossData: GlossData
 }>()
 
+const isCompound = computed(() => isCompoundGloss(glossData))
+
 const selectedTab = ref('definitions')
 const showAllVideos = ref(false)
+const showCompoundPhonology = ref(false)
+
+function openCompoundPhonology() {
+  selectedTab.value = 'compound'
+  showCompoundPhonology.value = true
+}
 
 const hasSignVideos = computed(() => (glossData.glossVideos?.length ?? 0) > 0)
 
@@ -123,7 +154,12 @@ const hasGlossTranslations = computed(() =>
   (glossData.glossTranslations?.length ?? 0) > 0
 )
 
-const showSidebar = computed(() => hasSignVideos.value || hasGlossTranslations.value)
+const showSidebar = computed(() => {
+  if (isCompound.value) {
+    return hasSignVideos.value
+  }
+  return hasSignVideos.value || hasGlossTranslations.value
+})
 </script>
 
 <style scoped>
@@ -147,9 +183,12 @@ const showSidebar = computed(() => hasSignVideos.value || hasGlossTranslations.v
 
 .gloss-view-layout__body--all-videos {
   gap: 0;
+  min-height: 0;
 }
 
 .gloss-video-column {
+  display: flex;
+  flex-direction: column;
   flex: 0 0 42%;
   min-width: 0;
   min-height: 0;
@@ -163,6 +202,10 @@ const showSidebar = computed(() => hasSignVideos.value || hasGlossTranslations.v
   min-width: 0;
   min-height: 0;
   overflow: hidden;
+}
+
+.gloss-content-column--full {
+  width: 100%;
 }
 
 .gloss-content-tabs {
@@ -195,11 +238,13 @@ const showSidebar = computed(() => hasSignVideos.value || hasGlossTranslations.v
   .gloss-video-column {
     flex: 0 0 auto;
     width: 100%;
+    max-height: calc(var(--sb-video-max-height, 200px) + 72px);
   }
 
   .gloss-content-column {
     flex: 1 1 0;
     width: 100%;
+    min-height: 0;
   }
 }
 </style>

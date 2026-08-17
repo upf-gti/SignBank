@@ -3,6 +3,7 @@
     <div
       v-if="hasAnyVideoUrl || editMode"
       class="video-angle-container"
+      :class="{ 'video-angle-container--compact': compact }"
     >
       <video
         v-for="video in sortedVideosWithUrl"
@@ -30,7 +31,7 @@
     </div>
 
     <div
-      v-if="editMode || sortedVideos.length > 1"
+      v-if="!hideAngles && (editMode || sortedVideos.length > 1)"
       class="column col justify-start items-start q-mt-sm"
     >
       <div class="row justify-between items-center full-width">
@@ -92,7 +93,7 @@
         class="column justify-center no-wrap items-start full-width q-mt-md"
       >
         <q-btn
-          v-if="signVideo.videos.length > 1"
+          v-if="(signVideo.videos?.length ?? 0) > 1"
           flat
           round
           icon="delete"
@@ -120,10 +121,20 @@ import { getVideoUrl } from 'src/utils/videoUrl';
 import { api } from 'src/services/api';
 import { useQuasar } from 'quasar';
 
+function normalizeSignVideo(signVideo: SignVideo): SignVideo {
+  return {
+    ...signVideo,
+    videos: signVideo.videos ?? [],
+    minimalPairs: signVideo.minimalPairs ?? [],
+  };
+}
+
 const props = defineProps<{
   signVideo: SignVideo;
   editMode: boolean;
   compact?: boolean;
+  /** Single front video only — no angle picker (inline compound morphemes). */
+  hideAngles?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -132,13 +143,14 @@ const emit = defineEmits<{
 
 const $q = useQuasar();
 
-const localSignVideo = ref<SignVideo>({ ...props.signVideo });
+const localSignVideo = ref<SignVideo>(normalizeSignVideo(props.signVideo));
 
 watch(() => props.signVideo, (newSignVideo) => {
-  localSignVideo.value = { ...newSignVideo };
+  localSignVideo.value = normalizeSignVideo(newSignVideo);
+  selectedVideo.value = localSignVideo.value.videos[0]?.id || '';
 }, { deep: true });
 
-const selectedVideo = ref<string>(localSignVideo.value?.videos[0]?.id || '');
+const selectedVideo = ref<string>(localSignVideo.value.videos[0]?.id || '');
 const videoRefs = new Map<string, HTMLVideoElement>();
 
 const sortedVideos = computed(() => {
@@ -311,11 +323,19 @@ const moveVideoRight = async () => {
 <style scoped>
 .video-angle-container {
   position: relative;
-  width: 100%;
+  width: min(100%, var(--sb-video-max-width, 480px));
+  max-width: 100%;
   aspect-ratio: 16 / 9;
+  max-height: var(--sb-video-max-height, none);
+  margin-inline: auto;
   background: #000;
   border-radius: var(--sb-card-radius, 12px);
   overflow: hidden;
+}
+
+.video-angle-container--compact {
+  max-height: var(--sb-video-compact-max-height, 140px);
+  width: min(100%, calc(var(--sb-video-compact-max-height, 140px) * 16 / 9));
 }
 
 .angle-video {
@@ -343,7 +363,7 @@ const moveVideoRight = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.96);
+  background: color-mix(in srgb, var(--sb-surface-elevated) 96%, transparent);
 }
 
 .angle-toggle--compact :deep(.q-btn) {

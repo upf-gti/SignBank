@@ -13,6 +13,6 @@ import HeaderComponent from 'components/HeaderComponent.vue';
 
 <style scoped>
 .page-container {
-  background: #fafafa;
+  background: var(--sb-bg);
 }
 </style>

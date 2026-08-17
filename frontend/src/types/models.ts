@@ -1,6 +1,6 @@
 import type { RelatedGloss, MinimalPair } from "./gloss"
 import type { 
-  Hand,
+  Handedness,
   HandConfiguration,
   ConfigurationChange,
   RelationBetweenArticulators,
@@ -81,10 +81,12 @@ export interface Video {
 }
 
 export interface PhonologyData {
-  hands: Hand;
-  configuration: HandConfiguration;
+  handedness: Handedness;
+  dominantConfiguration?: HandConfiguration | null;
+  nonDominantConfiguration?: HandConfiguration | null;
+  dominantRelationBetweenArticulators?: RelationBetweenArticulators | null;
+  nonDominantRelationBetweenArticulators?: RelationBetweenArticulators | null;
   configurationChanges: ConfigurationChange;
-  relationBetweenArticulators: RelationBetweenArticulators;
   location: Location;
   movementRelatedOrientation: MovementRelatedOrientation;
   orientationRelatedToLocation: OrientationRelatedToLocation;
@@ -114,6 +116,7 @@ export interface MinimalPairGlossData {
 export interface RelatedGlossData {
   id?: string;
   gloss: string;
+  isCompound?: boolean;
   createdAt: string;
   updatedAt: string;
   editComment: string | null;
@@ -121,6 +124,19 @@ export interface RelatedGlossData {
   isCreatedFromRequest: boolean;
   isCreatedFromEdit: boolean;
   glossVideos: SignVideo[];
+  compoundParts?: CompoundPart[];
+}
+
+export interface CompoundPart {
+  id?: string;
+  position: number;
+  gloss: string;
+  compExternalId?: string | null;
+  linkedGlossId?: string | null;
+  redundant?: boolean;
+  linkedGloss?: GlossData | null;
+  inlinePhonology?: PhonologyData | null;
+  inlineSignVideo?: SignVideo | null;
 }
 
 export interface SignVideo {
@@ -128,7 +144,7 @@ export interface SignVideo {
   title: string;
   priority: number;
   videoDataId: string;
-  glossDataId: string;
+  glossDataId?: string | null;
   videos: Video[];
   minimalPairs: MinimalPair[];
   videoData: PhonologyData;
@@ -138,6 +154,9 @@ export interface SignVideo {
 export interface GlossData {
   id?: string;
   gloss: string;
+  externalId?: string | null;
+  isCompound?: boolean;
+  iconicity?: string | null;
   createdAt: string;
   updatedAt: string;
   editComment: string | null;
@@ -147,6 +166,7 @@ export interface GlossData {
   definitions: Definition[];
   examples: Example[];
   glossTranslations: GlossTranslation[];
+  compoundParts?: CompoundPart[];
   relationsAsSource: RelatedGloss[];
   relationsAsTarget: RelatedGloss[];
   minimalPairsAsSource: MinimalPair[];

@@ -89,10 +89,12 @@ export interface MappedMinimalPair {
 }
 
 export interface MappedPhonology {
-  hands: string;
-  configuration: string;
+  handedness: string;
+  dominantConfiguration: string | null;
+  nonDominantConfiguration: string | null;
+  dominantRelationBetweenArticulators: string | null;
+  nonDominantRelationBetweenArticulators: string | null;
   configurationChanges: string;
-  relationBetweenArticulators: string;
   location: string;
   movementRelatedOrientation: string;
   orientationRelatedToLocation: string;

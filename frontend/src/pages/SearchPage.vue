@@ -29,7 +29,11 @@
     </div>
 
     <!-- Main Content: Filters and Results -->
-    <div v-if="$q.screen.gt.md" class="row q-col-gutter-md col" :style="{ overflowY: 'auto' }">
+    <div
+      v-if="$q.screen.gt.md"
+      class="row q-col-gutter-md col"
+      :style="{ overflowY: 'auto' }"
+    >
       <!-- Filters Sidebar -->
       <div 
         v-show="showFilters" 
@@ -39,7 +43,7 @@
         <SearchFilters
           v-model:search-query="searchQuery"
           v-model:selected-category="selectedLexicalCategory"
-          v-model:selected-hands="selectedHands"
+          v-model:selected-handedness="selectedHandedness"
           v-model:filter-inputs="filterInputs"
           @search="performSearch"
           @clear="performSearch"
@@ -60,7 +64,11 @@
         />
       </div>
     </div>
-    <div v-else class="column q-col-gutter-md col q-mt-md no-wrap" :style="{ overflowY: 'auto' }">
+    <div
+      v-else
+      class="column q-col-gutter-md col q-mt-md no-wrap"
+      :style="{ overflowY: 'auto' }"
+    >
       <!-- Filters Sidebar -->
       <div 
         v-show="showFilters" 
@@ -69,7 +77,7 @@
         <SearchFilters
           v-model:search-query="searchQuery"
           v-model:selected-category="selectedLexicalCategory"
-          v-model:selected-hands="selectedHands"
+          v-model:selected-handedness="selectedHandedness"
           v-model:filter-inputs="filterInputs"
           @search="performSearch"
           @clear="performSearch"
@@ -77,10 +85,11 @@
       </div>
 
       <!-- Search Results -->
-      <div class="col fit" 
-        v-show="!showFilters"
+      <div
+        v-show="!showFilters" 
+        class="col fit"
         :style="{ overflowY: 'auto' }"
-        >
+      >
         <SearchResults
           :results="searchResults"
           :loading="loading"
@@ -110,10 +119,10 @@ import translate from 'src/utils/translate';
 
 // Create a type for filter inputs that allows empty values
 type FilterInputs = {
-  hands: string | null;
-  configuration: string;
+  handedness: string | null;
+  dominantConfiguration: string;
   configurationChanges: string;
-  relationBetweenArticulators: string;
+  dominantRelationBetweenArticulators: string;
   location: string;
   movementRelatedOrientation: string;
   orientationRelatedToLocation: string;
@@ -156,12 +165,12 @@ const showFilters = ref(false);
 
 // Filters state
 const selectedLexicalCategory = ref<string>('');
-const selectedHands = ref<string>('');
+const selectedHandedness = ref<string>('');
 const filterInputs = ref<FilterInputs>({
-  hands: null,
-  configuration: '',
+  handedness: null,
+  dominantConfiguration: '',
   configurationChanges: '',
-  relationBetweenArticulators: '',
+  dominantRelationBetweenArticulators: '',
   location: '',
   movementRelatedOrientation: '',
   orientationRelatedToLocation: '',
@@ -180,8 +189,8 @@ const filterBy = computed(() => {
   const filters = [];
   
   
-  if (selectedHands.value !== '' && selectedHands.value !== null) {
-    filters.push(`hands:='${selectedHands.value}'`);
+  if (selectedHandedness.value !== '' && selectedHandedness.value !== null) {
+    filters.push(`handedness:='${selectedHandedness.value}'`);
   }
   
   // Add text input filters - using contains operator for fuzzy matching
@@ -228,7 +237,7 @@ async function performSearch() {
       page: Number(page.value),
       limit: Number(perPage.value),
       filter_by: filterBy.value || undefined,
-      facet_by: 'lexicalCategory,hands,configuration,configurationChanges,relationBetweenArticulators,location,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType'
+      facet_by: 'lexicalCategory,handedness,dominantConfiguration,configurationChanges,dominantRelationBetweenArticulators,location,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType'
     };
     
     searchResults.value = await searchService.search(params);
@@ -269,16 +278,16 @@ onMounted(async () => {
 }
 
 .filters-container::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--sb-surface-muted);
 }
 
 .filters-container::-webkit-scrollbar-thumb {
-  background: #888;
+  background: #B5A796;
   border-radius: 3px;
 }
 
 .filters-container::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #9A8B7A;
 }
 
 /* Mobile responsive adjustments */

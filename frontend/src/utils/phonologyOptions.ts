@@ -1,5 +1,5 @@
 import {
-  Hand,
+  Handedness,
   HandConfiguration,
   ConfigurationChange,
   RelationBetweenArticulators,
@@ -22,10 +22,14 @@ interface SelectOption {
 export function usePhonologyOptions() {
   const  t = (key: string) => translate(key);
 
-  const handOptions: SelectOption[] = Object.values(Hand).map(value => ({
+  const handednessOptions: SelectOption[] = Object.values(Handedness).map(value => ({
     value,
-    label: t(`phonology.hand.${value}`),
+    label: t(`phonology.handedness.${value}`),
+    description: t(`phonology.handedness.${value}_description`),
   }));
+
+  /** @deprecated Use handednessOptions */
+  const handOptions = handednessOptions;
 
   const handConfigurationOptions: SelectOption[] = Object.values(HandConfiguration).map(value => ({
     value,
@@ -79,6 +83,7 @@ export function usePhonologyOptions() {
   }));
 
   return {
+    handednessOptions,
     handOptions,
     handConfigurationOptions,
     configurationChangeOptions,
@@ -91,4 +96,12 @@ export function usePhonologyOptions() {
     movementTypeOptions,
     movementDirectionOptions,
   };
-} 
+}
+
+export type PhonologySelectOption = SelectOption;
+
+export function getOptionLabel(options: SelectOption[], value: string | null | undefined): string {
+  if (!value) return '';
+  const option = options.find(o => o.value === value);
+  return option ? option.label : value;
+}

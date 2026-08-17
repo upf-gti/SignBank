@@ -36,8 +36,8 @@
                 class="rounded-borders shadow-2"
                 :src="getVideoUrl(example.exampleVideoURL)"
                 muted
-                @error="$emit('videoError', $event)"
                 style="max-width: 100%; max-height: 250px; width: auto; height: auto;"
+                @error="$emit('videoError', $event)"
               />
               <q-btn
                 v-if="isEditing"

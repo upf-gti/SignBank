@@ -1,0 +1,43 @@
+/** Nested compound parts for gloss detail (max ~2 levels per domain rules). */
+const glossVideosInclude = {
+  orderBy: { priority: 'asc' as const },
+  include: {
+    videoData: true,
+    videos: { orderBy: { priority: 'asc' as const } },
+  },
+};
+
+const inlineSignVideoInclude = {
+  include: {
+    videos: { orderBy: { priority: 'asc' as const } },
+    videoData: true,
+  },
+};
+
+/** Linked gloss at the innermost compound level (e.g. GERMÀ inside BESSONS-1d). */
+const nestedLinkedGlossInclude = {
+  include: {
+    glossVideos: glossVideosInclude,
+  },
+};
+
+export const compoundPartsInclude = {
+  orderBy: { position: 'asc' as const },
+  include: {
+    linkedGloss: {
+      include: {
+        glossVideos: glossVideosInclude,
+        compoundParts: {
+          orderBy: { position: 'asc' as const },
+          include: {
+            linkedGloss: nestedLinkedGlossInclude,
+            inlinePhonology: true,
+            inlineSignVideo: inlineSignVideoInclude,
+          },
+        },
+      },
+    },
+    inlinePhonology: true,
+    inlineSignVideo: inlineSignVideoInclude,
+  },
+};

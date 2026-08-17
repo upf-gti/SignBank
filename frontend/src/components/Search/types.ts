@@ -1,8 +1,8 @@
 export interface FilterInputs {
-  hands: string;
-  configuration: string;
+  handedness: string;
+  dominantConfiguration: string;
   configurationChanges: string;
-  relationBetweenArticulators: string;
+  dominantRelationBetweenArticulators: string;
   location: string;
   movementRelatedOrientation: string;
   locationRelatedOrientation: string;
@@ -14,4 +14,4 @@ export interface FilterInputs {
   inicialization: string;
   repeatedMovement: boolean;
   movementDirection: string;
-} 
+}

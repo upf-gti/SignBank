@@ -3,7 +3,7 @@ import {
   ConfigurationChange,
   ContactType,
   GlossStatus,
-  Hand,
+  Handedness,
   HandConfiguration,
   Language,
   LexicalCategory,
@@ -339,11 +339,14 @@ export class BulkImportService {
       priority: 0,
       videoData: {
         create: {
-          hands: phonology.hands as Hand,
-          configuration: phonology.configuration as HandConfiguration,
+          handedness: phonology.handedness as Handedness,
+          dominantConfiguration: phonology.dominantConfiguration as HandConfiguration | null,
+          nonDominantConfiguration: phonology.nonDominantConfiguration as HandConfiguration | null,
+          dominantRelationBetweenArticulators:
+            phonology.dominantRelationBetweenArticulators as RelationBetweenArticulators | null,
+          nonDominantRelationBetweenArticulators:
+            phonology.nonDominantRelationBetweenArticulators as RelationBetweenArticulators | null,
           configurationChanges: phonology.configurationChanges as ConfigurationChange,
-          relationBetweenArticulators:
-            phonology.relationBetweenArticulators as RelationBetweenArticulators,
           location: phonology.location as Location,
           movementRelatedOrientation:
             phonology.movementRelatedOrientation as MovementRelatedOrientation,

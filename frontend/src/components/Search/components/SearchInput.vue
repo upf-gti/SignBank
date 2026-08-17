@@ -12,7 +12,10 @@
         @keyup.enter="$emit('search')"
       >
         <template #prepend>
-          <q-icon name="search" color="grey-6" />
+          <q-icon
+            name="search"
+            color="grey-6"
+          />
         </template>
       </q-input>
     </div>

@@ -1,21 +1,41 @@
-import { IsEnum, IsBoolean, IsOptional } from 'class-validator';
-import { HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType, MovementDirection } from '@prisma/client';
+import { IsEnum, IsBoolean, IsOptional, IsString } from 'class-validator';
+import {
+  Handedness,
+  HandConfiguration,
+  ConfigurationChange,
+  RelationBetweenArticulators,
+  Location,
+  MovementRelatedOrientation,
+  OrientationRelatedToLocation,
+  OrientationChange,
+  ContactType,
+  MovementType,
+  MovementDirection,
+} from '@prisma/client';
 
 export class VideoDataDto {
+  @IsEnum(Handedness)
+  handedness: Handedness;
+
   @IsEnum(HandConfiguration)
-  hands: HandConfiguration;
-
-  @IsEnum(ConfigurationChange)
   @IsOptional()
-  configuration?: ConfigurationChange;
+  dominantConfiguration?: HandConfiguration;
 
-  @IsEnum(ConfigurationChange)
+  @IsEnum(HandConfiguration)
   @IsOptional()
-  configurationChanges?: ConfigurationChange[];
+  nonDominantConfiguration?: HandConfiguration;
 
   @IsEnum(RelationBetweenArticulators)
   @IsOptional()
-  relationBetweenArticulators?: RelationBetweenArticulators;
+  dominantRelationBetweenArticulators?: RelationBetweenArticulators;
+
+  @IsEnum(RelationBetweenArticulators)
+  @IsOptional()
+  nonDominantRelationBetweenArticulators?: RelationBetweenArticulators;
+
+  @IsEnum(ConfigurationChange)
+  @IsOptional()
+  configurationChanges?: ConfigurationChange;
 
   @IsEnum(Location)
   @IsOptional()
@@ -45,7 +65,19 @@ export class VideoDataDto {
   @IsOptional()
   movementDirection?: MovementDirection;
 
+  @IsString()
+  @IsOptional()
+  vocalization?: string;
+
+  @IsString()
+  @IsOptional()
+  nonManualComponent?: string;
+
+  @IsString()
+  @IsOptional()
+  inicialization?: string;
+
   @IsBoolean()
   @IsOptional()
   repeatedMovement?: boolean;
-} 
+}

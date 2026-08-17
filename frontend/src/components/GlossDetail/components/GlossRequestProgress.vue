@@ -60,7 +60,7 @@ const items = computed(() => {
 <style scoped>
 .progress-card {
   border-radius: var(--sb-card-radius, 12px);
-  background: #fff;
+  background: var(--sb-surface);
 }
 
 .progress-item {

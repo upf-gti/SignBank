@@ -114,6 +114,15 @@
       class="q-mt-sm"
       @click="addTranslation"
     />
+
+    <div
+      v-if="localGlossData.iconicity && !editMode"
+      class="gloss-translations__iconicity text-body2 text-grey-8"
+      :class="glossTranslations.length ? 'q-mt-md' : ''"
+    >
+      <span class="text-weight-medium">{{ translate('iconicity') }}:</span>
+      {{ localGlossData.iconicity }}
+    </div>
   </q-card-section>
 </template>
 
@@ -239,7 +248,7 @@ const deleteTranslation = async (translation: GlossTranslation) => {
   if (!translation.id) {
     const index = localGlossData.value.glossTranslations?.findIndex((t) => t === translation) ?? -1;
     if (index !== -1) {
-      localGlossData.value.glossTranslations!.splice(index, 1);
+      localGlossData.value.glossTranslations.splice(index, 1);
     }
     return;
   }
@@ -270,7 +279,7 @@ const cancelTranslation = (translation: GlossTranslation) => {
   if (!translation.id) {
     const index = localGlossData.value.glossTranslations?.findIndex((t) => t === translation) ?? -1;
     if (index !== -1) {
-      localGlossData.value.glossTranslations!.splice(index, 1);
+      localGlossData.value.glossTranslations.splice(index, 1);
     }
   }
 };

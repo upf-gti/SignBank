@@ -1,7 +1,9 @@
 <template>
-  <div>
+  <div
+    v-if="editMode"
+    class="creation-stepper-shell"
+  >
     <q-stepper
-      v-if="editMode"
       v-model="step"
       color="primary"
       animated
@@ -10,10 +12,10 @@
       class="creation-stepper"
     >
       <q-step
-        :name="1"
+        name="core"
         :title="translate('stepCore')"
         icon="description"
-        :done="step > 1"
+        :done="step !== 'core'"
       >
         <DefinitionsComponent
           ref="definitionsRef"
@@ -21,26 +23,16 @@
           :edit-mode="editMode"
           :allow-edit="editMode"
           :inline-edit="true"
+          :hide-gloss-translations="Boolean(localGlossData.isCompound)"
           @update:gloss-data="updateGlossData"
         />
-
-        <q-stepper-navigation class="row justify-end q-mt-md">
-          <q-btn
-            color="primary"
-            unelevated
-            :label="translate('next')"
-            icon-right="arrow_forward"
-            :loading="stepLoading"
-            @click="goToStep(2)"
-          />
-        </q-stepper-navigation>
       </q-step>
 
       <q-step
-        :name="2"
+        name="video"
         :title="translate('stepVideo')"
         icon="videocam"
-        :done="step > 2"
+        :done="step === 'compound' || step === 'optional'"
       >
         <VideosComponent
           ref="videosRef"
@@ -49,29 +41,23 @@
           :inline-edit="true"
           @update:gloss-data="updateGlossData"
         />
-
-        <q-stepper-navigation class="row justify-between q-mt-md">
-          <q-btn
-            flat
-            color="primary"
-            :label="translate('back')"
-            icon="arrow_back"
-            :disable="stepLoading"
-            @click="step = 1"
-          />
-          <q-btn
-            color="primary"
-            unelevated
-            :label="translate('next')"
-            icon-right="arrow_forward"
-            :loading="stepLoading"
-            @click="goToStep(3)"
-          />
-        </q-stepper-navigation>
       </q-step>
 
       <q-step
-        :name="3"
+        name="compound"
+        :title="translate('stepCompound')"
+        icon="call_merge"
+        :done="step === 'optional'"
+      >
+        <CompoundEditorComponent
+          ref="compoundRef"
+          :gloss-data="localGlossData"
+          @update:gloss-data="updateGlossData"
+        />
+      </q-step>
+
+      <q-step
+        name="optional"
         :title="translate('stepOptional')"
         icon="more_horiz"
         optional
@@ -106,27 +92,46 @@
             @update:gloss-data="updateGlossData"
           />
         </q-expansion-item>
-
-        <q-stepper-navigation class="row justify-between q-mt-md">
-          <q-btn
-            flat
-            color="primary"
-            :label="translate('back')"
-            icon="arrow_back"
-            :disable="stepLoading || submitting"
-            @click="step = 2"
-          />
-          <q-btn
-            color="primary"
-            unelevated
-            :icon="isDraft ? 'send' : 'check'"
-            :label="isDraft ? translate('sendRequest') : translate('save')"
-            :loading="stepLoading || submitting"
-            @click="handleFinish"
-          />
-        </q-stepper-navigation>
       </q-step>
     </q-stepper>
+
+    <Teleport to="body">
+      <footer class="creation-stepper-footer">
+        <div class="creation-stepper-footer__inner">
+          <div class="creation-stepper-footer__side creation-stepper-footer__side--start">
+            <q-btn
+              v-if="step !== 'core'"
+              flat
+              color="primary"
+              :label="translate('back')"
+              icon="arrow_back"
+              :disable="stepLoading || submitting"
+              @click="goBack"
+            />
+          </div>
+          <div class="creation-stepper-footer__side creation-stepper-footer__side--end">
+            <q-btn
+              v-if="step !== 'optional'"
+              color="primary"
+              unelevated
+              :label="translate('next')"
+              icon-right="arrow_forward"
+              :loading="stepLoading"
+              @click="goNext"
+            />
+            <q-btn
+              v-else
+              color="primary"
+              unelevated
+              :icon="isDraft ? 'send' : 'check'"
+              :label="isDraft ? translate('sendRequest') : translate('save')"
+              :loading="stepLoading || submitting"
+              @click="handleFinish"
+            />
+          </div>
+        </div>
+      </footer>
+    </Teleport>
   </div>
 </template>
 
@@ -139,14 +144,18 @@ import ExamplesComponent from './ExamplesComponent/ExamplesComponent.vue';
 import VideosComponent from './VideosComponent.vue';
 import RelatedGlosses from './RelatedGlosses.vue';
 import DefinitionsComponent from './DefinitionsComponent/DefinitionsComponent.vue';
+import CompoundEditorComponent from './CompoundEditorComponent.vue';
 
-const $q = useQuasar()
-const step = ref(1)
-const stepLoading = ref(false)
+type EditorStep = 'core' | 'video' | 'compound' | 'optional';
 
-const definitionsRef = ref<InstanceType<typeof DefinitionsComponent> | null>(null)
-const videosRef = ref<InstanceType<typeof VideosComponent> | null>(null)
-const examplesRef = ref<InstanceType<typeof ExamplesComponent> | null>(null)
+const $q = useQuasar();
+const step = ref<EditorStep>('core');
+const stepLoading = ref(false);
+
+const definitionsRef = ref<InstanceType<typeof DefinitionsComponent> | null>(null);
+const videosRef = ref<InstanceType<typeof VideosComponent> | null>(null);
+const compoundRef = ref<InstanceType<typeof CompoundEditorComponent> | null>(null);
+const examplesRef = ref<InstanceType<typeof ExamplesComponent> | null>(null);
 
 const emit = defineEmits<{
   (e: 'update:glossData', glossData: GlossData): void
@@ -169,14 +178,14 @@ watch(() => glossData, (newGlossData) => {
 
 watch(() => editMode, (isEditing) => {
   if (isEditing) {
-    step.value = 1
+    step.value = 'core';
   }
 });
 
 const updateGlossData = (updated: GlossData) => {
   localGlossData.value = updated;
   emit('update:glossData', updated);
-}
+};
 
 function showValidationErrors(errors: string[]) {
   $q.dialog({
@@ -193,56 +202,153 @@ function showValidationErrors(errors: string[]) {
       flat: true,
       color: 'primary',
     },
-  })
+  });
 }
 
-async function goToStep(targetStep: number) {
-  stepLoading.value = true
+const previousStep: Record<EditorStep, EditorStep | null> = {
+  core: null,
+  video: 'core',
+  compound: 'video',
+  optional: 'compound',
+};
+
+const nextStep: Record<EditorStep, EditorStep | null> = {
+  core: 'video',
+  video: 'compound',
+  compound: 'optional',
+  optional: null,
+};
+
+function goBack() {
+  const target = previousStep[step.value];
+  if (target) {
+    step.value = target;
+  }
+}
+
+async function goToStep(targetStep: EditorStep) {
+  stepLoading.value = true;
   try {
-    if (targetStep === 2) {
-      const errors = definitionsRef.value?.getStepValidationErrors() ?? []
+    if (targetStep === 'video') {
+      const errors = definitionsRef.value?.getStepValidationErrors() ?? [];
       if (errors.length > 0) {
-        showValidationErrors(errors)
-        return
+        showValidationErrors(errors);
+        return;
       }
-      const saved = await definitionsRef.value?.saveAll(true)
-      if (saved === false) return
+      const saved = await definitionsRef.value?.saveAll(true);
+      if (saved === false) return;
     }
 
-    if (targetStep === 3) {
-      const errors = videosRef.value?.getStepValidationErrors() ?? []
+    if (targetStep === 'compound' || targetStep === 'optional') {
+      const errors = videosRef.value?.getStepValidationErrors() ?? [];
       if (errors.length > 0) {
-        showValidationErrors(errors)
-        return
+        showValidationErrors(errors);
+        return;
       }
-      await videosRef.value?.saveAll(true)
+      await videosRef.value?.saveAll(true);
     }
 
-    step.value = targetStep
+    if (targetStep === 'optional') {
+      const errors = compoundRef.value?.getStepValidationErrors() ?? [];
+      if (errors.length > 0) {
+        showValidationErrors(errors);
+        return;
+      }
+      const saved = await compoundRef.value?.saveAll(true);
+      if (!saved) return;
+    }
+
+    step.value = targetStep;
   } finally {
-    stepLoading.value = false
+    stepLoading.value = false;
+  }
+}
+
+async function goNext() {
+  const target = nextStep[step.value];
+  if (target) {
+    await goToStep(target);
   }
 }
 
 async function handleFinish() {
-  stepLoading.value = true
+  stepLoading.value = true;
   try {
-    await examplesRef.value?.saveAll(true)
+    const compoundSaved = await compoundRef.value?.saveAll(true);
+    if (compoundSaved === false) return;
+
+    await examplesRef.value?.saveAll(true);
 
     if (isDraft) {
-      emit('submitRequest')
+      emit('submitRequest');
     } else {
-      emit('finishEdit')
+      emit('finishEdit');
     }
   } finally {
-    stepLoading.value = false
+    stepLoading.value = false;
   }
 }
 </script>
 
 <style scoped>
+.creation-stepper-shell {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-bottom: 72px;
+}
+
 .creation-stepper {
   border-radius: var(--sb-card-radius, 12px);
-  background: white;
+  background: var(--sb-surface);
+  flex: 1 1 auto;
+}
+</style>
+
+<style>
+.creation-stepper-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2000;
+  display: flex;
+  justify-content: center;
+  padding: 0 16px;
+  pointer-events: none;
+}
+
+.creation-stepper-footer__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 16px;
+  box-sizing: border-box;
+  pointer-events: auto;
+  background: var(--sb-surface);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-bottom: none;
+  border-radius: var(--sb-card-radius, 12px) var(--sb-card-radius, 12px) 0 0;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.creation-stepper-footer__side {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.creation-stepper-footer__side--start {
+  justify-content: flex-start;
+  flex: 1 1 0;
+}
+
+.creation-stepper-footer__side--end {
+  justify-content: flex-end;
+  flex: 1 1 0;
 }
 </style>
