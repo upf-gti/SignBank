@@ -24,22 +24,52 @@ export interface FitxaMinimalPair {
   description?: string | null;
 }
 
+export interface FitxaVideoUrl {
+  url?: string | null;
+}
+
+export interface FitxaTranslations {
+  english?: string | null;
+  spanish?: string | null;
+  catalan?: string | null;
+}
+
+export interface FitxaCompoundComponent {
+  ordinal?: number;
+  name?: string | null;
+  comp_id?: string | null;
+  redundant?: boolean;
+  phonology?: FitxaPhonology | null;
+}
+
+export interface FitxaCompound {
+  is_compound?: boolean;
+  components?: FitxaCompoundComponent[];
+}
+
 export interface FitxaJson {
   id?: string;
   name?: string;
+  gloss_id?: string;
+  gloss_name?: string;
+  schema_version?: number;
   tr_en?: string;
   tr_es?: string;
   tr_ca?: string;
+  translations?: FitxaTranslations;
   definitions?: string[];
   definition?: string;
   lexical_category?: string;
-  phonology?: FitxaPhonology;
+  phonology?: FitxaPhonology | null;
   minimal_pairs?: FitxaMinimalPair[];
   related_signs?: Record<string, string[]>;
   notes?: string | null;
+  iconicity?: string | null;
   video_url?: string | null;
+  video_urls?: FitxaVideoUrl[];
   is_compound?: boolean;
   compound_signs?: string[];
+  compound?: FitxaCompound;
   morfologia_sequencial?: {
     compost_1?: string | null;
     compost_2?: string | null;
@@ -108,16 +138,29 @@ export interface MappedPhonology {
   repeatedMovement: boolean;
 }
 
+export interface MappedCompoundPart {
+  position: number;
+  gloss: string;
+  compExternalId: string | null;
+  redundant: boolean;
+  linked: boolean;
+  phonology: MappedPhonology | null;
+}
+
 export interface MappedFitxa {
   fileName: string;
   gloss: string;
+  externalId: string | null;
   notes: string | null;
+  iconicity: string | null;
+  isCompound: boolean;
   translations: Array<{ language: 'CATALAN' | 'SPANISH' | 'ENGLISH'; translation: string }>;
   definitions: MappedDefinition[];
   phonology: MappedPhonology | null;
   videoUrl: string | null;
   relations: MappedRelation[];
   minimalPairs: MappedMinimalPair[];
+  compoundParts: MappedCompoundPart[];
   linkedGlossNames: string[];
   issues: ImportIssue[];
 }

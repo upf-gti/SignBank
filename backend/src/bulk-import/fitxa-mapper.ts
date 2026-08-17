@@ -1,12 +1,13 @@
-import { Handedness } from '@prisma/client';
 import {
   resolveFitxaEnum,
   type FitxaMappingField,
 } from '../import/fitxa-enum-resolver';
 import type {
+  FitxaCompoundComponent,
   FitxaJson,
   FitxaPhonology,
   ImportIssue,
+  MappedCompoundPart,
   MappedFitxa,
   MappedPhonology,
 } from './fitxa.types';
@@ -52,6 +53,7 @@ const ENUM_FALLBACKS: Record<string, Record<string, string>> = {
   orientationChange: {
     'extensio > flexio': 'EXTENSION_TO_FLEXION',
     'flexio > extensio': 'FLEXION_TO_EXTENSION',
+    inclinacio: 'RADIAL_AND_ULNAR_FLEXION',
   },
 };
 
@@ -90,6 +92,8 @@ function splitCandidates(raw: string): string[] {
   return [trimmed, ...parts.filter((part) => part !== trimmed)];
 }
 
+const EMPTY_ENUM_LABELS = new Set(['no', 'none', 'n/a', 'na', 'cap', 'empty', '-']);
+
 function resolveEnumValue(
   field: FitxaMappingField,
   raw: string | null | undefined,
@@ -104,7 +108,15 @@ function resolveEnumValue(
   }
 
   const original = String(raw).trim();
-  for (const candidate of splitCandidates(original)) {
+  if (EMPTY_ENUM_LABELS.has(normalize(original))) {
+    return emptyValue;
+  }
+
+  const withoutParens = original.replace(/\([^)]*\)/g, ' ').replace(/\s+/g, ' ').trim();
+  const candidates = [...new Set([...splitCandidates(original), ...splitCandidates(withoutParens)])];
+
+  for (const candidate of candidates) {
+    if (!candidate) continue;
     const resolved = resolveFitxaEnum(field, candidate);
     if (resolved.value) {
       return String(resolved.value);
@@ -131,14 +143,14 @@ function mapHandedness(
   gloss: string,
   fileName: string,
   issues: ImportIssue[],
-): Handedness {
+): string {
   if (raw == null || String(raw).trim() === '') {
-    return Handedness.ONE;
+    return 'ONE';
   }
 
   const resolved = resolveFitxaEnum('handedness', raw);
   if (resolved.value) {
-    return resolved.value as Handedness;
+    return String(resolved.value);
   }
 
   issues.push({
@@ -148,7 +160,7 @@ function mapHandedness(
     value: String(raw),
     message: 'Invalid handedness code; stored as ONE',
   });
-  return Handedness.ONE;
+  return 'ONE';
 }
 
 function mapLexicalCategory(
@@ -169,6 +181,7 @@ function mapLexicalCategory(
 
   const normalized = normalize(String(raw));
   if (normalized === 'nom o verb') return 'NOUN_OR_VERB';
+  if (normalized === 'adjectiu o nom' || normalized === 'nom o adjectiu') return 'NOUN_OR_ADJECTIVE';
   if (normalized === 'adjectiu') return 'ADJECTIVE';
   if (normalized === 'nom') return 'NOUN';
   if (normalized === 'verb') return 'VERB';
@@ -275,11 +288,105 @@ function collectLinkedNames(fitxa: FitxaJson): string[] {
     if (part?.trim()) names.add(part.trim());
   }
 
+  for (const component of fitxa.compound?.components || []) {
+    if (component.name?.trim() && component.comp_id) {
+      names.add(component.name.trim());
+    }
+  }
+
   return [...names];
 }
 
+function firstVideoUrl(fitxa: FitxaJson): string | null {
+  const fromList = (fitxa.video_urls || [])
+    .map((item) => item.url?.trim())
+    .find((url): url is string => Boolean(url));
+  return fromList || fitxa.video_url?.trim() || null;
+}
+
+function mapCompoundParts(
+  fitxa: FitxaJson,
+  gloss: string,
+  fileName: string,
+  issues: ImportIssue[],
+): MappedCompoundPart[] {
+  const components = fitxa.compound?.components;
+  if (components?.length) {
+    return components
+      .map((component, index) => mapCompoundComponent(component, index, gloss, fileName, issues))
+      .filter((part): part is MappedCompoundPart => Boolean(part));
+  }
+
+  const v1Names = [
+    ...(fitxa.compound_signs || []),
+    fitxa.morfologia_sequencial?.compost_1,
+    fitxa.morfologia_sequencial?.compost_2,
+    fitxa.morfologia_sequencial?.compost_3,
+  ]
+    .map((name) => name?.trim())
+    .filter((name): name is string => Boolean(name));
+
+  return [...new Set(v1Names)].map((name, index) => ({
+    position: index + 1,
+    gloss: name,
+    compExternalId: null,
+    redundant: false,
+    linked: true,
+    phonology: null,
+  }));
+}
+
+function mapCompoundComponent(
+  component: FitxaCompoundComponent,
+  index: number,
+  gloss: string,
+  fileName: string,
+  issues: ImportIssue[],
+): MappedCompoundPart | null {
+  const name = component.name?.trim();
+  if (!name) return null;
+
+  const linked = Boolean(component.comp_id?.trim());
+  return {
+    position: component.ordinal ?? index + 1,
+    gloss: name,
+    compExternalId: component.comp_id?.trim() || null,
+    redundant: Boolean(component.redundant),
+    linked,
+    phonology: component.phonology
+      ? mapPhonology(component.phonology, `${gloss}/${name}`, fileName, issues)
+      : null,
+  };
+}
+
+export function isFitxaJson(value: unknown): value is FitxaJson {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return false;
+  }
+  const obj = value as Record<string, unknown>;
+  return (
+    typeof obj.gloss_name === 'string' ||
+    typeof obj.name === 'string' ||
+    typeof obj.gloss_id === 'string' ||
+    typeof obj.id === 'string'
+  );
+}
+
+export function extractFitxas(parsed: unknown): FitxaJson[] {
+  if (Array.isArray(parsed)) {
+    return parsed.filter(isFitxaJson);
+  }
+  if (isFitxaJson(parsed)) {
+    return [parsed];
+  }
+  if (!parsed || typeof parsed !== 'object') {
+    return [];
+  }
+  return Object.values(parsed as Record<string, unknown>).filter(isFitxaJson);
+}
+
 function mapPhonology(
-  phonology: FitxaPhonology | undefined,
+  phonology: FitxaPhonology | null | undefined,
   gloss: string,
   fileName: string,
   issues: ImportIssue[],
@@ -372,13 +479,13 @@ function mapPhonology(
 }
 
 export function mapFitxa(fitxa: FitxaJson, fileName: string): MappedFitxa | { error: ImportIssue } {
-  const gloss = fitxa.name?.trim();
+  const gloss = (fitxa.gloss_name || fitxa.name || '').trim();
   if (!gloss) {
     return {
       error: {
         gloss: '',
         fileName,
-        field: 'name',
+        field: 'gloss_name',
         value: '',
         message: 'Missing gloss name',
       },
@@ -401,14 +508,18 @@ export function mapFitxa(fitxa: FitxaJson, fileName: string): MappedFitxa | { er
     parseDefinitionLine(line, gloss, fileName, issues, defaultCategory),
   );
 
+  const catalan = fitxa.translations?.catalan ?? fitxa.tr_ca;
+  const spanish = fitxa.translations?.spanish ?? fitxa.tr_es;
+  const english = fitxa.translations?.english ?? fitxa.tr_en;
+
   const translations: MappedFitxa['translations'] = [];
-  for (const translation of splitTranslations(fitxa.tr_ca)) {
+  for (const translation of splitTranslations(catalan)) {
     translations.push({ language: 'CATALAN', translation });
   }
-  for (const translation of splitTranslations(fitxa.tr_es)) {
+  for (const translation of splitTranslations(spanish)) {
     translations.push({ language: 'SPANISH', translation });
   }
-  for (const translation of splitTranslations(fitxa.tr_en)) {
+  for (const translation of splitTranslations(english)) {
     translations.push({ language: 'ENGLISH', translation });
   }
 
@@ -433,18 +544,24 @@ export function mapFitxa(fitxa: FitxaJson, fileName: string): MappedFitxa | { er
   }
 
   const phonology = mapPhonology(fitxa.phonology, gloss, fileName, issues);
-  const hasVideo = Boolean(fitxa.video_url?.trim());
+  const videoUrl = firstVideoUrl(fitxa);
+  const compoundParts = mapCompoundParts(fitxa, gloss, fileName, issues);
+  const isCompound = Boolean(fitxa.compound?.is_compound ?? fitxa.is_compound);
 
   return {
     fileName,
     gloss,
+    externalId: (fitxa.gloss_id || fitxa.id || '').trim() || null,
     notes: fitxa.notes?.trim() || null,
+    iconicity: fitxa.iconicity?.trim() || null,
+    isCompound,
     translations,
     definitions,
-    phonology: phonology || (hasVideo ? mapPhonology({}, gloss, fileName, issues) : null),
-    videoUrl: fitxa.video_url?.trim() || null,
+    phonology: phonology || (videoUrl ? mapPhonology({}, gloss, fileName, issues) : null),
+    videoUrl,
     relations,
     minimalPairs,
+    compoundParts,
     linkedGlossNames: collectLinkedNames(fitxa),
     issues,
   };

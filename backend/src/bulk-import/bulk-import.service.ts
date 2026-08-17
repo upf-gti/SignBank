@@ -19,12 +19,11 @@ import {
 } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { TypesenseService } from '../typesense/typesense.service';
-import { mapFitxa } from './fitxa-mapper';
+import { mapFitxa, extractFitxas } from './fitxa-mapper';
 import type {
   BulkImportResult,
-  FitxaJson,
-  ImportDuplicate,
   ImportIssue,
+  MappedCompoundPart,
   MappedFitxa,
   MappedPhonology,
 } from './fitxa.types';
@@ -127,10 +126,24 @@ export class BulkImportService {
         continue;
       }
 
-      const items = Array.isArray(parsed) ? parsed : [parsed];
+      const items = extractFitxas(parsed);
+      if (!items.length) {
+        errors.push({
+          gloss: '',
+          fileName: file.originalname,
+          field: 'file',
+          value: file.originalname,
+          message: 'No fitxa entries found in JSON file',
+        });
+        continue;
+      }
+
       for (const [index, item] of items.entries()) {
-        const fileName = items.length > 1 ? `${file.originalname}[${index}]` : file.originalname;
-        const result = mapFitxa(item as FitxaJson, fileName);
+        const fileName =
+          items.length > 1
+            ? `${file.originalname}[${item.gloss_id || item.id || index}]`
+            : file.originalname;
+        const result = mapFitxa(item, fileName);
         if ('error' in result) {
           errors.push(result.error);
           continue;
@@ -211,6 +224,7 @@ export class BulkImportService {
     }
 
     await this.ensureLinks(glossId, fitxa, index, result);
+    await this.syncCompoundParts(glossId, fitxa, index, result);
   }
 
   private async ensureGloss(
@@ -240,6 +254,9 @@ export class BulkImportService {
     const created = await this.prisma.glossData.create({
       data: {
         gloss: fitxa.gloss,
+        externalId: fitxa.externalId,
+        isCompound: fitxa.isCompound,
+        iconicity: fitxa.iconicity,
         editComment: fitxa.notes,
         dictionaryEntry: {
           create: { status: GlossStatus.PUBLISHED },
@@ -260,6 +277,9 @@ export class BulkImportService {
         where: { id: glossDataId },
         data: {
           gloss: fitxa.gloss,
+          externalId: fitxa.externalId,
+          isCompound: fitxa.isCompound,
+          iconicity: fitxa.iconicity,
           editComment: fitxa.notes,
           glossTranslations: nested.glossTranslations,
           definitions: nested.definitions,
@@ -304,6 +324,7 @@ export class BulkImportService {
     await tx.glossTranslation.deleteMany({ where: { glossDataId } });
     await tx.relatedGloss.deleteMany({ where: { sourceGlossId: glossDataId } });
     await tx.minimalPair.deleteMany({ where: { sourceGlossId: glossDataId } });
+    await this.clearCompoundParts(tx, glossDataId);
   }
 
   private glossNestedCreate(fitxa: MappedFitxa) {
@@ -338,35 +359,39 @@ export class BulkImportService {
       title: gloss,
       priority: 0,
       videoData: {
-        create: {
-          handedness: phonology.handedness as Handedness,
-          dominantConfiguration: phonology.dominantConfiguration as HandConfiguration | null,
-          nonDominantConfiguration: phonology.nonDominantConfiguration as HandConfiguration | null,
-          dominantRelationBetweenArticulators:
-            phonology.dominantRelationBetweenArticulators as RelationBetweenArticulators | null,
-          nonDominantRelationBetweenArticulators:
-            phonology.nonDominantRelationBetweenArticulators as RelationBetweenArticulators | null,
-          configurationChanges: phonology.configurationChanges as ConfigurationChange,
-          location: phonology.location as Location,
-          movementRelatedOrientation:
-            phonology.movementRelatedOrientation as MovementRelatedOrientation,
-          orientationRelatedToLocation:
-            phonology.orientationRelatedToLocation as OrientationRelatedToLocation,
-          orientationChange: phonology.orientationChange as OrientationChange,
-          contactType: phonology.contactType as ContactType,
-          movementType: phonology.movementType as MovementType,
-          movementDirection: phonology.movementDirection as MovementDirection,
-          vocalization: phonology.vocalization,
-          nonManualComponent: phonology.nonManualComponent,
-          inicialization: phonology.inicialization,
-          repeatedMovement: phonology.repeatedMovement,
-        },
+        create: this.videoDataCreate(phonology),
       },
       videos: videoUrl
         ? {
             create: [{ url: videoUrl, angle: 'front', priority: 0 }],
           }
         : undefined,
+    };
+  }
+
+  private videoDataCreate(phonology: MappedPhonology) {
+    return {
+      handedness: phonology.handedness as Handedness,
+      dominantConfiguration: phonology.dominantConfiguration as HandConfiguration | null,
+      nonDominantConfiguration: phonology.nonDominantConfiguration as HandConfiguration | null,
+      dominantRelationBetweenArticulators:
+        phonology.dominantRelationBetweenArticulators as RelationBetweenArticulators | null,
+      nonDominantRelationBetweenArticulators:
+        phonology.nonDominantRelationBetweenArticulators as RelationBetweenArticulators | null,
+      configurationChanges: phonology.configurationChanges as ConfigurationChange,
+      location: phonology.location as Location,
+      movementRelatedOrientation:
+        phonology.movementRelatedOrientation as MovementRelatedOrientation,
+      orientationRelatedToLocation:
+        phonology.orientationRelatedToLocation as OrientationRelatedToLocation,
+      orientationChange: phonology.orientationChange as OrientationChange,
+      contactType: phonology.contactType as ContactType,
+      movementType: phonology.movementType as MovementType,
+      movementDirection: phonology.movementDirection as MovementDirection,
+      vocalization: phonology.vocalization,
+      nonManualComponent: phonology.nonManualComponent,
+      inicialization: phonology.inicialization,
+      repeatedMovement: phonology.repeatedMovement,
     };
   }
 
@@ -446,6 +471,101 @@ export class BulkImportService {
         });
       }
     }
+  }
+
+  private async clearCompoundParts(tx: Prisma.TransactionClient, glossDataId: string) {
+    const parts = await tx.compoundPart.findMany({
+      where: { glossDataId },
+      select: { id: true, inlinePhonologyId: true, inlineSignVideoId: true },
+    });
+    if (!parts.length) return;
+
+    const signVideoIds = parts
+      .map((part) => part.inlineSignVideoId)
+      .filter((id): id is string => Boolean(id));
+    if (signVideoIds.length) {
+      await tx.video.deleteMany({ where: { signVideoId: { in: signVideoIds } } });
+      await tx.signVideo.deleteMany({ where: { id: { in: signVideoIds } } });
+    }
+
+    await tx.compoundPart.deleteMany({ where: { glossDataId } });
+
+    const phonologyIds = parts
+      .map((part) => part.inlinePhonologyId)
+      .filter((id): id is string => Boolean(id));
+    if (phonologyIds.length) {
+      await tx.videoData.deleteMany({ where: { id: { in: phonologyIds } } });
+    }
+  }
+
+  private async syncCompoundParts(
+    glossDataId: string,
+    fitxa: MappedFitxa,
+    index: Map<string, GlossIndexEntry>,
+    result: BulkImportResult,
+  ) {
+    await this.prisma.glossData.update({
+      where: { id: glossDataId },
+      data: { isCompound: fitxa.isCompound },
+    });
+
+    if (!fitxa.isCompound || !fitxa.compoundParts.length) {
+      await this.clearCompoundParts(this.prisma, glossDataId);
+      return;
+    }
+
+    await this.clearCompoundParts(this.prisma, glossDataId);
+
+    for (const part of fitxa.compoundParts) {
+      try {
+        await this.createCompoundPart(glossDataId, part, index);
+      } catch (error) {
+        result.errors.push({
+          gloss: fitxa.gloss,
+          fileName: fitxa.fileName,
+          field: 'compound',
+          value: part.gloss,
+          message: error instanceof Error ? error.message : 'Failed to create compound part',
+        });
+      }
+    }
+  }
+
+  private async createCompoundPart(
+    glossDataId: string,
+    part: MappedCompoundPart,
+    index: Map<string, GlossIndexEntry>,
+  ) {
+    const linkedGlossId = part.linked
+      ? index.get(this.glossKey(part.gloss))?.id ?? null
+      : null;
+
+    if (linkedGlossId) {
+      await this.prisma.compoundPart.create({
+        data: {
+          glossDataId,
+          position: part.position,
+          gloss: part.gloss,
+          compExternalId: part.compExternalId,
+          redundant: part.redundant,
+          linkedGlossId,
+        },
+      });
+      return;
+    }
+
+    await this.prisma.compoundPart.create({
+      data: {
+        glossDataId,
+        position: part.position,
+        gloss: part.gloss,
+        compExternalId: part.compExternalId,
+        redundant: part.redundant,
+        inlinePhonology: part.phonology
+          ? { create: this.videoDataCreate(part.phonology) }
+          : undefined,
+      },
+    });
   }
 
   private glossKey(name: string): string {
