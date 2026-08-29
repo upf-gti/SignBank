@@ -3,8 +3,6 @@
     class="bg-secondary text-black app-header"
     bordered
   >
-    <loginComponent v-model="isLoginDialogOpen" />
-
     <q-drawer
       v-model="isSidebarOpen"
       side="right"
@@ -120,7 +118,7 @@
           v-ripple
           clickable
           class="rounded-borders"
-          @click="openLogin"
+          @click="openLoginDialog"
         >
           <q-item-section avatar>
             <q-icon
@@ -184,25 +182,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import loginComponent from '../components/loginComponent.vue'
 import useUser from 'src/stores/user.store'
 import translate from 'src/utils/translate'
 
 const userStore = useUser()
 const route = useRoute()
 const router = useRouter()
-const isLoginDialogOpen = ref(false)
 const isSidebarOpen = ref(false)
+const openLogin = inject<() => void>('openLogin', () => {})
 
 const navigateTo = (path: string) => {
   router.push(path)
   isSidebarOpen.value = false
 }
 
-const openLogin = () => {
-  isLoginDialogOpen.value = true
+const openLoginDialog = () => {
+  openLogin()
   isSidebarOpen.value = false
 }
 

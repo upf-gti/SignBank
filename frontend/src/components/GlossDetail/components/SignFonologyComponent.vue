@@ -3,7 +3,10 @@
     class="sign-phonology"
     :class="{ 'sign-phonology--natural-height': naturalHeight }"
   >
-    <div class="text-subtitle2 text-weight-medium sign-phonology__title">
+    <div
+      v-if="!hideTitle"
+      class="text-subtitle2 text-weight-medium sign-phonology__title"
+    >
       {{ translate('signFonology') }}
     </div>
     <PhonologyTable
@@ -26,6 +29,7 @@ defineProps<{
   editMode: boolean;
   compact?: boolean;
   naturalHeight?: boolean;
+  hideTitle?: boolean;
 }>();
 
 defineEmits<{

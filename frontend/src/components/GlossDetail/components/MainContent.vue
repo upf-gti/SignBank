@@ -20,6 +20,7 @@
             :gloss-data="glossData"
             :is-compound="isCompound"
             @show-all-videos="showAllVideos = true"
+            @show-phonology="selectedTab = 'phonology'"
             @show-compound-phonology="openCompoundPhonology"
           />
         </div>
@@ -29,6 +30,7 @@
           :class="{ 'gloss-content-column--full': !showSidebar }"
         >
           <q-tabs
+            v-if="visibleTabs.length > 0"
             v-model="selectedTab"
             class="gloss-content-tabs text-primary q-mb-sm"
             active-color="primary"
@@ -40,19 +42,27 @@
             mobile-arrows
           >
             <q-tab
+              v-if="showDefinitionsTab"
               name="definitions"
               :label="translate('definitions')"
             />
             <q-tab
-              v-if="isCompound"
+              v-if="showCompoundTab"
               name="compound"
               :label="translate('compound')"
             />
             <q-tab
+              v-if="showPhonologyTab"
+              name="phonology"
+              :label="translate('signFonology')"
+            />
+            <q-tab
+              v-if="showExamplesTab"
               name="examples"
               :label="translate('examples')"
             />
             <q-tab
+              v-if="showRelatedTab"
               name="related"
               :label="translate('relatedGlosses')"
             />
@@ -60,11 +70,13 @@
 
           <div class="gloss-content-scroll">
             <q-tab-panels
+              v-if="visibleTabs.length > 0"
               v-model="selectedTab"
               animated
               class="gloss-tab-panels"
             >
               <q-tab-panel
+                v-if="showDefinitionsTab"
                 name="definitions"
                 class="q-pa-none"
               >
@@ -79,7 +91,7 @@
               </q-tab-panel>
 
               <q-tab-panel
-                v-if="isCompound"
+                v-if="showCompoundTab"
                 name="compound"
                 class="q-pa-none"
               >
@@ -90,6 +102,15 @@
               </q-tab-panel>
 
               <q-tab-panel
+                v-if="showPhonologyTab"
+                name="phonology"
+                class="q-pa-none"
+              >
+                <PhonologyTabPanel :gloss-data="glossData" />
+              </q-tab-panel>
+
+              <q-tab-panel
+                v-if="showExamplesTab"
                 name="examples"
                 class="q-pa-none"
               >
@@ -102,6 +123,7 @@
               </q-tab-panel>
 
               <q-tab-panel
+                v-if="showRelatedTab"
                 name="related"
                 class="q-pa-none"
               >
@@ -122,7 +144,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { GlossData } from 'src/types/models'
 import SignVideoAside from './SignVideoAside.vue'
 import SignVideosBrowseView from './SignVideosBrowseView.vue'
@@ -130,18 +152,42 @@ import DefinitionsComponent from './DefinitionsComponent/DefinitionsComponent.vu
 import ExamplesComponent from './ExamplesComponent/ExamplesComponent.vue'
 import RelatedGlosses from './RelatedGlosses.vue'
 import CompoundComponent from './CompoundComponent.vue'
+import PhonologyTabPanel from './PhonologyTabPanel.vue'
 import translate from 'src/utils/translate'
 import { isCompoundGloss } from 'src/utils/compoundPhonology'
+import {
+  getVisibleGlossTabs,
+  type GlossContentTab,
+} from 'src/utils/glossTabVisibility'
 
 const { glossData } = defineProps<{
   glossData: GlossData
 }>()
 
+const editMode = false
+
 const isCompound = computed(() => isCompoundGloss(glossData))
 
-const selectedTab = ref('definitions')
+const selectedTab = ref<GlossContentTab>('definitions')
 const showAllVideos = ref(false)
 const showCompoundPhonology = ref(false)
+
+const visibleTabs = computed(() => getVisibleGlossTabs(glossData, {
+  editMode,
+  isCompound: isCompound.value,
+}))
+
+const showDefinitionsTab = computed(() => visibleTabs.value.includes('definitions'))
+const showCompoundTab = computed(() => visibleTabs.value.includes('compound'))
+const showPhonologyTab = computed(() => visibleTabs.value.includes('phonology'))
+const showExamplesTab = computed(() => visibleTabs.value.includes('examples'))
+const showRelatedTab = computed(() => visibleTabs.value.includes('related'))
+
+watch(visibleTabs, (tabs) => {
+  if (!tabs.includes(selectedTab.value)) {
+    selectedTab.value = tabs[0] ?? 'definitions'
+  }
+}, { immediate: true })
 
 function openCompoundPhonology() {
   selectedTab.value = 'compound'

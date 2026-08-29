@@ -51,15 +51,22 @@ const { glossData, isCompound = false } = defineProps<{
 
 const emit = defineEmits<{
   (e: 'showAllVideos'): void
+  (e: 'showPhonology'): void
   (e: 'showCompoundPhonology'): void
 }>()
 
 function onDetailsClick() {
-  if (isCompound && !hasMultipleSignVideos.value) {
+  if (hasMultipleSignVideos.value) {
+    emit('showAllVideos')
+    return
+  }
+
+  if (isCompound) {
     emit('showCompoundPhonology')
     return
   }
-  emit('showAllVideos')
+
+  emit('showPhonology')
 }
 
 const primarySignVideo = computed(() => {
@@ -74,15 +81,19 @@ const hasGlossTranslations = computed(() =>
   (glossData.glossTranslations?.length ?? 0) > 0
 )
 
-const showDetailsButton = computed(() =>
-  Boolean(primarySignVideo.value) && (glossData.glossVideos?.length ?? 0) > 0
-)
-
 const detailsButtonLabel = computed(() =>
   hasMultipleSignVideos.value
     ? translate('seeOtherVideos')
     : translate('signFonology')
 )
+
+const showDetailsButton = computed(() => {
+  if (hasMultipleSignVideos.value) {
+    return (glossData.glossVideos?.length ?? 0) > 1
+  }
+
+  return Boolean(primarySignVideo.value)
+})
 </script>
 
 <style scoped>

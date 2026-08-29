@@ -1,7 +1,7 @@
 <template>
   <q-dialog
     v-model="isOpen"
-    persistent
+    :persistent="mandatory"
   >
     <q-card class="login-card">
       <q-card-section class="row items-center q-pb-none">
@@ -10,6 +10,7 @@
         </div>
         <q-space />
         <q-btn
+          v-if="!mandatory"
           v-close-popup
           icon="close"
           flat
@@ -93,8 +94,12 @@ import translate from '../utils/translate'
 const props = defineProps({
   modelValue: {
     type: Boolean,
-    required: true
-  }
+    required: true,
+  },
+  mandatory: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits(['update:modelValue'])

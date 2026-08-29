@@ -19,7 +19,6 @@
 
     <div class="sign-videos-browse__main">
       <aside class="sign-videos-browse__videos">
-        <!-- Single video: show player only -->
         <template v-if="!hasMultipleVideos && selectedVideo">
           <div
             v-if="selectedVideo.title"
@@ -69,16 +68,6 @@
           </button>
         </div>
       </aside>
-
-      <section
-        v-if="selectedVideo?.videoData"
-        class="sign-videos-browse__phonology"
-      >
-        <SignFonologyComponent
-          :video-data="selectedVideo.videoData"
-          :edit-mode="false"
-        />
-      </section>
     </div>
   </div>
 </template>
@@ -87,7 +76,6 @@
 import { computed, ref, watch } from 'vue'
 import { GlossData } from 'src/types/models'
 import GlossVideoComponent from './GlossVideoComponent.vue'
-import SignFonologyComponent from './SignFonologyComponent.vue'
 import translate from 'src/utils/translate'
 
 const { glossData } = defineProps<{
@@ -177,13 +165,12 @@ function selectVideo(videoId: string | undefined) {
   display: flex;
   flex: 1 1 0;
   min-height: 0;
-  gap: 20px;
   overflow: hidden;
 }
 
 .sign-videos-browse__videos {
-  flex: 0 0 34%;
-  max-width: 380px;
+  flex: 1 1 0;
+  max-width: none;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -244,46 +231,6 @@ function selectVideo(videoId: string | undefined) {
   overflow: hidden;
 }
 
-.sign-videos-browse__phonology {
-  flex: 1 1 0;
-  min-width: 0;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: var(--sb-card-radius, 12px);
-  padding: 16px 20px;
-  background: var(--sb-surface);
-}
-
-.sign-videos-browse__phonology :deep(.sign-phonology) {
-  flex: 1 1 0;
-  min-height: 0;
-  margin-top: 0;
-}
-
-.sign-videos-browse__phonology :deep(.text-subtitle2) {
-  font-size: 1.05rem;
-}
-
-.sign-videos-browse__phonology :deep(.phonology-table__grid) {
-  font-size: 0.95rem;
-}
-
-.sign-videos-browse__phonology :deep(.phonology-table__grid .text-caption) {
-  font-size: 0.8rem;
-}
-
-.sign-videos-browse__phonology :deep(.phonology-table__grid .text-body2),
-.sign-videos-browse__phonology :deep(.phonology-table__grid td),
-.sign-videos-browse__phonology :deep(.phonology-table__grid th) {
-  font-size: 0.95rem;
-  white-space: normal;
-  word-break: break-word;
-  padding: 10px 8px;
-}
-
 .sign-videos-browse__picker-item--active .sign-videos-browse__picker-video {
   overflow: hidden;
 }
@@ -315,11 +262,6 @@ function selectVideo(videoId: string | undefined) {
   .sign-videos-browse__picker-item--active {
     flex: 0 0 min(280px, 72vw);
     width: min(280px, 72vw);
-  }
-
-  .sign-videos-browse__phonology {
-    flex: 1 1 auto;
-    min-height: 50vh;
   }
 }
 </style>
