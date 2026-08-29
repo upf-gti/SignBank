@@ -1,4 +1,87 @@
 /* app global css */
 :root {
-    --primary: #c8102f;
+  --primary: #c8102f;
+  --primary-hover: #a50d26;
+
+  --sb-bg: #fafafa;
+  --sb-surface: #ffffff;
+  --sb-surface-elevated: #ffffff;
+  --sb-surface-muted: #f5f5f5;
+
+  --sb-text-primary: #1d1d1d;
+  --sb-text-secondary: #616161;
+
+  --sb-border: rgba(0, 0, 0, 0.12);
+
+  --sb-positive: #21ba45;
+  --sb-warning: #f2c037;
+  --sb-negative: #8b0000;
+
+  --sb-card-radius: 12px;
+  --sb-transition: 0.2s ease;
+  --sb-video-max-width: 480px;
+  --sb-video-max-height: none;
+  --sb-video-compact-max-height: 140px;
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --sb-video-max-width: 360px;
+    --sb-video-max-height: min(32vh, 200px);
+    --sb-video-compact-max-height: 120px;
+  }
+}
+
+@media (max-width: 599px) {
+  :root {
+    --sb-video-max-width: 100%;
+    --sb-video-max-height: min(28vh, 168px);
+    --sb-video-compact-max-height: 100px;
+  }
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Consistent focus ring for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Subtle scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c4c4c4;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* Shared card hover effect */
+.sb-card-interactive {
+  transition: transform var(--sb-transition), box-shadow var(--sb-transition);
+  cursor: pointer;
+}
+
+.sb-card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.sb-card-interactive:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }

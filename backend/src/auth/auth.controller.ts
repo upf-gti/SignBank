@@ -1,9 +1,17 @@
 // src/auth/auth.controller.ts
-import { Body, Controller, Post, Get, UseGuards, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  UseGuards,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtGuard } from './guard/jwt.guard';
 import { GetUser } from './decorator/get-user.decorator';
 import { Public } from './decorator/public.decorator';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -11,16 +19,16 @@ export class AuthController {
 
   @Public()
   @Post('login')
-  async login(@Body() loginDto: { email: string; password: string }) {
+  async login(@Body() loginDto: LoginDto) {
     const user = await this.authService.validateUser(
       loginDto.email,
-      loginDto.password
+      loginDto.password,
     );
-    
+
     if (!user) {
-      return { message: 'Invalid credentials' };
+      throw new UnauthorizedException('Invalid credentials');
     }
-    
+
     return this.authService.login(user);
   }
 

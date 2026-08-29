@@ -1,0 +1,269 @@
+{
+  "gloss_id": "0001_menjar",
+  "gloss_name": "MENJAR",
+  "definition": "Verb- Dur un aliment sòlid a la boca, mastegar-lo i empassar-lo.\n\n. Tomar la comida\n Gastar, consumir o desbaratar\n\nNom- Producte natural o elaborat que proporciona als éssers vius energia, substàncies formadores de les estructures de l’organisme i els compostos químics indispensables per al bon funcionament o la regulació dels mecanismes vitals.\nConjunto de sustancias que los seres vivos comen para subsistir",
+  "definitions": [
+    "Verb- Dur un aliment sòlid a la boca, mastegar-lo i empassar-lo.\n\n. Tomar la comida\n Gastar, consumir o desbaratar",
+    "Nom- Producte natural o elaborat que proporciona als éssers vius energia, substàncies formadores de les estructures de l’organisme i els compostos químics indispensables per al bon funcionament o la regulació dels mecanismes vitals.\nConjunto de sustancias que los seres vivos comen para subsistir"
+  ],
+  "translations": {
+    "english": "EAT; FOOD; MEAL",
+    "spanish": "COMER; COMIDA",
+    "catalan": null
+  },
+  "phonology": {
+    "nombre_mans": "1",
+    "configuracio_ma_dominant": "Q (Beak)",
+    "configuracio_ma_no_dominant": null,
+    "canvi_configuracio": "No",
+    "relacio_articuladors_ma_dominant": null,
+    "relacio_articuladors_ma_no_dominant": null,
+    "localitzacio": "Boca",
+    "orientacio_moviment": "Punta dels dits (finger tips)",
+    "orientacio_localitzacio": null,
+    "canvi_orientacio": "Extensió > Flexió",
+    "tipus_contacte": null,
+    "forma_moviment": null,
+    "direccio_moviment": null,
+    "moviment_repetit": "SÍ",
+    "vocalitzacio": "Pot aparèixer amb vocalització",
+    "component_no_manual": null
+  },
+  "compound": {
+    "is_compound": false,
+    "components": []
+  },
+  "iconicity": "Sí",
+  "related_signs": {
+    "HOMÒNIM": [],
+    "SINÒNIM": [],
+    "VARIANT": [
+      "CONSUM"
+    ],
+    "ANTÒNIM": [],
+    "HIPÒNIM": [],
+    "HIPERÒNIM": [],
+    "VEURE TAMBÉ": []
+  },
+  "synonyms": [
+    "ALIMENTACIÓ",
+    "ALIMENT",
+    "APROFITAR-SE-lfp",
+    "VIANDA",
+    "ÀPAT",
+    "MANDUCA",
+    "NODRIR",
+    "CONSUM"
+  ],
+  "categories": [
+    "Acte físic"
+  ],
+  "entitat_amb_nom": null,
+  "valencia": "Verb transitiu",
+  "signes_claus": [
+    {
+      "glosses": [
+        "COSA",
+        "ANIMAL",
+        "VIURE",
+        "FALTAR",
+        "PER-A",
+        "SALVAR",
+        "SOBREVIURE"
+      ],
+      "comment": null
+    },
+    {
+      "glosses": [
+        "TRAGAR",
+        "ALIMENTO",
+        "COMBUSTIBLE-XUCLAR"
+      ],
+      "comment": "Proposta Lali (03/12/2025): GRUP + COSA + IX1-substàncies + ANIMAL + PLANTA + O + DIVERSOS-2d + VIURE + MENJAR + O  + XUCLAR-0e + HAVER-DE +  PER-A + SOBREVIURE  - Grup de substàncies que els animals, plantes o altres essers vius han de menjar o absorbir (xuclar?) per sobreviure.\n\nProposta Lali (26(01/2026): DESAPARÈIXER + MOTIU-bm + USAR + DESPESA – Desparèixer amb motiu de l’ús; despesa."
+    }
+  ],
+  "relacio_signes_forasters": {
+    "prestec": null,
+    "llengua_relacionada": null,
+    "glossa_llengua_relacionada": null
+  },
+  "morfologia_simultania": [
+    {
+      "glossa_morfema": "Classificador descriptiu",
+      "significat_en_aquest_signe": "Forma de l’aliment que es menja"
+    }
+  ],
+  "morfologia_abreujada": [
+    {
+      "glossa_abreujada": null,
+      "rol_en_aquest_signe": null
+    }
+  ],
+  "minimal_pairs": [
+    {
+      "sign": "EMPASSAR-SE",
+      "description": "Moviment simple vs. repetit"
+    }
+  ],
+  "corpus_forms": [
+    "MENJAR",
+    "MENJAR-rep",
+    "MENJAR-S'HO",
+    "MENJAR-lfp"
+  ],
+  "lexical_category": "Nom o verb",
+  "annotations": [],
+  "occurrences": {
+    "general": [
+      {
+        "source": "MARTÍN & ALVARADO",
+        "appears": "SÍ",
+        "gloss": "MENJAR"
+      },
+      {
+        "source": "PERELLÓ & FRÍGOLA",
+        "appears": "SÍ",
+        "gloss": "MENJAR"
+      },
+      {
+        "source": "FERRERONS",
+        "appears": "SÍ",
+        "gloss": "MENAR; ALIMENT 2; ÀPAT; ALIMENTAR-SE; ALIMENTACIÓ; DIETA; VIANDA, NODRIR, MANDUCA, etc."
+      },
+      {
+        "source": "DILSCAT",
+        "appears": "SÍ",
+        "gloss": "MENJAR"
+      },
+      {
+        "source": "MIRA QUÈ DIC",
+        "appears": "SÍ",
+        "gloss": "MENJAR"
+      },
+      {
+        "source": "VOCABULARI BÀSIC",
+        "appears": "SÍ",
+        "gloss": "MENJAR"
+      }
+    ],
+    "learning": [
+      {
+        "source": "A1 JUAN VALENZUELA",
+        "appears": "SÍ",
+        "gloss": "ALIMENT"
+      },
+      {
+        "source": "A1",
+        "appears": "SÍ",
+        "gloss": "MENJAR"
+      },
+      {
+        "source": "A2",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "APRENEM 1",
+        "appears": "SÍ",
+        "gloss": "MENJAR"
+      },
+      {
+        "source": "APRENEM 2",
+        "appears": "SÍ",
+        "gloss": "MENJAR"
+      }
+    ],
+    "specific": [
+      {
+        "source": "MEDICINES",
+        "appears": "SÍ",
+        "gloss": "MENJAR"
+      },
+      {
+        "source": "ÀREES MEDI SOCIAL",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "ÀREES MEDI NATURAL",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "ALIMENTS",
+        "appears": "SÍ",
+        "gloss": "MENJAR"
+      },
+      {
+        "source": "ANIMALS",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "LÀMINES GENERALITAT",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "El GENÍS I LA SANITATSÍ",
+        "appears": "SÍ",
+        "gloss": "No hi ha glossa"
+      },
+      {
+        "source": "EL GENÍS I L’EDUCACIÓ",
+        "appears": "SÍ",
+        "gloss": "No hi ha glossa"
+      },
+      {
+        "source": "RECULL TOPONÍMIC",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "53 MALES MANERES",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "HISTÒRIA FILOSOFIA",
+        "appears": null,
+        "gloss": null
+      },
+      {
+        "source": "ÀGILS COMUNICACIÓ",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "SIGNAPP",
+        "appears": "SÍ",
+        "gloss": "ALIMENTACIÓ; CONSUM"
+      }
+    ],
+    "web": [
+      {
+        "source": "SANTI FRÍGOLA",
+        "appears": "SÍ",
+        "gloss": "ALIMENTACIÓ"
+      }
+    ]
+  },
+  "video_urls": [
+    {
+      "url": "https://drive.google.com/file/d/155WTLpNgEXR3X9eSQ2Xbdq1HPJ0bK84_/view?usp=sharing",
+      "source": "IEC Fitxes Entrades",
+      "description": null,
+      "thumbnail_url": null
+    }
+  ],
+  "iec_metadata": {
+    "entry_id": "0001_menjar",
+    "entry_date": null,
+    "last_modified": null,
+    "contributor": null,
+    "status": null,
+    "notes": "OMISSIÓ, NUTRICIÓ, NODRIR, ENGOLIR"
+  },
+  "notes": "Observacions: Vist Santi\nSigne “Alimentació” utilitzar \"menjar + diferents\"\nVist Delfi \nLALI (20/5/2022): He afegit una fitxa per ALIMENTACIÓ\nLALI (06/07/2023) He afegit el parell mínim EMPASSAR-SE\nLALI (08/09/2025): He afegit l’accepció CONSUM",
+  "schema_version": 2
+}

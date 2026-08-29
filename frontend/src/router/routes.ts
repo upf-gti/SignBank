@@ -41,12 +41,27 @@ const routes: RouteRecordRaw[] = [
       { path: '', component: () => import('pages/UserManagementPage.vue') },
     ],
   },
+  {
+    path: '/bulk-import',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/BulkImportPage.vue') },
+    ],
+  },
+  {
+    path: '/phonology-catalog',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/PhonologyCatalogPage.vue') },
+    ],
+  },
 
-  // Always leave this as last one,
-  // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue'),
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/ErrorNotFound.vue') },
+    ],
   },
 ];
 

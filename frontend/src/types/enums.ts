@@ -253,10 +253,12 @@ export enum MovementType {
     STRAIGHT_TO_CIRCLE = 'STRAIGHT_TO_CIRCLE'
 }
 
-export enum Hand {
-    RIGHT = 'RIGHT',
-    LEFT = 'LEFT',
-    BOTH = 'BOTH'
+export enum Handedness {
+    ONE = 'ONE',
+    TWO_A = 'TWO_A',
+    TWO_N = 'TWO_N',
+    TWO_S = 'TWO_S',
+    NA = 'NA',
 }
 
 export enum Location {

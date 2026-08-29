@@ -1,64 +1,71 @@
 <template>
   <q-form
-    class="editable-module q-pa-sm"
-    @submit="saveEdit"
+    class="editable-module"
+    :class="{ editing: effectiveEditing, 'inline-mode': inlineEdit }"
+    @submit.prevent="handleSubmit"
   >
-    <!-- Header with title and action buttons -->
     <div class="column no-wrap">
       <div class="row items-start justify-between q-mb-sm">
         <slot name="header" />
         <div
-          v-if="allowEdit && !isEditing"
-          class="row items-center action-buttons q-py-sm"
+          v-if="allowEdit && !effectiveEditing"
+          class="row items-center action-buttons"
         >
           <q-btn
             flat
             dense
-            size="sm"
+            round
             icon="edit"
             color="primary"
-            :label="customEditLabel || translate('edit')"
-            class="edit-button"
+            :aria-label="customEditLabel || translate('edit')"
             @click="startEdit"
-          >
-            <q-tooltip>{{ customEditLabel || translate('edit') }}</q-tooltip>
-          </q-btn>
+          />
           <q-btn
             v-if="showDelete"
             flat
             dense
-            size="sm"
+            round
             icon="delete"
             color="negative"
-            :label="customDeleteLabel || translate('delete')"
-            class="delete-button"
+            :aria-label="customDeleteLabel || translate('delete')"
             @click="confirmDelete"
-          >
-            <q-tooltip>{{ customDeleteLabel || translate('delete') }}</q-tooltip>
-          </q-btn>
+          />
+        </div>
+        <div
+          v-else-if="inlineEdit && allowEdit && showDelete"
+          class="row items-center"
+        >
+          <q-btn
+            flat
+            dense
+            round
+            icon="delete"
+            color="negative"
+            :aria-label="customDeleteLabel || translate('delete')"
+            @click="confirmDelete"
+          />
         </div>
       </div>
 
-      <!-- Content area -->
       <div class="editable-content col">
-        <slot :is-editing="isEditing" />
+        <slot :is-editing="effectiveEditing" />
       </div>
     </div>
 
-    <!-- Action buttons when editing -->
     <div
-      v-if="isEditing"
+      v-if="effectiveEditing && allowEdit && !inlineEdit"
       class="row justify-end q-gutter-sm q-mt-md editing-actions"
     >
       <q-btn
         flat
         dense
-        color="negative"
+        color="grey-7"
         :label="translate('cancel')"
         @click="cancelEdit"
       />
       <q-btn
         dense
+        unelevated
         color="primary"
         :label="translate('save')"
         type="submit"
@@ -68,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed, watch } from 'vue'
 import translate from 'src/utils/translate'
 import { useQuasar } from 'quasar'
 
@@ -76,6 +83,7 @@ const $q = useQuasar()
 const props = defineProps<{
   allowEdit: boolean
   initialEditState?: boolean
+  inlineEdit?: boolean
   showDelete?: boolean
   customEditLabel?: string
   customDeleteLabel?: string
@@ -88,10 +96,22 @@ const emit = defineEmits<{
   (e: 'delete'): void
 }>()
 
-const isEditing = ref(props.initialEditState ?? false)
+const isEditing = ref(props.inlineEdit || props.initialEditState || false)
+
+watch(() => props.inlineEdit, (value) => {
+  if (value) isEditing.value = true
+})
+
+const effectiveEditing = computed(() => props.inlineEdit || isEditing.value)
 
 function startEdit() {
   isEditing.value = true
+}
+
+function handleSubmit() {
+  if (!props.inlineEdit) {
+    saveEdit()
+  }
 }
 
 function saveEdit() {
@@ -116,9 +136,11 @@ function saveEdit() {
       return
     }
   }
-  
+
   emit('save')
-  isEditing.value = false
+  if (!props.inlineEdit) {
+    isEditing.value = false
+  }
 }
 
 function cancelEdit() {
@@ -151,38 +173,26 @@ function confirmDelete() {
 .editable-module {
   position: relative;
   border-radius: 8px;
-  transition: all 0.3s ease;
+  transition: background 0.2s ease;
 }
 
-.editable-module:hover .action-buttons {
+.editable-module.inline-mode {
+  background: var(--sb-surface);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 12px;
+  border-radius: var(--sb-card-radius, 12px);
+}
+
+.editable-module:not(.inline-mode):hover .action-buttons {
   opacity: 1;
 }
 
 .action-buttons {
-  opacity: 0.4;
-  transition: opacity 0.3s ease;
-}
-
-.action-buttons .q-btn {
-  min-height: 24px;
-  padding: 0 8px;
-}
-
-.action-buttons .q-btn :deep(.q-btn__wrapper) {
-  padding: 4px 8px;
-  min-height: unset;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
 }
 
 .editing-actions .q-btn {
   min-height: 32px;
 }
-
-.editable-module:hover {
-  background: rgba(0, 0, 0, 0.02);
-}
-
-.editable-module.editing {
-  background: rgba(0, 0, 0, 0.03);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
-}
-</style> 
+</style>

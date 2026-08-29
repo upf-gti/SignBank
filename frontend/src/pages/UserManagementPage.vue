@@ -1,11 +1,15 @@
 <template>
-  <q-page class="q-pa-md column no-wrap" 
+  <q-page
+    class="q-pa-md column no-wrap" 
     :style-fn="(header: number, height: number) => {
       pageHeight = height-header
       return { height: `${height - header}px` };
-    }">
+    }"
+  >
     <div class="row q-mb-md items-center justify-between">
-      <div class="text-h4">{{ translate('userManagement') }}</div>
+      <div class="text-h4">
+        {{ translate('userManagement') }}
+      </div>
       <q-btn
         :label="translate('createUser')"
         color="primary"
@@ -153,7 +157,7 @@ onMounted(() => {
   .q-table__bottom,
   thead tr:first-child th
     /* bg color is important for th; just specify one */
-    background-color: white
+    background-color: var(--sb-surface)
 
   thead tr th
     position: sticky

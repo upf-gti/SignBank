@@ -2,9 +2,14 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { CreateSignVideoDto, UpdateSignVideoDto } from './dto/index';
 import { PrismaService } from 'src/prisma/prisma.service'
-import { GlossData, Hand, Prisma } from '@prisma/client'
+import { GlossData, Prisma } from '@prisma/client'
 import { GlossDataService } from 'src/gloss-data/gloss-data.service'
 import { GLOSS_SEARCH_SYNC_EVENT } from '../typesense/types/gloss-index.type';
+import { PhonologyValuesService } from '../phonology-values/phonology-values.service';
+import {
+  videoDataFromCodes,
+  videoDataUpdateFromCodes,
+} from '../phonology-values/phonology-video-data';
 
 @Injectable()
 export class SignVideosService {    
@@ -12,6 +17,7 @@ export class SignVideosService {
     private prisma: PrismaService,
     private glossDataService: GlossDataService,
     private eventEmitter: EventEmitter2,
+    private phonologyValuesService: PhonologyValuesService,
   ) {}
 
   private notifySearchIndex(glossDataId: string) {
@@ -19,26 +25,11 @@ export class SignVideosService {
   }
 
   async create(createSignVideoDto: CreateSignVideoDto): Promise<GlossData> {
+    await this.phonologyValuesService.assertVideoDataCodes(createSignVideoDto.videoData);
 
     // Create the video data first
     const videoData = await this.prisma.videoData.create({
-      data: {
-        id: createSignVideoDto.videoData.id,
-        hands: createSignVideoDto.videoData.hands || 'RIGHT',
-        configuration: createSignVideoDto.videoData.configuration || 'EMPTY',
-        configurationChanges: createSignVideoDto.videoData.configurationChanges || 'EMPTY',
-        relationBetweenArticulators: createSignVideoDto.videoData.relationBetweenArticulators || 'EMPTY',
-        location: createSignVideoDto.videoData.location || 'EMPTY',
-        movementRelatedOrientation: createSignVideoDto.videoData.movementRelatedOrientation || 'EMPTY',
-        orientationRelatedToLocation: createSignVideoDto.videoData.orientationRelatedToLocation || 'EMPTY',
-        orientationChange: createSignVideoDto.videoData.orientationChange || 'EMPTY',
-        contactType: createSignVideoDto.videoData.contactType || 'EMPTY',
-        movementType: createSignVideoDto.videoData.movementType || 'EMPTY',
-        movementDirection: createSignVideoDto.videoData.movementDirection || 'EMPTY',
-        vocalization: createSignVideoDto.videoData.vocalization || '',
-        nonManualComponent: createSignVideoDto.videoData.nonManualComponent || '',
-        inicialization: createSignVideoDto.videoData.inicialization || ''
-      }
+      data: videoDataFromCodes(createSignVideoDto.videoData),
     });
 
     // Create the sign video with the video data
@@ -73,6 +64,8 @@ export class SignVideosService {
   }
 
   async update(id: string, updateSignVideoDto: UpdateSignVideoDto): Promise<GlossData> {
+    await this.phonologyValuesService.assertVideoDataCodes(updateSignVideoDto.videoData);
+
     const signVideo = await this.prisma.signVideo.findUnique({
       where: { id },
       include: {
@@ -90,22 +83,11 @@ export class SignVideosService {
     await this.prisma.videoData.update({
       where: { id: signVideo.videoDataId },
       data: {
-        id: updateSignVideoDto.videoData.id,
-        hands: updateSignVideoDto.videoData.hands || 'RIGHT',
-        configuration: updateSignVideoDto.videoData.configuration || 'EMPTY',
-        configurationChanges: updateSignVideoDto.videoData.configurationChanges || 'EMPTY',
-        relationBetweenArticulators: updateSignVideoDto.videoData.relationBetweenArticulators || 'EMPTY',
-        location: updateSignVideoDto.videoData.location || 'EMPTY',
-        movementRelatedOrientation: updateSignVideoDto.videoData.movementRelatedOrientation || 'EMPTY',
-        orientationRelatedToLocation: updateSignVideoDto.videoData.orientationRelatedToLocation || 'EMPTY',
-        orientationChange: updateSignVideoDto.videoData.orientationChange || 'EMPTY',
-        contactType: updateSignVideoDto.videoData.contactType || 'EMPTY',
-        movementType: updateSignVideoDto.videoData.movementType || 'EMPTY',
-        movementDirection: updateSignVideoDto.videoData.movementDirection || 'EMPTY',
-        vocalization: updateSignVideoDto.videoData.vocalization || '',
-        nonManualComponent: updateSignVideoDto.videoData.nonManualComponent || '',
-        inicialization: updateSignVideoDto.videoData.inicialization || ''
-      }
+        ...(updateSignVideoDto.videoData.id
+          ? { id: updateSignVideoDto.videoData.id }
+          : {}),
+        ...videoDataUpdateFromCodes(updateSignVideoDto.videoData),
+      },
     });
 
     // Delete existing videos and create new ones
@@ -146,14 +128,26 @@ export class SignVideosService {
       });
 
       const glossDataId = signVideo.glossDataId;
-      
+
       // Delete the sign video
       await this.prisma.signVideo.delete({
         where: { id }
       });
 
-      this.notifySearchIndex(glossDataId);
-      return this.glossDataService.getGlossData(glossDataId);
+      if (glossDataId) {
+        this.notifySearchIndex(glossDataId);
+        return this.glossDataService.getGlossData(glossDataId);
+      }
+
+      const compoundPart = await this.prisma.compoundPart.findFirst({
+        where: { inlineSignVideoId: id },
+      });
+      if (compoundPart) {
+        this.notifySearchIndex(compoundPart.glossDataId);
+        return this.glossDataService.getGlossData(compoundPart.glossDataId);
+      }
+
+      throw new NotFoundException(`Sign video with ID "${id}" not found`);
     } catch (error) {
       throw new NotFoundException(`SignVideo with ID ${id} not found or could not be deleted`);
     }

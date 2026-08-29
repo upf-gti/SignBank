@@ -1,6 +1,9 @@
 <template>
   <q-card-section class="column">
-    <div class="text-h5 q-mb-md row justify-between items-center">
+    <div
+      v-if="!inlineEdit && !hideSectionTitle"
+      class="text-h5 q-mb-md row justify-between items-center"
+    >
       {{ translate('definitions') }}
       <div class="row q-gutter-sm">
         <q-btn
@@ -22,43 +25,92 @@
         />
       </div>
     </div>
-    <q-list 
-      v-if="!isMobile"
-      >
+
+    <!-- Inline first definition form for draft creation -->
+    <q-card
+      v-if="inlineEdit && definitions.length === 0"
+      flat
+      bordered
+      class="q-pa-md q-mb-md"
+    >
+      <div class="text-subtitle1 text-weight-medium q-mb-md">
+        {{ translate('firstSense') }}
+      </div>
+      <q-input
+        v-model="inlineDefinition.title"
+        :label="translate('definitionTitle')"
+        outlined
+        dense
+        class="q-mb-sm"
+      />
+      <q-input
+        v-model="inlineDefinition.definition"
+        :label="translate('definition')"
+        outlined
+        type="textarea"
+        rows="3"
+        class="q-mb-md"
+        :rules="[val => !!val || translate('required')]"
+      />
+    </q-card>
+
+    <q-list v-if="!isMobile">
       <!-- Desktop -->
-        <DefinitionCardDesktop
-          v-for="(definition, index) in definitions.sort((a, b) => a.priority - b.priority)"
-          :key="definition.id || index"
-          :definition="definition"
-          :allow-edit="allowEdit"
-          @save="saveDefinition"
-          @delete="deleteDefinition"
-          @upload-video="uploadVideo"
-          @delete-video="deleteDefinitionVideo"
-          @video-error="handleVideoError"
-          @update-translations="updateDefinitionTranslations"
-        />
-      </q-list>
-      <q-list v-else>
-        <!-- Mobile -->
-      <DefinitionCardMobile
+      <DefinitionCardDesktop
         v-for="(definition, index) in definitions.sort((a, b) => a.priority - b.priority)"
         :key="definition.id || index"
         :definition="definition"
         :allow-edit="allowEdit"
+        :inline-edit="inlineEdit"
+        :hide-definition-video="hideDefinitionVideo"
         @save="saveDefinition"
         @delete="deleteDefinition"
         @upload-video="uploadVideo"
         @delete-video="deleteDefinitionVideo"
         @video-error="handleVideoError"
+        @show-video="openVideo"
         @update-translations="updateDefinitionTranslations"
       />
     </q-list>
-    <!-- Translations of the sense -->
-    <div class="column">
+    <q-list v-else>
+      <!-- Mobile -->
+      <DefinitionCardMobile
+        v-for="(definition, index) in definitions.sort((a, b) => a.priority - b.priority)"
+        :key="definition.id || index"
+        :definition="definition"
+        :allow-edit="allowEdit"
+        :inline-edit="inlineEdit"
+        :hide-definition-video="hideDefinitionVideo"
+        @save="saveDefinition"
+        @delete="deleteDefinition"
+        @upload-video="uploadVideo"
+        @delete-video="deleteDefinitionVideo"
+        @video-error="handleVideoError"
+        @show-video="openVideo"
+        @update-translations="updateDefinitionTranslations"
+      />
+    </q-list>
+    <!-- Sense-level gloss translations -->
+    <div
+      v-if="!hideGlossTranslations"
+      class="column"
+    >
+      <q-btn
+        v-if="inlineEdit && allowEdit && definitions.length > 0"
+        flat
+        dense
+        icon="add"
+        color="primary"
+        :label="translate('addDefinition')"
+        class="q-mb-md self-start"
+        @click="addDefinition"
+      />
       <GlossTranslationsComponent
+        ref="glossTranslationsRef"
         :gloss-data="glossData"
         :edit-mode="editMode"
+        :inline-edit="inlineEdit"
+        :hide-section-title="hideSectionTitle"
         @update:gloss-data="emit('update:glossData', $event)"
       />
     </div>
@@ -87,8 +139,10 @@
           class="row items-center q-mb-sm"
         >
           <div class="col">
-            <div class="text-bold">{{ definition.title }}</div>
-            <div >{{ definition.definition }}</div>
+            <div class="text-bold">
+              {{ definition.title }}
+            </div>
+            <div>{{ definition.definition }}</div>
           </div>
           <div class="col-auto">
             <q-btn
@@ -127,11 +181,11 @@
   </q-dialog>
 
   <!-- Create Definition Dialog -->
-    <CreateDefinitionDialog
-      v-model="showCreateDefinitionDialog"
-      :gloss-data-id="glossData?.id || ''"
-      @definition-created="handleDefinitionCreated"
-    />
+  <CreateDefinitionDialog
+    v-model="showCreateDefinitionDialog"
+    :gloss-data-id="glossData?.id || ''"
+    @definition-created="handleDefinitionCreated"
+  />
 </template>
 
 <script setup lang="ts">
@@ -148,6 +202,7 @@ import CreateDefinitionDialog from './CreateDefinitionDialog.vue';
 
 const $q = useQuasar()
 const loading = ref(false)
+const glossTranslationsRef = ref<InstanceType<typeof GlossTranslationsComponent> | null>(null)
 const showCreateDefinitionDialog = ref(false)
 const showVideoDialog = ref(false)
 const selectedVideoUrl = ref('')
@@ -174,7 +229,16 @@ const props = defineProps<{
   allowEdit: boolean;
   editMode: boolean;
   glossData: GlossData;
+  inlineEdit?: boolean;
+  hideSectionTitle?: boolean;
+  hideGlossTranslations?: boolean;
+  hideDefinitionVideo?: boolean;
 }>();
+
+const inlineDefinition = ref({
+  title: '',
+  definition: '',
+});
 
 const emit = defineEmits<{
   (e: 'update:glossData', glossData: GlossData): void;
@@ -183,7 +247,28 @@ const emit = defineEmits<{
 const definitions = computed(() => props.glossData?.definitions || []);
 
 const addDefinition = () => {
+  if (props.inlineEdit && definitions.value.length === 0) {
+    return;
+  }
   showCreateDefinitionDialog.value = true;
+}
+
+const saveInlineDefinition = async () => {
+  if (!props.glossData?.id || !inlineDefinition.value.definition.trim()) return;
+
+  await handleDefinitionCreated({
+    id: '',
+    title: inlineDefinition.value.title.trim(),
+    definition: inlineDefinition.value.definition.trim(),
+    videoDefinitionUrl: '',
+    priority: 0,
+    glossDataId: props.glossData.id,
+    lexicalCategory: 'NOUN',
+    definitionTranslations: [],
+    isNew: true,
+  } as Definition);
+
+  inlineDefinition.value = { title: '', definition: '' };
 }
 
 const handleDefinitionCreated = async (definition: Definition) => {
@@ -226,7 +311,7 @@ const isGlossData = (data: any): data is GlossData => {
     'definitions' in data;
 }
 
-const saveDefinition = async (definition: Definition) => {
+const saveDefinition = async (definition: Definition, silent = false) => {
   if (!props.glossData?.id) return;
 
   try {
@@ -246,10 +331,12 @@ const saveDefinition = async (definition: Definition) => {
     if (response.data && isGlossData(response.data)) {
       emit('update:glossData', response.data);
 
-      $q.notify({
-        type: 'positive',
-        message: translate('definitionSavedSuccessfully')
-      });
+      if (!silent) {
+        $q.notify({
+          type: 'positive',
+          message: translate('definitionSavedSuccessfully')
+        });
+      }
     }
   } catch (error) {
     console.error('Error saving definition:', error);
@@ -396,7 +483,7 @@ const saveSortDefinitions = async () => {
         updateData.videoDefinitionUrl = definition.videoDefinitionUrl
       }
       
-      return api.definitions.update(props.glossData!.id!, definition.id!, updateData)
+      return api.definitions.update(props.glossData.id!, definition.id!, updateData)
     })
     
     if (updatePromises.length === 0) {
@@ -430,6 +517,83 @@ const saveSortDefinitions = async () => {
     loading.value = false
   }
 }
+
+async function saveDefinitionTranslations(definition: Definition, silent = false) {
+  if (!definition.id) return
+
+  for (const dt of definition.definitionTranslations || []) {
+    if (!dt.translation?.trim()) continue
+
+    try {
+      if (dt.id) {
+        await api.definitions.updateTranslation(definition.id, dt.id, {
+          translation: dt.translation,
+          language: dt.language,
+        })
+      } else {
+        await api.definitions.createTranslation(definition.id, {
+          translation: dt.translation,
+          language: dt.language,
+        })
+      }
+    } catch (error) {
+      console.error('Error saving definition translation:', error)
+      if (!silent) {
+        $q.notify({
+          type: 'negative',
+          message: translate('errors.failedToSaveTranslation'),
+        })
+      }
+      throw error
+    }
+  }
+}
+
+function getStepValidationErrors(): string[] {
+  const errors: string[] = []
+  const hasDefinition = definitions.value.some(d => d.definition?.trim())
+    || inlineDefinition.value.definition.trim()
+
+  if (!hasDefinition) {
+    errors.push(translate('validation.definitionRequired', { senseTitle: props.glossData.gloss }))
+  }
+
+  errors.push(...(glossTranslationsRef.value?.getStepValidationErrors() ?? []))
+
+  return errors
+}
+
+async function saveAll(silent = false): Promise<boolean> {
+  try {
+    loading.value = true
+
+    if (definitions.value.length === 0) {
+      if (!inlineDefinition.value.definition.trim()) return false
+      await saveInlineDefinition()
+    } else {
+      for (const definition of definitions.value) {
+        await saveDefinition(definition, silent)
+        await saveDefinitionTranslations(definition, silent)
+      }
+    }
+
+    await glossTranslationsRef.value?.saveAll(silent)
+    return true
+  } catch (error) {
+    console.error('Error saving definitions step:', error)
+    if (!silent) {
+      $q.notify({
+        type: 'negative',
+        message: translate('errors.failedToSaveDefinition'),
+      })
+    }
+    return false
+  } finally {
+    loading.value = false
+  }
+}
+
+defineExpose({ saveAll, getStepValidationErrors })
 </script>
 
 <style scoped>

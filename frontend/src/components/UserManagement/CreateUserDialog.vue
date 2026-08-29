@@ -1,12 +1,20 @@
 <template>
-  <q-dialog v-model="dialogVisible" @hide="$emit('close')">
+  <q-dialog
+    v-model="dialogVisible"
+    @hide="$emit('close')"
+  >
     <q-card style="min-width: 350px; max-width: 400px;">
       <q-card-section>
-        <div class="text-h6">{{ translate('createUser') }}</div>
+        <div class="text-h6">
+          {{ translate('createUser') }}
+        </div>
       </q-card-section>
 
       <q-card-section>
-        <q-form @submit="handleSubmit" class="q-gutter-sm">
+        <q-form
+          class="q-gutter-sm"
+          @submit="handleSubmit"
+        >
           <q-input
             v-model="form.username"
             :label="translate('username')"

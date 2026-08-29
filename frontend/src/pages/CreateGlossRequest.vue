@@ -1,16 +1,20 @@
 <template>
-  <q-page padding 
-  :style-fn="(header: number, height: number) => {
+  <q-page
+    padding 
+    :style-fn="(header: number, height: number) => {
       pageHeight = height-header
       return { height: `${height - header}px` };
     }"
-    >
+  >
     <div class="row justify-center">
       <div class="col-12 col-md-8 col-lg-6">
         <q-card class="q-pa-lg">
-          <div class="text-h4 q-mb-xl">
+          <div class="text-h4 q-mb-sm">
             {{ translate('createNewGloss') }}
           </div>
+          <p class="text-body2 text-grey-7 q-mb-lg">
+            {{ translate('createGlossHint') }}
+          </p>
           
           <q-form
             class="q-gutter-md"

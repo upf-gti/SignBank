@@ -1,5 +1,8 @@
 <template>
-  <q-page>
+  <q-page
+    class="column"
+    :class="{ 'gloss-page': !editMode }"
+  >
     <LoadingComponent
       v-if="loading"
       :loading="loading"
@@ -7,30 +10,58 @@
 
     <div
       v-else-if="error"
-      class="text-center q-pa-md"
+      class="column items-center q-pa-xl"
     >
-      <div class="text-negative text-h6">
+      <q-icon
+        name="error_outline"
+        size="48px"
+        color="negative"
+        class="q-mb-md"
+      />
+      <div class="text-negative text-h6 text-center q-mb-md">
         {{ error }}
       </div>
-      <q-btn
-        color="primary"
-        :label="translate('common.goBack')"
-        class="q-mt-md"
-        @click="router.go(-1)"
-      />
+      <div class="row q-gutter-sm">
+        <q-btn
+          color="primary"
+          outline
+          icon="refresh"
+          :label="translate('retry')"
+          @click="getGlossData"
+        />
+        <q-btn
+          flat
+          icon="arrow_back"
+          :label="translate('goBack')"
+          @click="router.go(-1)"
+        />
+      </div>
     </div>
 
     <div
-      v-else
-      class="column full-width justify-center items-center"
-      style="height: fit-content"
+      v-else-if="glossData"
+      class="gloss-page__content col column"
+      :class="{ 'gloss-page__content--editing': editMode }"
     >
+      <div
+        v-if="!editMode"
+        class="gloss-page__toolbar q-px-md q-pt-sm"
+      >
+        <q-btn
+          flat
+          icon="arrow_back"
+          :label="translate('backToSearch')"
+          @click="router.push('/search')"
+        />
+      </div>
+
       <GlossDetailComponent
-        v-if="glossData"
         v-model:edit-mode="editMode"
-        class="col full-width"
+        class="gloss-page__detail col column"
+        :class="{ 'gloss-page__detail--editing': editMode }"
         :gloss-data="glossData"
         :allow-edit="true"
+        :constrained-layout="!editMode"
         @save-gloss="saveGloss"
         @update:gloss-data="updateGlossData"
       />
@@ -50,7 +81,6 @@ import type { GlossData } from 'src/types/models'
 const route = useRoute()
 const router = useRouter()
 
-// State
 const loading = ref(true)
 const error = ref<string | null>(null)
 const editMode = ref(false)
@@ -67,13 +97,15 @@ watch(() => route.fullPath, () => {
 })
 
 function getGlossData() {
-  if(route.params.gloss) {
+  if (route.params.gloss) {
+    loading.value = true
+    error.value = null
     api.glosses.get(route.params.gloss as string)
       .then((response) => {
         glossData.value = response.data
       })
-      .catch((error) => {
-        console.error(error)
+      .catch((err) => {
+        console.error(err)
         error.value = translate('errors.failedToLoadGloss')
       }).finally(() => {
         loading.value = false
@@ -99,3 +131,48 @@ const updateGlossData = (updatedGlossData: GlossData) => {
   glossData.value = updatedGlossData
 }
 </script>
+
+<style scoped>
+.gloss-page {
+  height: calc(100vh - 64px);
+  max-height: calc(100vh - 64px);
+  overflow-x: visible;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.gloss-page__content {
+  flex: 1 1 0;
+  min-height: 0;
+  height: 100%;
+  overflow-x: visible;
+  overflow-y: hidden;
+}
+
+.gloss-page__content--editing {
+  flex: 1 1 auto;
+  min-height: auto;
+  height: auto;
+  overflow: visible;
+}
+
+.gloss-page__toolbar {
+  flex: 0 0 auto;
+}
+
+.gloss-page__detail {
+  flex: 1 1 0;
+  min-height: 0;
+  height: 100%;
+  overflow-x: visible;
+  overflow-y: hidden;
+}
+
+.gloss-page__detail--editing {
+  flex: 1 1 auto;
+  min-height: auto;
+  height: auto;
+  overflow: visible;
+}
+</style>

@@ -81,7 +81,9 @@ Frontend phonology filters and Typesense facets mirror these enum string values.
 
 ## Migration rules
 
-1. Edit `schema.prisma`, then `npx prisma migrate dev --name <name>` (development).
+**Use `signbank-prisma-migrate` skill** — always generate migrations with `prisma migrate dev`; never hand-write `migration.sql`.
+
+1. Edit `schema.prisma`, then `npx prisma migrate dev --name <name>` (via Docker exec in dev).
 2. Containers apply with `prisma migrate deploy` on startup — never edit applied migration SQL retroactively.
 3. Seed (`backend/prisma/seed.ts`) is dev/test only; production bootstraps admin via `AppService.onApplicationBootstrap`.
 

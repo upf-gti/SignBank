@@ -1,51 +1,70 @@
-import { IsEnum, IsBoolean, IsOptional } from 'class-validator';
-import { HandConfiguration, ConfigurationChange, RelationBetweenArticulators, Location, MovementRelatedOrientation, OrientationRelatedToLocation, OrientationChange, ContactType, MovementType, MovementDirection } from '@prisma/client';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 export class VideoDataDto {
-  @IsEnum(HandConfiguration)
-  hands: HandConfiguration;
+  @IsString()
+  handedness: string;
 
-  @IsEnum(ConfigurationChange)
+  @IsString()
   @IsOptional()
-  configuration?: ConfigurationChange;
+  dominantConfiguration?: string;
 
-  @IsEnum(ConfigurationChange)
+  @IsString()
   @IsOptional()
-  configurationChanges?: ConfigurationChange[];
+  nonDominantConfiguration?: string;
 
-  @IsEnum(RelationBetweenArticulators)
+  @IsString()
   @IsOptional()
-  relationBetweenArticulators?: RelationBetweenArticulators;
+  dominantRelationBetweenArticulators?: string;
 
-  @IsEnum(Location)
+  @IsString()
   @IsOptional()
-  location?: Location;
+  nonDominantRelationBetweenArticulators?: string;
 
-  @IsEnum(MovementRelatedOrientation)
+  @IsString()
   @IsOptional()
-  movementRelatedOrientation?: MovementRelatedOrientation;
+  configurationChanges?: string;
 
-  @IsEnum(OrientationRelatedToLocation)
+  @IsString()
   @IsOptional()
-  orientationRelatedToLocation?: OrientationRelatedToLocation;
+  location?: string;
 
-  @IsEnum(OrientationChange)
+  @IsString()
   @IsOptional()
-  orientationChange?: OrientationChange;
+  movementRelatedOrientation?: string;
 
-  @IsEnum(ContactType)
+  @IsString()
   @IsOptional()
-  contactType?: ContactType;
+  orientationRelatedToLocation?: string;
 
-  @IsEnum(MovementType)
+  @IsString()
   @IsOptional()
-  movementType?: MovementType;
+  orientationChange?: string;
 
-  @IsEnum(MovementDirection)
+  @IsString()
   @IsOptional()
-  movementDirection?: MovementDirection;
+  contactType?: string;
+
+  @IsString()
+  @IsOptional()
+  movementType?: string;
+
+  @IsString()
+  @IsOptional()
+  movementDirection?: string;
+
+  @IsString()
+  @IsOptional()
+  vocalization?: string;
+
+  @IsString()
+  @IsOptional()
+  nonManualComponent?: string;
+
+  @IsString()
+  @IsOptional()
+  inicialization?: string;
 
   @IsBoolean()
   @IsOptional()
   repeatedMovement?: boolean;
-} 
+}

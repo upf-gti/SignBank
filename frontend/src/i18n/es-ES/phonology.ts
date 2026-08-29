@@ -43,6 +43,18 @@ const phonology : PhonologyTranslateKeys = {
       WIGGLING: 'Vibración',
       WIGGLING_description: 'Oscilación alterna de los dedos seleccionados'
     },
+    handedness: {
+      ONE: '1',
+      ONE_description: 'Signo con una mano',
+      TWO_A: '2a',
+      TWO_A_description: 'Signo con dos manos asimétrico',
+      TWO_N: '2n',
+      TWO_N_description: 'Signo con dos manos no espejadas',
+      TWO_S: '2s',
+      TWO_S_description: 'Signo con dos manos simétrico',
+      NA: 'x',
+      NA_description: 'No aplicable',
+    },
     handConfiguration: {
       EMPTY: 'Vacío',
       CONF_1: 'BABY_O',

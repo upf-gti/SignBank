@@ -6,6 +6,7 @@ import { DeclineGlossRequestDto } from './dto/decline-gloss-request.dto';
 import { GlossStatus, RequestStatus } from '@prisma/client';
 import { validateGlossRequest } from '../utils/gloss-validation';
 import { GLOSS_SEARCH_SYNC_EVENT } from '../typesense/types/gloss-index.type';
+import { flattenPhonologyInTree, videoDataPhonologyInclude } from '../phonology-values/phonology-video-data';
 
 const requestedGlossDataInclude = {
   definitions: {
@@ -23,7 +24,7 @@ const requestedGlossDataInclude = {
   glossVideos: {
     include: {
       videos: true,
-      videoData: true,
+      videoData: { include: videoDataPhonologyInclude },
     },
   },
   minimalPairsAsSource: {
@@ -84,7 +85,7 @@ export class GlossRequestsService {
   }
 
   async getGlossRequest(id: string) {
-    return this.prisma.glossRequest.findUnique({
+    const request = await this.prisma.glossRequest.findUnique({
       where: { id },
       include: {
         creator: true,
@@ -93,6 +94,7 @@ export class GlossRequestsService {
         requestedGlossData: { include: requestedGlossDataInclude },
       },
     });
+    return flattenPhonologyInTree(request);
   }
 
   async createGlossRequest(userId: string, createGlossRequestDto: CreateGlossRequestDto) {
@@ -192,13 +194,15 @@ export class GlossRequestsService {
       });
     }
 
-    return this.prisma.glossRequest.update({
-      where: { id },
-      data: { status: RequestStatus.WAITING_FOR_APPROVAL },
-      include: {
-        creator: { select: { id: true, username: true, email: true } },
-        requestedGlossData: { include: requestedGlossDataInclude },
-      },
-    });
+    return flattenPhonologyInTree(
+      await this.prisma.glossRequest.update({
+        where: { id },
+        data: { status: RequestStatus.WAITING_FOR_APPROVAL },
+        include: {
+          creator: { select: { id: true, username: true, email: true } },
+          requestedGlossData: { include: requestedGlossDataInclude },
+        },
+      }),
+    );
   }
 }

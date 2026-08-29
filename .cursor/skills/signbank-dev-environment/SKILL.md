@@ -62,12 +62,14 @@ Source of truth: `.env.example`. Key vars:
 
 ## Common workflows
 
-**Schema change:**
+**Schema change:** follow `signbank-prisma-migrate` skill — edit `schema.prisma`, then:
+
 ```bash
-# Dev: create migration inside backend container or locally with DATABASE_URL set
-npx prisma migrate dev --name describe_change
-make migrate   # deploy in running stack
+docker compose -f docker-compose-local.yaml exec backend npx prisma migrate dev --name describe_change
+docker compose -f docker-compose-local.yaml exec backend npx prisma migrate status
 ```
+
+Deploy only (migrations already committed): `make migrate` or the `migrate deploy` exec above.
 
 **Backend debug:** Node inspector on `9229` when using local compose.
 
@@ -86,7 +88,7 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 
 | Symptom | Check |
 |---------|-------|
-| 502 from nginx | `make logs`, ensure backend/frontend are healthy |
+| Frontend changes not hot-reloading (Windows/macOS) | Ensure `CHOKIDAR_USEPOLLING=true` in local compose; recreate frontend: `make rebuild s=frontend` |
 | DB connection errors | `DATABASE_URL_DOCKER` in backend env, postgres healthcheck |
 | Search empty/stale | Typesense init runs on backend boot; see `signbank-search-typesense` skill |
 | Videos 404 | Dufs volume `./FileServer`; nginx path `/lscassets` → dufs |

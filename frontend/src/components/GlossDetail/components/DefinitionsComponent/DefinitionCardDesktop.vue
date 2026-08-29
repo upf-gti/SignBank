@@ -2,7 +2,8 @@
   <q-item class="q-mb-lg q-pa-md q-hover:bg-grey-1 q-transition-all q-rounded-borders column">
     <EditableModule
       :allow-edit="allowEdit"
-      :show-delete="true"
+      :inline-edit="inlineEdit"
+      :show-delete="!inlineEdit || Boolean(definition.id)"
       :custom-edit-label="translate('editDefinition')"
       :custom-delete-label="translate('deleteDefinition')"
       @save="() => $emit('save', definition)"
@@ -20,15 +21,34 @@
         />
         <div
           v-else
-          class="text-subtitle1 q-mb-md text-weight-medium text-primary"
+          class="row items-center justify-between q-mb-md"
         >
-          {{ definition.title }}
+          <div class="text-subtitle1 text-weight-medium text-primary">
+            {{ definition.title }}
+          </div>
+          <q-btn
+            v-if="hideDefinitionVideo && definition.videoDefinitionUrl"
+            flat
+            no-caps
+            dense
+            color="primary"
+            class="col-auto"
+            :label="translate('seeDefinitionVideo')"
+            icon="videocam"
+            @click="$emit('showVideo', definition)"
+          />
         </div>
 
-        <!-- Definition Content - Side by Side Layout -->
-        <div class="row q-gutter-md q-mb-lg q-items-start">
+        <!-- Definition Content -->
+        <div
+          class="q-mb-lg"
+          :class="hideDefinitionVideo ? 'column' : 'row q-gutter-md q-items-start'"
+        >
           <!-- Definition Video Section -->
-          <div class="col-auto" v-if="definition.videoDefinitionUrl || isEditing">
+          <div
+            v-if="!hideDefinitionVideo && (definition.videoDefinitionUrl || isEditing)"
+            class="col-auto"
+          >
             <UploadVideoComponent
               v-if="isEditing && !definition.videoDefinitionUrl"
               video-type="definition"
@@ -43,11 +63,10 @@
                 ref="videoPlayer"
                 controls
                 autoplay
-                class="rounded-borders shadow-2"
+                class="rounded-borders shadow-2 definition-video"
                 :src="getVideoUrl(definition.videoDefinitionUrl)"
                 muted
                 @error="$emit('videoError', $event)"
-                style="max-width: 100%; max-height: 250px; width: auto; height: auto;"
               />
               <q-btn
                 v-if="isEditing"
@@ -62,7 +81,7 @@
           </div>
 
           <!-- Definition Text Section -->
-          <div class="col">
+          <div :class="hideDefinitionVideo ? '' : 'col'">
             <q-input
               v-if="isEditing"
               v-model="definition.definition"
@@ -84,6 +103,7 @@
         <!-- Definition Translations -->
         <DefinitionTranslationsComponent
           :allow-edit="allowEdit"
+          :inline-edit="inlineEdit"
           :definition-id="definition.id || ''"
           :translations="definition.definitionTranslations"
           @update:translations="(translations: DefinitionTranslation[]) => $emit('updateTranslations', definition, translations)"
@@ -104,6 +124,8 @@ import { getVideoUrl } from 'src/utils/videoUrl';
 const props = defineProps<{
   definition: Definition;
   allowEdit: boolean;
+  inlineEdit?: boolean;
+  hideDefinitionVideo?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -112,6 +134,17 @@ const emit = defineEmits<{
   (e: 'uploadVideo', definition: Definition, url: string): void;
   (e: 'deleteVideo', definition: Definition): void;
   (e: 'videoError', event: Event): void;
+  (e: 'showVideo', definition: Definition): void;
   (e: 'updateTranslations', definition: Definition, translations: DefinitionTranslation[]): void;
 }>();
-</script> 
+</script>
+
+<style scoped>
+.definition-video {
+  max-width: 100%;
+  max-height: 250px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+</style>

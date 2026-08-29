@@ -12,9 +12,9 @@
     >
       <EditableModule
         :allow-edit="allowEdit"
+        :inline-edit="inlineEdit"
         :initial-edit-state="definitionTranslation.isNew || false"
-        :show-delete="true"
-        :custom-delete-label="translate('deleteDefinitionTranslation')"
+        :show-delete="Boolean(definitionTranslation.id)"
         @save="() => saveDefinitionTranslation(definitionTranslation)"
         @cancel="cancelDefinitionTranslationEdit"
         @delete="() => deleteDefinitionTranslation(definitionTranslation)"
@@ -50,10 +50,20 @@
       </EditableModule>
     </div>
     <q-btn
-      v-if="allowEdit"
+      v-if="allowEdit && !inlineEdit"
       flat
       class="q-mt-sm"
       icon="add"
+      :label="translate('addDefinitionTranslation')"
+      @click="addTranslation"
+    />
+    <q-btn
+      v-else-if="allowEdit && inlineEdit"
+      flat
+      dense
+      class="q-mt-sm"
+      icon="add"
+      color="primary"
       :label="translate('addDefinitionTranslation')"
       @click="addTranslation"
     />
@@ -74,6 +84,7 @@ const loading = ref(false)
 
 const props = defineProps<{
   allowEdit: boolean;
+  inlineEdit?: boolean;
   definitionId: string;
   translations: DefinitionTranslation[];
 }>();

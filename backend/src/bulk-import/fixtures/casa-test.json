@@ -1,0 +1,31 @@
+{
+  "id": "test_casa",
+  "name": "CASA-TEST",
+  "tr_en": "HOUSE",
+  "tr_es": "CASA",
+  "tr_ca": "CASA",
+  "definitions": [
+    "Nom – Edifici destinat a habitatge."
+  ],
+  "lexical_category": "Nom",
+  "phonology": {
+    "nombre_mans": "2s",
+    "configuracio": "B (B)",
+    "localitzacio": "Espai neutre",
+    "moviment_repetit": "No"
+  },
+  "minimal_pairs": [],
+  "related_signs": {
+    "HOMÒNIM": [],
+    "SINÒNIM": [],
+    "VARIANT": ["CASA-ANTIGA"],
+    "ANTÒNIM": [],
+    "HIPÒNIM": ["PIS-TEST"],
+    "HIPERÒNIM": ["EDIFICI-TEST"],
+    "VEURE TAMBÉ": ["FINESTRA-TEST", "PORTA-TEST"]
+  },
+  "notes": "Fitxa de prova per stubs de relacions",
+  "video_url": null,
+  "is_compound": false,
+  "compound_signs": []
+}

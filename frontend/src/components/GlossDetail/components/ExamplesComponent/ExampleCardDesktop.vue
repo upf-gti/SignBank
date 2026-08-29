@@ -2,17 +2,23 @@
   <q-item class="q-mb-lg q-pa-md q-hover:bg-grey-1 q-transition-all q-rounded-borders column full-width">
     <EditableModule
       :allow-edit="allowEdit"
-      :show-delete="true"
-      :custom-edit-label="translate('editExample')"
-      :custom-delete-label="translate('deleteExample')"
+      :inline-edit="inlineEdit"
+      :initial-edit-state="example.isNew"
+      :show-delete="!inlineEdit || Boolean(example.id) || example.isNew"
       @save="() => $emit('save', example)"
       @delete="() => $emit('delete', example)"
     >
       <template #default="{ isEditing }">
-        <!-- Example Content - Side by Side Layout -->
-        <div class="row q-gutter-md q-mb-lg q-items-start">
+        <!-- Example Content -->
+        <div
+          class="q-mb-lg"
+          :class="hideExampleVideo ? 'column' : 'row q-gutter-md q-items-start'"
+        >
           <!-- Example Video Section -->
-          <div class="col-auto" v-if="example.exampleVideoURL || isEditing">
+          <div
+            v-if="!hideExampleVideo && (example.exampleVideoURL || isEditing)"
+            class="col-auto"
+          >
             <UploadVideoComponent
               v-if="isEditing && !example.exampleVideoURL"
               video-type="example"
@@ -30,8 +36,8 @@
                 class="rounded-borders shadow-2"
                 :src="getVideoUrl(example.exampleVideoURL)"
                 muted
-                @error="$emit('videoError', $event)"
                 style="max-width: 100%; max-height: 250px; width: auto; height: auto;"
+                @error="$emit('videoError', $event)"
               />
               <q-btn
                 v-if="isEditing"
@@ -46,7 +52,7 @@
           </div>
 
           <!-- Example Text Section -->
-          <div class="col">
+          <div :class="hideExampleVideo ? '' : 'col'">
             <q-input
               v-if="isEditing"
               v-model="example.example"
@@ -88,6 +94,8 @@ import { getVideoUrl } from 'src/utils/videoUrl';
 const props = defineProps<{
   example: Example;
   allowEdit: boolean;
+  inlineEdit?: boolean;
+  hideExampleVideo?: boolean;
 }>();
 
 const emit = defineEmits<{

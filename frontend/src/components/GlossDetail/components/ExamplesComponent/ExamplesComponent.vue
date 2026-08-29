@@ -1,12 +1,30 @@
 <template>
   <q-card-section>
-    <div class="text-h5 q-mb-md row justify-between items-center">
+    <div
+      v-if="!inlineEdit && !hideSectionTitle"
+      class="text-h5 q-mb-md row justify-between items-center"
+    >
       {{ translate('examples') }}
       <q-btn
         v-if="editMode"
         flat
         round
         icon="add"
+        :label="translate('addExample')"
+        @click="addExample"
+      />
+    </div>
+    <div
+      v-else-if="inlineEdit"
+      class="row justify-between items-center q-mb-md"
+    >
+      <span class="text-body2 text-grey-7">{{ translate('optional') }}</span>
+      <q-btn
+        v-if="editMode"
+        flat
+        dense
+        icon="add"
+        color="primary"
         :label="translate('addExample')"
         @click="addExample"
       />
@@ -25,6 +43,8 @@
           v-if="$q.screen.gt.sm"
           :example="example"
           :allow-edit="editMode"
+          :inline-edit="inlineEdit"
+          :hide-example-video="hideExampleVideo"
           @save="saveExample"
           @delete="deleteExample"
           @upload-video="uploadVideo"
@@ -37,6 +57,8 @@
           v-else
           :example="example"
           :allow-edit="editMode"
+          :inline-edit="inlineEdit"
+          :hide-example-video="hideExampleVideo"
           @save="saveExample"
           @delete="deleteExample"
           @upload-video="uploadVideo"
@@ -75,6 +97,9 @@ const selectedExample = ref<Example | null>(null);
 const props = defineProps<{
   glossData: GlossData;
   editMode: boolean;
+  inlineEdit?: boolean;
+  hideSectionTitle?: boolean;
+  hideExampleVideo?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -103,7 +128,7 @@ const addExample = () => {
   });
 };
 
-const saveExample = async (example: Example) => {
+const saveExample = async (example: Example, silent = false) => {
   try {
     loading.value = true;
     let response;
@@ -122,21 +147,35 @@ const saveExample = async (example: Example) => {
 
     if (response.data) {
       emit('update:glossData', response.data);
-      $q.notify({
-        type: 'positive',
-        message: translate(example.id ? 'exampleUpdatedSuccessfully' : 'exampleCreatedSuccessfully'),
-      });
+      if (!silent) {
+        $q.notify({
+          type: 'positive',
+          message: translate(example.id ? 'exampleUpdatedSuccessfully' : 'exampleCreatedSuccessfully'),
+        });
+      }
     }
   } catch (error) {
     console.error('Error saving example:', error);
-    $q.notify({
-      type: 'negative',
-      message: translate('errors.failedToSaveExample'),
-    });
+    if (!silent) {
+      $q.notify({
+        type: 'negative',
+        message: translate('errors.failedToSaveExample'),
+      });
+    }
+    throw error;
   } finally {
     loading.value = false;
   }
 };
+
+async function saveAll(silent = false): Promise<void> {
+  for (const example of examples.value) {
+    if (!example.example?.trim()) continue;
+    await saveExample(example, silent);
+  }
+}
+
+defineExpose({ saveAll });
 
 const deleteExample = async (example: Example) => {
   if (!example.id) {

@@ -28,6 +28,10 @@ export const api = {
     unarchiveGloss: (glossDataId: string) =>
       apiClient.patch<GlossData>(`/gloss-data/${glossDataId}/unarchive`),
   },
+  compound: {
+    update: (glossDataId: string, data: Record<string, unknown>) =>
+      apiClient.put<GlossData>(`/gloss-data/${glossDataId}/compound`, data),
+  },
   examples: {
     create: (glossDataId: string, data: { example: string, exampleVideoURL: string }) =>
       apiClient.post<GlossData>(`/examples/gloss/${glossDataId}`, data),
@@ -208,6 +212,27 @@ export const api = {
     delete: (userId: string) => apiClient.delete(`/users/${userId}`),
     changePassword: (userId: string, newPassword: string) =>
       apiClient.put(`/users/${userId}/password`, { newPassword }),
+  },
+  phonologyValues: {
+    list: (params?: { dimension?: string; includeInactive?: boolean; withUsage?: boolean }) =>
+      apiClient.get('/phonology-values', { params }),
+    create: (data: Record<string, unknown>) =>
+      apiClient.post('/phonology-values', data),
+    update: (id: string, data: Record<string, unknown>) =>
+      apiClient.patch(`/phonology-values/${id}`, data),
+    remove: (id: string, params?: { confirmCode?: string }) =>
+      apiClient.delete(`/phonology-values/${id}`, { params }),
+  },
+  bulkImport: {
+    importFitxas: (files: File[], overwriteAll: boolean, overwriteGlosses: string[] = []) => {
+      const formData = new FormData()
+      files.forEach((file) => formData.append('files', file))
+      formData.append('overwriteAll', String(overwriteAll))
+      formData.append('overwriteGlosses', JSON.stringify(overwriteGlosses))
+      return apiClient.post('/bulk-import', formData, {
+        timeout: 10 * 60 * 1000,
+      })
+    },
   },
 }
 

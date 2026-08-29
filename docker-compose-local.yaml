@@ -18,7 +18,7 @@ services:
       - TYPESENSE_PORT=${TYPESENSE_PORT}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_EXPIRATION=${JWT_EXPIRATION:-24h}
-      - SEED_DB=true
+      - SEED_DB=${SEED_DB:-false}
     ports:
       - 9229:9229
     cap_add:
@@ -52,6 +52,9 @@ services:
     container_name: frontend
     environment:
       - BASE_URL=${BASE_URL}
+      # Required on Windows/macOS Docker bind mounts — inotify events don't reach the container
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=1000
     networks:
       - signbank
     volumes:
@@ -112,6 +115,7 @@ services:
       - signbank
     depends_on:
       - backend
+      - frontend
 
   db-backup:
     image: kartoza/pg-backup:17-3.5

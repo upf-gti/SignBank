@@ -1,0 +1,36 @@
+{
+  "id": "test_bessons",
+  "name": "BESSONS-TEST",
+  "tr_en": "TWINS",
+  "tr_es": "GEMELOS",
+  "tr_ca": "BESSONS",
+  "definitions": [
+    "Adj- Nat d’un mateix part, amb un altre o altres"
+  ],
+  "lexical_category": "Adjectiu",
+  "phonology": {
+    "nombre_mans": "1",
+    "configuracio": "2 (beak2_open_spread)",
+    "localitzacio": "Espai neutre",
+    "moviment_repetit": "No"
+  },
+  "minimal_pairs": [],
+  "related_signs": {
+    "HOMÒNIM": [],
+    "SINÒNIM": [],
+    "VARIANT": ["BESSONS-T-ANTIGA"],
+    "ANTÒNIM": [],
+    "HIPÒNIM": [],
+    "HIPERÒNIM": [],
+    "VEURE TAMBÉ": []
+  },
+  "notes": "Fitxa de prova de compost: GERMÀ-TEST + SEGON-TEST",
+  "video_url": null,
+  "is_compound": true,
+  "compound_signs": ["GERMÀ-TEST", "SEGON-TEST"],
+  "morfologia_sequencial": {
+    "compost_1": "GERMÀ-TEST",
+    "compost_2": "SEGON-TEST",
+    "compost_3": null
+  }
+}

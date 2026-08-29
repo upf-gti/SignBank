@@ -173,7 +173,24 @@ import { getVideoUrl } from 'src/utils/videoUrl';
 import SearchInput from 'src/components/Search/components/SearchInput.vue';
 import FilterCategories from 'src/components/Search/components/FilterCategories.vue';
 import FilterInputs from 'src/components/Search/components/FilterInputs.vue';
-import type { PhonologyData } from 'src/types/models';
+
+type GlossSearchFilterInputs = {
+  handedness: string | null;
+  dominantConfiguration: string;
+  configurationChanges: string;
+  dominantRelationBetweenArticulators: string;
+  location: string;
+  movementRelatedOrientation: string;
+  orientationRelatedToLocation: string;
+  orientationChange: string;
+  contactType: string;
+  movementType: string;
+  vocalization: string;
+  nonManualComponent: string;
+  inicialization: string;
+  repeatedMovement: boolean | null;
+  movementDirection: string;
+};
 
 const t = (key: string) => translate(key);
 
@@ -199,11 +216,11 @@ const loading = ref(false);
 const page = ref(1);
 const perPage = ref(20);
 const selectedCategory = ref('');
-const filterInputs = ref<PhonologyData>({
-  hands: null,
-  configuration: '',
+const filterInputs = ref<GlossSearchFilterInputs>({
+  handedness: null,
+  dominantConfiguration: '',
   configurationChanges: '',
-  relationBetweenArticulators: '',
+  dominantRelationBetweenArticulators: '',
   location: '',
   movementRelatedOrientation: '',
   orientationRelatedToLocation: '',
@@ -212,7 +229,9 @@ const filterInputs = ref<PhonologyData>({
   movementType: '',
   vocalization: '',
   nonManualComponent: '',
-  inicialization: ''
+  inicialization: '',
+  repeatedMovement: null,
+  movementDirection: '',
 });
 
 // Computed
@@ -245,8 +264,10 @@ async function performSearch() {
     }
     
     for (const [field, value] of Object.entries(filterInputs.value)) {
-      if (value && value.trim()) {
-        filters.push(`${field}:='${value.trim()}'`);
+      if (value !== null && value !== '' && typeof value !== 'boolean') {
+        filters.push(`${field}:='${String(value).trim()}'`);
+      } else if (typeof value === 'boolean') {
+        filters.push(`${field}:=${value}`);
       }
     }
 
@@ -255,7 +276,7 @@ async function performSearch() {
       page: Number(page.value),
       limit: Number(perPage.value),
       filter_by: filters.join(' && ') || undefined,
-      facet_by: 'lexicalCategory,hands'
+      facet_by: 'lexicalCategory,handedness'
     };
     
     searchResults.value = await searchService.search(params);
@@ -274,7 +295,7 @@ function updateCategory(value: string) {
   selectedCategory.value = value;
 }
 
-function updateFilterInputs(value: PhonologyData) {
+function updateFilterInputs(value: GlossSearchFilterInputs) {
   filterInputs.value = value;
 }
 
@@ -288,10 +309,10 @@ function updatePage(value: number) {
 function clearFilters() {
   selectedCategory.value = '';
   filterInputs.value = {
-    hands: null,
-    configuration: '',
+    handedness: null,
+    dominantConfiguration: '',
     configurationChanges: '',
-    relationBetweenArticulators: '',
+    dominantRelationBetweenArticulators: '',
     location: '',
     movementRelatedOrientation: '',
     orientationRelatedToLocation: '',

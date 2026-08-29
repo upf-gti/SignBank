@@ -1,43 +1,37 @@
 <template>
   <div class="phonology-filters overflow-x-hidden">
     <div class="column q-col-gutter-md">
-      <!-- Hands -->
+      <!-- Handedness -->
       <div class="col-12">
         <q-item-label
           v-if="!isEditable"
           caption
         >
-          {{ translate('hands') }}
+          {{ translate('handedness') }}
         </q-item-label>
         <div
           v-if="!isEditable"
           class="q-py-sm"
         >
           <span
-            v-if="localData.hands"
+            v-if="localData.handedness"
             class="text-body2"
-          >{{ getHandLabel(localData.hands) }}</span>
+          >{{ getHandednessLabel(localData.handedness) }}</span>
           <span
             v-else
             class="text-grey-5"
           >{{ translate('notSet') }}</span>
         </div>
-        <q-btn-toggle
+        <q-select
           v-else
-          v-model="localData.hands"
-          :options="[
-            { label: translate('activeHand'), value: 'RIGHT' },
-            { label: translate('both'), value: 'BOTH' }
-          ]"
-          spread
-          no-caps
-          unelevated
-          toggle-color="primary"
-          color="grey-3"
-          text-color="grey-8"
-          class="full-width"
+          v-model="localData.handedness"
+          :options="phonologyOptions.handednessOptions"
+          :label="translate('handedness')"
           clearable
-          @update:model-value="updateField('hands', $event)"
+          emit-value
+          map-options
+          options-dense
+          @update:model-value="updateField('handedness', $event)"
         />
       </div>
 
@@ -54,9 +48,9 @@
           class="q-py-sm"
         >
           <span
-            v-if="localData.configuration"
+            v-if="localData.dominantConfiguration"
             class="text-body2"
-          >{{ getConfigurationLabel(localData.configuration) }}</span>
+          >{{ getConfigurationLabel(localData.dominantConfiguration) }}</span>
           <span
             v-else
             class="text-grey-5"
@@ -64,8 +58,8 @@
         </div>
         <q-select
           v-else
-          v-model="localData.configuration"
-          :options="filteredOptions.configuration"
+          v-model="localData.dominantConfiguration"
+          :options="filteredOptions.dominantConfiguration"
           :label="translate('configuration')"
           clearable
           emit-value
@@ -73,8 +67,8 @@
           options-dense
           use-input
           input-debounce="300"
-          @filter="(val, update) => filterFn(val, update, phonologyOptions.handConfigurationOptions, 'configuration')"
-          @update:model-value="updateField('configuration', $event)"
+          @filter="(val, update) => filterFn(val, update, phonologyOptions.handConfigurationOptions, 'dominantConfiguration')"
+          @update:model-value="updateField('dominantConfiguration', $event)"
         />
       </div>
 
@@ -142,9 +136,9 @@
           class="q-py-sm"
         >
           <span
-            v-if="localData.relationBetweenArticulators"
+            v-if="localData.dominantRelationBetweenArticulators"
             class="text-body2"
-          >{{ getRelationBetweenArticulatorsLabel(localData.relationBetweenArticulators) }}</span>
+          >{{ getRelationBetweenArticulatorsLabel(localData.dominantRelationBetweenArticulators) }}</span>
           <span
             v-else
             class="text-grey-5"
@@ -152,8 +146,8 @@
         </div>
         <q-select
           v-else
-          v-model="localData.relationBetweenArticulators"
-          :options="filteredOptions.relationBetweenArticulators"
+          v-model="localData.dominantRelationBetweenArticulators"
+          :options="filteredOptions.dominantRelationBetweenArticulators"
           :label="translate('relationBetweenArticulators')"
           clearable
           emit-value
@@ -161,8 +155,8 @@
           options-dense
           use-input
           input-debounce="300"
-          @filter="(val, update) => filterFn(val, update, phonologyOptions.relationBetweenArticulatorsOptions, 'relationBetweenArticulators')"
-          @update:model-value="updateField('relationBetweenArticulators', $event)"
+          @filter="(val, update) => filterFn(val, update, phonologyOptions.relationBetweenArticulatorsOptions, 'dominantRelationBetweenArticulators')"
+          @update:model-value="updateField('dominantRelationBetweenArticulators', $event)"
         />
       </div>
 
@@ -540,28 +534,31 @@
             class="text-grey-5"
           >{{ translate('notSet') }}</span>
         </div>
-        <div v-else class="column">
+        <div
+          v-else
+          class="column"
+        >
           <q-label>
             {{ translate('repeatedMovement') }}
           </q-label>
           <q-btn-toggle
-          v-model="localData.repeatedMovement"
-          :options="[
-            { label: translate('yes'), value: true },
-            { label: translate('no'), value: false }
-          ]"
-          spread
-          no-caps
-          unelevated
-          :label="translate('repeatedMovement')"
-          toggle-color="primary"
-          color="grey-3"
-          text-color="grey-8"
-          class="full-width"
-          clearable
-          @update:model-value="updateBooleanField('repeatedMovement', $event)"
-        />
-      </div>
+            v-model="localData.repeatedMovement"
+            :options="[
+              { label: translate('yes'), value: true },
+              { label: translate('no'), value: false }
+            ]"
+            spread
+            no-caps
+            unelevated
+            :label="translate('repeatedMovement')"
+            toggle-color="primary"
+            color="grey-3"
+            text-color="grey-8"
+            class="full-width"
+            clearable
+            @update:model-value="updateBooleanField('repeatedMovement', $event)"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -574,10 +571,10 @@ import { usePhonologyOptions } from '../../../utils/phonologyOptions';
 
 // Create a type for filter inputs that allows empty values
 type FilterInputs = {
-  hands: string | null;
-  configuration: string;
+  handedness: string | null;
+  dominantConfiguration: string;
   configurationChanges: string;
-  relationBetweenArticulators: string;
+  dominantRelationBetweenArticulators: string;
   location: string;
   movementRelatedOrientation: string;
   orientationRelatedToLocation: string;
@@ -611,18 +608,49 @@ const localData = ref<FilterInputs>({ ...props.phonologyData });
 
 // Initialize filtered options with the original options
 const filteredOptions = ref({
-  hands: phonologyOptions.handOptions,
-  configuration: phonologyOptions.handConfigurationOptions,
-  configurationChanges: phonologyOptions.configurationChangeOptions,
-  relationBetweenArticulators: phonologyOptions.relationBetweenArticulatorsOptions,
-  location: phonologyOptions.locationOptions,
-  movementRelatedOrientation: phonologyOptions.movementRelatedOrientationOptions,
-  orientationRelatedToLocation: phonologyOptions.orientationRelatedToLocationOptions,
-  orientationChange: phonologyOptions.orientationChangeOptions,
-  contactType: phonologyOptions.contactTypeOptions,
-  movementType: phonologyOptions.movementTypeOptions,
-  movementDirection: phonologyOptions.movementDirectionOptions,
+  handedness: phonologyOptions.handednessOptions.value,
+  dominantConfiguration: phonologyOptions.handConfigurationOptions.value,
+  configurationChanges: phonologyOptions.configurationChangeOptions.value,
+  dominantRelationBetweenArticulators: phonologyOptions.relationBetweenArticulatorsOptions.value,
+  location: phonologyOptions.locationOptions.value,
+  movementRelatedOrientation: phonologyOptions.movementRelatedOrientationOptions.value,
+  orientationRelatedToLocation: phonologyOptions.orientationRelatedToLocationOptions.value,
+  orientationChange: phonologyOptions.orientationChangeOptions.value,
+  contactType: phonologyOptions.contactTypeOptions.value,
+  movementType: phonologyOptions.movementTypeOptions.value,
+  movementDirection: phonologyOptions.movementDirectionOptions.value,
 });
+
+watch(
+  () => [
+    phonologyOptions.handednessOptions.value,
+    phonologyOptions.handConfigurationOptions.value,
+    phonologyOptions.configurationChangeOptions.value,
+    phonologyOptions.relationBetweenArticulatorsOptions.value,
+    phonologyOptions.locationOptions.value,
+    phonologyOptions.movementRelatedOrientationOptions.value,
+    phonologyOptions.orientationRelatedToLocationOptions.value,
+    phonologyOptions.orientationChangeOptions.value,
+    phonologyOptions.contactTypeOptions.value,
+    phonologyOptions.movementTypeOptions.value,
+    phonologyOptions.movementDirectionOptions.value,
+  ],
+  () => {
+    filteredOptions.value = {
+      handedness: phonologyOptions.handednessOptions.value,
+      dominantConfiguration: phonologyOptions.handConfigurationOptions.value,
+      configurationChanges: phonologyOptions.configurationChangeOptions.value,
+      dominantRelationBetweenArticulators: phonologyOptions.relationBetweenArticulatorsOptions.value,
+      location: phonologyOptions.locationOptions.value,
+      movementRelatedOrientation: phonologyOptions.movementRelatedOrientationOptions.value,
+      orientationRelatedToLocation: phonologyOptions.orientationRelatedToLocationOptions.value,
+      orientationChange: phonologyOptions.orientationChangeOptions.value,
+      contactType: phonologyOptions.contactTypeOptions.value,
+      movementType: phonologyOptions.movementTypeOptions.value,
+      movementDirection: phonologyOptions.movementDirectionOptions.value,
+    };
+  },
+);
 
 // Keep local data in sync with prop changes
 watch(() => props.phonologyData, (newValue) => {
@@ -661,66 +689,58 @@ const updateField = (field: keyof FilterInputs, value: string | string[] | numbe
   emit('update:phonologyData', localData.value);
 };
 
-const getHandLabel = (hands: string) => {
-  switch (hands) {
-    case 'RIGHT':
-      return translate('right');
-    case 'LEFT':
-      return translate('left');
-    case 'BOTH':
-      return translate('both');
-    default:
-      return '';
-  }
+const getHandednessLabel = (handedness: string) => {
+  const option = phonologyOptions.handednessOptions.value.find(o => o.value === handedness);
+  return option ? option.label : '';
 };
 
 const getConfigurationLabel = (configuration: string) => {
-  const option = phonologyOptions.handConfigurationOptions.find(o => o.value === configuration);
+  const option = phonologyOptions.handConfigurationOptions.value.find(o => o.value === configuration);
   return option ? option.label : '';
 };
 
 const getConfigurationChangesLabel = (configurationChanges: string) => {
-  const option = phonologyOptions.configurationChangeOptions.find(o => o.value === configurationChanges);
+  const option = phonologyOptions.configurationChangeOptions.value.find(o => o.value === configurationChanges);
   return option ? option.label : '';
 };
 
 const getRelationBetweenArticulatorsLabel = (relationBetweenArticulators: string) => {
-  const option = phonologyOptions.relationBetweenArticulatorsOptions.find(o => o.value === relationBetweenArticulators);
+  const option = phonologyOptions.relationBetweenArticulatorsOptions.value.find(o => o.value === relationBetweenArticulators);
   return option ? option.label : '';
 };
 
 const getLocationLabel = (location: string) => {
-  const option = phonologyOptions.locationOptions.find(o => o.value === location);
+  const option = phonologyOptions.locationOptions.value.find(o => o.value === location);
   return option ? option.label : '';
 };
 
 const getMovementRelatedOrientationLabel = (movementRelatedOrientation: string) => {
-  const option = phonologyOptions.movementRelatedOrientationOptions.find(o => o.value === movementRelatedOrientation);
+  const option = phonologyOptions.movementRelatedOrientationOptions.value.find(o => o.value === movementRelatedOrientation);
   return option ? option.label : '';
 };
 
 const getOrientationRelatedToLocationLabel = (orientationRelatedToLocation: string) => {
-  const option = phonologyOptions.orientationRelatedToLocationOptions.find(o => o.value === orientationRelatedToLocation);
+  const option = phonologyOptions.orientationRelatedToLocationOptions.value.find(o => o.value === orientationRelatedToLocation);
   return option ? option.label : '';
 };
 
 const getOrientationChangeLabel = (orientationChange: string) => {
-  const option = phonologyOptions.orientationChangeOptions.find(o => o.value === orientationChange);
+  const option = phonologyOptions.orientationChangeOptions.value.find(o => o.value === orientationChange);
   return option ? option.label : '';
 };
 
 const getContactTypeLabel = (contactType: string) => {
-  const option = phonologyOptions.contactTypeOptions.find(o => o.value === contactType);
+  const option = phonologyOptions.contactTypeOptions.value.find(o => o.value === contactType);
   return option ? option.label : '';
 };
 
 const getMovementTypeLabel = (movementType: string) => {
-  const option = phonologyOptions.movementTypeOptions.find(o => o.value === movementType);
+  const option = phonologyOptions.movementTypeOptions.value.find(o => o.value === movementType);
   return option ? option.label : '';
 };
 
 const getMovementDirectionLabel = (movementDirection: string) => {
-  const option = phonologyOptions.movementDirectionOptions.find(o => o.value === movementDirection);
+  const option = phonologyOptions.movementDirectionOptions.value.find(o => o.value === movementDirection);
   return option ? option.label : '';
 };
 

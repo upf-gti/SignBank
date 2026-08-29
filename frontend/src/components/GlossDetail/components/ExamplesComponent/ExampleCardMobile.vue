@@ -2,9 +2,9 @@
   <q-item class="q-mb-md q-pa-md q-hover:bg-grey-1 q-transition-all q-rounded-borders column">
     <EditableModule
       :allow-edit="allowEdit"
-      :show-delete="true"
-      :custom-edit-label="translate('editExample')"
-      :custom-delete-label="translate('deleteExample')"
+      :inline-edit="inlineEdit"
+      :initial-edit-state="example.isNew"
+      :show-delete="!inlineEdit || Boolean(example.id) || example.isNew"
       @save="() => $emit('save', example)"
       @delete="() => $emit('delete', example)"
     >
@@ -30,8 +30,11 @@
             </div>
           </div>
 
-          <!-- Example Video Section (Second on Mobile) -->
-          <div class="col" v-if="example.exampleVideoURL || isEditing">
+          <!-- Example Video Section -->
+          <div
+            v-if="!hideExampleVideo && (example.exampleVideoURL || isEditing)"
+            class="col"
+          >
             <UploadVideoComponent
               v-if="isEditing && !example.exampleVideoURL"
               video-type="example"
@@ -49,8 +52,8 @@
                 class="rounded-borders shadow-2 full-width"
                 :src="getVideoUrl(example.exampleVideoURL)"
                 muted
-                @error="$emit('videoError', $event)"
                 style="max-width: 100%; max-height: 200px; width: 100%; height: auto; object-fit: contain;"
+                @error="$emit('videoError', $event)"
               />
               <q-btn
                 v-if="isEditing"
@@ -88,6 +91,8 @@ import { getVideoUrl } from 'src/utils/videoUrl';
 const props = defineProps<{
   example: Example;
   allowEdit: boolean;
+  inlineEdit?: boolean;
+  hideExampleVideo?: boolean;
 }>();
 
 const emit = defineEmits<{

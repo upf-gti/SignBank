@@ -5,9 +5,17 @@ import { VIDEOS_COLLECTION_NAME, videosSchema } from './typesense.config';
 import { GlossIndex } from './types/gloss-index.type';
 import {
   GlossStatus,
-  Hand,
   Prisma,
 } from '@prisma/client';
+import { compoundPartsInclude } from '../glosses/compound-include';
+import {
+  resolveCompoundSearchPhonology,
+  resolveCompoundSearchVideoUrl,
+} from '../glosses/compound-phonology';
+import {
+  toSearchPhonology,
+  videoDataPhonologyInclude,
+} from '../phonology-values/phonology-video-data';
 
 const glossIndexInclude = {
   definitions: {
@@ -17,10 +25,11 @@ const glossIndexInclude = {
     orderBy: { priority: 'asc' as const },
   },
   glossTranslations: true,
+  compoundParts: compoundPartsInclude,
   glossVideos: {
     include: {
       videos: { orderBy: { priority: 'asc' as const } },
-      videoData: true,
+      videoData: { include: videoDataPhonologyInclude },
     },
     orderBy: { priority: 'asc' as const },
   },
@@ -126,19 +135,38 @@ export class TypesenseService implements OnModuleInit {
   }
 
   buildGlossDocument(glossData: GlossDataForIndex): GlossIndex | null {
+    const primaryDefinition = glossData.definitions[0];
+    const description = primaryDefinition?.definition ?? '';
+    const lexicalCategories = [
+      ...new Set(
+        glossData.definitions
+          .map((definition) => definition.lexicalCategory)
+          .filter((category): category is NonNullable<typeof category> => Boolean(category)),
+      ),
+    ];
+
+    if (glossData.isCompound && (glossData.compoundParts?.length ?? 0) > 0) {
+      const videoData = resolveCompoundSearchPhonology(glossData);
+      return {
+        id: glossData.id,
+        glossId: glossData.id,
+        gloss: glossData.gloss,
+        url: resolveCompoundSearchVideoUrl(glossData),
+        signVideoTitle: glossData.gloss,
+        isCompound: true,
+        lexicalCategory: primaryDefinition?.lexicalCategory ?? lexicalCategories[0] ?? '',
+        lexicalCategories,
+        description,
+        ...toSearchPhonology(videoData),
+      };
+    }
+
     if (!glossData.glossVideos.length) {
       return null;
     }
 
     const primarySignVideo = glossData.glossVideos[0];
     const primaryVideo = primarySignVideo.videos[0];
-    const primaryDefinition = glossData.definitions[0];
-
-    let description = '';
-    if (primaryDefinition) {
-      description = primaryDefinition.definition;
-    }
-
     const videoData = primarySignVideo.videoData;
 
     return {
@@ -147,23 +175,11 @@ export class TypesenseService implements OnModuleInit {
       gloss: glossData.gloss,
       url: primaryVideo?.url ?? '',
       signVideoTitle: primarySignVideo.title,
-      lexicalCategory: primaryDefinition?.lexicalCategory ?? '',
+      isCompound: false,
+      lexicalCategory: primaryDefinition?.lexicalCategory ?? lexicalCategories[0] ?? '',
+      lexicalCategories,
       description,
-      hands: videoData?.hands ?? Hand.RIGHT,
-      configuration: videoData?.configuration ?? '',
-      configurationChanges: videoData?.configurationChanges ?? '',
-      relationBetweenArticulators: videoData?.relationBetweenArticulators ?? '',
-      location: videoData?.location ?? '',
-      movementRelatedOrientation: videoData?.movementRelatedOrientation ?? '',
-      orientationRelatedToLocation: videoData?.orientationRelatedToLocation ?? '',
-      orientationChange: videoData?.orientationChange ?? '',
-      contactType: videoData?.contactType ?? '',
-      movementType: videoData?.movementType ?? '',
-      movementDirection: videoData?.movementDirection ?? '',
-      vocalization: videoData?.vocalization ?? '',
-      nonManualComponent: videoData?.nonManualComponent ?? '',
-      inicialization: videoData?.inicialization ?? '',
-      repeatedMovement: videoData?.repeatedMovement ?? false,
+      ...toSearchPhonology(videoData),
     };
   }
 
@@ -201,13 +217,36 @@ export class TypesenseService implements OnModuleInit {
     return { success: true, action: 'upserted' as const };
   }
 
+  private getMissingSchemaFields(fields: { name: string }[]): string[] {
+    const actualFieldNames = new Set(fields.map((field) => field.name));
+    return videosSchema.fields
+      .map((field) => field.name)
+      .filter((name) => name !== 'id' && !actualFieldNames.has(name));
+  }
+
   async ensureCollectionExists() {
     try {
-      await this.client.collections(VIDEOS_COLLECTION_NAME).retrieve();
+      const collection = await this.client
+        .collections(VIDEOS_COLLECTION_NAME)
+        .retrieve();
+      const missingFields = this.getMissingSchemaFields(collection.fields);
+
+      if (missingFields.length === 0) {
+        return {
+          success: true,
+          created: false,
+          message: 'Collection already exists',
+        };
+      }
+
+      this.logger.warn(
+        `Typesense schema out of date (missing: ${missingFields.join(', ')}). Recreating collection...`,
+      );
+      await this.recreateCollection();
       return {
         success: true,
-        created: false,
-        message: 'Collection already exists',
+        created: true,
+        message: 'Collection recreated due to schema changes',
       };
     } catch (error) {
       if (error.httpStatus !== 404) {
@@ -285,6 +324,49 @@ export class TypesenseService implements OnModuleInit {
     }
   }
 
+  private async listIndexedDocumentIds(): Promise<string[]> {
+    const ids: string[] = [];
+    const perPage = 250;
+    let page = 1;
+
+    while (true) {
+      const results = await this.client
+        .collections(VIDEOS_COLLECTION_NAME)
+        .documents()
+        .search({
+          q: '*',
+          query_by: 'gloss',
+          per_page: perPage,
+          page,
+        });
+
+      const hits = results.hits ?? [];
+      for (const hit of hits) {
+        ids.push((hit.document as { id: string }).id);
+      }
+
+      if (hits.length < perPage) {
+        break;
+      }
+      page++;
+    }
+
+    return ids;
+  }
+
+  private async removeOrphanedDocuments(validIds: Set<string>) {
+    const indexedIds = await this.listIndexedDocumentIds();
+    const orphanedIds = indexedIds.filter((id) => !validIds.has(id));
+
+    if (orphanedIds.length === 0) {
+      return 0;
+    }
+
+    await Promise.all(orphanedIds.map((id) => this.deleteDocument(id)));
+    this.logger.log(`Removed ${orphanedIds.length} stale documents from search index`);
+    return orphanedIds.length;
+  }
+
   async syncAllVideos() {
     this.logger.log('Starting gloss search sync...');
     try {
@@ -302,6 +384,9 @@ export class TypesenseService implements OnModuleInit {
           documents.push(document);
         }
       }
+
+      const validIds = new Set(documents.map((document) => document.id));
+      await this.removeOrphanedDocuments(validIds);
 
       const BATCH_SIZE = 100;
       for (let i = 0; i < documents.length; i += BATCH_SIZE) {
@@ -331,11 +416,11 @@ export class TypesenseService implements OnModuleInit {
         q: searchParameters.q || '*',
         query_by:
           searchParameters.query_by ||
-          'gloss,signVideoTitle,description,configuration,location,hands,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection',
+          'gloss,signVideoTitle,description,dominantConfiguration,nonDominantConfiguration,location,handedness,configurationChanges,dominantRelationBetweenArticulators,nonDominantRelationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection',
         filter_by: searchParameters.filter_by || '',
         facet_by:
           searchParameters.facet_by ||
-          'lexicalCategory,configuration,location,hands,configurationChanges,relationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection,repeatedMovement,description,gloss,signVideoTitle',
+          'lexicalCategory,dominantConfiguration,nonDominantConfiguration,location,handedness,configurationChanges,dominantRelationBetweenArticulators,nonDominantRelationBetweenArticulators,movementRelatedOrientation,orientationRelatedToLocation,orientationChange,contactType,movementType,movementDirection,repeatedMovement,description,gloss,signVideoTitle',
         max_hits: searchParameters.max_hits || 100,
         page: searchParameters.page || 1,
         per_page: searchParameters.per_page || 20,

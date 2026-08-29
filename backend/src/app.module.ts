@@ -17,12 +17,15 @@ import { DefinitionsModule } from './definitions/definitions.module';
 import { ExampleTranslationsModule } from './example-translations/example-translations.module';
 import { UsersModule } from './users/users.module';
 import { BackupModule } from './backup/backup.module';
+import { BulkImportModule } from './bulk-import/bulk-import.module';
+import { PhonologyValuesModule } from './phonology-values/phonology-values.module';
 
 @Module({
   imports: [
     ScheduleModule.forRoot(),
     PrismaModule,
     AuthModule,
+    PhonologyValuesModule,
     GlossRequestsModule,
     GlossesModule,
     GlossDataModule,
@@ -36,6 +39,7 @@ import { BackupModule } from './backup/backup.module';
     ExampleTranslationsModule,
     UsersModule,
     BackupModule,
+    BulkImportModule,
   ],
   controllers: [AppController],
   providers: [AppService],

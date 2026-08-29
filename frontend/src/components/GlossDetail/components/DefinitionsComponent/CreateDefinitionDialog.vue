@@ -1,5 +1,8 @@
 <template>
-  <q-dialog v-model="showDialog" persistent>
+  <q-dialog
+    v-model="showDialog"
+    persistent
+  >
     <q-card style="min-width: 600px">
       <q-card-section>
         <div class="text-h6">
@@ -11,22 +14,22 @@
         <div class="column q-gutter-md">
           <!-- Definition Title -->
           <q-input
+            ref="titleInput"
             v-model="definition.title"
             :label="translate('definitionTitle')"
             outlined
             dense
-            ref="titleInput"
           />
 
           <!-- Definition Text -->
           <q-input
+            ref="definitionInput"
             v-model="definition.definition"
             :label="translate('definition')"
             outlined
             type="textarea"
             rows="3"
             :rules="[val => !!val || translate('definitionRequired')]"
-            ref="definitionInput"
           />
 
           <!-- Definition Video -->

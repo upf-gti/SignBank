@@ -1,13 +1,20 @@
 <template>
   <q-card
     flat
-    style="max-width: 1200px"
+    class="gloss-detail-card"
+    :class="{ 'gloss-detail-card--constrained': constrainedLayout }"
   >
+    <GlossRequestProgress
+      v-if="editMode"
+      :gloss-data="glossData"
+    />
+
     <GlossHeader
       :gloss-data="glossData"
       :edit-mode="editMode"
       :allow-edit="allowEdit"
       :is-confirm-request-page="isConfirmRequestPage"
+      :is-draft="isDraft"
       :request-status="requestStatus"
       :submitting="submitting"
       @edit-gloss="editGloss"
@@ -17,25 +24,36 @@
       @decline-request="declineRequest"
       @submit-request="submitRequest"
     />
+
     <MainContent
-      v-if="!editMode"
+      v-if="!contentEditable"
+      class="gloss-detail-card__main"
       :gloss-data="glossData"
     />
+
     <MoreContentComponent
+      v-if="contentEditable"
+      class="gloss-detail-card__edit"
       :gloss-data="glossData"
-      :edit-mode="editMode"
+      :edit-mode="contentEditable"
+      :is-draft="isDraft"
+      :submitting="submitting"
       @update:gloss-data="handleGlossDataUpdate"
+      @submit-request="submitRequest"
+      @finish-edit="finishEdit"
     />
   </q-card>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { GlossData, RequestStatus } from 'src/types/models'
 import GlossHeader from './components/GlossHeader.vue'
-import MainContent from './components/MainContent.vue';
-import MoreContentComponent from './components/MoreContentComponent.vue';
-import { validateGloss } from 'src/utils/glossValidation';
-import { useQuasar } from 'quasar';
+import MainContent from './components/MainContent.vue'
+import MoreContentComponent from './components/MoreContentComponent.vue'
+import GlossRequestProgress from './components/GlossRequestProgress.vue'
+import { validateGloss } from 'src/utils/glossValidation'
+import { useQuasar } from 'quasar'
 import translate from 'src/utils/translate'
 
 const emit = defineEmits<{
@@ -46,14 +64,21 @@ const emit = defineEmits<{
   (e: 'submitRequest'): void
 }>()
 
-const { glossData, editMode, allowEdit = true, isConfirmRequestPage = false, requestStatus, submitting = false } = defineProps<{
+const { glossData, editMode, allowEdit = true, isConfirmRequestPage = false, requestStatus, submitting = false, constrainedLayout = false } = defineProps<{
   glossData: GlossData,
   editMode: boolean,
   allowEdit: boolean,
   isConfirmRequestPage?: boolean | undefined,
   requestStatus?: RequestStatus | undefined,
-  submitting?: boolean | undefined
+  submitting?: boolean | undefined,
+  constrainedLayout?: boolean | undefined,
 }>()
+
+const isDraft = computed(() =>
+  editMode && allowEdit && requestStatus === RequestStatus.NOT_COMPLETED
+)
+
+const contentEditable = computed(() => allowEdit && editMode)
 
 const $q = useQuasar()
 
@@ -99,7 +124,51 @@ const submitRequest = () => {
   emit('submitRequest')
 }
 
+const finishEdit = () => {
+  $q.notify({
+    type: 'positive',
+    message: translate('glossSavedSuccessfully'),
+  })
+  emit('update:editMode', false)
+}
+
 const handleGlossDataUpdate = (updatedGlossData: GlossData) => {
   emit('update:glossData', updatedGlossData)
 }
 </script>
+
+<style scoped>
+.gloss-detail-card {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.gloss-detail-card--constrained {
+  flex: 1 1 0;
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-x: visible;
+  overflow-y: hidden;
+}
+
+.gloss-detail-card--constrained > :not(.gloss-detail-card__main) {
+  flex: 0 0 auto;
+  flex-shrink: 0;
+}
+
+.gloss-detail-card--constrained .gloss-detail-card__main {
+  flex: 1 1 0;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.gloss-detail-card__edit {
+  width: 100%;
+}
+</style>

@@ -1,32 +1,66 @@
 <template>
-  <q-card-section>
-    <div class="text-h5 q-mb-md row justify-between items-center">
+  <q-card-section
+    class="gloss-translations"
+    :class="{ 'gloss-translations--compact q-px-none q-pb-none': compact }"
+  >
+    <div
+      v-if="!inlineEdit && !hideSectionTitle"
+      class="text-h5 q-mb-md row justify-between items-center"
+    >
       {{ translate('glossTranslations') }}
       <q-btn
         v-if="editMode"
         flat
-        round
+        dense
         icon="add"
         :label="translate('addSenseTranslation')"
         @click="addTranslation"
       />
     </div>
+    <div
+      v-else-if="inlineEdit"
+      class="text-subtitle1 text-weight-medium q-mb-md"
+    >
+      {{ translate('glossTranslations') }}
+    </div>
 
-    <q-list class="row q-col-gutter-md">
+    <template v-if="compact && !editMode">
+      <div
+        v-for="(translation, index) in glossTranslations"
+        :key="translation.id || index"
+        class="gloss-translations__item q-mb-sm"
+      >
+        <q-chip
+          dense
+          outline
+          color="primary"
+          class="q-mb-xs"
+        >
+          {{ translate(translation.language) }}
+        </q-chip>
+        <div class="text-body1">
+          {{ translation.translation }}
+        </div>
+      </div>
+    </template>
+
+    <q-list
+      v-else
+      class="row q-col-gutter-md"
+    >
       <q-item
         v-for="(translation, index) in glossTranslations"
         :key="translation.id || index"
-        class="col-12 col-md-6 q-pa-none"
-        style="min-width: 300px"
+        class="col-12 q-pa-none"
+        :class="{ 'col-md-6': !compact }"
         dense
       >
         <EditableModule
           :allow-edit="editMode"
+          :inline-edit="inlineEdit"
           :initial-edit-state="translation.isNew as boolean"
-          :show-delete="true"
-          :custom-edit-label="translate('editTranslation')"
-          :custom-delete-label="translate('deleteTranslation')"
-          class="full-width q-pa-none"
+          :show-delete="Boolean(translation.id) || glossTranslations.length > 1"
+          class="full-width"
           @save="() => saveTranslation(translation)"
           @cancel="() => cancelTranslation(translation)"
           @delete="() => deleteTranslation(translation)"
@@ -36,7 +70,6 @@
               bordered
               flat
               class="full-width q-pa-md"
-              style="min-height: 120px"
             >
               <div class="row justify-between items-center q-mb-sm">
                 <LanguageSelector
@@ -44,7 +77,10 @@
                   v-model="translation.language"
                   class="col"
                 />
-                <q-chip>
+                <q-chip
+                  v-else
+                  dense
+                >
                   {{ translate(translation.language) }}
                 </q-chip>
               </div>
@@ -55,7 +91,6 @@
                 :label="translate('translation')"
                 outlined
                 dense
-                class="col-12"
               />
               <div
                 v-else
@@ -68,6 +103,26 @@
         </EditableModule>
       </q-item>
     </q-list>
+
+    <q-btn
+      v-if="inlineEdit && editMode && glossTranslations.length > 0"
+      flat
+      dense
+      icon="add"
+      color="primary"
+      :label="translate('addSenseTranslation')"
+      class="q-mt-sm"
+      @click="addTranslation"
+    />
+
+    <div
+      v-if="localGlossData.iconicity && !editMode"
+      class="gloss-translations__iconicity text-body2 text-grey-8"
+      :class="glossTranslations.length ? 'q-mt-md' : ''"
+    >
+      <span class="text-weight-medium">{{ translate('iconicity') }}:</span>
+      {{ localGlossData.iconicity }}
+    </div>
   </q-card-section>
 </template>
 
@@ -78,7 +133,7 @@ import { api } from 'src/services/api';
 import { useQuasar } from 'quasar';
 import LanguageSelector from './LanguageSelector.vue';
 import EditableModule from 'src/components/Shared/EditableModule.vue';
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 
 const $q = useQuasar();
 const loading = ref(false);
@@ -86,6 +141,9 @@ const loading = ref(false);
 const props = defineProps<{
   glossData: GlossData;
   editMode: boolean;
+  inlineEdit?: boolean;
+  hideSectionTitle?: boolean;
+  compact?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -109,6 +167,12 @@ const glossTranslations = computed(() => {
   });
 });
 
+onMounted(() => {
+  if (props.inlineEdit && props.editMode && glossTranslations.value.length === 0) {
+    addTranslation();
+  }
+});
+
 const addTranslation = () => {
   if (!localGlossData.value.glossTranslations) {
     localGlossData.value.glossTranslations = [];
@@ -123,7 +187,7 @@ const addTranslation = () => {
   });
 };
 
-const saveTranslation = async (translation: GlossTranslation) => {
+const saveTranslation = async (translation: GlossTranslation, silent = false) => {
   try {
     loading.value = true;
     let response;
@@ -142,27 +206,49 @@ const saveTranslation = async (translation: GlossTranslation) => {
 
     if (response.data) {
       emit('update:glossData', response.data);
-      $q.notify({
-        type: 'positive',
-        message: translate(translation.id ? 'translationUpdatedSuccessfully' : 'translationCreatedSuccessfully'),
-      });
+      if (!silent) {
+        $q.notify({
+          type: 'positive',
+          message: translate(translation.id ? 'translationUpdatedSuccessfully' : 'translationCreatedSuccessfully'),
+        });
+      }
     }
   } catch (error) {
     console.error('Error saving translation:', error);
-    $q.notify({
-      type: 'negative',
-      message: translate('errors.failedToSaveTranslation'),
-    });
+    if (!silent) {
+      $q.notify({
+        type: 'negative',
+        message: translate('errors.failedToSaveTranslation'),
+      });
+    }
+    throw error;
   } finally {
     loading.value = false;
   }
 };
 
+async function saveAll(silent = false): Promise<void> {
+  for (const translation of glossTranslations.value) {
+    if (!translation.translation?.trim()) continue;
+    await saveTranslation(translation, silent);
+  }
+}
+
+function getStepValidationErrors(): string[] {
+  const hasTranslation = glossTranslations.value.some(t => t.translation?.trim());
+  if (!hasTranslation) {
+    return [translate('validation.senseTranslationRequired', { senseTitle: localGlossData.value.gloss })];
+  }
+  return [];
+}
+
+defineExpose({ saveAll, getStepValidationErrors });
+
 const deleteTranslation = async (translation: GlossTranslation) => {
   if (!translation.id) {
     const index = localGlossData.value.glossTranslations?.findIndex((t) => t === translation) ?? -1;
     if (index !== -1) {
-      localGlossData.value.glossTranslations!.splice(index, 1);
+      localGlossData.value.glossTranslations.splice(index, 1);
     }
     return;
   }
@@ -193,8 +279,18 @@ const cancelTranslation = (translation: GlossTranslation) => {
   if (!translation.id) {
     const index = localGlossData.value.glossTranslations?.findIndex((t) => t === translation) ?? -1;
     if (index !== -1) {
-      localGlossData.value.glossTranslations!.splice(index, 1);
+      localGlossData.value.glossTranslations.splice(index, 1);
     }
   }
 };
 </script>
+
+<style scoped>
+.gloss-translations--compact {
+  padding-top: 12px;
+}
+
+.gloss-translations__item:last-child {
+  margin-bottom: 0;
+}
+</style>

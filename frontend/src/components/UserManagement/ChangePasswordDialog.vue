@@ -1,12 +1,20 @@
 <template>
-  <q-dialog v-model="dialogVisible" @hide="$emit('close')">
+  <q-dialog
+    v-model="dialogVisible"
+    @hide="$emit('close')"
+  >
     <q-card style="min-width: 400px">
       <q-card-section>
-        <div class="text-h6">{{ translate('changePassword') }}</div>
+        <div class="text-h6">
+          {{ translate('changePassword') }}
+        </div>
       </q-card-section>
 
       <q-card-section>
-        <q-form @submit="handleSubmit" class="q-gutter-md">
+        <q-form
+          class="q-gutter-md"
+          @submit="handleSubmit"
+        >
           <div class="text-body2 q-mb-md">
             {{ translate('changePasswordFor', { username: user?.username }) }}
           </div>

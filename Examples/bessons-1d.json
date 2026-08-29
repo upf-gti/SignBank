@@ -1,0 +1,264 @@
+{
+  "gloss_id": "1420_02_bessons-1d",
+  "gloss_name": "BESSONS-1d",
+  "definition": "Adj- Nat d’un mateix part, amb un altre o altres",
+  "definitions": [
+    "Adj- Nat d’un mateix part, amb un altre o altres"
+  ],
+  "translations": {
+    "english": "TWINS",
+    "spanish": "GEMELOS",
+    "catalan": null
+  },
+  "phonology": null,
+  "compound": {
+    "is_compound": true,
+    "components": [
+      {
+        "ordinal": 1,
+        "name": "GERMÀ",
+        "comp_id": "0165_dona_germa",
+        "redundant": true,
+        "phonology": {
+          "nombre_mans": "1",
+          "configuracio_ma_dominant": null,
+          "configuracio_ma_no_dominant": null,
+          "canvi_configuracio": null,
+          "relacio_articuladors_ma_dominant": null,
+          "relacio_articuladors_ma_no_dominant": null,
+          "localitzacio": "Espai neutre",
+          "orientacio_moviment": null,
+          "orientacio_localitzacio": null,
+          "canvi_orientacio": "Inclinació",
+          "tipus_contacte": null,
+          "forma_moviment": null,
+          "direccio_moviment": null,
+          "moviment_repetit": "No",
+          "vocalitzacio": null,
+          "component_no_manual": null
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "SEGON",
+        "comp_id": null,
+        "redundant": false,
+        "phonology": {
+          "nombre_mans": "1",
+          "configuracio_ma_dominant": null,
+          "configuracio_ma_no_dominant": null,
+          "canvi_configuracio": null,
+          "relacio_articuladors_ma_dominant": null,
+          "relacio_articuladors_ma_no_dominant": null,
+          "localitzacio": "Espai neutre",
+          "orientacio_moviment": null,
+          "orientacio_localitzacio": null,
+          "canvi_orientacio": "Inclinació",
+          "tipus_contacte": null,
+          "forma_moviment": null,
+          "direccio_moviment": null,
+          "moviment_repetit": "No",
+          "vocalitzacio": null,
+          "component_no_manual": null
+        }
+      }
+    ]
+  },
+  "iconicity": "SÍ (2 germans)",
+  "related_signs": {
+    "HOMÒNIM": [],
+    "SINÒNIM": [],
+    "VARIANT": [
+      "BESSONS-T_antiga"
+    ],
+    "ANTÒNIM": [],
+    "HIPÒNIM": [],
+    "HIPERÒNIM": [],
+    "VEURE TAMBÉ": []
+  },
+  "synonyms": [
+    "GERMÀ+Conf 2"
+  ],
+  "categories": [
+    "Família"
+  ],
+  "entitat_amb_nom": null,
+  "valencia": null,
+  "signes_claus": [],
+  "relacio_signes_forasters": {
+    "prestec": null,
+    "llengua_relacionada": null,
+    "glossa_llengua_relacionada": null
+  },
+  "morfologia_simultania": [],
+  "morfologia_abreujada": [
+    {
+      "glossa_abreujada": null,
+      "rol_en_aquest_signe": null
+    }
+  ],
+  "minimal_pairs": [],
+  "corpus_forms": [
+    "NOMÉS APAREIX ALS MATERIALS"
+  ],
+  "lexical_category": "Adjectiu",
+  "annotations": [],
+  "occurrences": {
+    "general": [
+      {
+        "source": "MARTÍN & ALVARADO",
+        "appears": "ALTRE",
+        "gloss": "Conf T_antiga"
+      },
+      {
+        "source": "PERELLÓ & FRÍGOLA",
+        "appears": "ALTRE",
+        "gloss": "Conf T_antiga"
+      },
+      {
+        "source": "FERRERONS",
+        "appears": "ALTRE",
+        "gloss": "Conf T_antiga i GEMANS + ACOMPANYAR-6"
+      },
+      {
+        "source": "DILSCAT",
+        "appears": "SÍ",
+        "gloss": "BESSONS 2"
+      },
+      {
+        "source": "MIRA QUÈ DIC",
+        "appears": "ALTRE",
+        "gloss": "Conf T_antiga + NENS"
+      },
+      {
+        "source": "VOCABULARI BÀSIC",
+        "appears": "ALTRE",
+        "gloss": "Conf T_antiga"
+      },
+      {
+        "source": "MATERIAL FESOCA",
+        "appears": "ALTRE",
+        "gloss": "Conf T_antiga"
+      }
+    ],
+    "learning": [
+      {
+        "source": "A1 JUAN VALENZUELA",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "A1",
+        "appears": "ALTRE",
+        "gloss": "Conf T_antiga"
+      },
+      {
+        "source": "A2",
+        "appears": "ALTRE",
+        "gloss": "Només 2n compost"
+      },
+      {
+        "source": "APRENEM 1",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "APRENEM 2",
+        "appears": "NO",
+        "gloss": null
+      }
+    ],
+    "specific": [
+      {
+        "source": "MEDICINES",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "ÀREES MEDI NATURAL",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "ÀREES MEDI SOCIAL",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "ALIMENTS",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "ANIMALS",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "LÀMINES GENERALITAT",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "El GENÍS I LA SANITAT",
+        "appears": null,
+        "gloss": null
+      },
+      {
+        "source": "EL GENÍS I L’EDUCACIÓ",
+        "appears": null,
+        "gloss": null
+      },
+      {
+        "source": "RECULL TOPONÍMIC",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "53 MALES MANERES",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "HISTÒRIA FILOSOFIA",
+        "appears": null,
+        "gloss": null
+      },
+      {
+        "source": "ÀGILS COMUNICACIÓ",
+        "appears": "NO",
+        "gloss": null
+      },
+      {
+        "source": "SIGNAPP",
+        "appears": "ALTRE",
+        "gloss": "Conf B i glossat BESSONS / BESSONES (diferents)"
+      }
+    ],
+    "web": [
+      {
+        "source": "SANTI FRÍGOLA",
+        "appears": "NO",
+        "gloss": null
+      }
+    ]
+  },
+  "video_urls": [
+    {
+      "url": "https://drive.google.com/file/d/1f8YqJU_Lne5Az0o8gyAR1CAPKE3CbA8x/view?usp=sharing",
+      "source": "IEC Fitxes Entrades",
+      "description": null,
+      "thumbnail_url": null
+    }
+  ],
+  "iec_metadata": {
+    "entry_id": "1420_02_bessons-1d",
+    "entry_date": null,
+    "last_modified": null,
+    "contributor": null,
+    "status": null,
+    "notes": null
+  },
+  "notes": "Observacions: Vist per Santi",
+  "schema_version": 2
+}

@@ -1,17 +1,4 @@
 import type { RelatedGloss, MinimalPair } from "./gloss"
-import type { 
-  Hand,
-  HandConfiguration,
-  ConfigurationChange,
-  RelationBetweenArticulators,
-  MovementRelatedOrientation,
-  OrientationRelatedToLocation,
-  OrientationChange,
-  ContactType,
-  MovementType,
-  Location,
-  MovementDirection,
-} from './enums';
 
 export type WordStatus = 'PUBLISHED' | 'DRAFT' | 'PENDING';
 
@@ -81,17 +68,19 @@ export interface Video {
 }
 
 export interface PhonologyData {
-  hands: Hand;
-  configuration: HandConfiguration;
-  configurationChanges: ConfigurationChange;
-  relationBetweenArticulators: RelationBetweenArticulators;
-  location: Location;
-  movementRelatedOrientation: MovementRelatedOrientation;
-  orientationRelatedToLocation: OrientationRelatedToLocation;
-  orientationChange: OrientationChange;
-  contactType: ContactType;
-  movementType: MovementType;
-  movementDirection: MovementDirection;
+  handedness: string;
+  dominantConfiguration?: string | null;
+  nonDominantConfiguration?: string | null;
+  dominantRelationBetweenArticulators?: string | null;
+  nonDominantRelationBetweenArticulators?: string | null;
+  configurationChanges: string;
+  location: string;
+  movementRelatedOrientation: string;
+  orientationRelatedToLocation: string;
+  orientationChange: string;
+  contactType: string;
+  movementType: string;
+  movementDirection: string;
   vocalization: string;
   nonManualComponent: string;
   repeatedMovement: boolean;
@@ -114,6 +103,7 @@ export interface MinimalPairGlossData {
 export interface RelatedGlossData {
   id?: string;
   gloss: string;
+  isCompound?: boolean;
   createdAt: string;
   updatedAt: string;
   editComment: string | null;
@@ -121,6 +111,19 @@ export interface RelatedGlossData {
   isCreatedFromRequest: boolean;
   isCreatedFromEdit: boolean;
   glossVideos: SignVideo[];
+  compoundParts?: CompoundPart[];
+}
+
+export interface CompoundPart {
+  id?: string;
+  position: number;
+  gloss: string;
+  compExternalId?: string | null;
+  linkedGlossId?: string | null;
+  redundant?: boolean;
+  linkedGloss?: GlossData | null;
+  inlinePhonology?: PhonologyData | null;
+  inlineSignVideo?: SignVideo | null;
 }
 
 export interface SignVideo {
@@ -128,7 +131,7 @@ export interface SignVideo {
   title: string;
   priority: number;
   videoDataId: string;
-  glossDataId: string;
+  glossDataId?: string | null;
   videos: Video[];
   minimalPairs: MinimalPair[];
   videoData: PhonologyData;
@@ -138,6 +141,9 @@ export interface SignVideo {
 export interface GlossData {
   id?: string;
   gloss: string;
+  externalId?: string | null;
+  isCompound?: boolean;
+  iconicity?: string | null;
   createdAt: string;
   updatedAt: string;
   editComment: string | null;
@@ -147,6 +153,7 @@ export interface GlossData {
   definitions: Definition[];
   examples: Example[];
   glossTranslations: GlossTranslation[];
+  compoundParts?: CompoundPart[];
   relationsAsSource: RelatedGloss[];
   relationsAsTarget: RelatedGloss[];
   minimalPairsAsSource: MinimalPair[];

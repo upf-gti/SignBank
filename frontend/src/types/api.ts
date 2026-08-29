@@ -1,4 +1,4 @@
-import type { GlossData , Language, RequestStatus, Hand } from './models'
+import type { GlossData , Language, RequestStatus } from './models'
 
 export type WordStatus = 'PUBLISHED' | 'DRAFT' | 'PENDING';
 
@@ -95,10 +95,12 @@ export interface UpdateVideoDto {
   url: string;
   priority?: number;
   videoData: {
-    hands: Hand;
-    configuration: string;
+    handedness: string;
+    dominantConfiguration: string;
+    nonDominantConfiguration?: string;
     configurationChanges: string;
-    relationBetweenArticulators: string;
+    dominantRelationBetweenArticulators: string;
+    nonDominantRelationBetweenArticulators?: string;
     location: string;
     movementRelatedOrientation: string;
     locationRelatedOrientation: string;
@@ -179,10 +181,12 @@ export interface GlossRequestDetailResponse extends GlossRequestResponse {
     url: string;
     priority: number;
     videoData: {
-      hands: Hand;
-      configuration: string;
+      handedness: string;
+      dominantConfiguration: string;
+      nonDominantConfiguration?: string;
       configurationChanges: string;
-      relationBetweenArticulators: string;
+      dominantRelationBetweenArticulators: string;
+      nonDominantRelationBetweenArticulators?: string;
       location: string;
       movementRelatedOrientation: string;
       locationRelatedOrientation: string;

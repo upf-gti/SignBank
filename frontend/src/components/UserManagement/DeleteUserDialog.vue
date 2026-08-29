@@ -1,8 +1,13 @@
 <template>
-  <q-dialog v-model="dialogVisible" @hide="$emit('close')">
+  <q-dialog
+    v-model="dialogVisible"
+    @hide="$emit('close')"
+  >
     <q-card>
       <q-card-section>
-        <div class="text-h6">{{ translate('confirmDelete') }}</div>
+        <div class="text-h6">
+          {{ translate('confirmDelete') }}
+        </div>
       </q-card-section>
 
       <q-card-section>
@@ -19,8 +24,8 @@
         <q-btn
           :label="translate('delete')"
           color="negative"
-          @click="handleDelete"
           :loading="loading"
+          @click="handleDelete"
         />
       </q-card-actions>
     </q-card>

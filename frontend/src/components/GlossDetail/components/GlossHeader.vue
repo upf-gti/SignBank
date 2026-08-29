@@ -1,108 +1,105 @@
 <template>
-  <q-card-section class="row justify-between items-center">
-    <div class="column">
-      <div class="row justify-between items-center">
-        <div class="text-h4" v-if="!editMode">
+  <q-card-section class="gloss-header">
+    <div class="gloss-header__inner">
+      <div class="gloss-header__title column">
+        <div
+          v-if="!editMode || !allowEdit"
+          class="text-h4 gloss-header__gloss-name"
+        >
           {{ localGlossData.gloss }}
         </div>
-      
+
         <q-input
-          v-else
+          v-else-if="editMode && allowEdit"
           v-model="localGlossData.gloss"
           :label="translate('gloss')"
           outlined
           debounce="500"
+          class="gloss-header__gloss-input"
           @update:model-value="saveGloss"
         />
-       
-      </div>
-      <!-- Status Info -->
-      <div
-        v-if="requestStatus && requestStatus !== 'NOT_COMPLETED'"
-        class="q-mt-sm"
-      >
-        <q-chip
-          :color="getStatusColor(requestStatus)"
-          text-color="white"
-          :label="translate(requestStatus)"
-          dense
-        />
-      </div>
-      <!-- Archive Status -->
-      <div
-        v-if="isArchived"
-        class="q-mt-sm"
-      >
-        <q-chip
-          color="grey"
-          text-color="white"
-          :label="translate('archived')"
-          dense
-        />
-      </div>
-    </div>
-    <div class="row q-gutter-sm">
-      <q-btn
-        v-if="allowEdit && !editMode && userStore.isAdmin"
-        color="primary"
-        icon="edit"
-        :label="translate('edit')"
-        @click="emit('editGloss')"
-      />
-      <q-btn
-        v-if="allowEdit && !editMode && userStore.isAdmin && isPublished"
-        color="negative"
-        icon="archive"
-        :label="translate('archive')"
-        outline
-        class="q-mr-sm"
-        @click="confirmArchive"
-      />
-      <q-btn
-        v-if="allowEdit && !editMode && userStore.isAdmin && isArchived"
-        color="positive"
-        icon="unarchive"
-        :label="translate('unarchive')"
-        outline
-        class="q-mr-sm"
-        @click="confirmUnarchive"
-      />
-      <q-btn
-        v-if="allowEdit && editMode && router.currentRoute.value.path.includes('/gloss')"
-        color="negative"
-        icon="cancel"
-        :label="translate('exitEditMode')"
-        @click="emit('cancelGloss')"
-      />
-      <!-- Send Request Button - shown when request is not completed -->
-      <q-btn
-        v-if="requestStatus === 'NOT_COMPLETED'"
-        color="primary"
-        icon="send"
-        :label="translate('sendRequest')"
-        :loading="submitting"
-        class="q-mr-sm"
-        @click="submitRequest"
-      />
 
-      <template v-if="isConfirmRequestPage">
+        <div
+          v-if="requestStatus && requestStatus !== 'NOT_COMPLETED'"
+          class="q-mt-sm"
+        >
+          <q-chip
+            :color="getStatusColor(requestStatus)"
+            text-color="white"
+            :label="translate(requestStatus)"
+            dense
+          />
+        </div>
+        <div
+          v-if="isArchived"
+          class="q-mt-sm"
+        >
+          <q-chip
+            color="grey"
+            text-color="white"
+            :label="translate('archived')"
+            dense
+          />
+        </div>
+      </div>
+
+      <div class="gloss-header__actions row q-gutter-sm">
         <q-btn
-          icon="check"
-          color="positive"
-          :label="translate('accept')"
-          outline
-          class="q-mr-sm"
-          @click="acceptRequest"
+          v-if="allowEdit && !editMode && userStore.isAdmin"
+          color="primary"
+          icon="edit"
+          :label="translate('edit')"
+          @click="emit('editGloss')"
         />
         <q-btn
-          icon="close"
+          v-if="allowEdit && !editMode && userStore.isAdmin && isPublished"
           color="negative"
-          :label="translate('decline')"
+          icon="archive"
+          :label="translate('archive')"
           outline
-          class="q-mr-sm"
-          @click="declineRequest"
+          @click="confirmArchive"
         />
-      </template>
+        <q-btn
+          v-if="allowEdit && !editMode && userStore.isAdmin && isArchived"
+          color="positive"
+          icon="unarchive"
+          :label="translate('unarchive')"
+          outline
+          @click="confirmUnarchive"
+        />
+        <q-btn
+          v-if="allowEdit && editMode && router.currentRoute.value.path.includes('/gloss')"
+          color="negative"
+          icon="cancel"
+          :label="translate('exitEditMode')"
+          @click="emit('cancelGloss')"
+        />
+        <q-btn
+          v-if="requestStatus === 'NOT_COMPLETED' && !isDraft"
+          color="primary"
+          icon="send"
+          :label="translate('sendRequest')"
+          :loading="submitting"
+          @click="submitRequest"
+        />
+
+        <template v-if="isConfirmRequestPage && requestStatus === RequestStatus.WAITING_FOR_APPROVAL">
+          <q-btn
+            icon="check"
+            color="positive"
+            :label="translate('accept')"
+            outline
+            @click="acceptRequest"
+          />
+          <q-btn
+            icon="close"
+            color="negative"
+            :label="translate('decline')"
+            outline
+            @click="declineRequest"
+          />
+        </template>
+      </div>
     </div>
   </q-card-section>
 </template>
@@ -135,6 +132,7 @@ const props = defineProps<{
   glossData: GlossData,
   editMode: boolean,
   isConfirmRequestPage?: boolean,
+  isDraft?: boolean,
   requestStatus?: RequestStatus | undefined,
   submitting?: boolean | undefined,
   allowEdit: boolean
@@ -258,3 +256,42 @@ const getStatusColor = (status: RequestStatus | undefined): string => {
   }
 }
 </script>
+
+<style scoped>
+.gloss-header {
+  flex: 0 0 auto;
+  flex-shrink: 0;
+  overflow: visible;
+  position: relative;
+  z-index: 2;
+}
+
+.gloss-header__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.gloss-header__title {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+
+.gloss-header__gloss-name {
+  word-break: break-word;
+}
+
+.gloss-header__gloss-input {
+  min-width: 200px;
+  max-width: 100%;
+}
+
+.gloss-header__actions {
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+}
+</style>

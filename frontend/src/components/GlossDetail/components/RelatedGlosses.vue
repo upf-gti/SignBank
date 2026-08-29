@@ -1,6 +1,9 @@
 <template>
   <q-card-section class="related-glosses">
-    <div class="text-h5 q-mb-md">
+    <div
+      v-if="!hideSectionTitle"
+      class="text-h5 q-mb-md"
+    >
       {{ t('relatedGlosses') }}
     </div>
 
@@ -367,6 +370,7 @@ const props = defineProps<{
   minimalPairs: MinimalPair[];
   editMode: boolean;
   glossId: string;
+  hideSectionTitle?: boolean;
 }>();
 
 const emit = defineEmits<{
