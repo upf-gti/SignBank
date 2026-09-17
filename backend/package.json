@@ -72,8 +72,8 @@
   "name": "sign-bank-backend",
   "private": true,
   "prisma": {
-    "seed": "ts-node prisma/seed.ts",
-    "empty-seed": "ts-node prisma/emptySeed.ts"
+    "seed": "ts-node --transpile-only prisma/seed.ts",
+    "empty-seed": "ts-node --transpile-only prisma/emptySeed.ts"
   },
   "scripts": {
     "build": "nest build && cp -r scripts dist/",
