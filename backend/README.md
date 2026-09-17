@@ -113,6 +113,7 @@ The following diagram illustrates the main structure of the database used by the
 ---
 
 ## Videos (`/videos`)
+- `GET /videos/drive/:fileId` — Stream a Google Drive video (public; requires `GOOGLE_DRIVE_API_KEY`)
 - `POST /videos/upload` — Upload a video (JWT required)
 - `DELETE /videos/:videoUrl(*)` — Delete a video (JWT required)
 

@@ -8,7 +8,8 @@
 #
 # Make GHCR packages public, or configure a registry token in Dockploy.
 #
-# Same routing as docker-compose.dockploy.yaml (Traefik handles SSL).
+# Same routing as docker-compose.dockploy.yaml: publish frontend:80;
+# frontend nginx proxies /api → backend:3000 and /lscassets → dufs:5000.
 
 networks:
   signbank:
@@ -30,6 +31,7 @@ services:
       - BASE_URL=${BASE_URL}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_EXPIRATION=${JWT_EXPIRATION:-24h}
+      - GOOGLE_DRIVE_API_KEY=${GOOGLE_DRIVE_API_KEY:-}
       - ADMIN_EMAIL=${ADMIN_EMAIL}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
       - BACKUP_ENABLED=false
@@ -52,6 +54,9 @@ services:
     networks:
       - signbank
     restart: unless-stopped
+    depends_on:
+      - backend
+      - dufs
 
   postgres:
     image: postgres:16

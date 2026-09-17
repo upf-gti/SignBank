@@ -2,11 +2,21 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { createReadStream } from 'fs';
 import { stat, unlink } from 'fs/promises';
 import axios from 'axios';
-import { basename, join } from 'path';
+import { basename } from 'path';
+import type { Request, Response } from 'express';
+import { isDriveFileId, isGoogleDriveUrl } from './google-drive.util';
 
 @Injectable()
 export class VideosService {
   private readonly dufsUrl = process.env.DUFS_URL || 'http://localhost:5000';
+
+  constructor() {
+    if (!process.env.GOOGLE_DRIVE_API_KEY?.trim()) {
+      console.warn(
+        'GOOGLE_DRIVE_API_KEY is not set; Google Drive videos will not play',
+      );
+    }
+  }
 
   async uploadVideo(file: any, type: 'gloss' | 'example' | 'definition' = 'gloss'): Promise<{ url: string }> {
     try {
@@ -62,16 +72,122 @@ export class VideosService {
 
   async deleteVideo(videoUrl: string): Promise<void> {
     console.log('Deleting video', videoUrl);
+
+    if (
+      isGoogleDriveUrl(videoUrl) ||
+      videoUrl.startsWith('http://') ||
+      videoUrl.startsWith('https://')
+    ) {
+      return;
+    }
+
     try {
       // The videoUrl is already in the format "baseDir/filename"
       const deleteUrl = `${this.dufsUrl}/${videoUrl}`;
       
       await axios.delete(deleteUrl);
-    } catch (error) {
+    } catch {
       throw new HttpException(
         'Failed to delete video',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
-} 
+
+  async streamDriveVideo(
+    fileId: string,
+    req: Request,
+    res: Response,
+    resourceKey?: string,
+  ): Promise<void> {
+    if (!isDriveFileId(fileId)) {
+      throw new HttpException('Invalid Google Drive file id', HttpStatus.BAD_REQUEST);
+    }
+
+    const apiKey = process.env.GOOGLE_DRIVE_API_KEY?.trim();
+    if (!apiKey) {
+      throw new HttpException(
+        'GOOGLE_DRIVE_API_KEY is not configured',
+        HttpStatus.SERVICE_UNAVAILABLE,
+      );
+    }
+
+    const driveUrl = new URL(
+      `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(fileId)}`,
+    );
+    driveUrl.searchParams.set('alt', 'media');
+    driveUrl.searchParams.set('supportsAllDrives', 'true');
+    driveUrl.searchParams.set('key', apiKey);
+
+    const headers: Record<string, string> = {};
+    const range = req.headers.range;
+    if (typeof range === 'string' && range.length > 0) {
+      headers.Range = range;
+    }
+    if (resourceKey) {
+      headers['X-Goog-Drive-Resource-Keys'] = `${fileId}/${resourceKey}`;
+    }
+
+    try {
+      const driveResponse = await axios.get(driveUrl.toString(), {
+        headers,
+        responseType: 'stream',
+        timeout: 0,
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity,
+        validateStatus: (status) => status === 200 || status === 206,
+      });
+
+      res.status(driveResponse.status);
+      res.setHeader(
+        'Content-Type',
+        driveResponse.headers['content-type'] || 'video/mp4',
+      );
+      res.setHeader('Accept-Ranges', 'bytes');
+      res.setHeader('Cache-Control', 'public, max-age=3600');
+
+      const contentLength = driveResponse.headers['content-length'];
+      if (contentLength) {
+        res.setHeader('Content-Length', contentLength);
+      }
+      const contentRange = driveResponse.headers['content-range'];
+      if (contentRange) {
+        res.setHeader('Content-Range', contentRange);
+      }
+
+      const stream = driveResponse.data as NodeJS.ReadableStream;
+      const abort = () => {
+        if (typeof (stream as { destroy?: () => void }).destroy === 'function') {
+          (stream as { destroy: () => void }).destroy();
+        }
+      };
+      req.on('close', abort);
+      stream.on('error', abort);
+      stream.pipe(res);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+        const data = error.response?.data as { destroy?: () => void } | undefined;
+        data?.destroy?.();
+
+        if (status === 401 || status === 403) {
+          throw new HttpException(
+            'Google Drive denied access. Share the file with "Anyone with the link" and check GOOGLE_DRIVE_API_KEY.',
+            HttpStatus.FORBIDDEN,
+          );
+        }
+        if (status === 404) {
+          throw new HttpException(
+            'Google Drive file not found. Confirm the file id and that it is shared with "Anyone with the link".',
+            HttpStatus.NOT_FOUND,
+          );
+        }
+      }
+
+      throw new HttpException(
+        'Failed to fetch video from Google Drive',
+        HttpStatus.BAD_GATEWAY,
+      );
+    }
+  }
+}

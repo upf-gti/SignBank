@@ -1,12 +1,13 @@
-import { Controller, Post, Delete, UploadedFile, UseInterceptors, Body, Param } from '@nestjs/common';
+import { Controller, Post, Delete, UploadedFile, UseInterceptors, Body, Param, Get, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { VideosService } from './videos.service';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
-import { UseGuards } from '@nestjs/common';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { RolesGuard } from '../auth/guard/roles.guard';
+import { Public } from '../auth/decorator/public.decorator';
 import { promises as fs } from 'fs';
+import type { Request, Response } from 'express';
 
 @Controller('videos')
 @UseGuards(JwtGuard, RolesGuard)
@@ -31,6 +32,17 @@ export class VideosController {
     } catch (error) {
       console.error('Error creating upload directories:', error);
     }
+  }
+
+  @Public()
+  @Get('drive/:fileId')
+  async streamDriveVideo(
+    @Param('fileId') fileId: string,
+    @Query('resourceKey') resourceKey: string | undefined,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    return this.videosService.streamDriveVideo(fileId, req, res, resourceKey);
   }
 
   @Post('upload')

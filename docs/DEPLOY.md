@@ -90,8 +90,11 @@ Copy `.env.example` → `.env` and set:
 | `TYPESENSE_HOST` | Yes | `typesense` in Docker network |
 | `TYPESENSE_PORT` | Yes | `8108` |
 | `DUFS_URL` | Yes | `http://dufs:5000` in Docker |
+| `GOOGLE_DRIVE_API_KEY` | If DB has Drive URLs | Google Cloud API key with Drive API enabled. Files must be shared as **Anyone with the link** |
 | `ADMIN_EMAIL` / `ADMIN_PASSWORD` | First deploy | Creates admin if none exists |
 | `SEED_DB` | Test only | Set `true` once for sample data, then remove |
+
+**Google Drive videos:** create a Google Cloud API key, enable the **Google Drive API**, and set `GOOGLE_DRIVE_API_KEY`. An API key cannot use your personal Drive permissions — share the video folder as **Anyone with the link** (Viewer). Restrict the key to the Drive API (and optionally your server IPs).
 
 ### 3. File storage
 
@@ -137,6 +140,7 @@ make prod-up
 - [ ] Login with admin credentials works
 - [ ] Search returns results (after seed or accepted glosses)
 - [ ] Video plays from `/lscassets/gloss-videos/...`
+- [ ] Google Drive videos play when `GOOGLE_DRIVE_API_KEY` is set and files are shared with "Anyone with the link"
 - [ ] Restart backend container → search still works
 
 ### 7. Migrations
@@ -167,13 +171,15 @@ Do **not** set `SEED_DB=true` on updates — it re-runs seed data.
 
 ## Dockploy routing
 
-When using `docker-compose.dockploy.yaml` (no nginx container):
+When using `docker-compose.dockploy.yaml` (no outer nginx container), publish **only the frontend** on port 80. Frontend nginx proxies `/api` and `/lscassets` on the Docker network:
 
 | Public path | Target service | Port |
 |-------------|----------------|------|
 | `/` | frontend | 80 |
-| `/api/*` | backend | 3000 (strip `/api` prefix) |
-| `/lscassets/*` | dufs | 5000 |
+| `/api/*` | frontend → backend | 3000 (frontend nginx strips `/api`) |
+| `/lscassets/*` | frontend → dufs | 5000 |
+
+Do not point `/api` at the frontend without that proxy — nginx `try_files` returns **405** on POST (login). Do not also strip `/api` in Traefik if the domain already goes to the frontend; stripping twice would break routing.
 
 Set all env vars in the Dockploy project settings (never commit secrets).
 
@@ -186,7 +192,8 @@ Set all env vars in the Dockploy project settings (never commit secrets).
 | Symptom | Check |
 |---------|-------|
 | Backend won't start in prod | Logs for missing `JWT_SECRET` or env validation errors |
-| 502 on `/api` | Backend container running; `DATABASE_URL` correct |
+| **405 on login** (`POST /api/auth/login`) | `/api` is hitting the SPA nginx, not NestJS. Rebuild frontend (it must proxy `/api/` to `backend:3000`) and publish only the frontend domain in Dockploy |
+| 502 on `/api` | Backend container running; `DATABASE_URL` correct; frontend can resolve `backend` on the compose network |
 | Search empty after restart | Typesense bootstrap logs; admin `POST /api/typesense/sync` |
 | Videos 404 | `FileServer/` exists and dufs volume mounted |
 | Migration failed | `prisma migrate status`; see DATABASE.md |

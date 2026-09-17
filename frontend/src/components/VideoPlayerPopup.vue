@@ -22,14 +22,14 @@
 
       <q-card-section class="video-player-dialog__body q-pa-md">
         <div class="video-player-dialog__frame">
-          <video
+          <StoredVideo
             ref="videoPlayer"
             controls
             autoplay
             loop
             playsinline
             class="video-player-dialog__video"
-            :src="getVideoUrl(videoUrl)"
+            :src="videoUrl"
             muted
             @error="handleVideoError"
           />
@@ -43,7 +43,7 @@
 import { ref, watch, nextTick } from 'vue';
 import { useQuasar } from 'quasar';
 import translate from 'src/utils/translate';
-import { getVideoUrl } from 'src/utils/videoUrl'
+import StoredVideo from 'src/components/StoredVideo.vue';
 
 const $q = useQuasar();
 
@@ -58,16 +58,17 @@ const emit = defineEmits<{
 }>();
 
 const showDialog = ref(props.showDialog);
-const videoPlayer = ref<HTMLVideoElement | null>(null);
+const videoPlayer = ref<{ getVideoElement?: () => HTMLVideoElement | null } | null>(null);
 
 watch(() => props.showDialog, async (newValue) => {
   showDialog.value = newValue;
 
   if (newValue) {
     await nextTick();
-    if (videoPlayer.value) {
-      videoPlayer.value.currentTime = 0;
-      void videoPlayer.value.play().catch(() => undefined);
+    const video = videoPlayer.value?.getVideoElement?.();
+    if (video) {
+      video.currentTime = 0;
+      void video.play().catch(() => undefined);
     }
   }
 });
@@ -75,9 +76,10 @@ watch(() => props.showDialog, async (newValue) => {
 watch(showDialog, (newValue) => {
   emit('update:show-dialog', newValue);
 
-  if (!newValue && videoPlayer.value) {
-    videoPlayer.value.pause();
-    videoPlayer.value.currentTime = 0;
+  const video = videoPlayer.value?.getVideoElement?.();
+  if (!newValue && video) {
+    video.pause();
+    video.currentTime = 0;
   }
 });
 

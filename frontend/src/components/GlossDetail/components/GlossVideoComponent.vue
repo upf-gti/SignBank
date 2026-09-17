@@ -5,17 +5,17 @@
       class="video-angle-container"
       :class="{ 'video-angle-container--compact': compact }"
     >
-      <video
+      <StoredVideo
         v-for="video in sortedVideosWithUrl"
         :key="video.id"
         :ref="(el) => registerVideoRef(video.id, el)"
         class="angle-video"
         :class="{ 'angle-video--active': video.id === selectedVideo }"
+        :src="video.url"
         loop
         muted
         playsinline
         preload="auto"
-        :src="getVideoUrl(video.url)"
       />
 
       <div
@@ -117,7 +117,7 @@ import { ref, computed, watch, onMounted, nextTick, type ComponentPublicInstance
 import { SignVideo } from 'src/types/models';
 import translate from 'src/utils/translate';
 import UploadVideoComponent from 'src/components/UploadVideoComponent.vue';
-import { getVideoUrl } from 'src/utils/videoUrl';
+import StoredVideo from 'src/components/StoredVideo.vue';
 import { api } from 'src/services/api';
 import { useQuasar } from 'quasar';
 
@@ -168,8 +168,13 @@ const selectedVideoData = computed(() => {
 });
 
 function registerVideoRef(id: string, el: Element | ComponentPublicInstance | null) {
-  if (el instanceof HTMLVideoElement) {
-    videoRefs.set(id, el);
+  const videoElement =
+    el instanceof HTMLVideoElement
+      ? el
+      : (el as { getVideoElement?: () => HTMLVideoElement | null } | null)?.getVideoElement?.();
+
+  if (videoElement) {
+    videoRefs.set(id, videoElement);
     return;
   }
   videoRefs.delete(id);
@@ -347,6 +352,10 @@ const moveVideoRight = async () => {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+}
+
+.angle-video :deep(.stored-video__media) {
+  object-fit: contain;
 }
 
 .angle-video--active {
