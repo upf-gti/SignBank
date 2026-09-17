@@ -1,9 +1,7 @@
 # SignBank — Dockploy / test deployment
-# No nginx container: Dockploy Traefik handles SSL and routing.
-#
-# Dockploy route mapping:
-#   /           → frontend:80
-#   /api/*      → backend:3000  (strip /api prefix in Dockploy)
+# No outer nginx container: Dockploy Traefik terminates SSL and should
+# publish only the frontend (port 80). Frontend nginx then proxies:
+#   /api/*      → backend:3000  (strips /api)
 #   /lscassets  → dufs:5000
 #
 # Set all secrets in Dockploy env UI. Use SEED_DB=true only on first deploy.
@@ -29,6 +27,7 @@ services:
       - BASE_URL=${BASE_URL}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_EXPIRATION=${JWT_EXPIRATION:-24h}
+      - GOOGLE_DRIVE_API_KEY=${GOOGLE_DRIVE_API_KEY:-}
       - ADMIN_EMAIL=${ADMIN_EMAIL}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
       - BACKUP_ENABLED=false
@@ -54,6 +53,9 @@ services:
     networks:
       - signbank
     restart: unless-stopped
+    depends_on:
+      - backend
+      - dufs
 
   postgres:
     image: postgres:16

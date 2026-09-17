@@ -15,10 +15,9 @@
       class="video-section q-pb-none"
     >
       <div class="video-container bg-grey-2">
-        <video
-          ref="videoRef"
+        <StoredVideo
           class="video-player"
-          :src="getVideoUrl(document.url)"
+          :src="document.url"
           preload="metadata"
           loop
           autoplay
@@ -26,13 +25,7 @@
           playsinline
           @error="handleVideoError"
           @loadeddata="handleVideoLoaded"
-        >
-          <source
-            :src="getVideoUrl(document.url)"
-            type="video/mp4"
-          >
-          {{ t('videoNotSupported') }}
-        </video>
+        />
         <div
           v-if="isLoading"
           class="absolute-full flex flex-center bg-grey-2"
@@ -91,13 +84,11 @@
 
 <script setup lang="ts">
 import translate from 'src/utils/translate';
-import { getVideoUrl } from 'src/utils/videoUrl';
+import StoredVideo from 'src/components/StoredVideo.vue';
 import type { SearchResult } from 'src/services/search.service';
 import { computed, ref } from 'vue';
 
-const t = (key: string) => translate(key);
 const isLoading = ref(true);
-const videoRef = ref<HTMLVideoElement | null>(null);
 
 const props = defineProps<{
   document: SearchResult;
@@ -132,7 +123,6 @@ const handleVideoError = () => {
 
 const handleVideoLoaded = () => {
   isLoading.value = false;
-  videoRef.value?.play().catch(() => {});
 };
 </script>
 

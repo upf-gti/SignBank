@@ -62,6 +62,14 @@ Uploaded videos return relative paths from API. Display via nginx:
 
 Example: API returns `gloss-videos/abc.mp4` → src `/lscassets/gloss-videos/abc.mp4`.
 
+Google Drive URLs stored in the DB are rewritten by `getVideoUrl()` to:
+
+```
+/api/videos/drive/{fileId}
+```
+
+The backend streams them with `GOOGLE_DRIVE_API_KEY`. Files must be shared as "Anyone with the link".
+
 Validation helper: `src/utils/videoValidation.ts`.
 
 ## Search UI

@@ -9,10 +9,9 @@
           v-if="videos.length > 0"
           class="video-container"
         >
-          <video 
-            :src="getVideoUrl(currentVideo!.url)"
-            class="q-mb-md"
-            style="height: 250px; width: 250px; object-fit: cover"
+          <StoredVideo
+            :src="currentVideo!.url"
+            class="q-mb-md gloss-video"
             loop
             autoplay
             muted
@@ -74,7 +73,7 @@ import { ref, computed, watch } from 'vue'
 import { Video } from 'src/types/models'
 import translate from 'src/utils/translate'
 import SignInfo from './SignInfo.vue'
-import { getVideoUrl } from 'src/utils/videoUrl'
+import StoredVideo from './StoredVideo.vue'
 
 interface Props {
   videos: Video[]
@@ -138,5 +137,10 @@ function updateVideo(video: Video) {
   text-align: center;
   padding: 2rem 0;
   color: #aaa;
+}
+
+.gloss-video {
+  height: 250px;
+  width: 250px;
 }
 </style> 

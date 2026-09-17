@@ -18,6 +18,7 @@ services:
       - TYPESENSE_PORT=${TYPESENSE_PORT}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_EXPIRATION=${JWT_EXPIRATION:-24h}
+      - GOOGLE_DRIVE_API_KEY=${GOOGLE_DRIVE_API_KEY:-}
       - SEED_DB=${SEED_DB:-false}
     ports:
       - 9229:9229

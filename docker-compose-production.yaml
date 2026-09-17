@@ -18,6 +18,7 @@ services:
       - BASE_URL=${BASE_URL:-localhost}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_EXPIRATION=${JWT_EXPIRATION:-24h}
+      - GOOGLE_DRIVE_API_KEY=${GOOGLE_DRIVE_API_KEY:-}
       - ADMIN_EMAIL=${ADMIN_EMAIL}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
       - PRISMA_CLI_BINARY_TARGETS=linux-musl,linux-musl-openssl-3.0.x

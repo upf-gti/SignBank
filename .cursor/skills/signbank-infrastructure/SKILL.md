@@ -13,6 +13,7 @@ Local config: `nginx/default.conf`. Production/test variants under `nginx/nginx.
 https://host/           → frontend:443
 https://host/ws         → frontend (WebSocket/HMR)
 https://host/api/*      → backend:443  (strip /api prefix)
+https://host/api/videos/drive/* → backend Drive proxy (no buffering)
 https://host/lscassets/* → dufs:5000   (video files)
 ```
 
