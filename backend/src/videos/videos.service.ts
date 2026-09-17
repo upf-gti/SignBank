@@ -3,8 +3,19 @@ import { createReadStream } from 'fs';
 import { stat, unlink } from 'fs/promises';
 import axios from 'axios';
 import { basename } from 'path';
+import { Readable } from 'stream';
 import type { Request, Response } from 'express';
 import { isDriveFileId, isGoogleDriveUrl } from './google-drive.util';
+
+function asHeaderString(value: unknown, fallback?: string): string | undefined {
+  if (value == null || typeof value === 'boolean') {
+    return fallback;
+  }
+  if (Array.isArray(value)) {
+    return value.join(', ');
+  }
+  return String(value);
+}
 
 @Injectable()
 export class VideosService {
@@ -141,25 +152,23 @@ export class VideosService {
       res.status(driveResponse.status);
       res.setHeader(
         'Content-Type',
-        driveResponse.headers['content-type'] || 'video/mp4',
+        asHeaderString(driveResponse.headers['content-type'], 'video/mp4')!,
       );
       res.setHeader('Accept-Ranges', 'bytes');
       res.setHeader('Cache-Control', 'public, max-age=3600');
 
-      const contentLength = driveResponse.headers['content-length'];
+      const contentLength = asHeaderString(driveResponse.headers['content-length']);
       if (contentLength) {
         res.setHeader('Content-Length', contentLength);
       }
-      const contentRange = driveResponse.headers['content-range'];
+      const contentRange = asHeaderString(driveResponse.headers['content-range']);
       if (contentRange) {
         res.setHeader('Content-Range', contentRange);
       }
 
-      const stream = driveResponse.data as NodeJS.ReadableStream;
+      const stream = driveResponse.data as Readable;
       const abort = () => {
-        if (typeof (stream as { destroy?: () => void }).destroy === 'function') {
-          (stream as { destroy: () => void }).destroy();
-        }
+        stream.destroy();
       };
       req.on('close', abort);
       stream.on('error', abort);
@@ -167,8 +176,10 @@ export class VideosService {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const status = error.response?.status;
-        const data = error.response?.data as { destroy?: () => void } | undefined;
-        data?.destroy?.();
+        const data = error.response?.data;
+        if (data instanceof Readable) {
+          data.destroy();
+        }
 
         if (status === 401 || status === 403) {
           throw new HttpException(
