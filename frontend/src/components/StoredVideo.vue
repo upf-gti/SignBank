@@ -42,11 +42,10 @@ defineOptions({ inheritAttrs: false })
 const props = withDefaults(defineProps<{
   src: string
   title?: string
-  /** How the media fills the box. Prefer cover in search cards. */
+  /** contain = max width or height without crop; cover = fill and crop */
   fit?: 'contain' | 'cover'
   /**
    * When true, Drive iframe ignores pointer events so parent cards stay clickable.
-   * Use on search results; leave false on detail players that need Drive controls.
    */
   drivePassive?: boolean
 }>(), {
@@ -83,7 +82,6 @@ async function tryAutoplay() {
 }
 
 function onError(event: Event) {
-  // Non-web codecs (e.g. AVI) fail in <video>; fall back to Drive preview.
   if (drivePreviewUrl.value) {
     forcePreview.value = true
     emit('loadeddata', event)
@@ -139,20 +137,18 @@ defineExpose({ getVideoElement, isDrivePreview: showDrivePreview })
   object-fit: cover;
 }
 
-/* Drive preview: zoom/crop chrome + letterboxing so the sign fills the card */
+/*
+ * Drive preview fills the fixed box. Mild scale only crops Drive chrome
+ * (top bar), keeping the signing area visible (contain-like).
+ */
 .stored-video--drive .stored-video__iframe {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  inset: 0;
   width: 100%;
   height: 100%;
   border: 0;
-  transform: translate(-50%, -50%) scale(1.55);
+  transform: scale(1.12);
   transform-origin: center center;
-}
-
-.stored-video--drive.stored-video--cover .stored-video__iframe {
-  transform: translate(-50%, -50%) scale(1.75);
 }
 
 .stored-video--drive.stored-video--passive .stored-video__iframe {

@@ -14,11 +14,11 @@
       v-if="document.url"
       class="video-section q-pb-none"
     >
-      <div class="video-container bg-grey-2">
+      <div class="video-container">
         <StoredVideo
           class="video-player"
           :src="document.url"
-          fit="cover"
+          fit="contain"
           drive-passive
           preload="auto"
           loop
@@ -44,7 +44,7 @@
       v-else
       class="video-section q-pb-none"
     >
-      <div class="video-container bg-grey-2 flex flex-center">
+      <div class="video-container flex flex-center">
         <q-icon
           name="videocam_off"
           size="2.5em"
@@ -88,7 +88,7 @@
 import translate from 'src/utils/translate';
 import StoredVideo from 'src/components/StoredVideo.vue';
 import type { SearchResult } from 'src/services/search.service';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 const isLoading = ref(true);
 
@@ -96,6 +96,13 @@ const props = defineProps<{
   document: SearchResult;
   showDetails: boolean;
 }>();
+
+watch(
+  () => props.document.url,
+  () => {
+    isLoading.value = true;
+  },
+);
 
 const emit = defineEmits<{
   (e: 'view-details', glossId: string): void;
@@ -144,10 +151,7 @@ const handleVideoLoaded = () => {
 .video-container {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 5;
-  min-height: 220px;
-  max-height: 300px;
-  height: auto;
+  height: 220px;
   border-radius: 8px;
   overflow: hidden;
   background: #000;
@@ -188,8 +192,7 @@ const handleVideoLoaded = () => {
 
 @media (max-width: 599px) {
   .video-container {
-    min-height: 180px;
-    max-height: 240px;
+    height: 180px;
   }
 }
 </style>
