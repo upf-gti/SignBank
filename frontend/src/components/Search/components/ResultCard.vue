@@ -14,12 +14,16 @@
       v-if="document.url"
       class="video-section q-pb-none"
     >
-      <div class="video-container bg-grey-2">
+      <div
+        class="video-container"
+        :style="videoBoxStyle"
+      >
         <StoredVideo
           class="video-player"
           :src="document.url"
-          fit="cover"
+          fit="contain"
           drive-passive
+          adapt-aspect-ratio
           preload="auto"
           loop
           autoplay
@@ -27,6 +31,7 @@
           playsinline
           @error="handleVideoError"
           @loadeddata="handleVideoLoaded"
+          @aspect-ratio="onAspectRatio"
         />
         <div
           v-if="isLoading"
@@ -88,14 +93,23 @@
 import translate from 'src/utils/translate';
 import StoredVideo from 'src/components/StoredVideo.vue';
 import type { SearchResult } from 'src/services/search.service';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 const isLoading = ref(true);
+const mediaAspectRatio = ref<number | null>(null);
 
 const props = defineProps<{
   document: SearchResult;
   showDetails: boolean;
 }>();
+
+watch(
+  () => props.document.url,
+  () => {
+    isLoading.value = true;
+    mediaAspectRatio.value = null;
+  },
+);
 
 const emit = defineEmits<{
   (e: 'view-details', glossId: string): void;
@@ -104,6 +118,10 @@ const emit = defineEmits<{
 const emitViewDetails = () => {
   emit('view-details', props.document.glossId);
 };
+
+const videoBoxStyle = computed(() => ({
+  aspectRatio: String(mediaAspectRatio.value ?? 3 / 4),
+}));
 
 const lexicalCategories = computed(() => {
   const { lexicalCategories: categories, lexicalCategory } = props.document;
@@ -126,6 +144,10 @@ const handleVideoError = () => {
 const handleVideoLoaded = () => {
   isLoading.value = false;
 };
+
+const onAspectRatio = (ratio: number | null) => {
+  mediaAspectRatio.value = ratio;
+};
 </script>
 
 <style scoped>
@@ -144,10 +166,8 @@ const handleVideoLoaded = () => {
 .video-container {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 5;
-  min-height: 220px;
-  max-height: 300px;
-  height: auto;
+  /* Default until media reports its ratio; overridden via inline style */
+  aspect-ratio: 3 / 4;
   border-radius: 8px;
   overflow: hidden;
   background: #000;
@@ -184,12 +204,5 @@ const handleVideoLoaded = () => {
 .lexical-categories :deep(.q-chip) {
   width: fit-content;
   max-width: 100%;
-}
-
-@media (max-width: 599px) {
-  .video-container {
-    min-height: 180px;
-    max-height: 240px;
-  }
 }
 </style>
