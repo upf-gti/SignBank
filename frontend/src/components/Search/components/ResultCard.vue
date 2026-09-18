@@ -14,16 +14,12 @@
       v-if="document.url"
       class="video-section q-pb-none"
     >
-      <div
-        class="video-container"
-        :style="videoBoxStyle"
-      >
+      <div class="video-container">
         <StoredVideo
           class="video-player"
           :src="document.url"
           fit="contain"
           drive-passive
-          adapt-aspect-ratio
           preload="auto"
           loop
           autoplay
@@ -31,7 +27,6 @@
           playsinline
           @error="handleVideoError"
           @loadeddata="handleVideoLoaded"
-          @aspect-ratio="onAspectRatio"
         />
         <div
           v-if="isLoading"
@@ -49,7 +44,7 @@
       v-else
       class="video-section q-pb-none"
     >
-      <div class="video-container bg-grey-2 flex flex-center">
+      <div class="video-container flex flex-center">
         <q-icon
           name="videocam_off"
           size="2.5em"
@@ -96,7 +91,6 @@ import type { SearchResult } from 'src/services/search.service';
 import { computed, ref, watch } from 'vue';
 
 const isLoading = ref(true);
-const mediaAspectRatio = ref<number | null>(null);
 
 const props = defineProps<{
   document: SearchResult;
@@ -107,7 +101,6 @@ watch(
   () => props.document.url,
   () => {
     isLoading.value = true;
-    mediaAspectRatio.value = null;
   },
 );
 
@@ -118,10 +111,6 @@ const emit = defineEmits<{
 const emitViewDetails = () => {
   emit('view-details', props.document.glossId);
 };
-
-const videoBoxStyle = computed(() => ({
-  aspectRatio: String(mediaAspectRatio.value ?? 3 / 4),
-}));
 
 const lexicalCategories = computed(() => {
   const { lexicalCategories: categories, lexicalCategory } = props.document;
@@ -144,10 +133,6 @@ const handleVideoError = () => {
 const handleVideoLoaded = () => {
   isLoading.value = false;
 };
-
-const onAspectRatio = (ratio: number | null) => {
-  mediaAspectRatio.value = ratio;
-};
 </script>
 
 <style scoped>
@@ -166,8 +151,7 @@ const onAspectRatio = (ratio: number | null) => {
 .video-container {
   position: relative;
   width: 100%;
-  /* Default until media reports its ratio; overridden via inline style */
-  aspect-ratio: 3 / 4;
+  height: 220px;
   border-radius: 8px;
   overflow: hidden;
   background: #000;
@@ -204,5 +188,11 @@ const onAspectRatio = (ratio: number | null) => {
 .lexical-categories :deep(.q-chip) {
   width: fit-content;
   max-width: 100%;
+}
+
+@media (max-width: 599px) {
+  .video-container {
+    height: 180px;
+  }
 }
 </style>
