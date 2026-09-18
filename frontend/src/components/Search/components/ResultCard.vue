@@ -18,7 +18,9 @@
         <StoredVideo
           class="video-player"
           :src="document.url"
-          preload="metadata"
+          fit="cover"
+          drive-passive
+          preload="auto"
           loop
           autoplay
           muted
@@ -142,15 +144,18 @@ const handleVideoLoaded = () => {
 .video-container {
   position: relative;
   width: 100%;
-  height: 180px;
+  aspect-ratio: 4 / 5;
+  min-height: 220px;
+  max-height: 300px;
+  height: auto;
   border-radius: 8px;
   overflow: hidden;
+  background: #000;
 }
 
 .video-player {
   width: 100%;
   height: 100%;
-  object-fit: contain;
 }
 
 .content-section {
@@ -183,7 +188,8 @@ const handleVideoLoaded = () => {
 
 @media (max-width: 599px) {
   .video-container {
-    height: 150px;
+    min-height: 180px;
+    max-height: 240px;
   }
 }
 </style>
