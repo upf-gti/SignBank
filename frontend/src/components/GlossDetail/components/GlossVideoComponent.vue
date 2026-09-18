@@ -12,9 +12,11 @@
         class="angle-video"
         :class="{ 'angle-video--active': video.id === selectedVideo }"
         :src="video.url"
+        fit="contain"
         loop
         muted
         playsinline
+        autoplay
         preload="auto"
       />
 
